@@ -65,8 +65,14 @@ Opened from a web address the app knows its own. Opened from a file there is
 nothing to share, so the club's address is typed once and kept in settings,
 which also means it travels with a backup.
 
-## Two fixes to the existing build
+## Three fixes to the existing build
 
+- **The debounced write had no flush.** `save()` waits 250ms before serialising, so a burst of
+  taps does not rewrite the database each time. Nothing flushed that pending write when the page
+  went away, and iOS discards backgrounded tabs without warning — so the last thing a judge did
+  before pocketing the phone could be lost. The write is now flushed synchronously on
+  `visibilitychange` (hidden) and on `pagehide`. Found by reloading immediately after a save while
+  testing the hosted build.
 - `__BADGE__` in the `<link rel="icon">` tags was never substituted; both now point at `./icon.jpg`.
 - `render()` set the header chip to the storage state and then immediately overwrote it with the
   connection state, so «Χωρίς αποθήκευση» could never appear. The storage state now wins, which is

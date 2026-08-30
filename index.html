@@ -555,12 +555,25 @@ let saveTimer=null;
 function save(){
   mem = DB;
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(async ()=>{
-    const s = JSON.stringify(DB);
-    if(storageMode === "app"){ try{ await window.storage.set(KEY, s); }catch(e){} }
-    if(storageMode === "local"){ try{ localStorage.setItem(KEY, s); }catch(e){} }
-  }, 250);
+  saveTimer = setTimeout(()=>{ saveTimer = null; writeStore(); }, 250);
 }
+function writeStore(){
+  const s = JSON.stringify(DB);
+  if(storageMode === "app"){ try{ window.storage.set(KEY, s); }catch(e){} }
+  if(storageMode === "local"){ try{ localStorage.setItem(KEY, s); }catch(e){} }
+}
+/* The write is debounced so a run of taps does not serialise the database each
+   time. That leaves a quarter of a second in which a backgrounded tab — which
+   iOS discards without warning — would lose the last thing the judge did, so
+   the pending write is flushed the moment the page is hidden or unloaded.
+   Synchronous on purpose: a hidden page does not get to await anything. */
+function flushStore(){
+  if(!saveTimer) return;
+  clearTimeout(saveTimer); saveTimer = null;
+  writeStore();
+}
+document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState === "hidden") flushStore(); });
+addEventListener("pagehide", flushStore);   /* pagehide fires at the window */
 
 /* ---------- 3. Helpers --------------------------------------------------- */
 const $  = s => document.querySelector(s);
