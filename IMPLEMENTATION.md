@@ -27,6 +27,7 @@ and the printed sheets.
 | 1i Στατιστικά | `vStats()` |
 | 1j Ιστορικό σκύλου | `vDog()` |
 | 1k print | `drawSheet()` (draw list) and `noteSheet()` (blank judge sheet) |
+| — | Εγκατάσταση: `vInstall()`, the QR encoder `QR`, and `qrPoster()` for the printed sheet |
 
 The six screens the designer had not drawn yet — Αγώνες, Στήσιμο, Συμμετοχές, Τερέν & Κριτές,
 Βαθμολόγηση, Μεταφορά — follow the same tokens and the same two registers.
@@ -43,6 +44,26 @@ The six screens the designer had not drawn yet — Αγώνες, Στήσιμο,
 - **Second confirmation on elimination** (Άρθρο 33) and on re-drawing an order that has been sent.
 - **Dictation** uses the Web Speech API where it exists and otherwise points at the keyboard's own
   microphone, which is what works on iOS.
+
+## Εγκατάσταση — QR code and install guide
+
+A fifth destination in the navigation. It shows the address the app is served
+from as a QR code, so the head judge holds up his phone and the next one scans
+it, plus the install route for iPhone, Android and a laptop, and a printable A4
+poster to pin up at the trial.
+
+The code is generated in the page — byte mode, error correction level M,
+versions 1 to 10, about 170 lines. Fetching it from a service would have been
+shorter and would have failed on the one hillside where it matters, and a
+library would have broken the no-dependencies rule the whole build rests on.
+It is verified two ways in the test harness: every code is decoded back with an
+independent decoder (jsqr) and compared to its payload, and the matrices are
+compared module by module against a reference encoder (`qrcode`) — they are
+identical, mask selection included. Neither library ships.
+
+Opened from a web address the app knows its own. Opened from a file there is
+nothing to share, so the club's address is typed once and kept in settings,
+which also means it travels with a backup.
 
 ## Two fixes to the existing build
 
@@ -67,9 +88,12 @@ The six screens the designer had not drawn yet — Αγώνες, Στήσιμο,
   stack with Greek coverage. This matters: a render-blocking stylesheet is a blank screen on a
   hillside with one bar of signal.
 
-## Worth a second opinion
+## Contrast
 
-`--slate` (#6B6A64) on `--stone` (#EFEAE0) is about 4.3:1. It is the canvas's own pairing and all
-primary text is far above 7:1, but secondary text on the field screens — breed, handler, the meta
-line under a dog's name — sits at that ratio and the brief asks for 7:1 on anything that matters.
-Darkening `--slate` to roughly #55544F would clear it without touching the palette's character.
+`--slate` was the canvas's #6B6A64, which is 4.5:1 on `--stone` — under the 7:1 the brief asks for
+on anything that matters, and it carries the breed and handler lines that get read in sunlight. It
+is now **#4C4B46**: 7.3:1 on stone, 8.7:1 on white, 7.8:1 on sand. Primary text on stone is 14.5:1.
+
+`--slate-2` (#9B968C) and `--dim` (#8F8B82) are left as drawn. They are deliberately subordinate —
+third-level labels on the desk screens, and the dimming that marks a finished brace — and dimming
+is doing real work there as a state signal.

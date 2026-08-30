@@ -41,7 +41,11 @@
   --card:#FFFFFF;
   --sand:#F5F1E9;      /* quiet fill inside cards */
   --ink:#171A21;
-  --slate:#6B6A64;     /* secondary text */
+  --slate:#4C4B46;     /* secondary text — darkened from the canvas's #6B6A64,
+                          which was 4.5:1 on --stone. The field screens' breed
+                          and handler lines are read in sunlight, so this holds
+                          7:1 against every surface it sits on: 7.3 on stone,
+                          8.7 on white, 7.8 on sand (brief §7) */
   --slate-2:#9B968C;   /* third-level text */
   --dim:#8F8B82;       /* finished, spent */
   --setter:#8C3A1E;    /* the single accent: what is happening now */
@@ -507,7 +511,7 @@ const FAULTS = ["Συνειδητό ξεσήκωμα","Κουτούλημα","Π
   "Άρνηση πονταρίσματος","Πτώση ρυθμού"];
 const DEFAULT_SMS = `Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}`;
 const DEFAULT_SMS_FOOT = `Η σειρά είναι ενδεικτική (Άρθρο 16). Να είστε στη διάθεση των κριτών.`;
-const DEFAULT_SETTINGS = { sms:DEFAULT_SMS, smsFoot:DEFAULT_SMS_FOOT, smsMode:"full",
+const DEFAULT_SETTINGS = { sms:DEFAULT_SMS, smsFoot:DEFAULT_SMS_FOOT, smsMode:"full", appUrl:"",
   smsJudges:true, points:{...DEFAULT_POINTS},
   avoidOwner:true, avoidKennel:true, seasonLast:true };
 
@@ -793,7 +797,8 @@ let S = {view:"trials", trialId:null, tab:"entries", day:0, judgeFilter:"", dogI
          reveal:null, openBrace:null};
 
 function nav(){
-  const tabs = [["trials","Αγώνες"],["registry","Μητρώο"],["stats","Στατιστικά"],["settings","Ρυθμίσεις"]];
+  const tabs = [["trials","Αγώνες"],["registry","Μητρώο"],["stats","Στατιστικά"],
+                ["install","Εγκατάσταση"],["settings","Ρυθμίσεις"]];
   el("nav").innerHTML = tabs.map(([k,l])=>
     `<button data-nav="${k}" class="${S.view===k||(S.view==="trial"&&k==="trials")?"on":""}">${l}</button>`).join("");
 }
@@ -811,7 +816,8 @@ function warnBar(){
 function render(){
   nav();
   el("warn").innerHTML = warnBar();
-  const v = {trials:vTrials, trial:vTrial, registry:vRegistry, stats:vStats, settings:vSettings, dog:vDog}[S.view];
+  const v = {trials:vTrials, trial:vTrial, registry:vRegistry, stats:vStats,
+             settings:vSettings, dog:vDog, install:vInstall}[S.view];
   el("app").innerHTML = v ? v() : "";
   el("fab").innerHTML = fabFor();
   document.body.toggleAttribute("data-field", isFieldScreen());
@@ -2649,7 +2655,12 @@ window.addEventListener("offline", render);
   DB = await load();
   DB.settings = Object.assign({}, DEFAULT_SETTINGS, DB.settings||{});
   migrate();
-  render();
+  /* the awaited load resumes at a microtask checkpoint, which can land before
+     the later script blocks have parsed — wait for the document so every view
+     function is defined */
+  if(document.readyState === "loading")
+    document.addEventListener("DOMContentLoaded", render, {once:true});
+  else render();
 })();
 </script>
 
@@ -3151,5 +3162,347 @@ function afterDownload(name){
 }
 </script>
 
+<script>
+/* ==========================================================================
+   20. Εγκατάσταση — QR code and install guide
+
+   The head judge stands in a field and someone asks how to get the app. He
+   shows his screen, the other phone scans it, done. That has to work with no
+   signal, so the code is generated here rather than fetched from a service —
+   which also means no dependency, in keeping with the rest of the build.
+
+   Byte mode, error correction level M, versions 1..10 (213 bytes), which is
+   more than any hosting URL needs. ISO/IEC 18004.
+   ========================================================================== */
+const QR = (() => {
+  /* GF(256), primitive polynomial 0x11D */
+  const EXP = new Uint8Array(512), LOG = new Uint8Array(256);
+  for(let i = 0, x = 1; i < 255; i++){ EXP[i] = x; LOG[x] = i; x <<= 1; if(x & 0x100) x ^= 0x11D; }
+  for(let i = 255; i < 512; i++) EXP[i] = EXP[i - 255];
+  const mul = (a, b) => (a && b) ? EXP[LOG[a] + LOG[b]] : 0;
+
+  /* per version, level M: [ec codewords per block, [[blocks, data codewords], …]] */
+  const RS = {
+    1:[10,[[1,16]]],  2:[16,[[1,28]]],  3:[26,[[1,44]]],  4:[18,[[2,32]]],
+    5:[24,[[2,43]]],  6:[16,[[4,27]]],  7:[18,[[4,31]]],  8:[22,[[2,38],[2,39]]],
+    9:[22,[[3,36],[2,37]]], 10:[26,[[4,43],[1,44]]]
+  };
+  const ALIGN = {1:[], 2:[6,18], 3:[6,22], 4:[6,26], 5:[6,30], 6:[6,34],
+                 7:[6,22,38], 8:[6,24,42], 9:[6,26,46], 10:[6,28,50]};
+
+  function genPoly(n){
+    let g = [1];
+    for(let i = 0; i < n; i++){
+      const ng = new Array(g.length + 1).fill(0);
+      for(let j = 0; j < g.length; j++){ ng[j] ^= g[j]; ng[j+1] ^= mul(g[j], EXP[i]); }
+      g = ng;
+    }
+    return g;
+  }
+  function ecc(data, n){
+    const g = genPoly(n), res = new Uint8Array(data.length + n);
+    res.set(data);
+    for(let i = 0; i < data.length; i++){
+      const f = res[i]; if(!f) continue;
+      for(let j = 0; j < g.length; j++) res[i+j] ^= mul(g[j], f);
+    }
+    return res.slice(data.length);
+  }
+  /* BCH for the format (15,5) and version (18,6) strings */
+  function bch(v, poly, len){
+    let d = v << len;
+    const bits = n => { let c = 0; while(n){ c++; n >>= 1; } return c; };
+    while(bits(d) > len) d ^= poly << (bits(d) - bits(poly));
+    return d;
+  }
+
+  const MASKS = [
+    (i,j) => (i + j) % 2 === 0,
+    (i,j) => i % 2 === 0,
+    (i,j) => j % 3 === 0,
+    (i,j) => (i + j) % 3 === 0,
+    (i,j) => (Math.floor(i/2) + Math.floor(j/3)) % 2 === 0,
+    (i,j) => (i*j) % 2 + (i*j) % 3 === 0,
+    (i,j) => ((i*j) % 2 + (i*j) % 3) % 2 === 0,
+    (i,j) => ((i+j) % 2 + (i*j) % 3) % 2 === 0
+  ];
+
+  function penalty(m){
+    const n = m.length; let p = 0;
+    /* rule 1 — runs of five or more */
+    const run = get => {
+      for(let a = 0; a < n; a++){
+        let last = -1, len = 0;
+        for(let b = 0; b < n; b++){
+          const v = get(a, b);
+          if(v === last) len++; else { if(len >= 5) p += 3 + (len - 5); last = v; len = 1; }
+        }
+        if(len >= 5) p += 3 + (len - 5);
+      }
+    };
+    run((a,b) => m[a][b]); run((a,b) => m[b][a]);
+    /* rule 2 — 2×2 blocks of one colour */
+    for(let i = 0; i < n-1; i++) for(let j = 0; j < n-1; j++)
+      if(m[i][j] === m[i][j+1] && m[i][j] === m[i+1][j] && m[i][j] === m[i+1][j+1]) p += 3;
+    /* rule 3 — the finder-like pattern */
+    const P1 = [1,0,1,1,1,0,1,0,0,0,0], P2 = [0,0,0,0,1,0,1,1,1,0,1];
+    const hit = (get, a, b, P) => { for(let k = 0; k < 11; k++) if(get(a, b+k) !== P[k]) return false; return true; };
+    for(let a = 0; a < n; a++) for(let b = 0; b + 11 <= n; b++){
+      if(hit((x,y) => m[x][y], a, b, P1) || hit((x,y) => m[x][y], a, b, P2)) p += 40;
+      if(hit((x,y) => m[y][x], a, b, P1) || hit((x,y) => m[y][x], a, b, P2)) p += 40;
+    }
+    /* rule 4 — deviation from half dark */
+    let dark = 0;
+    for(let i = 0; i < n; i++) for(let j = 0; j < n; j++) dark += m[i][j];
+    p += 10 * Math.floor(Math.abs(dark * 100 / (n*n) - 50) / 5);
+    return p;
+  }
+
+  /* returns a size×size matrix of 0/1 */
+  function build(text){
+    const bytes = new TextEncoder().encode(text);
+    let ver = 0, total = 0;
+    for(let v = 1; v <= 10; v++){
+      total = RS[v][1].reduce((a, [b, d]) => a + b*d, 0);
+      if(bytes.length*8 + 4 + (v < 10 ? 8 : 16) <= total*8){ ver = v; break; }
+    }
+    if(!ver) throw new Error("Η διεύθυνση είναι πολύ μεγάλη για κωδικό QR.");
+
+    /* bit stream: mode, length, payload, terminator, pad */
+    const bits = [];
+    const put = (val, len) => { for(let i = len-1; i >= 0; i--) bits.push((val >> i) & 1); };
+    put(4, 4); put(bytes.length, ver < 10 ? 8 : 16);
+    bytes.forEach(b => put(b, 8));
+    for(let i = 0; i < 4 && bits.length < total*8; i++) bits.push(0);
+    while(bits.length % 8) bits.push(0);
+    const cw = [];
+    for(let i = 0; i < bits.length; i += 8){ let b = 0; for(let j = 0; j < 8; j++) b = (b<<1) | bits[i+j]; cw.push(b); }
+    for(let i = 0; cw.length < total; i++) cw.push(i % 2 ? 0x11 : 0xEC);
+
+    /* split into blocks, add error correction, interleave */
+    const [ecLen, groups] = RS[ver];
+    const blocks = []; let p = 0;
+    groups.forEach(([nb, dl]) => { for(let i = 0; i < nb; i++){
+      const dat = cw.slice(p, p + dl); p += dl; blocks.push({dat, ec: ecc(dat, ecLen)}); } });
+    const out = [];
+    const maxD = Math.max(...blocks.map(b => b.dat.length));
+    for(let i = 0; i < maxD; i++) blocks.forEach(b => { if(i < b.dat.length) out.push(b.dat[i]); });
+    for(let i = 0; i < ecLen; i++) blocks.forEach(b => out.push(b.ec[i]));
+
+    /* function patterns */
+    const size = ver*4 + 17;
+    const m = Array.from({length:size}, () => new Array(size).fill(0));
+    const fn = Array.from({length:size}, () => new Array(size).fill(false));
+    const setFn = (r, c, v) => { m[r][c] = v; fn[r][c] = true; };
+
+    const finder = (r, c) => {
+      for(let dr = -1; dr <= 7; dr++) for(let dc = -1; dc <= 7; dc++){
+        const rr = r + dr, cc = c + dc;
+        if(rr < 0 || cc < 0 || rr >= size || cc >= size) continue;
+        const ring = (dr >= 0 && dr <= 6 && (dc === 0 || dc === 6))
+                  || (dc >= 0 && dc <= 6 && (dr === 0 || dr === 6));
+        const core = dr >= 2 && dr <= 4 && dc >= 2 && dc <= 4;
+        setFn(rr, cc, (ring || core) ? 1 : 0);
+      }
+    };
+    finder(0, 0); finder(0, size-7); finder(size-7, 0);
+    for(let i = 8; i < size-8; i++){ setFn(6, i, i % 2 === 0 ? 1 : 0); setFn(i, 6, i % 2 === 0 ? 1 : 0); }
+    for(const r of ALIGN[ver]) for(const c of ALIGN[ver]){
+      if((r === 6 && c === 6) || (r === 6 && c === size-7) || (r === size-7 && c === 6)) continue;
+      for(let dr = -2; dr <= 2; dr++) for(let dc = -2; dc <= 2; dc++)
+        setFn(r+dr, c+dc, Math.max(Math.abs(dr), Math.abs(dc)) === 1 ? 0 : 1);
+    }
+    /* Reserve exactly the modules the format string occupies — the two copies
+       run down column 8 and along row 8, skipping the timing lines. */
+    const fmtCells = [];
+    for(let i = 0; i < 15; i++){
+      fmtCells.push(i < 6 ? [i, 8] : i === 6 ? [7, 8] : i === 7 ? [8, 8]
+                  : i === 8 ? [8, 7] : [8, 14 - i]);
+      fmtCells.push(i < 8 ? [8, size-1-i] : [size-15+i, 8]);
+    }
+    fmtCells.forEach(([r, c]) => { if(!fn[r][c]) setFn(r, c, 0); });
+    setFn(size-8, 8, 1);                                   /* the dark module */
+    if(ver >= 7){
+      const vi = (ver << 12) | bch(ver, 0x1F25, 12);
+      for(let i = 0; i < 18; i++){
+        const b = (vi >> i) & 1, r = Math.floor(i/3), c = size - 11 + i % 3;
+        setFn(r, c, b); setFn(c, r, b);
+      }
+    }
+
+    /* data, in the zigzag, skipping the vertical timing column */
+    let dir = -1, row = size - 1, idx = 0;
+    for(let col = size - 1; col > 0; col -= 2){
+      if(col === 6) col--;
+      for(;;){
+        for(let k = 0; k < 2; k++){
+          const cc = col - k;
+          if(!fn[row][cc]){
+            let bit = 0;
+            if(idx < out.length*8){ bit = (out[idx >> 3] >> (7 - (idx & 7))) & 1; idx++; }
+            m[row][cc] = bit;
+          }
+        }
+        row += dir;
+        if(row < 0 || row >= size){ row -= dir; dir = -dir; break; }
+      }
+    }
+
+    /* pick the mask that scores lowest, then write its format string */
+    let best = null;
+    for(let mask = 0; mask < 8; mask++){
+      const t = m.map(r => r.slice());
+      for(let i = 0; i < size; i++) for(let j = 0; j < size; j++)
+        if(!fn[i][j] && MASKS[mask](i, j)) t[i][j] ^= 1;
+      const fmt = ((0x00 << 3 | mask) << 10 | bch((0x00 << 3 | mask), 0x537, 10)) ^ 0x5412;
+      for(let i = 0; i < 15; i++){
+        const b = (fmt >> i) & 1;
+        const [r1, c1] = fmtCells[i*2], [r2, c2] = fmtCells[i*2 + 1];
+        t[r1][c1] = b; t[r2][c2] = b;
+      }
+      const score = penalty(t);
+      if(!best || score < best.score) best = {score, m: t};
+    }
+    return best.m;
+  }
+
+  /* SVG, because this gets printed as well as shown on a screen */
+  function svg(text, px, quiet){
+    const m = build(text), n = m.length, q = quiet == null ? 4 : quiet;
+    const total = n + q*2, s = (px || 240) / total;
+    let d = "";
+    for(let i = 0; i < n; i++) for(let j = 0; j < n; j++)
+      if(m[i][j]) d += `M${((j+q)*s).toFixed(2)} ${((i+q)*s).toFixed(2)}h${s.toFixed(2)}v${s.toFixed(2)}h-${s.toFixed(2)}z`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${px||240}" height="${px||240}"
+      viewBox="0 0 ${px||240} ${px||240}" role="img" aria-label="Κωδικός QR για τη διεύθυνση της εφαρμογής">
+      <rect width="100%" height="100%" fill="#fff"/><path d="${d}" fill="#000"/></svg>`;
+  }
+  return {build, svg};
+})();
+
+/* ---------- the address the app lives at ----------
+   Opened from a web address it knows its own; opened from a file there is
+   nothing to share, so the club's address is typed once and kept. */
+function appUrl(){
+  if(location.protocol.startsWith("http")) return location.origin + location.pathname.replace(/index\.html$/, "");
+  return (DB.settings.appUrl || "").trim();
+}
+
+function vInstall(){
+  const url = appUrl();
+  const hosted = location.protocol.startsWith("http");
+  let qr = "";
+  if(url){
+    try{ qr = QR.svg(url, 260); }
+    catch(e){ qr = `<div class="err" style="margin:0">${esc(e.message)}</div>`; }
+  }
+  return `
+  <div class="eyebrow">Κ.Ο.Α.Δ.</div><h1>Εγκατάσταση στο τηλέφωνο</h1>
+  <p class="muted" style="max-width:640px">Η εφαρμογή δεν κατεβαίνει από κατάστημα. Ανοίγει σε μια
+    διεύθυνση και προστίθεται στην αρχική οθόνη. Μετά την πρώτη φορά δουλεύει χωρίς σήμα, που είναι
+    και το ζητούμενο στο τερέν.</p>
+
+  ${url ? `<div class="card" style="display:flex;gap:24px;flex-wrap:wrap;align-items:center">
+      <div style="background:#fff;padding:10px;border:1px solid var(--line);border-radius:var(--r);flex:none">${qr}</div>
+      <div style="flex:1;min-width:240px">
+        <div class="eyebrow">Σαρώστε με την κάμερα</div>
+        <div class="fingerprint" style="word-break:break-all;font-size:16px">${esc(url)}</div>
+        <div class="row tight" style="margin-top:14px">
+          <button class="b-act" data-act="shareApp">Κοινή χρήση συνδέσμου</button>
+          <button data-act="copyApp">Αντιγραφή</button>
+          <button data-act="printQr">Εκτύπωση αφίσας</button>
+        </div>
+      </div>
+    </div>`
+  : `<div class="err"><b>Η εφαρμογή άνοιξε από αρχείο, όχι από διεύθυνση.</b>
+      Δεν υπάρχει σύνδεσμος για κοινή χρήση και ο περιηγητής δεν αποθηκεύει τίποτε.
+      Γράψτε τη διεύθυνση του ομίλου παρακάτω για να φτιαχτεί ο κωδικός QR.</div>`}
+
+  <div class="card">
+    <div class="eyebrow">Διεύθυνση του ομίλου</div>
+    <div class="row" style="margin-top:8px">
+      <div class="grow"><input id="appUrlIn" placeholder="https://…" value="${esc(DB.settings.appUrl||"")}"></div>
+      <button class="b-pri" data-act="saveAppUrl">Αποθήκευση</button>
+    </div>
+    <p class="tiny" style="margin-top:10px">${hosted
+      ? "Η εφαρμογή τρέχει ήδη σε διεύθυνση και τη χρησιμοποιεί. Το πεδίο χρησιμεύει μόνο αν θέλετε να μοιράζεστε άλλη."
+      : "Χωρίς αυτή, η εφαρμογή δεν ξέρει πού βρίσκεται."}</p>
+  </div>
+
+  <div class="split">
+    <div class="card">
+      <div class="eyebrow">iPhone και iPad</div>
+      <p class="tiny">Πρέπει να είναι Safari, όχι Chrome.</p>
+      <ol class="tiny" style="padding-left:20px;line-height:1.9">
+        <li>Ανοίξτε τη διεύθυνση στο Safari.</li>
+        <li>Πατήστε το κουμπί Κοινή χρήση, κάτω στη μέση.</li>
+        <li>«Πρόσθεση στην Οθόνη Αφετηρίας».</li>
+        <li>Πρόσθεση.</li>
+      </ol>
+    </div>
+    <div class="card">
+      <div class="eyebrow">Android</div>
+      <p class="tiny">Chrome.</p>
+      <ol class="tiny" style="padding-left:20px;line-height:1.9">
+        <li>Ανοίξτε τη διεύθυνση στο Chrome.</li>
+        <li>Μενού ⋮, πάνω δεξιά.</li>
+        <li>«Εγκατάσταση εφαρμογής».</li>
+      </ol>
+    </div>
+    <div class="card">
+      <div class="eyebrow">Υπολογιστής</div>
+      <ol class="tiny" style="padding-left:20px;line-height:1.9">
+        <li>Chrome ή Edge στη διεύθυνση.</li>
+        <li>Εικονίδιο εγκατάστασης στη γραμμή διευθύνσεων.</li>
+        <li>Ή απλώς σελιδοδείκτης· ο υπολογιστής σπάνια μένει χωρίς σήμα.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="note">Κάθε συσκευή κρατά τα δικά της δεδομένα. Η εγκατάσταση δίνει την εφαρμογή,
+    όχι τους αγώνες — αυτοί ταξιδεύουν με τη Μεταφορά (Ρυθμίσεις).</div>`;
+}
+
+/* the poster: badge, address, QR big enough to scan from a step back */
+function qrPoster(){
+  const url = appUrl();
+  return `<div class="sheet" style="text-align:center">
+    <img src="${BADGE}" alt="" style="width:26mm;height:26mm;border-radius:50%;
+      filter:grayscale(1) contrast(1.2);margin:6mm auto 0;display:block">
+    <div style="font:800 14pt/1.3 var(--f-d);letter-spacing:.08em;margin-top:5mm">
+      ΚΥΠΡΙΑΚΟΣ ΟΜΙΛΟΣ ΑΓΓΛΙΚΩΝ ΔΕΙΚΤΩΝ</div>
+    <div style="font:400 11pt/1.4 var(--f-b);margin-top:2mm">Διαχείριση Αγώνων · σαρώστε για εγκατάσταση</div>
+    <div style="margin:8mm auto 0;width:92mm">${QR.svg(url, 348)}</div>
+    <div style="font:400 10pt/1.4 var(--f-b);margin-top:5mm;word-break:break-all">${esc(url)}</div>
+    <div style="font:400 9.5pt/1.6 var(--f-b);margin-top:6mm;text-align:left;
+      max-width:120mm;margin-left:auto;margin-right:auto">
+      <b>iPhone:</b> Safari → Κοινή χρήση → Πρόσθεση στην Οθόνη Αφετηρίας.<br>
+      <b>Android:</b> Chrome → μενού ⋮ → Εγκατάσταση εφαρμογής.<br>
+      Μετά την πρώτη φορά λειτουργεί χωρίς σήμα.
+    </div>
+  </div>`;
+}
+
+Object.assign(ACT, {
+  saveAppUrl: ()=>{
+    let v = el("appUrlIn").value.trim();
+    if(v && !/^https?:\/\//i.test(v)) v = "https://" + v;
+    DB.settings.appUrl = v; save(); render();
+    toast(v ? "Η διεύθυνση αποθηκεύτηκε" : "Η διεύθυνση διαγράφηκε");
+  },
+  shareApp: ()=> shareOrCopy(
+    "Κ.Ο.Α.Δ. — Διαχείριση Αγώνων\n" + appUrl()
+    + "\n\nΑνοίξτε τον σύνδεσμο και προσθέστε την εφαρμογή στην αρχική οθόνη.",
+    "Κ.Ο.Α.Δ. — Διαχείριση Αγώνων"),
+  copyApp: async ()=>{
+    try{ await navigator.clipboard.writeText(appUrl()); toast("Ο σύνδεσμος αντιγράφηκε"); }
+    catch(e){ alert(appUrl()); }
+  },
+  printQr: ()=>{
+    if(!appUrl()) return toast("Γράψτε πρώτα τη διεύθυνση του ομίλου");
+    printSheets(qrPoster());
+  }
+});
+</script>
 </body>
 </html>
