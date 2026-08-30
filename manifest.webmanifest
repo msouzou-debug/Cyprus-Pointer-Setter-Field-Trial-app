@@ -1,0 +1,19 @@
+{
+  "name": "Κ.Ο.Α.Δ. — Διαχείριση Αγώνων",
+  "short_name": "Κ.Ο.Α.Δ.",
+  "lang": "el",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#EFEAE0",
+  "theme_color": "#1E2B4D",
+  "icons": [
+    {
+      "src": "./icon.jpg",
+      "sizes": "224x224",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ]
+}

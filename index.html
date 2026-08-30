@@ -1,0 +1,3155 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1E2B4D">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Κ.Ο.Α.Δ.">
+<meta name="format-detection" content="telephone=no">
+<link rel="apple-touch-icon" href="./icon.jpg">
+<link rel="icon" href="./icon.jpg">
+<link rel="manifest" href="./manifest.webmanifest">
+<title>Κ.Ο.Α.Δ. — Διαχείριση Αγώνων</title>
+<!-- Commissioner and Source Sans 3 both carry full Greek. They are an
+     enhancement, never a dependency. Loaded through media="print" so the
+     request never blocks the first paint: on a hillside with one bar of signal
+     the app must draw immediately and pick the faces up if they arrive. The
+     service worker keeps them after the first visit; with no network at all
+     the type falls back to a system stack with Greek coverage and works
+     through scale and weight instead. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" media="print" onload="this.media='all'"
+  href="https://fonts.googleapis.com/css2?family=Commissioner:wght@300;400;600;800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+/* ==========================================================================
+   Κ.Ο.Α.Δ. — design tokens.
+   Two registers on one set of tokens: field mode is large, high-contrast and
+   thumb-driven; desk mode is the same system at a tighter density. Field mode
+   sets the floor — nothing below 15px, no tap target under 48px — and the
+   laptop inherits from it, never the other way round.
+   ========================================================================== */
+:root{
+  /* colour — taken from the badge and the ground these dogs work */
+  --navy:#1E2B4D;      /* header, brand surfaces */
+  --navy-d:#141E36;    /* navigation */
+  --navy-l:#E6E9F0;    /* navy chip fill */
+  --stone:#EFEAE0;     /* page; limestone, and it reads in sunlight */
+  --card:#FFFFFF;
+  --sand:#F5F1E9;      /* quiet fill inside cards */
+  --ink:#171A21;
+  --slate:#6B6A64;     /* secondary text */
+  --slate-2:#9B968C;   /* third-level text */
+  --dim:#8F8B82;       /* finished, spent */
+  --setter:#8C3A1E;    /* the single accent: what is happening now */
+  --stubble:#C8A24A;   /* warnings, οίστρος, pending SMS */
+  --stubble-bg:#F3E4BE;
+  --stubble-ink:#5E4813;
+  --stubble-soft:#FBF4E3;
+  --bad:#B3261E;       /* elimination, data loss */
+  --bad-bg:#FDF3F2;
+  --bad-line:#E0BEBA;
+  --ok:#4A7C3F;        /* sent, paid */
+  --ok-bg:#EDF3EB;
+  --ok-ink:#2F5427;
+  --line:#D9D3C7;      /* hairline */
+  --line-s:#C9C2B4;    /* card border */
+  --line-f:#E4DED2;    /* faintest rule */
+
+  /* type — Greek coverage is mandatory, so every stack ends in a system face
+     that has it. With no font files the type still works through scale and
+     weight; that is the offline fallback the brief asks for. */
+  --f-d:"Commissioner","Noto Sans","Segoe UI",Roboto,system-ui,sans-serif;
+  --f-b:"Source Sans 3","Noto Sans","Segoe UI",Roboto,system-ui,sans-serif;
+  --f-m:ui-monospace,Menlo,Consolas,"DejaVu Sans Mono",monospace;
+
+  /* rhythm 4 · 8 · 12 · 16 · 24 · 32 · 48 */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px;
+  --r-chip:2px; --r:6px; --r-pill:999px;
+  --tap:48px;          /* cold hands, gloves */
+  font-synthesis-weight:none;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--stone); color:var(--ink);
+  -webkit-text-size-adjust:100%; -webkit-font-smoothing:antialiased;
+  font:400 17px/1.5 var(--f-b);
+  padding-bottom:var(--s5);
+}
+body[data-field]{
+  padding-bottom:calc(96px + env(safe-area-inset-bottom));
+}
+h1,h2,h3{margin:0 0 .4em;font-family:var(--f-d);letter-spacing:-.01em}
+h1{font:600 28px/1.15 var(--f-d)}
+h2{font:600 22px/1.2 var(--f-d)}
+h3{font:600 19px/1.25 var(--f-d)}
+p{margin:0 0 .7em}
+a{color:var(--setter)}
+a:hover{color:#6E2C15}
+.num,.tnum,table,input[type=number]{font-variant-numeric:tabular-nums}
+
+/* an eyebrow: small caps in the accent, the canvas uses it above every title */
+.eyebrow{font:600 12px/1 var(--f-b);letter-spacing:.14em;color:var(--setter);
+  text-transform:uppercase;margin-bottom:var(--s2)}
+
+/* ---------- header ---------- */
+header{background:var(--navy);color:#fff;
+  padding:calc(10px + env(safe-area-inset-top)) var(--s4) 10px;
+  display:flex;gap:10px;align-items:center;position:sticky;top:0;z-index:40}
+header img{width:40px;height:40px;border-radius:50%;flex:0 0 auto;background:#fff2;object-fit:cover}
+.wm{line-height:1.15;min-width:0}
+.wm b{display:block;font:800 13px/1.1 var(--f-d);letter-spacing:.14em}
+.wm span{display:block;font:400 12px/1.3 var(--f-b);letter-spacing:.04em;color:#ffffffb0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.offline{margin-left:auto;font:600 12px/1 var(--f-b);letter-spacing:.06em;
+  border:1px solid #ffffff59;border-radius:var(--r-chip);padding:6px 8px;white-space:nowrap}
+.offline.warn{background:var(--bad);border-color:var(--bad);color:#fff}
+
+/* ---------- nav ---------- */
+nav{display:flex;overflow-x:auto;background:var(--navy-d);
+  position:sticky;top:calc(60px + env(safe-area-inset-top));z-index:39;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{background:none;border:0;color:#ffffff8c;font:400 16px/1 var(--f-b);
+  padding:14px 16px;min-height:var(--tap);white-space:nowrap;
+  border-bottom:3px solid transparent;cursor:pointer}
+nav button.on{color:#fff;font-weight:600;border-bottom-color:var(--setter)}
+
+main{padding:var(--s4);max-width:1240px;margin:0 auto}
+
+/* ---------- primitives ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:var(--s4);margin-bottom:var(--s3)}
+.card.quiet{background:var(--sand)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row.tight{gap:6px}
+.grow{flex:1 1 200px;min-width:0}
+label{display:block;font:400 15px/1.3 var(--f-b);color:var(--slate);margin:0 0 5px}
+input,select,textarea{width:100%;font:400 17px/1.3 var(--f-b);color:var(--ink);background:#fff;
+  border:1px solid var(--line-s);border-radius:var(--r);padding:12px;min-height:var(--tap)}
+textarea{min-height:92px;resize:vertical;line-height:1.5}
+input:focus,select:focus,textarea:focus,button:focus-visible,[data-act]:focus-visible{
+  outline:3px solid #1E2B4D66;outline-offset:1px}
+button{font:600 17px/1 var(--f-b);border-radius:var(--r);border:1px solid var(--line-s);
+  background:#fff;color:var(--ink);padding:14px 16px;min-height:var(--tap);cursor:pointer}
+button:active{transform:translateY(1px)}
+.b-pri{background:var(--navy);border-color:var(--navy);color:#fff}
+.b-act{background:var(--setter);border-color:var(--setter);color:#fff;font-family:var(--f-d);font-weight:800}
+.b-sm{min-height:40px;padding:9px 12px;font-size:15px}
+.b-warn{color:var(--bad);border-color:var(--bad-line);background:var(--bad-bg)}
+.b-full{width:100%}
+.muted{color:var(--slate);font-size:15px}
+.tiny{color:var(--slate);font-size:15px;line-height:1.45}
+code{font:400 15px/1.4 var(--f-m)}
+
+/* chips: 2px corners, quiet by default. One accent only — .chip.a is the
+   running brace and the primary action, and nothing else. */
+.chip{display:inline-block;font:600 13px/1 var(--f-b);letter-spacing:.06em;
+  padding:6px 8px;border-radius:var(--r-chip);background:var(--line-f);color:var(--slate)}
+.chip.g{background:var(--ok-bg);color:var(--ok-ink);border:1px solid var(--ok)}
+.chip.r{background:var(--bad-bg);color:var(--bad);border:1px solid var(--bad-line)}
+.chip.y{background:var(--stubble-bg);color:var(--stubble-ink);border:1px solid var(--stubble)}
+.chip.n{background:var(--navy-l);color:var(--navy)}
+.chip.o{background:transparent;color:var(--navy);border:1px solid var(--navy)}
+.chip.a{background:var(--setter);color:#fff}
+.chip.dash{background:transparent;color:var(--navy);border:1px dashed var(--navy)}
+
+table{width:100%;border-collapse:collapse;font-size:16px}
+th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line-f)}
+td.num{white-space:nowrap}
+th{font:600 13px/1 var(--f-b);letter-spacing:.06em;color:var(--slate);text-transform:uppercase;
+  background:var(--sand);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:1}
+tbody tr:last-child td{border-bottom:0}
+.scroll{overflow:auto;max-height:70vh;-webkit-overflow-scrolling:touch}
+.split{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--s3)}
+
+/* notices: an error states the fact and the fix, so it needs room to say both */
+.note{background:var(--stubble-soft);border:1px solid var(--stubble);border-radius:var(--r);
+  padding:12px 14px;font-size:16px;line-height:1.5;color:var(--stubble-ink);margin-bottom:var(--s3)}
+.err{background:var(--bad-bg);border:1px solid var(--bad-line);border-radius:var(--r);
+  padding:12px 14px;font-size:16px;line-height:1.5;color:var(--ink);margin-bottom:var(--s3)}
+.err b{color:var(--bad)}
+.empty{padding:var(--s6) var(--s4);color:var(--slate);font-size:17px;line-height:1.55;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);margin-bottom:var(--s3)}
+.empty h2{color:var(--ink);margin-bottom:6px}
+hr{border:0;border-top:1px solid var(--line);margin:var(--s4) 0}
+
+/* the storage bar. It cannot be dismissed and it does not scroll away —
+   losing a day of results is worse than an ugly bar. */
+#warn:not(:empty){position:sticky;top:calc(112px + env(safe-area-inset-top));z-index:38}
+.nostore{background:var(--bad);color:#fff;padding:12px var(--s4);
+  display:flex;gap:10px;align-items:flex-start;font:400 16px/1.45 var(--f-b)}
+.nostore b{font-weight:600}
+.nostore .bang{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid #fff;
+  font:700 14px/18px var(--f-b);text-align:center}
+
+/* ---------- the brace card (signature) ----------
+   Two dogs side by side, split down the middle, the number very large across
+   the top. Left half is the dog drawn first — right of the jury — and the card
+   says so, because handlers argue about it. */
+.brace{background:var(--card);border:1px solid var(--line-s);border-radius:var(--r);
+  margin-bottom:var(--s3);overflow:hidden}
+.bhead{display:flex;align-items:center;gap:10px;padding:12px var(--s4) 8px;flex-wrap:wrap}
+.bno{font:800 48px/1 var(--f-d);letter-spacing:-.03em;color:var(--ink);
+  font-variant-numeric:tabular-nums;flex:none}
+.bstate{font:600 13px/1 var(--f-b);letter-spacing:.1em;color:var(--slate);margin-left:auto}
+.bhead .b-sm{margin-left:auto}
+.bhead .chip + .b-sm{margin-left:0}
+.bbody{display:grid;grid-template-columns:1fr 1px 1fr}
+.vline{background:var(--line-s)}
+.dog{padding:14px var(--s3) 16px;min-width:0}
+/* "ΑΡΙΣΤΕΡΑ ΤΗΣ ΕΠΙΤΡΟΠΗΣ" has to survive half of a 402px phone without
+   wrapping or spilling, so it is tracked tight and clipped rather than folded */
+.dog .pos{font:600 10.5px/1.3 var(--f-b);letter-spacing:.06em;color:var(--slate);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dog.a .pos{color:var(--setter)}
+.dog .nm{font:600 24px/1.15 var(--f-d);color:var(--ink);margin:8px 0 0;overflow-wrap:anywhere}
+.dog .mt{font:400 15px/1.4 var(--f-b);color:var(--slate);margin-top:4px}
+.bfoot{border-top:1px solid var(--line-f);padding:10px var(--s4);
+  font:400 15px/1.4 var(--f-b);color:var(--slate)}
+
+/* running — filled setter, unmistakable from arm's length */
+.brace.run{background:var(--setter);border-color:var(--setter)}
+.brace.run .bno,.brace.run .bstate,.brace.run .dog .nm{color:#fff}
+.brace.run .dog .pos{color:#ffffffbf}
+.brace.run .dog .mt{color:#ffffffd1}
+.brace.run .bbody,.brace.run .bfoot{border-top-color:#ffffff47}
+.brace.run .vline{background:#ffffff59}
+.brace.run .b-sm{background:#fff;border-color:#fff;color:var(--setter)}
+.brace.run .chip{background:#ffffff2e;color:#fff}
+.live{display:inline-flex;align-items:center;gap:8px;color:#fff;
+  font:600 13px/1 var(--f-b);letter-spacing:.1em;margin-left:auto}
+.live i{width:9px;height:9px;border-radius:50%;background:#fff;animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.clock{font:600 20px/1 var(--f-m);color:#fff;font-variant-numeric:tabular-nums}
+.clock.big{font-size:44px}
+.clock.over{color:var(--stubble-bg)}
+
+/* finished — dimmed, with the qualification chip */
+.brace.done{background:var(--sand);border-color:var(--line)}
+.brace.done .bno{color:var(--dim)}
+.brace.done .dog .nm{color:var(--slate)}
+.brace.done .dog .pos,.brace.done .dog .mt{color:var(--slate-2)}
+.brace.done .bstate{color:var(--dim)}
+
+/* solo — one half struck through, the word ΜΟΝΟΣ, and the trailer action */
+.dog.none{background:repeating-linear-gradient(135deg,var(--sand) 0 8px,var(--stone) 8px 16px)}
+.dog.none .pos{text-decoration:line-through;color:var(--slate-2)}
+.dog.none .nm{text-decoration:line-through;color:var(--dim)}
+.brace.recall{border-color:var(--stubble)}
+
+/* collapsed brace in the live terrain: a number and two names, nothing else */
+.brief{display:flex;align-items:center;gap:14px;background:var(--card);
+  border:1px solid var(--line-s);border-radius:var(--r);padding:12px 14px;margin-bottom:var(--s2);
+  width:100%;text-align:left;min-height:var(--tap)}
+.brief.done{background:var(--sand);border-color:var(--line)}
+.brief .n{font:800 30px/1 var(--f-d);color:var(--ink);min-width:32px;
+  font-variant-numeric:tabular-nums;flex:none}
+.brief.done .n{color:var(--dim)}
+.brief .who{flex:1;min-width:0}
+.brief .who b{display:block;font:600 19px/1.2 var(--f-d);color:var(--ink);overflow-wrap:anywhere}
+.brief.done .who b{color:var(--slate)}
+.brief .who span{display:block;font:400 15px/1.3 var(--f-b);color:var(--slate);margin-top:2px}
+
+/* ---------- draw ---------- */
+.seed{font:600 17px/1 var(--f-m);letter-spacing:.02em}
+.fingerprint{font:400 15px/1.6 var(--f-m);color:var(--slate);font-variant-numeric:tabular-nums}
+.reveal{animation:braceIn .22s ease-out both}
+@keyframes braceIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){
+  .reveal{animation:none}
+  .live i{animation:none}
+}
+/* re-draw is deliberately uncomfortable: it throws away a drawn order */
+.b-redraw{background:var(--stubble-soft);border:1px solid var(--stubble);color:var(--stubble-ink);width:100%}
+
+/* ---------- notes (field) ---------- */
+.scale{display:flex;gap:6px}
+.scale .tog{flex:1;padding:0}
+.tog{display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid var(--line-s);background:#fff;color:var(--ink);border-radius:var(--r);
+  padding:0 14px;min-height:var(--tap);font:600 17px/1 var(--f-b);cursor:pointer}
+.tog.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.tog.red{border-color:var(--bad-line);background:#fff;font-weight:400;font-size:15px;
+  padding:0 10px;min-height:44px}
+/* a settings group, not a row of primary actions: same system, quieter weight */
+.tog.opt{min-height:44px;font-size:15px;padding:0 12px}
+.tog.opt.on{background:var(--navy-l);color:var(--navy);border-color:var(--navy)}
+.tog.opt.on::before{content:"✓ ";font-weight:700}
+.tog.red.on{background:var(--bad);border-color:var(--bad);color:#fff}
+.badge-list{display:flex;flex-wrap:wrap;gap:6px}
+.step{display:flex;align-items:center;gap:10px}
+.step button{width:52px;height:52px;min-height:52px;padding:0;font:600 24px/1 var(--f-b);
+  border-color:var(--navy);color:var(--navy)}
+.step .val{min-width:30px;text-align:center;font:800 34px/1 var(--f-d);
+  font-variant-numeric:tabular-nums}
+.danger-zone{background:var(--bad-bg);border:2px solid var(--bad);border-radius:var(--r);
+  padding:var(--s4);margin-bottom:var(--s3)}
+.danger-zone .eyebrow{color:var(--bad)}
+.saved{font:400 15px/1 var(--f-b);color:var(--slate);margin-left:auto}
+
+/* ---------- SMS ---------- */
+.sms-row{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:var(--s4);margin-bottom:10px}
+.sms-row.sent{border-color:var(--ok)}
+.seg{flex:none;font:600 15px/1 var(--f-b);border-radius:var(--r-chip);padding:7px 9px;
+  background:var(--line-f);color:var(--slate);font-variant-numeric:tabular-nums}
+.seg.hot{background:var(--stubble-bg);color:var(--stubble-ink)}
+.preview{white-space:pre-wrap;font:400 15px/1.5 var(--f-b);color:var(--slate);
+  background:var(--sand);border-radius:var(--r);padding:10px 12px;margin:10px 0;
+  max-height:180px;overflow:auto}
+.total{font:800 28px/1 var(--f-d);font-variant-numeric:tabular-nums}
+.bar{height:8px;background:#0000000d;border-radius:var(--r-pill);overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;background:var(--ok)}
+
+/* ---------- stats matrix ----------
+   The season at a glance. Rotated column heads, tabular figures, first column
+   pinned so a dog's name stays visible while the row is read. */
+.matrix{font-size:16px;border-collapse:separate;border-spacing:0}
+.matrix th,.matrix td{border-bottom:1px solid var(--line-f);white-space:nowrap}
+.matrix th.v{height:178px;vertical-align:bottom;padding:0;background:var(--sand);
+  border-bottom:1px solid var(--line);position:relative;min-width:74px;width:74px}
+.matrix th.v span{position:absolute;bottom:10px;left:14px;transform:rotate(-60deg);
+  transform-origin:left bottom;white-space:nowrap;font:600 14px/1 var(--f-b);
+  color:var(--ink);text-transform:none;letter-spacing:0}
+.matrix th.first{position:sticky;left:0;z-index:3;min-width:220px;text-align:left;
+  vertical-align:bottom;height:178px}
+.matrix td.first{position:sticky;left:0;background:var(--card);z-index:2;
+  border-right:1px solid var(--line);min-width:220px}
+.matrix td.first b{font:600 16px/1.2 var(--f-b)}
+.matrix td.first span{display:block;font:400 13px/1.2 var(--f-b);color:var(--slate-2);margin-top:2px}
+.matrix td.n{text-align:center;font-variant-numeric:tabular-nums}
+.matrix td.z{color:var(--slate-2)}
+.matrix .tail{width:104px;min-width:104px;background:none;border:0}
+.matrix td.tot{background:var(--sand);font:800 18px/1.2 var(--f-d);text-align:right;
+  font-variant-numeric:tabular-nums}
+.matrix tr.sum td{background:var(--stone);font-weight:600}
+.matrix tr.sum td.tot{background:var(--navy);color:#fff}
+
+/* ---------- dog history ---------- */
+.dog-hd{background:var(--navy);color:#fff;border-radius:var(--r);
+  padding:var(--s5) var(--s5) var(--s4);margin-bottom:var(--s4);
+  display:flex;gap:var(--s4);align-items:flex-start;flex-wrap:wrap}
+.dog-hd img{width:56px;height:56px;border-radius:50%;flex:none;object-fit:cover}
+.dog-hd .eyebrow{color:#ffffffa6}
+.dog-hd h1{color:#fff;margin:0}
+.dog-hd .meta{font:400 16px/1.5 var(--f-b);color:#ffffffbf;margin-top:6px}
+.dog-hd .score{margin-left:auto;text-align:right}
+.dog-hd .score b{display:block;font:800 44px/1 var(--f-d);font-variant-numeric:tabular-nums}
+.dog-hd .score span{font:400 15px/1.2 var(--f-b);color:#ffffffb3}
+.tl{display:flex;gap:var(--s4);padding-bottom:var(--s5)}
+.tl .when{width:104px;flex:none;text-align:right}
+.tl .when b{font:600 16px/1.2 var(--f-b);font-variant-numeric:tabular-nums}
+.tl .when span{display:block;font:400 14px/1.3 var(--f-b);color:var(--slate-2);margin-top:3px}
+.tl .rail{width:1px;background:var(--line);flex:none;position:relative}
+.tl .rail i{position:absolute;top:5px;left:-4px;width:9px;height:9px;border-radius:50%;
+  background:var(--navy)}
+.tl .what{flex:1;min-width:0}
+.tl .what h3{margin:0}
+.tl .what .meta{font:400 15px/1.5 var(--f-b);color:var(--slate);margin-top:5px}
+.tl .said{border-left:2px solid var(--line-f);padding-left:14px;margin-top:10px;
+  font:400 16px/1.6 var(--f-b)}
+.tl .said cite{display:block;font:400 14px/1.3 var(--f-b);color:var(--slate-2);
+  font-style:normal;margin-top:6px}
+.tl .pts{width:78px;flex:none;text-align:right}
+.tl .pts b{font:800 24px/1 var(--f-d);font-variant-numeric:tabular-nums}
+.tl .pts span{display:block;font:400 13px/1.2 var(--f-b);color:var(--slate-2);margin-top:3px}
+
+/* ---------- import mapping ---------- */
+.map-row{display:flex;align-items:center;gap:var(--s3);padding:11px 0;
+  border-bottom:1px solid var(--line-f)}
+.map-row .from{flex:1;min-width:0}
+.map-row .from b{font:600 16px/1.2 var(--f-b)}
+.map-row .from span{display:block;font:400 14px/1.3 var(--f-b);color:var(--slate-2);margin-top:3px}
+.map-row .to{width:240px;flex:none}
+.map-row .to select{min-height:44px;padding:10px 12px;font-size:16px}
+
+/* ---------- registry sidebar (desk) ---------- */
+.side{display:none}
+.side .item{display:block;width:100%;text-align:left;padding:11px var(--s4);
+  border:0;border-left:3px solid transparent;background:none;border-radius:0;
+  font:400 16px/1 var(--f-b);color:var(--slate);min-height:0}
+.side .item.on{background:#fff;color:var(--ink);font-weight:600;border-left-color:var(--setter)}
+
+/* ---------- misc ---------- */
+body:not([data-field]) .fab{display:none}
+.fab{position:fixed;left:var(--s4);right:var(--s4);bottom:calc(10px + env(safe-area-inset-bottom));
+  z-index:35;display:flex;gap:10px;max-width:1208px;margin:0 auto}
+.fab:empty{display:none}
+.fab button{flex:1;min-height:60px;font-size:19px;box-shadow:0 6px 20px #00000038}
+.fab .b-act{font:800 21px/1 var(--f-d)}
+dialog{border:0;border-radius:var(--r);padding:0;max-width:640px;width:calc(100% - 20px);
+  box-shadow:0 20px 60px #00000059;color:var(--ink);background:var(--card)}
+dialog::backdrop{background:#000000a6}
+.dlg{padding:var(--s4) var(--s4) var(--s5)}
+.dlg h2{margin-bottom:var(--s3)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);
+  bottom:calc(84px + env(safe-area-inset-bottom));background:var(--navy);color:#fff;
+  padding:12px 16px;border-radius:var(--r);font:400 16px/1.3 var(--f-b);z-index:60;
+  box-shadow:0 8px 24px #00000047;max-width:calc(100% - 32px)}
+
+/* ---------- desk mode: same tokens, tighter ---------- */
+@media (min-width:900px){
+  body{font-size:16px}
+  main{padding:var(--s5)}
+  .card{padding:var(--s5)}
+  table{font-size:15px}
+  th,td{padding:10px 14px}
+  .muted,.tiny{font-size:14px}
+  .map-row .from span{font-size:13px}
+  .reg{display:grid;grid-template-columns:210px 1fr;gap:0;
+    background:#fff;border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+  .side{display:block;background:var(--stone);border-right:1px solid var(--line);padding:var(--s5) 0}
+  .reg .main{padding:var(--s5);min-width:0}
+  .reg-tabs{display:none}
+}
+
+/* ---------- print ----------
+   A4 portrait, black and white, legible after photocopying. It will be
+   photocopied. */
+@media print{
+  @page{size:A4 portrait;margin:14mm}
+  header,nav,.fab,.noprint,button,#warn,.toast{display:none!important}
+  body{background:#fff;color:#000;padding:0;font:400 10.5pt/1.35 var(--f-b)}
+  main{max-width:none;padding:0}
+  .card,.brace,.sms-row{break-inside:avoid;border:1px solid #999;box-shadow:none;
+    background:#fff!important;color:#000!important}
+  .print-hd{display:flex!important;gap:10px;align-items:flex-start;
+    border-bottom:2px solid #000;margin-bottom:10px;padding-bottom:8px}
+  .print-hd img{width:44px;height:44px;border-radius:50%;filter:grayscale(1) contrast(1.2)}
+  .print-hd .t{flex:1}
+  .print-hd b{display:block;font:800 11pt/1.3 var(--f-d);letter-spacing:.08em}
+  .print-hd span{display:block;font:400 9.5pt/1.35 var(--f-b);margin-top:2px}
+  .print-hd .pg{font:600 9.5pt/1.3 var(--f-b);text-align:right;white-space:nowrap}
+  /* Any screen may be sent to the printer, so cards stay legible in black and
+     white. The drawn order and the note sheets have their own A4 layouts and
+     do not come through here at all. */
+  .brace,.brief{border:1px solid #666;page-break-inside:avoid;background:#fff!important}
+  .brace.run{background:#fff!important}
+  .brace.run .bno,.brace.run .bstate,.brace.run .dog .nm{color:#000!important}
+  .brace.run .dog .pos,.brace.run .dog .mt{color:#333!important}
+  .live i,.clock{display:none!important}
+  .dog .nm{color:#000!important}
+  .matrix th.v span{color:#000}
+  .empty,.note,.err{border:1px solid #999;background:#fff;color:#000}
+  a{color:#000;text-decoration:none}
+  .print-only{display:block!important}
+}
+.print-hd,.print-only{display:none}
+
+/* ---------- the blank judge note sheet ----------
+   A4 portrait, black on white, boxes big enough to write in with a pen on a
+   knee. It gets photocopied, so nothing here is grey. */
+#sheets{display:none}
+.sheet{padding:0 0 10mm}
+.sheet .fields{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;margin-top:10px}
+.sheet .fld span{font:400 9pt/1 var(--f-b)}
+.sheet .fld .line{border-bottom:1px solid #000;height:22px}
+.sheet .box{border:1px solid #000;height:26px}
+.sheet table{border-collapse:collapse;width:100%;margin-top:6px}
+.sheet th,.sheet td{border:1px solid #666;padding:4px;font:400 9pt/1.2 var(--f-b);
+  text-align:left;background:none;position:static;text-transform:none;letter-spacing:0;color:#000}
+.sheet th{border-color:#000;font-weight:600}
+.sheet .rate{display:flex;gap:5px}
+.sheet .rate i{width:20px;height:20px;border:1px solid #000;font:400 8.5pt/19px var(--f-b);
+  text-align:center;font-style:normal}
+.sheet h4{font:600 9.5pt/1 var(--f-b);margin:12px 0 4px;border-top:1px solid #000;padding-top:8px}
+@media print{
+  body.sheets-only main,body.sheets-only .fab{display:none!important}
+  body.sheets-only #sheets{display:block}
+  .sheet{page-break-after:always}
+  .sheet:last-child{page-break-after:auto}
+}
+</style>
+</head>
+<body>
+<header>
+  <img src="data:image/jpeg;base64,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" alt="Έμβλημα Κ.Ο.Α.Δ.">
+  <div class="wm">
+    <b>Κ.Ο.Α.Δ.</b>
+    <span>Κυπριακός Όμιλος Αγγλικών Δεικτών · 1992</span>
+  </div>
+  <div class="offline" id="net">—</div>
+</header>
+<nav id="nav"></nav>
+<div id="warn"></div>
+<main id="app"></main>
+<div id="sheets"></div>
+<div class="fab" id="fab"></div>
+<dialog id="dlg"><div class="dlg" id="dlgBody"></div></dialog>
+
+<script>
+"use strict";
+/* ==========================================================================
+   Κ.Ο.Α.Δ. — Διαχείριση Αγώνων Κυνηγετικών Ικανοτήτων
+   Single-file offline app. Rules implemented per ΚΑΝΟΝΙΣΜΟΙ Α.Κ.Ι. Κ.Ο.Α.Δ.
+   ========================================================================== */
+
+/* ---------- 1. Reference data ------------------------------------------- */
+const BREEDS = ["Pointer","Αγγλικό Σέττερ","Ιρλανδικό Σέττερ","Σκωτικό Σέττερ"];
+const BREED_GROUP = b => b === "Pointer" ? "POINTER" : "SETTER";
+const TYPES = ["Πρακτικού Κυνηγίου","Έρευνας Κυνηγίου","Μεγάλης Έρευνας","Κλασικός","Derby","Ε.Κ.Ι.","Ε.ΦΥ.Π."];
+const AWARDS = ["-","CACT","RCACT","CACIT","RCACIT"];
+const QUALS = ["-","1ος ΕΞΑΙΡΕΤΟΣ","2ος ΕΞΑΙΡΕΤΟΣ","ΕΞΑΙΡΕΤΟΣ","Τ.Μ.Ε.","1ος ΠΟΛΥ ΚΑΛΟΣ","ΠΟΛΥ ΚΑΛΟΣ","ΚΑΛΟΣ","Π.Φ.Π. (CQN)","ΑΝΕΠΑΡΚΗΣ","ΑΠΟΚΛΕΙΣΜΟΣ"];
+const DEFAULT_POINTS = {
+  "CACIT":14,"RCACIT":13,"CACT":12,"RCACT":11,
+  "1ος ΕΞΑΙΡΕΤΟΣ":10,"2ος ΕΞΑΙΡΕΤΟΣ":9,"ΕΞΑΙΡΕΤΟΣ":8,"Τ.Μ.Ε.":7,
+  "1ος ΠΟΛΥ ΚΑΛΟΣ":6,"ΠΟΛΥ ΚΑΛΟΣ":5,"ΚΑΛΟΣ":4,
+  "Π.Φ.Π. (CQN)":0,"ΑΝΕΠΑΡΚΗΣ":0,"ΑΠΟΚΛΕΙΣΜΟΣ":0,"-":0
+};
+/* Άρθρο 33 — σφάλματα αποκλεισμού */
+const FAULTS = ["Συνειδητό ξεσήκωμα","Κουτούλημα","Προσπέρασμα","Εκτός ελέγχου",
+  "Τρεις λευκές σε διαφορετική κατεύθυνση","Άρνηση συναίνεσης","Κροτοφοβία","Θηραματοφοβία",
+  "Κλαφούνισμα","Ανεπαρκής έρευνα","Παρενόχληση συνδιαγωνιζόμενου","Καταδίωξη επί μακρόν",
+  "Άρνηση πονταρίσματος","Πτώση ρυθμού"];
+const DEFAULT_SMS = `Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}`;
+const DEFAULT_SMS_FOOT = `Η σειρά είναι ενδεικτική (Άρθρο 16). Να είστε στη διάθεση των κριτών.`;
+const DEFAULT_SETTINGS = { sms:DEFAULT_SMS, smsFoot:DEFAULT_SMS_FOOT, smsMode:"full",
+  smsJudges:true, points:{...DEFAULT_POINTS},
+  avoidOwner:true, avoidKennel:true, seasonLast:true };
+
+/* ---------- 2. Storage --------------------------------------------------- */
+/* Safari refuses localStorage on file:// URLs. If the head judge emails himself
+   this file and opens it from the Files app on an iPhone, nothing would be saved
+   and he would not be told. So probe the store on startup and say so loudly. */
+const KEY = "koad_db_v1";
+let DB = null, mem = null, storageMode = "memory";
+
+function blank(){ return {v:1, people:[], judges:[], dogs:[], trials:[],
+  settings:{...DEFAULT_SETTINGS, points:{...DEFAULT_POINTS}} }; }
+
+async function probeStorage(){
+  try{
+    if(window.storage){
+      await window.storage.set("__koad_probe","1");
+      const r = await window.storage.get("__koad_probe");
+      if(r && r.value === "1"){ storageMode = "app"; return; }
+    }
+  }catch(e){}
+  try{
+    localStorage.setItem("__koad_probe","1");
+    if(localStorage.getItem("__koad_probe") === "1"){
+      localStorage.removeItem("__koad_probe"); storageMode = "local"; return;
+    }
+  }catch(e){}
+  storageMode = "memory";
+}
+
+async function load(){
+  if(storageMode === "app"){
+    try{ const r = await window.storage.get(KEY); if(r && r.value) return JSON.parse(r.value); }catch(e){}
+  }
+  if(storageMode === "local"){
+    try{ const s = localStorage.getItem(KEY); if(s) return JSON.parse(s); }catch(e){}
+  }
+  return mem || blank();
+}
+let saveTimer=null;
+function save(){
+  mem = DB;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async ()=>{
+    const s = JSON.stringify(DB);
+    if(storageMode === "app"){ try{ await window.storage.set(KEY, s); }catch(e){} }
+    if(storageMode === "local"){ try{ localStorage.setItem(KEY, s); }catch(e){} }
+  }, 250);
+}
+
+/* ---------- 3. Helpers --------------------------------------------------- */
+const $  = s => document.querySelector(s);
+const uid = () => Math.random().toString(36).slice(2,9) + Date.now().toString(36).slice(-4);
+const esc = s => String(s??"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const el  = id => document.getElementById(id);
+const dogById = id => DB.dogs.find(d=>d.id===id);
+const perById = id => DB.people.find(p=>p.id===id);
+const judById = id => DB.judges.find(j=>j.id===id);
+const trialById = id => DB.trials.find(t=>t.id===id);
+const dogName = id => (dogById(id)||{}).name || "—";
+const perName = id => (perById(id)||{}).name || "—";
+const fmtDate = d => d ? d.split("-").reverse().join("/") : "—";
+const today = () => new Date().toISOString().slice(0,10);
+
+function toast(msg){
+  const n=document.createElement("div");
+  n.className="toast"; n.textContent=msg;
+  document.body.appendChild(n); setTimeout(()=>n.remove(),2200);
+}
+/* the badge, once, so the dog page and the printed sheets can carry it too */
+const BADGE = document.querySelector("header img").getAttribute("src");
+function confirmAct(msg){ return window.confirm(msg); }
+function download(name, mime, content){
+  const b = new Blob([content], {type:mime+";charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(b); a.download = name; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
+}
+function phoneClean(p){ return String(p||"").replace(/[^\d+]/g,""); }
+
+/* seeded PRNG — the draw must be reproducible from its seed */
+function hashStr(s){ let h=2166136261; for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);} return h>>>0; }
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0;
+  let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t;
+  return ((t^t>>>14)>>>0)/4294967296; }; }
+function shuffled(arr, rnd){ const a=arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(rnd()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+/* ---------- 4. Points ---------------------------------------------------- */
+function scoreKey(res){ if(!res) return "-"; return (res.award && res.award!=="-") ? res.award : (res.qual||"-"); }
+function coefficient(t){
+  const brace = t.format === "ΖΕΥΓΗ";
+  const wildRelevant = t.wild && (t.type==="Έρευνας Κυνηγίου" || t.type==="Πρακτικού Κυνηγίου");
+  if(wildRelevant) return brace ? 4 : 3;   // (2+2) / (2+1)
+  return brace ? 2 : 1;
+}
+function pointsFor(t, res){
+  const base = DB.settings.points[scoreKey(res)] ?? 0;
+  return base * coefficient(t);
+}
+
+/* ---------- 5. Draw engine ---------------------------------------------- */
+/* Hard constraints:  H1 same handler never braced · H2 judge never judges his own
+   dog's terrain (Άρθρο 49) · H3 Derby breed group · H4 one run per dog per day   */
+function judgeConflict(terrain, entry, trial){
+  const dog = dogById(entry.dogId) || {};
+  return terrain.judgeIds.some(jid=>{
+    const j = judById(jid); if(!j) return false;
+    return j.personId && (j.personId===entry.handlerId || j.personId===dog.ownerId);
+  });
+}
+function pairConflict(e1, e2, soft){
+  if(e1.handlerId && e1.handlerId===e2.handlerId) return true;          // H1
+  const d1=dogById(e1.dogId)||{}, d2=dogById(e2.dogId)||{};
+  if(soft.avoidOwner  && d1.ownerId && d1.ownerId===d2.ownerId) return true;
+  if(soft.avoidKennel && d1.kennel  && d1.kennel===d2.kennel)   return true;
+  return false;
+}
+
+function runDraw(trial, dayIdx, seedIn, mode){
+  const day = trial.days[dayIdx];
+  const soft = DB.settings;
+  const seed = seedIn || (uid()+Date.now());
+  const rnd  = mulberry32(hashStr(seed));
+  const active = trial.entries.filter(e=>e.status==="ΔΗΛΩΜΕΝΟΣ");
+  const problems = [];
+
+  if(!day.terrains.length) return {error:"Δεν έχουν οριστεί τερέν."};
+  if(!active.length)       return {error:"Δεν υπάρχουν ενεργές συμμετοχές."};
+
+  /* --- allocation to terrains --- */
+  /* only an explicit assignment by the head judge counts as manual; entryIds left
+     behind by a previous draw must not leak into the next one, or the draw stops
+     being reproducible from its seed */
+  const manual = day.terrains.some(t=>t.assigned && t.entryIds && t.entryIds.length);
+  if(!manual) day.terrains.forEach(t=>{ t.entryIds = []; });
+  const alloc  = {}; day.terrains.forEach(t=>alloc[t.id]=[]);
+
+  if(mode==="ΠΕΡΙΣΤΡΟΦΗ" && dayIdx>0 && trial.days[dayIdx-1].draw){
+    const prev = trial.days[dayIdx-1];
+    const n = day.terrains.length;
+    prev.terrains.forEach((pt,i)=>{
+      const target = day.terrains[(i+1)%n];
+      (pt.entryIds||[]).forEach(eid=>{
+        const e = active.find(x=>x.id===eid); if(e) alloc[target.id].push(e);
+      });
+    });
+    // dogs that were not in the previous day fall through to normal allocation
+    const placed = new Set(Object.values(alloc).flat().map(e=>e.id));
+    active.filter(e=>!placed.has(e.id)).forEach(e=>{
+      const t = eligibleTerrain(e); if(t) alloc[t.id].push(e); else problems.push(dogName(e.dogId));
+    });
+  } else if(manual){
+    day.terrains.forEach(t=>{
+      (t.entryIds||[]).forEach(eid=>{
+        const e = active.find(x=>x.id===eid); if(e) alloc[t.id].push(e);
+      });
+    });
+    const placed = new Set(Object.values(alloc).flat().map(e=>e.id));
+    active.filter(e=>!placed.has(e.id)).forEach(e=>{
+      const t = eligibleTerrain(e); if(t) alloc[t.id].push(e); else problems.push(dogName(e.dogId));
+    });
+  } else {
+    shuffled(active, rnd).forEach(e=>{
+      const t = eligibleTerrain(e); if(t) alloc[t.id].push(e); else problems.push(dogName(e.dogId));
+    });
+  }
+
+  function eligibleTerrain(e){
+    const dog = dogById(e.dogId) || {};
+    const ok = day.terrains.filter(t=>{
+      if(t.breedGroup && BREED_GROUP(dog.breed)!==t.breedGroup) return false;  // H3
+      if(judgeConflict(t, e, trial)) return false;                             // H2
+      return true;
+    });
+    if(!ok.length) return null;
+    /* prefer the terrain where this handler has the fewest dogs, then the emptiest
+       terrain — clustering one handler's dogs makes braces impossible to build */
+    const mine = tr => alloc[tr.id].filter(x=>x.handlerId===e.handlerId).length;
+    ok.sort((a,b)=> (mine(a)-mine(b)) || (alloc[a.id].length-alloc[b.id].length));
+    return ok[0];
+  }
+
+  if(problems.length)
+    return {error:"Δεν βρέθηκε κατάλληλο τερέν για: "+problems.join(", ")+
+      ". Ελέγξτε τους κριτές (Άρθρο 49) ή τη φυλή του τερέν."};
+
+  /* --- pairing inside each terrain --- */
+  const braceFormat = trial.format === "ΖΕΥΓΗ";
+  const warn = [];
+  const NONE = {avoidOwner:false, avoidKennel:false};   // hard constraints only
+
+  /* Pair a pool in two phases: first honour the soft preferences, and only if no
+     partner qualifies fall back to the hard constraints alone. The same-handler
+     rule is never broken unless it is arithmetically impossible. */
+  function pairPool(pool, out, terrainName){
+    while(pool.length){
+      const a = pool.shift();
+      if(!pool.length){ out.push({id:uid(),no:out.length+1,a:a.id,b:null,solo:true,status:"ΕΚΚΡΕΜΕΙ"}); break; }
+      let cands = pool.map((_,i)=>i).filter(i=>!pairConflict(a,pool[i],soft));
+      let relaxed = false, broken = false;
+      if(!cands.length){ cands = pool.map((_,i)=>i).filter(i=>!pairConflict(a,pool[i],NONE)); relaxed = true; }
+      if(!cands.length){ cands = [0]; broken = true; }
+      const b = pool.splice(cands[Math.floor(rnd()*cands.length)],1)[0];
+      void broken; void relaxed;   // reported after the repair pass, not here
+      out.push({id:uid(),no:out.length+1,a:a.id,b:b.id,solo:false,status:"ΕΚΚΡΕΜΕΙ"});
+    }
+    return out;
+  }
+
+  /* Greedy pairing can corner itself: the last two dogs left over may share a
+     handler even though a valid arrangement existed. Repair by swapping partners
+     between braces — hard violations first, then the soft preferences. */
+  function repair(braces, byId, level, terrainName){
+    const bad = b => b.b && pairConflict(byId[b.a], byId[b.b], level);
+    const locked = e => soft.seasonLast && e && e.season;   // keep οίστρος at the end
+    for(let pass=0; pass<60; pass++){
+      let fixed = false;
+      for(let i=0;i<braces.length;i++){
+        if(!bad(braces[i])) continue;
+        for(let j=0;j<braces.length && !fixed;j++){
+          if(i===j || !braces[j].b) continue;
+          for(const side of ["a","b"]){
+            const bi = braces[i], bj = braces[j];
+            const keepI = byId[bi.a], moveI = byId[bi.b];
+            const keepJ = byId[side==="a" ? bj.b : bj.a], moveJ = byId[side==="a" ? bj.a : bj.b];
+            if(locked(moveI) || locked(moveJ)) continue;
+            if(!pairConflict(keepI,moveJ,level) && !pairConflict(keepJ,moveI,level)){
+              bi.b = moveJ.id;
+              if(side==="a"){ bj.a = moveI.id; } else { bj.b = moveI.id; }
+              fixed = true; break;
+            }
+          }
+        }
+        if(fixed) break;
+      }
+      if(!fixed) break;
+    }
+    return braces.filter(bad).length;
+  }
+
+  day.terrains.forEach(t=>{
+    const list = shuffled(alloc[t.id], rnd);
+    let braces = [];
+    if(!braceFormat){
+      const ordered = soft.seasonLast ? list.filter(e=>!e.season).concat(list.filter(e=>e.season)) : list;
+      ordered.forEach((e,i)=>braces.push({id:uid(),no:i+1,a:e.id,b:null,solo:true,status:"ΕΚΚΡΕΜΕΙ"}));
+    } else if(soft.seasonLast && list.some(e=>e.season)){
+      const season = list.filter(e=>e.season), normal = list.filter(e=>!e.season);
+      braces = pairPool(normal.slice(), [], t.name);
+      const last = braces[braces.length-1];
+      if(last && last.solo && season.length){                 // fill the odd turn
+        last.b = season.shift().id; last.solo = false;
+      }
+      pairPool(season.slice(), braces, t.name);
+      braces.forEach((b,i)=>b.no = i+1);
+    } else {
+      braces = pairPool(list.slice(), [], t.name);
+    }
+    if(braceFormat){
+      const byId = {}; list.forEach(e=>byId[e.id]=e);
+      const stillHard = repair(braces, byId, NONE, t.name);   // H1 first
+      repair(braces, byId, soft, t.name);                     // then S1/S2
+      if(stillHard) warn.push(`«${t.name}»: ${stillHard} ζεύγος/η με τον ίδιο κυναγωγό — δεν υπάρχει άλλη δυνατή διάταξη με τους σκύλους αυτού του τερέν.`);
+    }
+    t.braces = braces;
+    t.entryIds = braces.flatMap(b=>b.b ? [b.a,b.b] : [b.a]);
+    if(braces.length<3) warn.push(`Το τερέν «${t.name}» έχει ${braces.length} ζεύγη. Χρειάζονται τουλάχιστον 3 (Άρθρο 40).`);
+  });
+
+  const hash = hashStr(day.terrains.map(t=>t.id+":"+t.braces.map(b=>b.no+b.a+(b.b||"")).join("|")).join("//")).toString(16);
+  day.draw = {seed, at:new Date().toISOString(), hash, mode:mode||"ΚΛΗΡΩΣΗ",
+              constraints:{avoidOwner:soft.avoidOwner,avoidKennel:soft.avoidKennel,seasonLast:soft.seasonLast}};
+  trial.status = "ΚΛΗΡΩΜΕΝΟΣ";
+  return {ok:true, warn};
+}
+
+/* ---------- 6. Router / state ------------------------------------------- */
+/* reveal: null shows the whole drawn order; a number is how many braces have
+   been read out so far during the draw animation. openBrace is the collapsed
+   brace the judge tapped open in the live terrain. */
+let S = {view:"trials", trialId:null, tab:"entries", day:0, judgeFilter:"", dogId:null,
+         reveal:null, openBrace:null};
+
+function nav(){
+  const tabs = [["trials","Αγώνες"],["registry","Μητρώο"],["stats","Στατιστικά"],["settings","Ρυθμίσεις"]];
+  el("nav").innerHTML = tabs.map(([k,l])=>
+    `<button data-nav="${k}" class="${S.view===k||(S.view==="trial"&&k==="trials")?"on":""}">${l}</button>`).join("");
+}
+
+/* The storage bar. It sits under the navigation, it does not scroll away and it
+   cannot be dismissed. Losing a day of results is worse than an ugly bar. */
+function warnBar(){
+  if(storageMode !== "memory") return "";
+  return `<div class="nostore noprint"><div class="bang">!</div><div>
+    <b>Τα δεδομένα δεν αποθηκεύονται.</b> Ανοίξατε το αρχείο απευθείας και ο περιηγητής δεν
+    επιτρέπει αποθήκευση. Ό,τι καταχωρήσετε θα χαθεί μόλις κλείσετε τη σελίδα.
+    Κλείστε το και ανοίξτε την εφαρμογή από τη διεύθυνση του ομίλου, ή κατεβάστε αντίγραφο
+    (Ρυθμίσεις → Μεταφορά) πριν κλείσετε.</div></div>`;
+}
+function render(){
+  nav();
+  el("warn").innerHTML = warnBar();
+  const v = {trials:vTrials, trial:vTrial, registry:vRegistry, stats:vStats, settings:vSettings, dog:vDog}[S.view];
+  el("app").innerHTML = v ? v() : "";
+  el("fab").innerHTML = fabFor();
+  document.body.toggleAttribute("data-field", isFieldScreen());
+  /* the header chip: no storage outranks the connection, because it is the one
+     that loses a season */
+  const net = el("net");
+  net.textContent = storageMode === "memory" ? "Χωρίς αποθήκευση"
+    : (navigator.onLine ? "Συνδεδεμένο" : "Εκτός σύνδεσης");
+  net.className = "offline" + (storageMode === "memory" ? " warn" : "");
+  startClocks();
+  window.scrollTo({top:0});
+}
+
+/* ---------- 7. Views: trials -------------------------------------------- */
+/* Cards by season, with the status chip the club uses. */
+function vTrials(){
+  const head = `<div class="row" style="align-items:flex-end;gap:16px;margin-bottom:18px">
+    <div class="grow"><div class="eyebrow">Κ.Ο.Α.Δ.</div><h1 style="margin:0">Αγώνες</h1></div>
+    <button class="b-act" data-act="newTrial">Νέος αγώνας</button></div>`;
+  if(!DB.trials.length) return head + `<div class="empty"><h2>Κανένας αγώνας ακόμη</h2>
+    Δημιουργήστε τον πρώτο αγώνα για να ξεκινήσετε την κλήρωση. Το μητρώο σκύλων
+    μπορεί να γεμίσει πρώτο, από το Μητρώο ή με εισαγωγή αρχείου Excel.</div>`;
+  const byYear = {};
+  DB.trials.slice().sort((a,b)=>(b.dateStart||"").localeCompare(a.dateStart||""))
+    .forEach(t=>{ const y=(t.dateStart||"----").slice(0,4); (byYear[y]=byYear[y]||[]).push(t); });
+  return head + Object.entries(byYear).map(([y,list])=>`
+    <div class="eyebrow" style="margin-top:24px">Σεζόν ${y}</div>
+    ${list.map(t=>{
+      const n = t.entries.filter(e=>e.status==="ΔΗΛΩΜΕΝΟΣ").length;
+      const drawn = t.days.some(d=>d.draw);
+      return `<div class="card" data-open="${t.id}" style="cursor:pointer">
+        <div class="row" style="align-items:flex-start">
+          <h3 class="grow" style="margin:0">${esc(t.title)}</h3>
+          <span class="chip ${drawn?"n":""}">${esc(t.status)}</span></div>
+        <div class="muted" style="margin-top:6px">${esc(t.type)} · ${t.format==="ΖΕΥΓΗ"?"ζεύγη":"ατομικός"} · ${esc(t.game||"—")}${t.award!=="-"?" · "+esc(t.award):""}</div>
+        <div class="muted num">${fmtDate(t.dateStart)} · ${esc(t.place||"—")} · ${n} ${n===1?"σκύλος":"σκύλοι"}${
+          t.days.length>1?" · "+t.days.length+" ημέρες":""}</div>
+      </div>`;}).join("")}`).join("");
+}
+
+/* The bottom action bar is field chrome. On Κλήρωση, Τερέν and SMS the primary
+   action lives in the bottom third, because the top of a phone is out of reach
+   one-handed. The desk screens carry their actions inline instead — the same
+   split the design draws. */
+function isFieldScreen(){
+  return S.view==="trial" && ["draw","braces","sms"].includes(S.tab);
+}
+function fabFor(){
+  if(S.view==="trial"){
+    const t = trialById(S.trialId); if(!t) return "";
+    const day = t.days[S.day];
+    if(S.tab==="draw"){
+      const label = S.reveal !== null ? "Κλήρωση…" : day.draw ? "Νέα κλήρωση" : "Κλήρωση";
+      return `<button class="b-act" data-act="doDraw">${label}</button>`;
+    }
+    if(S.tab==="braces"){
+      const live = liveBrace(t);
+      if(live) return `<button data-act="pauseBrace" style="flex:0 0 auto">${live.b.startedAt?"Παύση":"Συνέχεια"}</button>
+        <button class="b-act" data-act="nextBrace">Επόμενο ζεύγος</button>`;
+      const next = nextPending(t);
+      return next ? `<button class="b-act" data-act="nextBrace">Έναρξη ζεύγους ${next.b.no}</button>` : "";
+    }
+    if(S.tab==="sms")   return `<button class="b-act" data-act="smsAll">Άνοιγμα επόμενου SMS</button>`;
+    return "";
+  }
+  return "";
+}
+/* the brace on the ground right now, and the one after it */
+function liveBrace(t){
+  const day = t.days[S.day];
+  for(const tr of day.terrains||[])
+    for(const b of tr.braces||[]) if(b.status==="ΤΡΕΧΕΙ" && (!S.judgeFilter || tr.judgeIds.includes(S.judgeFilter)))
+      return {tr, b};
+  return null;
+}
+function nextPending(t){
+  const day = t.days[S.day];
+  for(const tr of day.terrains||[])
+    for(const b of tr.braces||[]) if(b.status==="ΕΚΚΡΕΜΕΙ" && (!S.judgeFilter || tr.judgeIds.includes(S.judgeFilter)))
+      return {tr, b};
+  return null;
+}
+
+/* ---------- 8. Views: trial detail --------------------------------------- */
+function vTrial(){
+  const t = trialById(S.trialId); if(!t){ S.view="trials"; return vTrials(); }
+  const tabs=[["entries","Συμμετοχές"],["terrains","Τερέν & Κριτές"],["draw","Κλήρωση"],
+              ["braces","Ζεύγη"],["sms","SMS"],["results","Βαθμολογία"],["export","Εξαγωγές"]];
+  const body = {entries:tEntries,terrains:tTerrains,draw:tDraw,braces:tBraces,
+                sms:tSms,results:tResults,export:tExport}[S.tab](t);
+  return `
+  <div class="row noprint" style="margin-bottom:10px">
+    <button class="b-sm" data-nav="trials">‹ Αγώνες</button>
+    <span class="chip n">${esc(t.status)}</span>
+    <button class="b-sm" data-act="editTrial" style="margin-left:auto">Επεξεργασία</button>
+  </div>
+  <h1 style="margin-bottom:6px">${esc(t.title)}</h1>
+  <div class="muted" style="margin-bottom:14px">${esc(t.type)} · ${t.format==="ΖΕΥΓΗ"?"Ζεύγη":"Ατομικός"}
+   · ${esc(t.game||"—")}${t.wild?" (άγριο θήραμα)":""} · ${fmtDate(t.dateStart)} · ${esc(t.place||"")}
+   · Συντελεστής ×${coefficient(t)}</div>
+  <div class="badge-list noprint" style="margin-bottom:14px">
+    ${tabs.map(([k,l])=>`<button class="tog ${S.tab===k?"on":""}" data-tab="${k}">${l}</button>`).join("")}
+  </div>
+  ${t.days.length>1?`<div class="row tight noprint" style="margin-bottom:14px">
+    ${t.days.map((d,i)=>`<button class="tog ${S.day===i?"on":""}" data-day="${i}">Ημέρα ${i+1} · ${fmtDate(d.date)}</button>`).join("")}
+  </div>`:""}
+  ${body}`;
+}
+
+/* --- 8a. entries --- */
+function tEntries(t){
+  const rows = t.entries.map(e=>{
+    const d = dogById(e.dogId)||{};
+    return `<tr>
+      <td>${esc(d.name||"—")}<div class="tiny">${esc(d.breed||"")} ${d.sex?("· "+d.sex):""} ${d.reg?("· "+esc(d.reg)):""}</div></td>
+      <td>${esc(perName(e.handlerId))}</td>
+      <td class="n">${e.season?'<span class="chip y">οίστρος</span>':""} ${e.paid?'<span class="chip g">πληρ.</span>':'<span class="chip r">απλήρωτο</span>'}</td>
+      <td><span class="chip">${esc(e.status)}</span></td>
+      <td class="noprint"><button class="b-sm" data-editentry="${e.id}">Επεξ.</button></td>
+    </tr>`;}).join("");
+  const active = t.entries.filter(e=>e.status==="ΔΗΛΩΜΕΝΟΣ").length;
+  const braces = Math.ceil(active/(t.format==="ΖΕΥΓΗ"?2:1));
+  const min = active>=6 && braces>=3;
+  return `
+  <div class="${min?"note":"err"}">${active} ${active===1?"σκύλος":"σκύλοι"} · ${braces} ${t.format==="ΖΕΥΓΗ"?"ζεύγη":"διαδρομές"}.
+   ${min ? "Πληρούνται τα ελάχιστα: 6 σκύλοι και 3 ζεύγη."
+     : `<b>Δεν πληρούνται τα ελάχιστα.</b> Χρειάζονται τουλάχιστον 6 σκύλοι και 3 ζεύγη
+        (ΕΚ Άρθρο 5, Άρθρο 40). Προσθέστε συμμετοχές ή συγχωνεύστε τερέν.`}</div>
+  <div class="row tight noprint" style="margin-bottom:14px">
+    <button class="b-act" data-act="addEntry">+ Συμμετοχή</button>
+    <button data-act="importEntries">Εισαγωγή αρχείου</button></div>
+  ${rows ? `<div class="card" style="padding:0"><div class="scroll"><table>
+    <thead><tr><th>Σκύλος</th><th>Κυναγωγός</th><th>Σημάνσεις</th><th>Κατάσταση</th><th class="noprint"></th></tr></thead>
+    <tbody>${rows}</tbody></table></div></div>`
+  : `<div class="empty">Καμία συμμετοχή ακόμη. Εισαγάγετε αρχείο Excel ή προσθέστε σκύλο.</div>`}`;
+}
+
+/* --- 8b. terrains --- */
+function tTerrains(t){
+  const day = t.days[S.day];
+  const cards = day.terrains.map(tr=>{
+    const judges = tr.judgeIds.map(j=>esc((judById(j)||{}).name||"?")).join(", ");
+    const need = t.format==="ΖΕΥΓΗ"?2:1;
+    const cacit = t.award==="CACIT";
+    const bad = tr.judgeIds.length < (cacit?3:need);
+    const conflicts = t.entries.filter(e=>e.status==="ΔΗΛΩΜΕΝΟΣ" && (tr.entryIds||[]).includes(e.id)
+                       && judgeConflict(tr,e,t)).map(e=>dogName(e.dogId));
+    /* conflicts surface immediately and specifically, with the article and a
+       one-tap way to fix them */
+    return `<div class="card">
+      <div class="row"><h3 class="grow" style="margin:0">${esc(tr.name)}</h3>
+        <button class="b-sm" data-editterrain="${tr.id}">Επεξεργασία</button></div>
+      <div class="muted" style="margin-top:8px">Κριτές: ${judges||"— κανένας —"}${tr.breedGroup?` · Φυλή: ${tr.breedGroup==="POINTER"?"Pointer":"Setter"}`:""}</div>
+      <div class="muted num">${(tr.entryIds||[]).length} σκύλοι · ${(tr.braces||[]).length} ζεύγη</div>
+      ${bad?`<div class="err" style="margin-top:12px;margin-bottom:0">
+        <b>Το ${esc(tr.name)} έχει ${tr.judgeIds.length} ${tr.judgeIds.length===1?"κριτή":"κριτές"}.</b>
+        Χρειάζονται τουλάχιστον ${cacit?3:need} (Άρθρο 48${cacit?" — για CACIT τρεις, ο ένας Μεγάλης Έρευνας":""}).
+        Προσθέστε κριτή από την Επεξεργασία.</div>`:""}
+      ${conflicts.length?`<div class="err" style="margin-top:12px;margin-bottom:0">
+        <b>Κριτής με δικό του σκύλο σε αυτό το τερέν (Άρθρο 49):</b> ${esc(conflicts.join(", "))}.
+        Αφαιρέστε τον κριτή ή μεταφέρετε τον σκύλο σε άλλο τερέν.</div>`:""}
+    </div>`;}).join("");
+  return `<div class="note">Ο Πρόεδρος Κριτών ορίζει πόσα τερέν χρειάζονται και ποιοι κριτές κρίνουν
+    σε καθένα. Η κατανομή των σκύλων γίνεται στην κλήρωση.</div>
+    ${cards||`<div class="empty">Δεν έχουν οριστεί τερέν. Προσθέστε τουλάχιστον ένα πριν την κλήρωση.</div>`}
+    <button class="b-act noprint" data-act="addTerrain">+ Προσθήκη τερέν</button>`;
+}
+
+/* --- 8c. draw ---
+   The moment this app exists for. One screen, one large button. On tap the
+   braces appear one at a time, in order — it mirrors a public draw where names
+   are read out one by one and it gives the crowd something to watch. Below,
+   small and permanent: seed, time, fingerprint and Άρθρο 16. */
+function tDraw(t){
+  const day = t.days[S.day], d = day.draw;
+  const active = t.entries.filter(e=>e.status==="ΔΗΛΩΜΕΝΟΣ").length;
+  const rows = [];
+  if(d) day.terrains.forEach(tr=>(tr.braces||[]).forEach(b=>{
+    const ea = t.entries.find(e=>e.id===b.a), eb = t.entries.find(e=>e.id===b.b);
+    rows.push({no:b.no, terrain:tr.name,
+      pair:(ea?dogName(ea.dogId):"—") + " / " + (eb?dogName(eb.dogId):"ΜΟΝΟΣ"),
+      handlers:[ea&&perName(ea.handlerId), eb&&perName(eb.handlerId)].filter(Boolean).join(" · ")});
+  }));
+  const shown = S.reveal === null ? rows.length : S.reveal;
+
+  return `
+  <div class="eyebrow">Ημέρα ${S.day+1} · ${day.terrains.length} τερέν · ${active} σκύλοι</div>
+  <h1>Κλήρωση ζευγών</h1>
+
+  <div class="card">
+    <div class="row">
+      <div class="grow"><label>Σπόρος κλήρωσης — αφήστε κενό για τυχαίο</label>
+        <input id="seedIn" class="seed" placeholder="π.χ. ΚΑΤΩΜΟΝΗ-2026-02-14"></div>
+      ${S.day>0?`<div class="grow"><label>Τρόπος</label><select id="drawMode">
+        <option value="ΠΕΡΙΣΤΡΟΦΗ" selected>Περιστροφή τερέν (ιταλικό σύστημα)</option>
+        <option value="ΚΛΗΡΩΣΗ">Νέα κλήρωση</option></select></div>`:""}
+    </div>
+    <label style="margin-top:16px">Προτιμήσεις — τηρούνται όπου γίνεται</label>
+    <div class="row tight">
+      <button class="tog opt ${DB.settings.avoidOwner?"on":""}" data-set="avoidOwner">Ίδιος ιδιοκτήτης</button>
+      <button class="tog opt ${DB.settings.avoidKennel?"on":""}" data-set="avoidKennel">Ίδιο εκτροφείο</button>
+      <button class="tog opt ${DB.settings.seasonLast?"on":""}" data-set="seasonLast">Οίστρος τελευταίες</button>
+    </div>
+    <div class="tiny" style="margin-top:12px">Πάντα ισχύουν: ποτέ δύο σκύλοι του ίδιου κυναγωγού
+      στο ίδιο ζεύγος · κανένας κριτής δεν κρίνει τερέν με δικό του σκύλο (Άρθρο 49).
+      Ο ίδιος σπόρος με τις ίδιες συμμετοχές δίνει πάντα την ίδια σειρά.</div>
+  </div>
+
+  ${!d ? `<div class="empty">Καμία κλήρωση ακόμη για την ημέρα ${S.day+1}. Πατήστε «Κλήρωση» για
+      να κατανεμηθούν οι σκύλοι στα τερέν και να σχηματιστούν τα ζεύγη.</div>`
+    : `<div style="display:flex;flex-direction:column;gap:10px">
+      ${rows.map((r,i)=>`<div class="card" data-brace-row style="display:flex;align-items:center;gap:14px;margin:0" ${i<shown?"":"hidden"}>
+        <span class="bno" style="font-size:34px;min-width:34px">${r.no}</span>
+        <span style="flex:1;min-width:0">
+          <span class="eyebrow" style="margin:0">${esc(r.terrain)}</span>
+          <b style="display:block;font:600 19px/1.25 var(--f-d);margin-top:5px">${esc(r.pair)}</b>
+          <span class="muted">${esc(r.handlers)}</span>
+        </span></div>`).join("")}
+    </div>
+    <div style="border-top:1px solid var(--line);margin-top:18px;padding-top:14px">
+      <div class="fingerprint">σπόρος ${esc(d.seed)}<br>${new Date(d.at).toLocaleString("el-GR")} · ${esc(d.mode)}<br>αποτύπωμα ${esc(d.hash)}</div>
+      <p style="margin-top:8px">Η σειρά είναι ενδεικτική – Άρθρο 16.</p>
+      <button class="b-redraw noprint" data-act="doDraw">Νέα κλήρωση — ακυρώνει την τρέχουσα</button>
+    </div>`}`;
+}
+
+/* --- 8d. braces ---
+   The brace card is the one thing this app exists to produce. Two dogs side by
+   side, split down the middle, the number very large across the top. The left
+   half is the dog drawn first — right of the jury — and the card says so,
+   because handlers argue about it. Every state in §5 of the brief is here:
+   εκκρεμεί, τρέχει, ολοκληρώθηκε, μονός, με συμπληρωματικό, επανάκληση,
+   χειροκίνητη αλλαγή. */
+
+/* Άρθρο 24 — each run lasts 15 minutes. The clock counts that down and keeps
+   counting past zero rather than stopping, because the judge decides when the
+   run ends, not the timer. */
+const RUN_SECS = 15*60;
+function braceElapsed(b){
+  let s = b.elapsed || 0;
+  if(b.startedAt) s += Math.floor((Date.now() - b.startedAt)/1000);
+  return s;
+}
+function clockText(secs){
+  const over = secs < 0, n = Math.abs(secs);
+  return (over?"+":"") + String(Math.floor(n/60)).padStart(2,"0") + ":" + String(n%60).padStart(2,"0");
+}
+/* one interval for the whole page; the running braces read their own start time */
+let clockTimer = null;
+function startClocks(){
+  clearInterval(clockTimer);
+  if(!document.querySelector("[data-clock]")) return;
+  const tick = ()=>{
+    document.querySelectorAll("[data-clock]").forEach(n=>{
+      const left = RUN_SECS - (+n.dataset.elapsed + (n.dataset.running==="1"
+        ? Math.floor((Date.now() - +n.dataset.since)/1000) : 0));
+      n.textContent = clockText(left);
+      n.classList.toggle("over", left < 0);
+    });
+  };
+  tick(); clockTimer = setInterval(tick, 1000);
+}
+function clockEl(b, big){
+  const running = !!b.startedAt;
+  return `<span class="clock${big?" big":""}" data-clock data-elapsed="${b.elapsed||0}"
+    data-running="${running?1:0}" data-since="${b.startedAt||0}">${clockText(RUN_SECS - braceElapsed(b))}</span>`;
+}
+
+function qualChip(t, id){
+  const r = t.results[id];
+  if(!r || !r.qual || r.qual==="-") return "";
+  const pts = pointsFor(t, r);
+  return `<span class="chip o">${esc(r.qual)}${r.award&&r.award!=="-"?" · "+esc(r.award):""}${pts?" · "+pts:""}</span>`;
+}
+
+function braceCard(t, tr, b, opts){
+  opts = opts || {};
+  const ea = t.entries.find(e=>e.id===b.a), eb = t.entries.find(e=>e.id===b.b);
+  const running = b.status==="ΤΡΕΧΕΙ", done = b.status==="ΟΛΟΚΛΗΡΩΘΗΚΕ";
+
+  const side = (e,pos,cls)=>{
+    if(!e) return `<div class="dog none">
+      <div class="pos">${pos}</div>
+      <div class="nm">ΜΟΝΟΣ</div>
+      <button class="b-sm noprint" style="margin-top:10px" data-trailer="${tr.id}|${b.id}">+ Συμπληρωματικός</button>
+    </div>`;
+    const d = dogById(e.dogId)||{};
+    const isTrailer = b.trailer && e.id===b.b;
+    /* Σημειώσεις is the action a judge reaches for on every run, so it sits
+       with the dog. The rare ones — επανάκληση, ανταλλαγή — live in the footer
+       and keep the halves readable from arm's length. */
+    return `<div class="dog ${cls}">
+      <div class="pos">${pos}</div>
+      ${isTrailer?`<div style="margin-top:6px"><span class="chip">ΣΥΜΠΛΗΡΩΜΑΤΙΚΟΣ</span></div>`:""}
+      <div class="nm">${esc(d.name||"—")}</div>
+      <div class="mt">${esc(d.breed||"")}${d.sex?" · "+d.sex:""}${e.season?" · οίστρος":""}</div>
+      <div class="mt">${esc(perName(e.handlerId))}</div>
+      ${opts.actions?`<button class="b-full noprint" style="margin-top:12px;min-height:48px"
+        data-note="${e.id}::${b.id}">Σημειώσεις</button>`:""}
+    </div>`;
+  };
+
+  /* The rare per-dog actions, named by dog so it is clear which one they hit.
+     They stay off the running card: at arm's length that one carries the two
+     dogs, the clock and nothing else. */
+  const extra = [];
+  if(opts.actions && !opts.big) [ea, eb].forEach(e=>{
+    if(!e) return;
+    const nm = dogName(e.dogId);
+    extra.push(`<button class="b-sm" data-recall="${tr.id}|${e.id}">Επανάκληση ${esc(nm)}</button>`);
+    extra.push(`<button class="b-sm" data-swap="${tr.id}|${b.id}|${e.id}">Ανταλλαγή ${esc(nm)}</button>`);
+  });
+  if(opts.actions && !opts.big && b.trailer)
+    extra.push(`<button class="b-sm b-warn" data-untrailer="${tr.id}|${b.id}">Αφαίρεση συμπληρωματικού</button>`);
+
+  /* the state, said once, in the top right */
+  let state;
+  if(running) state = `<span class="live"><i></i>ΤΡΕΧΕΙ</span>`;
+  else if(done) state = `<span class="bstate">ΟΛΟΚΛΗΡΩΘΗΚΕ</span>`;
+  else if(b.solo && !b.b) state = `<span class="bstate">ΜΟΝΟΣ</span>`;
+  else state = `<span class="bstate">ΕΚΚΡΕΜΕΙ</span>`;
+
+  const foot = [];
+  if(b.recall) foot.push(`Δεύτερη διαδρομή του ${esc(dogName((ea||{}).dogId))} (Άρθρο 30). Ξεχωριστό φύλλο σημειώσεων.`);
+  if(b.trailer) foot.push("Εκτός κλήρωσης. Δεν προσμετράται στα τρία ζεύγη (Άρθρο 40).");
+  if(b.manual) foot.push(`Χειροκίνητη αλλαγή από τον Πρόεδρο Κριτών, ${esc(b.manual.at||"")}. Τυπώνεται στη λίστα.`);
+
+  return `<div class="brace ${running?"run":""} ${done?"done":""} ${b.recall?"recall":""}">
+    <div class="bhead">
+      <div class="bno">${b.no}</div>
+      ${opts.big&&running?`<div style="margin-left:auto;text-align:right">
+          ${state}${clockEl(b,true)}
+          <div class="tiny" style="color:#ffffffcc;margin-top:4px">από 15:00 (Άρθρο 24)</div></div>`
+        :`${b.recall?`<span class="chip y">ΕΠΑΝΑΚΛΗΣΗ</span>`:""}
+          ${b.trailer?`<span class="chip n">ΜΕ ΣΥΜΠΛΗΡΩΜΑΤΙΚΟ</span>`:""}
+          ${b.manual?`<span class="chip dash">ΧΕΙΡΟΚΙΝΗΤΗ ΑΛΛΑΓΗ</span>`:""}
+          ${qualChip(t,b.a)} ${b.b?qualChip(t,b.b):""}
+          ${state}${running?clockEl(b):""}`}
+      <button class="b-sm noprint" data-bstat="${tr.id}|${b.id}">${
+        b.status==="ΕΚΚΡΕΜΕΙ"?"Έναρξη":running?"Λήξη":"Επαναφορά"}</button>
+    </div>
+    <div class="bbody">
+      ${side(ea,"ΔΕΞΙΑ ΤΗΣ ΕΠΙΤΡΟΠΗΣ","a")}
+      <div class="vline"></div>
+      ${side(eb,"ΑΡΙΣΤΕΡΑ ΤΗΣ ΕΠΙΤΡΟΠΗΣ","b")}
+    </div>
+    ${foot.length?`<div class="bfoot">${foot.join("<br>")}</div>`:""}
+    ${extra.length?`<div class="bfoot noprint"><div class="row tight">${extra.join("")}</div></div>`:""}</div>`;
+}
+
+/* collapsed: a number and two names, which is all you need to know where you are */
+function braceBrief(t, tr, b){
+  const ea = t.entries.find(e=>e.id===b.a), eb = t.entries.find(e=>e.id===b.b);
+  const done = b.status==="ΟΛΟΚΛΗΡΩΘΗΚΕ";
+  const names = (ea?dogName(ea.dogId):"—") + " / " + (eb?dogName(eb.dogId):"ΜΟΝΟΣ");
+  const who = [ea&&perName(ea.handlerId), eb&&perName(eb.handlerId)].filter(Boolean).join(" · ");
+  return `<button class="brief ${done?"done":""}" data-openbrace="${b.id}">
+    <span class="n">${b.no}</span>
+    <span class="who"><b>${esc(names)}</b><span>${esc(who)}</span></span>
+    ${done ? qualChip(t,b.a) || `<span class="chip">ΟΛΟΚΛΗΡΩΘΗΚΕ</span>`
+      : b.recall ? `<span class="chip y">ΕΠΑΝΑΚΛΗΣΗ</span>`
+      : (b.solo&&!b.b) ? `<span class="chip">ΜΟΝΟΣ</span>`
+      : `<span class="chip">ΕΚΚΡΕΜΕΙ</span>`}
+  </button>`;
+}
+/* Field mode. The live brace is expanded with its countdown; the rest collapse
+   to a number and two names, so scrolling a terrain you know where you are
+   without reading. Tap a collapsed one to open it. */
+function tBraces(t){
+  const day = t.days[S.day];
+  const jf = S.judgeFilter;
+  const terrains = day.terrains.filter(tr=>!jf || tr.judgeIds.includes(jf));
+  if(!day.draw) return `<div class="empty">Δεν έχει γίνει κλήρωση για την ημέρα αυτή.
+    Πηγαίνετε στην καρτέλα «Κλήρωση».</div>`;
+  const printHd = printHead(t, day, terrains.length===1 ? terrains[0].name : "");
+  return `
+  ${!navigator.onLine ? `<div class="note noprint" style="display:flex;gap:10px;align-items:center">
+    <span style="width:8px;height:8px;border-radius:50%;background:var(--stubble);flex:none"></span>
+    Εκτός σύνδεσης. Οι αλλαγές αποθηκεύονται στη συσκευή και ταξιδεύουν με τη Μεταφορά.</div>` : ""}
+  <div class="row noprint" style="margin-bottom:12px">
+    <div class="grow"><label>Προβολή ως κριτής (βλέπει μόνο το τερέν του)</label>
+    <select data-jfilter><option value="">Πρόεδρος Κριτών — όλα τα τερέν</option>
+      ${DB.judges.map(j=>`<option value="${j.id}" ${jf===j.id?"selected":""}>${esc(j.name)}</option>`).join("")}
+    </select></div>
+    <button class="b-sm" data-act="print" style="align-self:flex-end">Εκτύπωση / PDF</button>
+  </div>
+  ${printHd}
+  ${terrains.map(tr=>{
+    const braces = tr.braces||[];
+    const live = braces.find(b=>b.status==="ΤΡΕΧΕΙ");
+    return `
+    <div class="row" style="margin:18px 0 10px;align-items:baseline">
+      <h3 class="grow" style="margin:0">${esc(tr.name)}</h3>
+      <span class="muted">${braces.length} ${braces.length===1?"ζεύγος":"ζεύγη"}
+        ${tr.judgeIds.length?"· "+tr.judgeIds.map(j=>esc((judById(j)||{}).name||"?")).join(", "):""}</span>
+    </div>
+    ${braces.length ? braces.map(b=>{
+        const open = b===live || S.openBrace===b.id;
+        return open ? braceCard(t,tr,b,{big:b===live, actions:true}) : braceBrief(t,tr,b);
+      }).join("")
+      : `<div class="empty">Χωρίς ζεύγη σε αυτό το τερέν.</div>`}`;
+  }).join("")}
+  <div class="tiny noprint" style="margin-top:16px">Άρθρο 30: ο κριτής μπορεί να ζητήσει
+  <b>επανάκληση</b> σκύλου μεγάλης αξίας — προστίθεται νέα διαδρομή στο τέλος του τερέν με δικές
+  της σημειώσεις. Σε μονό αριθμό σκύλων μπορεί να προστεθεί <b>συμπληρωματικός</b> για να
+  συμπληρωθεί το τελευταίο ζεύγος.</div>`;
+}
+
+/* The reveal is not decoration: it reads the braces out one at a time the way
+   the draw is read out to the field. prefers-reduced-motion gets all of them at
+   once, instantly. */
+let revealTimer = null;
+function revealBraces(){
+  clearInterval(revealTimer);
+  const nodes = [...document.querySelectorAll("[data-brace-row]")];
+  const finish = ()=>{ S.reveal = null; el("fab").innerHTML = fabFor(); toast("Η κλήρωση ολοκληρώθηκε"); };
+  if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches){
+    nodes.forEach(n=>{ n.hidden = false; }); finish(); return;
+  }
+  let i = 0;
+  revealTimer = setInterval(()=>{
+    if(i >= nodes.length){ clearInterval(revealTimer); finish(); return; }
+    nodes[i].hidden = false; nodes[i].classList.add("reveal");
+    S.reveal = ++i; el("fab").innerHTML = fabFor();
+  }, 150);
+}
+
+/* The drawn order, A4 portrait, one sheet per terrain. Black on white with a
+   column left blank for the time, because this sheet is pinned up, written on
+   and photocopied. */
+function drawSheet(t, day, tr){
+  const rows = (tr.braces||[]).map(b=>{
+    const ea = t.entries.find(e=>e.id===b.a), eb = t.entries.find(e=>e.id===b.b);
+    const cell = e => e ? `${esc(dogName(e.dogId))} — ${esc(perName(e.handlerId))}` : "ΜΟΝΟΣ";
+    const marks = [b.recall && "επανάκληση", b.trailer && "συμπληρωματικός",
+                   b.manual && "χειροκίνητη αλλαγή"].filter(Boolean);
+    return `<tr>
+      <td style="font-weight:700">${b.no}</td>
+      <td>${cell(ea)}</td>
+      <td>${cell(eb)}</td>
+      <td style="width:16mm"></td>
+    </tr>${marks.length?`<tr><td></td><td colspan="3" style="font-size:8pt">${esc(marks.join(" · "))}</td></tr>`:""}`;
+  }).join("");
+  const judges = (tr.judgeIds||[]).map(j=>esc((judById(j)||{}).name||"?")).join(", ");
+  const manual = (tr.braces||[]).filter(b=>b.manual).map(b=>b.no);
+  return `<div class="sheet">
+    <div class="print-hd" style="display:flex">
+      <img src="${BADGE}" alt="">
+      <div class="t"><b>ΚΥΠΡΙΑΚΟΣ ΟΜΙΛΟΣ ΑΓΓΛΙΚΩΝ ΔΕΙΚΤΩΝ</b>
+        <span>${esc(t.title)}${t.place && t.place!==t.title ? " · "+esc(t.place) : ""} · ${esc(t.type)} · ${fmtDate(day.date)}</span>
+        <span>Κριτές: ${judges||"—"}</span></div>
+      <div class="pg">${esc(tr.name)}</div>
+    </div>
+    <table style="margin-top:10px">
+      <tr><th style="width:9mm">Ζ.</th><th>Δεξιά της επιτροπής (1ος)</th>
+        <th>Αριστερά της επιτροπής (2ος)</th><th>Ώρα</th></tr>
+      ${rows || `<tr><td colspan="4">Χωρίς ζεύγη.</td></tr>`}
+    </table>
+    <p style="font:400 9pt/1.4 var(--f-b);margin-top:10px;border-top:1px solid #000;padding-top:8px">
+      Η σειρά είναι ενδεικτική – Άρθρο 16.${manual.length
+        ? ` Χειροκίνητη αλλαγή στο ${manual.length===1?"ζεύγος":"ζεύγη"} ${manual.join(", ")}.` : ""}</p>
+  </div>`;
+}
+
+/* The blank judge note sheet, A4 portrait. The fields follow §7 exactly, in the
+   same order as the screen, so a judge who filled one in on paper can type it
+   in afterwards without hunting. */
+function noteSheet(t, day, tr, b, e, d){
+  const rate = ()=>`<span class="rate">${[1,2,3,4,5].map(n=>`<i>${n}</i>`).join("")}</span>`;
+  const scales = ["Πάθος","Μεθοδικότητα","Καλπασμός και στυλ φυλής","Επαφή με κυναγωγό"];
+  const fld = (label,val)=>`<div class="fld"><span>${label}</span>
+    <div class="line">${val?esc(val):""}</div></div>`;
+  return `<div class="sheet">
+    <div class="print-hd" style="display:flex">
+      <img src="${BADGE}" alt="">
+      <div class="t"><b>ΦΥΛΛΟ ΣΗΜΕΙΩΣΕΩΝ ΚΡΙΤΗ</b>
+        <span>${esc(t.title)}${t.place && t.place!==t.title ? " · "+esc(t.place) : ""} · ${fmtDate(day.date)}</span>
+        <span>${esc(t.type)}${t.game?" · "+esc(t.game):""}${t.wild?" (άγριο θήραμα)":""}</span></div>
+      <div class="pg">${esc(tr.name)}</div>
+    </div>
+    <div class="fields">
+      ${fld("Σκύλος", d.name)}
+      ${fld("Ζεύγος / θέση", "ζεύγος " + b.no + " · " + (b.a===e.id?"δεξιά":"αριστερά") + " της επιτροπής")}
+      ${fld("Κυναγωγός", perName(e.handlerId))}
+      ${fld("Κ.Ο.Κ.", d.reg)}
+      ${fld("Φυλή / φύλο", (d.breed||"") + (d.sex?" · "+d.sex:""))}
+      ${fld("Κριτής", "")}
+    </div>
+    <h4>ΕΡΕΥΝΑ</h4>
+    ${scales.map(s=>`<div style="display:flex;align-items:center;gap:10px;padding:5px 0">
+      <span style="flex:1;font:400 9.5pt/1.2 var(--f-b)">${s}</span>${rate()}</div>`).join("")}
+    <div style="display:flex;align-items:center;gap:10px;padding:5px 0">
+      <span style="flex:1;font:400 9.5pt/1.2 var(--f-b)">Πλάτος έρευνας</span>
+      <span style="font:400 9pt/1 var(--f-b)">Στενή · Κανονική · Ανοικτή · Πολύ ανοικτή</span></div>
+    <h4>ΠΟΝΤΟΙ</h4>
+    <table><tr><th style="width:22px">#</th><th>Θήραμα</th><th>Ποιότητα</th>
+      <th>Φέρμα / ποντάρισμα</th><th>Ακινησία</th><th>Συναίνεση</th></tr>
+      ${[1,2,3,4].map(n=>`<tr><td>${n}</td><td style="height:26px"></td><td></td><td></td><td></td><td></td></tr>`).join("")}
+    </table>
+    <h4>ΣΦΑΛΜΑΤΑ ΑΠΟΚΛΕΙΣΜΟΥ · ΑΡΘΡΟ 33</h4>
+    <div style="font:400 8.5pt/1.5 var(--f-b)">${FAULTS.join(" · ")}</div>
+    <div style="display:flex;gap:12px;margin-top:12px">
+      <div style="flex:1"><span style="font:400 9pt/1 var(--f-b)">Λευκές φέρμες</span><div class="box"></div></div>
+      <div style="flex:2"><span style="font:400 9pt/1 var(--f-b)">Προτεινόμενη βαθμολογία</span><div class="box"></div></div>
+    </div>
+    <h4>ΕΛΕΥΘΕΡΟ ΣΧΟΛΙΟ</h4>
+    <div style="border:1px solid #000;height:34mm"></div>
+    <div style="margin-top:12px"><span style="font:400 9pt/1 var(--f-b)">Υπογραφή κριτή</span>
+      <div style="border-bottom:1px solid #000;height:30px"></div></div>
+  </div>`;
+}
+
+/* the printed head: badge, club, trial, terrain, page — on every sheet */
+function printHead(t, day, terrain){
+  return `<div class="print-hd">
+    <img src="${BADGE}" alt="">
+    <div class="t"><b>ΚΥΠΡΙΑΚΟΣ ΟΜΙΛΟΣ ΑΓΓΛΙΚΩΝ ΔΕΙΚΤΩΝ</b>
+      <span>${esc(t.title)} · ${esc(t.type)} · ${esc(t.place||"")} · ${fmtDate(day.date)}</span>
+      <span>Η σειρά είναι ενδεικτική – Άρθρο 16.</span></div>
+    ${terrain?`<div class="pg">${esc(terrain)}</div>`:""}
+  </div>`;
+}
+
+/* --- 8e. sms --- */
+/* The full running order of the day. A handler's own braces are marked so he can
+   see where he sits among the others without hunting for his name. */
+function orderText(t, handlerId, withJudges){
+  const day = t.days[S.day], L = [];
+  (day.terrains||[]).forEach(tr=>{
+    L.push("▸ " + tr.name + (withJudges && tr.judgeIds.length
+      ? " (" + tr.judgeIds.map(j=>(judById(j)||{}).name).filter(Boolean).join(", ") + ")" : ""));
+    (tr.braces||[]).forEach(b=>{
+      const a = t.entries.find(e=>e.id===b.a), c = t.entries.find(e=>e.id===b.b);
+      const mine = handlerId && ((a && a.handlerId===handlerId) || (c && c.handlerId===handlerId));
+      L.push((mine ? ">> " : "") + b.no + ". " + (a?dogName(a.dogId):"—") + " / " + (c?dogName(c.dogId):"ΜΟΝΟΣ")
+        + (b.recall ? " (επανάκληση)" : "") + (b.trailer ? " (trailer)" : "")
+        + (mine ? "  <-- ΕΣΕΙΣ" : ""));
+    });
+  });
+  return L.join("\n");
+}
+function myRuns(t, handlerId){
+  const out = [];
+  (t.days[S.day].terrains||[]).forEach(tr=>(tr.braces||[]).forEach(b=>{
+    [b.a,b.b].forEach(id=>{ const e = t.entries.find(x=>x.id===id);
+      if(e && e.handlerId===handlerId) out.push({dog:dogName(e.dogId), ter:tr.name, no:b.no, recall:b.recall}); });
+  }));
+  return out;
+}
+function smsBody(t, entry){
+  const st = DB.settings;
+  const head = (st.sms||DEFAULT_SMS)
+    .replace(/\{ΑΓΩΝΑΣ\}/g, t.title)
+    .replace(/\{ΗΜΕΡΟΜΗΝΙΑ\}/g, fmtDate(t.days[S.day].date));
+  const mine = myRuns(t, entry.handlerId);
+  const L = [head, ""];
+  L.push(mine.length===1 ? "Η διαδρομή σας:" : "Οι διαδρομές σας:");
+  mine.forEach(m=>L.push("• " + m.dog + " — " + m.ter + ", ζεύγος " + m.no + "ο"
+    + (m.recall ? " (επανάκληση)" : "")));
+  if(st.smsMode !== "own"){
+    L.push("", "ΣΕΙΡΑ ΤΗΣ ΗΜΕΡΑΣ", orderText(t, entry.handlerId, st.smsJudges));
+  }
+  L.push("", st.smsFoot || DEFAULT_SMS_FOOT);
+  return L.join("\n");
+}
+/* Greek text is sent as UCS-2: 70 characters in one segment, 67 per segment
+   after that. The head judge pays for these, so show him the count. */
+function smsSegments(text){
+  const n = text.length;
+  const greek = /[^\x00-\x7F]/.test(text);
+  const one = greek ? 70 : 160, more = greek ? 67 : 153;
+  return n <= one ? 1 : Math.ceil(n / more);
+}
+function smsQueue(t){
+  const day = t.days[S.day], out = [], seen = new Set();
+  (day.terrains||[]).forEach(tr=>(tr.braces||[]).forEach(b=>{
+    [b.a,b.b].forEach(id=>{
+      const e = t.entries.find(x=>x.id===id); if(!e) return;
+      const key = e.handlerId || e.id; if(seen.has(key)) return; seen.add(key);
+      out.push({entry:e, phone:phoneClean((perById(e.handlerId)||{}).phone), body:smsBody(t,e)});
+    });
+  }));
+  return out;
+}
+/* He is paying for these out of his own credit, so the mode switch sits at the
+   top of this screen — not in settings — and the total is visible before he
+   starts, with each message's own count beside it. */
+function tSms(t){
+  const day = t.days[S.day];
+  if(!day.draw) return `<div class="empty">Κάντε πρώτα την κλήρωση. Τα μηνύματα συντίθενται
+    από τη σειρά της ημέρας.</div>`;
+  const q = smsQueue(t);
+  const sent = q.filter(x=>t.sms[x.entry.id]==="ΕΣΤΑΛΗ").length;
+  const segs = q.reduce((a,x)=>a+smsSegments(x.body),0);
+  const st = DB.settings;
+  return `
+  <div class="card">
+    <label>Περιεχόμενο μηνύματος</label>
+    <div class="row tight noprint">
+      <button class="tog ${st.smsMode!=="own"?"on":""}" data-set="smsModeFull">Πλήρης σειρά ημέρας</button>
+      <button class="tog ${st.smsMode==="own"?"on":""}" data-set="smsModeOwn">Μόνο τα δικά του ζεύγη</button>
+    </div>
+    <div class="row" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line-f)">
+      <span class="grow">Εκτίμηση συνόλου</span>
+      <span class="total">${segs} τμήματα</span>
+    </div>
+    <div class="tiny">${q.length} μηνύματα, ελληνικά (UCS-2). Πληρώνονται από το δικό σας τηλέφωνο.</div>
+    <div class="row tight noprint" style="margin-top:12px">
+      <button class="tog ${st.smsJudges?"on":""}" data-set="smsJudges">Ονόματα κριτών στο μήνυμα</button>
+    </div>
+    <div class="row" style="margin-top:14px">
+      <b class="grow">${sent} από ${q.length} στάλθηκαν</b></div>
+    <div class="bar"><i style="width:${q.length?Math.round(sent/q.length*100):0}%"></i></div>
+  </div>
+  ${q.map((x,i)=>{
+    const stt = t.sms[x.entry.id]==="ΕΣΤΑΛΗ", sg = smsSegments(x.body);
+    return `<div class="sms-row ${stt?"sent":""}">
+      <div class="row" style="align-items:flex-start">
+        <div class="grow">
+          <b style="font:600 19px/1.2 var(--f-d)">${esc(perName(x.entry.handlerId))}</b>
+          <div class="fingerprint">${esc(x.phone||"— χωρίς τηλέφωνο —")}</div>
+        </div>
+        <span class="seg ${sg>6?"hot":""}">${sg} τμ.</span>
+      </div>
+      <div class="preview">${esc(x.body)}</div>
+      <div class="row tight noprint">
+        <button class="${stt?"":"b-act"} grow" data-sms="${i}" ${x.phone?"":"disabled"}
+          ${stt?'style="background:var(--ok-bg);border-color:var(--ok);color:var(--ok-ink)"':""}>${stt?"Στάλθηκε":"Αποστολή"}</button>
+        <button class="b-sm" data-copy="${i}">Αντ.</button>
+        <button class="b-sm" data-wa="${i}" ${x.phone?"":"disabled"}>WhatsApp</button>
+        <button class="b-sm" data-smsdone="${x.entry.id}">${stt?"Αναίρεση":"Σήμανση"}</button>
+      </div></div>`;}).join("")}
+  <p class="tiny">Η σειρά είναι ενδεικτική – Άρθρο 16. Το μήνυμα ανοίγει στην εφαρμογή μηνυμάτων
+    του τηλεφώνου· η αποστολή γίνεται από εκεί.</p>`;
+}
+
+/* --- 8f. results --- */
+function tResults(t){
+  const day = t.days[S.day];
+  const rows = [];
+  day.terrains.forEach(tr=>(tr.braces||[]).forEach(b=>[b.a,b.b].forEach(id=>{
+    const e = t.entries.find(x=>x.id===id); if(!e) return;
+    const r = t.results[e.id] || {};
+    /* The app's arithmetic is advice and clearly subordinate: Άρθρο 27 caps are
+       shown as a hint, never as a block. The judge always overrides. */
+    const notes = t.notes[e.id+"::"+b.id] || {};
+    const whites = Math.max(0, ...Object.values(notes).map(n=>n.whites||0));
+    const faults = [].concat(...Object.values(notes).map(n=>n.faults||[]));
+    const hint = faults.length ? `Σφάλμα Άρθρου 33 καταγεγραμμένο: ${esc(faults.join(", "))}.`
+      : whites>=3 ? "3 λευκές φέρμες → αποκλεισμός αν είναι σε διαφορετικές κατευθύνσεις (Άρθρο 27)."
+      : whites===2 ? "2 λευκές φέρμες → μέγιστο ΠΟΛΥ ΚΑΛΟΣ (Άρθρο 27)."
+      : whites===1 ? "1 λευκή φέρμα δεν εμποδίζει CAC (Άρθρο 27)." : "";
+    rows.push(`<tr>
+      <td><b>${esc(dogName(e.dogId))}</b><div class="tiny">${esc(tr.name)} · ζεύγος ${b.no}${b.recall?" · επανάκληση":""}</div>
+        ${hint?`<div class="tiny" style="color:var(--stubble-ink)">${hint}</div>`:""}</td>
+      <td><select data-res="${e.id}|qual">${QUALS.map(q=>`<option ${r.qual===q?"selected":""}>${q}</option>`).join("")}</select></td>
+      <td><select data-res="${e.id}|award">${AWARDS.map(a=>`<option ${r.award===a?"selected":""}>${a}</option>`).join("")}</select></td>
+      <td class="num"><b style="font:800 21px/1 var(--f-d)">${pointsFor(t,r)}</b></td>
+      <td class="noprint"><button class="b-sm" data-note="${e.id}::${b.id}">Σημειώσεις</button></td>
+    </tr>`);
+  })));
+  if(!rows.length) return `<div class="empty">Κάντε πρώτα την κλήρωση. Η βαθμολογία ακολουθεί τα ζεύγη.</div>`;
+  return `<div class="note">Πόντοι = βασικοί πόντοι × συντελεστής ${coefficient(t)}
+    (${t.format==="ΖΕΥΓΗ"?"ζεύγη":"ατομικός"}${t.wild&&(t.type==="Έρευνας Κυνηγίου"||t.type==="Πρακτικού Κυνηγίου")?", άγριο θήραμα":""}).
+    Ο πίνακας πόντων είναι δεδομένα και αλλάζει από τις Ρυθμίσεις. Ο κριτής αποφασίζει τη
+    βαθμολογία· οι υποδείξεις της εφαρμογής είναι ενδεικτικές.</div>
+  <div class="card" style="padding:0"><div class="scroll"><table>
+    <thead><tr><th>Σκύλος</th><th>Βαθμολογία</th><th>Τίτλος</th><th>Πόντοι</th><th class="noprint"></th></tr></thead>
+    <tbody>${rows.join("")}</tbody></table></div></div>`;
+}
+
+/* --- 8g. export --- */
+function tExport(t){
+  return `<div class="card">
+    <div class="eyebrow">Εξαγωγές αγώνα</div>
+    <p class="tiny">Το Excel περιέχει φύλλο «Παραμετροι» με τον πίνακα πόντων. Όλοι οι πόντοι
+      υπολογίζονται με τύπους VLOOKUP/SUMIFS που δείχνουν εκεί — καμία σταθερή τιμή μέσα σε τύπο,
+      ώστε όποιος ανοίξει το αρχείο να μπορεί να ελέγξει την αριθμητική. Ανοίγει σε Excel και
+      LibreOffice. Η εκτύπωση είναι ασπρόμαυρη, για φωτοτυπία.</p>
+    <div class="row tight" style="margin-top:12px">
+      <button class="b-pri" data-act="xlsTrial">Excel με ζωντανούς τύπους</button>
+      <button data-act="docTrial">Word (αποτελέσματα)</button>
+      <button data-act="csvTrial">CSV ζευγών</button>
+      <button data-act="print">Εκτύπωση / PDF</button>
+      <button data-act="printNotes">Φύλλα σημειώσεων κριτή</button>
+    </div></div>
+
+  <div class="card">
+    <div class="eyebrow">Αποστολή σειράς ως κείμενο</div>
+    <p class="tiny">Για ομάδες WhatsApp ή Viber, την επιτροπή ή τον πίνακα ανακοινώσεων.
+      Στέλνει τη σειρά σε απλό κείμενο, όχι αρχείο.</p>
+    <div class="row tight" style="margin-top:12px">
+      <button class="b-pri" data-act="shareDraw">Κοινή χρήση</button>
+      <button data-act="waDraw">WhatsApp</button>
+      <button data-act="viberDraw">Viber</button>
+      <button data-act="smsDraw">SMS</button>
+      <button data-act="mailDraw">Email</button>
+    </div></div>
+
+  <div class="card">
+    <div class="eyebrow">Μεταφορά σε άλλη συσκευή</div>
+    <p class="tiny">Στέλνει μόνο αυτόν τον αγώνα, με τους σκύλους και τα πρόσωπά του — μικρό αρχείο
+      που περνά από κάθε εφαρμογή μηνυμάτων. Στην άλλη συσκευή: Ρυθμίσεις → Φόρτωση αρχείου →
+      Συγχώνευση. Κινηθείτε προς μία κατεύθυνση κάθε φορά: αν ο ίδιος αγώνας αλλάξει και στις δύο
+      συσκευές, υπερισχύει το αρχείο που φορτώθηκε τελευταίο.</p>
+    <div class="row tight" style="margin-top:12px">
+      <button class="b-pri" data-act="shareTrial">Αποστολή αγώνα</button>
+      <button data-act="backup">Λήψη πλήρους αντιγράφου</button>
+      <button data-act="restore">Φόρτωση αρχείου</button>
+    </div></div>`;
+}
+</script>
+
+<script>
+/* ---------- 9. Registry -------------------------------------------------- */
+/* Desk mode: dense, the same tokens. A sidebar of counts on the left, the
+   register in the middle. */
+function vRegistry(){
+  const tab = S.regTab || "dogs";
+  const dogs = DB.dogs.slice().sort((a,b)=>a.name.localeCompare(b.name,"el"));
+  const byBreed = {};
+  DB.dogs.forEach(d=>{ byBreed[d.breed||"—"] = (byBreed[d.breed||"—"]||0)+1; });
+
+  const side = `<div class="side noprint">
+    <button class="item ${tab==="dogs"?"on":""}" data-regtab="dogs">Σκύλοι · ${DB.dogs.length}</button>
+    <button class="item ${tab==="people"?"on":""}" data-regtab="people">Πρόσωπα · ${DB.people.length}</button>
+    <button class="item ${tab==="judges"?"on":""}" data-regtab="judges">Κριτές · ${DB.judges.length}</button>
+    <hr style="margin:16px 20px">
+    <div class="eyebrow" style="padding:0 20px">Φυλή</div>
+    <div class="tiny" style="padding:10px 20px 0;line-height:1.9">${
+      Object.entries(byBreed).sort((a,b)=>b[1]-a[1])
+        .map(([b,n])=>`${esc(b)} · ${n}`).join("<br>") || "—"}</div>
+  </div>`;
+
+  const heading = (eyebrow, title, right)=>`<div class="row" style="align-items:flex-end;gap:16px;margin-bottom:18px">
+    <div class="grow"><div class="eyebrow">${eyebrow}</div><h2 style="margin:0">${title}</h2></div>${right||""}</div>`;
+
+  let body;
+  if(tab === "people"){
+    body = heading("Μητρώο","Πρόσωπα",
+      `<button class="b-act" data-act="newPerson">Νέο πρόσωπο</button>`)
+      + (DB.people.length ? `<div class="card" style="padding:0"><table>
+        <thead><tr><th>Ονοματεπώνυμο</th><th>Κινητό</th><th>Αρ. μέλους</th><th class="noprint"></th></tr></thead>
+        <tbody>${DB.people.map(p=>`<tr>
+          <td><b>${esc(p.name)}</b></td>
+          <td class="num">${esc(p.phone||"—")}</td>
+          <td class="num">${esc(p.member||"—")}</td>
+          <td class="noprint"><button class="b-sm" data-editperson="${p.id}">Επεξεργασία</button></td>
+        </tr>`).join("")}</tbody></table></div>`
+      : `<div class="empty">Κανένα πρόσωπο ακόμη. Τα πρόσωπα δημιουργούνται και μόνα τους
+          όταν καταχωρείτε σκύλο ή εισάγετε αρχείο.</div>`);
+  } else if(tab === "judges"){
+    body = heading("Μητρώο","Κριτές",
+      `<button class="b-act" data-act="newJudge">Νέος κριτής</button>`)
+      + (DB.judges.length ? `<div class="card" style="padding:0"><table>
+        <thead><tr><th>Ονοματεπώνυμο</th><th>Ιδιότητα</th><th>Μεγάλη Έρευνα</th><th>Πρόσωπο</th><th class="noprint"></th></tr></thead>
+        <tbody>${DB.judges.map(j=>`<tr>
+          <td><b>${esc(j.name)}</b></td>
+          <td>${esc(j.licence||"—")}</td>
+          <td>${j.me?"Ναι":"—"}</td>
+          <td>${esc(perName(j.personId))}</td>
+          <td class="noprint"><button class="b-sm" data-editjudge="${j.id}">Επεξεργασία</button></td>
+        </tr>`).join("")}</tbody></table></div>`
+      : `<div class="empty">Κανένας κριτής ακόμη. Η σύνδεση κριτή με πρόσωπο επιτρέπει στην
+          κλήρωση να μην βάζει τον σκύλο του στο τερέν που κρίνει (Άρθρο 49).</div>`);
+  } else {
+    body = heading("Μητρώο","Σκύλοι",
+      `<div style="width:300px;max-width:100%"><input id="q" placeholder="Αναζήτηση ονόματος ή Κ.Ο.Κ."
+        oninput="filterDogs(this.value)"></div>
+       <button class="b-act" data-act="newDog">Νέος σκύλος</button>`)
+      + (dogs.length ? `<div class="card" style="padding:0"><div class="scroll"><table id="dogTbl">
+        <thead><tr><th>Όνομα</th><th>Κ.Ο.Κ.</th><th>Φύλο</th><th>Έτος</th><th>Φυλή</th>
+          <th>Ιδιοκτήτης</th><th>Αγώνες</th><th class="noprint"></th></tr></thead>
+        <tbody>${dogs.map(d=>{
+          const n = DB.trials.filter(t=>t.entries.some(e=>e.dogId===d.id)).length;
+          return `<tr data-name="${esc((d.name+" "+(d.reg||"")+" "+(d.kennel||"")).toLowerCase())}">
+          <td><b>${esc(d.name)}</b>${d.kennel?`<div class="tiny">${esc(d.kennel)}</div>`:""}</td>
+          <td class="num">${esc(d.reg||"—")}</td>
+          <td>${esc(d.sex||"—")}</td>
+          <td class="num">${d.dob?d.dob.slice(0,4):"—"}</td>
+          <td>${esc(d.breed||"—")}</td>
+          <td>${esc(perName(d.ownerId))}</td>
+          <td class="num">${n}</td>
+          <td class="noprint"><button class="b-sm" data-dog="${d.id}">Ιστορικό</button>
+            <button class="b-sm" data-editdog="${d.id}">Επεξ.</button></td></tr>`;}).join("")}
+        </tbody></table></div></div>`
+      : `<div class="empty">Κανένας σκύλος στο μητρώο. Εισαγάγετε αρχείο Excel ή προσθέστε σκύλο.</div>`)
+      + `<div class="card">
+        <div class="eyebrow">Εισαγωγή</div>
+        <p class="tiny">Excel (.xlsx), Word (.docx, από πίνακα) και CSV. Θα αντιστοιχίσετε μόνοι σας
+          ποια στήλη είναι τι· δεν χρειάζεται συγκεκριμένη σειρά στηλών. Οι σκύλοι που υπάρχουν
+          ήδη ενημερώνονται αντί να διπλογραφούν.</p>
+        <button class="b-pri" data-act="importDogs">Επιλογή αρχείου Excel / Word / CSV</button></div>`;
+  }
+  /* the sidebar is a desk affordance; on a phone the same three live in a row */
+  const phoneTabs = `<div class="badge-list reg-tabs noprint" style="margin-bottom:16px">
+    <button class="tog ${tab==="dogs"?"on":""}" data-regtab="dogs">Σκύλοι · ${DB.dogs.length}</button>
+    <button class="tog ${tab==="people"?"on":""}" data-regtab="people">Πρόσωπα · ${DB.people.length}</button>
+    <button class="tog ${tab==="judges"?"on":""}" data-regtab="judges">Κριτές · ${DB.judges.length}</button>
+  </div>`;
+  return `<div class="reg">${side}<div class="main">${phoneTabs}${body}</div></div>`;
+}
+function filterDogs(v){
+  v = (v||"").toLowerCase();
+  document.querySelectorAll("#dogTbl tbody tr").forEach(tr=>{
+    tr.style.display = !v || (tr.dataset.name||"").includes(v) ? "" : "none";
+  });
+}
+
+/* ---------- 10. Dog history --------------------------------------------- */
+function vDog(){
+  const d = dogById(S.dogId); if(!d){ S.view="registry"; return vRegistry(); }
+  const hist = [];
+  DB.trials.forEach(t=>{
+    const e = t.entries.find(x=>x.dogId===d.id); if(!e) return;
+    let ter="—", no="—";
+    t.days.forEach(day=>day.terrains.forEach(tr=>(tr.braces||[]).forEach(b=>{
+      if(b.a===e.id||b.b===e.id){ ter=tr.name; no=b.no; }})));
+    const r = t.results[e.id]||{};
+    const notes = {};
+    Object.keys(t.notes||{}).forEach(k=>{
+      if(k === e.id || k.startsWith(e.id + "::"))
+        Object.entries(t.notes[k]).forEach(([jid,n])=>{ notes[jid + "|" + k] = n; });
+    });
+    hist.push({t, ter, no, r, notes});
+  });
+  hist.sort((a,b)=>(b.t.dateStart||"").localeCompare(a.t.dateStart||""));
+  const total = hist.reduce((s,h)=>s+pointsFor(h.t,h.r),0);
+  /* The page breeders will actually use: a quiet chronological timeline,
+     newest first, with what each judge wrote. */
+  return `
+  <button class="b-sm noprint" data-nav="registry" style="margin-bottom:14px">‹ Μητρώο</button>
+  <div class="dog-hd">
+    <img src="${BADGE}" alt="">
+    <div class="grow" style="min-width:200px">
+      <div class="eyebrow">Ιστορικό σκύλου</div>
+      <h1>${esc(d.name)}</h1>
+      <div class="meta num">${esc(d.breed||"")}${d.sex?" · "+(d.sex==="Θ"?"Θηλυκό":"Αρσενικό"):""}${d.dob?" · "+fmtDate(d.dob):""}${d.reg?" · Κ.Ο.Κ. "+esc(d.reg):""}${d.cy?" · κυπριακής εκτροφής":""}
+        <br>Ιδιοκτήτης ${esc(perName(d.ownerId))}${d.kennel?" · εκτροφείο «"+esc(d.kennel)+"»":""}</div>
+    </div>
+    <div class="score"><b>${total}</b><span>πόντοι · ${hist.length} ${hist.length===1?"συμμετοχή":"συμμετοχές"}</span></div>
+  </div>
+  ${hist.map(h=>{
+    const q = h.r.qual && h.r.qual!=="-";
+    const chip = h.r.award && h.r.award!=="-"
+      ? `<span class="chip n">${esc(h.r.qual||"")} · ${esc(h.r.award)}</span>`
+      : q ? `<span class="chip o">${esc(h.r.qual)}</span>`
+      : `<span class="chip">χωρίς βαθμολογία</span>`;
+    const notes = Object.entries(h.notes);
+    return `<div class="tl">
+      <div class="when"><b>${fmtDate(h.t.dateStart)}</b><span>${esc(h.t.place||"")}</span></div>
+      <div class="rail"><i></i></div>
+      <div class="what">
+        <div class="row" style="align-items:baseline;gap:10px">
+          <h3 style="margin:0">${esc(h.t.type)}${h.ter!=="—"?` · ${esc(h.ter)} · ζεύγος ${h.no}`:" · αδιάθετο"}</h3>${chip}</div>
+        <div class="meta">${esc(h.t.title)}${h.t.wild?" · άγριο θήραμα":""} · συντελεστής ×${coefficient(h.t)}</div>
+        ${notes.map(([k,n])=>`<div class="said">${noteSummary(n)}
+          <cite>${esc((judById(k.split("|")[0])||{}).name||"Κριτής")}</cite></div>`).join("")}
+      </div>
+      <div class="pts"><b>${pointsFor(h.t,h.r)}</b><span>πόντοι</span></div>
+    </div>`;}).join("")
+    || `<div class="empty">Καμία συμμετοχή καταγεγραμμένη ακόμη για αυτόν τον σκύλο.</div>`}`;
+}
+function noteSummary(n){
+  const bits=[];
+  if(n.passion) bits.push("Πάθος "+n.passion+"/5");
+  if(n.method)  bits.push("Μεθοδικότητα "+n.method+"/5");
+  if(n.style)   bits.push("Καλπασμός και στυλ "+n.style+"/5");
+  if(n.contact) bits.push("Επαφή "+n.contact+"/5");
+  if(n.width)   bits.push("Έρευνα "+n.width.toLowerCase());
+  if(n.whites)  bits.push("Λευκές φέρμες "+n.whites);
+  const pts = (n.points||[]).length ? `<div class="tiny">Πόντοι: ${(n.points||[]).map(p=>
+      esc([p.game,p.quality,p.ferma,p.akinF].filter(Boolean).join(" / "))).join(" · ")}</div>` : "";
+  const f = (n.faults||[]).length ? `<div class="tiny" style="color:var(--bad)">Σφάλματα αποκλεισμού: ${esc(n.faults.join(", "))}</div>` : "";
+  return `${n.text?`<div>${esc(n.text)}</div>`:""}
+    <div class="tiny">${esc(bits.join(" · "))||"—"}</div>${pts}${f}`;
+}
+
+/* ---------- 11. Stats matrix -------------------------------------------- */
+function vStats(){
+  const trials = DB.trials.slice().sort((a,b)=>(a.dateStart||"").localeCompare(b.dateStart||""));
+  const map = {};                       // dogId -> trialId -> points
+  trials.forEach(t=>t.entries.forEach(e=>{
+    const r = t.results[e.id]; if(!r) return;
+    (map[e.dogId] = map[e.dogId]||{})[t.id] = pointsFor(t,r);
+  }));
+  const dogIds = Object.keys(map).sort((a,b)=>dogName(a).localeCompare(dogName(b),"el"));
+  if(!dogIds.length) return `<div class="empty"><h2>Χωρίς αποτελέσματα ακόμη</h2>
+    <p class="muted">Ο πίνακας γεμίζει μόλις βαθμολογηθεί ο πρώτος αγώνας.</p></div>`;
+  /* dogs as rows, trials as columns, totals both ways. This is the season at a
+     glance and it should look like a record, not a report. */
+  const rows = dogIds.map(id=>{
+    const tot = trials.reduce((s,t)=>s+(map[id][t.id]||0),0);
+    return `<tr><td class="first">${esc(dogName(id))}<span>${esc((dogById(id)||{}).breed||"")}</span></td>
+      ${trials.map(t=>{const v=map[id][t.id];
+        return `<td class="n ${v?"":"z"}">${v!==undefined&&v!==0?v:"–"}</td>`;}).join("")}
+      <td class="tot">${tot}</td><td class="tail"></td></tr>`;
+  }).join("");
+  const grand = dogIds.reduce((a,id)=>a+trials.reduce((s,t)=>s+(map[id][t.id]||0),0),0);
+  const totRow = `<tr class="sum"><td class="first">ΣΥΝΟΛΟ ΑΓΩΝΑ</td>${trials.map(t=>{
+      const s = dogIds.reduce((a,id)=>a+(map[id][t.id]||0),0);
+      return `<td class="n">${s}</td>`;}).join("")}
+      <td class="tot">${grand}</td><td class="tail"></td></tr>`;
+  const season = trials.length
+    ? (trials[0].dateStart||"").slice(0,4) + "–" + (trials[trials.length-1].dateStart||"").slice(0,4) : "";
+  return `
+  <div class="row" style="align-items:flex-end;gap:16px;margin-bottom:20px">
+    <div class="grow"><div class="eyebrow">Πίνακας σεζόν ${esc(season)}</div>
+      <h1 style="margin:0">Στατιστικά</h1></div>
+    <div class="tiny" style="text-align:right;max-width:340px">Πόντοι κατά Αξιολόγηση. Ζεύγη ×2,
+      άγριο θήραμα ×2. Ο πίνακας πόντων είναι δεδομένα και αλλάζει από τον όμιλο (Ρυθμίσεις).</div>
+  </div>
+  <div class="card" style="padding:0"><div class="scroll"><table class="matrix">
+    <thead><tr><th class="first">Σκύλος</th>
+      ${trials.map(t=>`<th class="v"><span>${esc(t.title)} ${fmtDate(t.dateStart).slice(0,5)}</span></th>`).join("")}
+      <th class="v"><span>ΣΥΝΟΛΟ</span></th><th class="v tail"></th></tr></thead>
+    <tbody>${rows}${totRow}</tbody></table></div></div>
+  <div class="row tight noprint" style="margin-top:18px">
+    <button data-act="xlsStats">Excel με ζωντανούς τύπους</button>
+    <button data-act="print">Εκτύπωση</button></div>`;
+}
+
+/* ---------- 12. Settings ------------------------------------------------- */
+function vSettings(){
+  return `
+  <div class="eyebrow">Ρυθμίσεις</div><h1>Μήνυμα, πόντοι, μεταφορά</h1>
+  <div class="card"><h3>Μήνυμα SMS</h3>
+    <p class="tiny">Το μήνυμα συντίθεται αυτόματα: επικεφαλίδα, οι διαδρομές του κυναγωγού,
+      ολόκληρη η σειρά της ημέρας με τα δικά του ζεύγη σημειωμένα, και κατακλείδα.</p>
+    <label>Επικεφαλίδα — πεδία {ΑΓΩΝΑΣ} {ΗΜΕΡΟΜΗΝΙΑ}</label>
+    <textarea id="smsTpl" style="min-height:60px">${esc(DB.settings.sms)}</textarea>
+    <label style="margin-top:8px">Κατακλείδα</label>
+    <textarea id="smsFoot" style="min-height:60px">${esc(DB.settings.smsFoot||DEFAULT_SMS_FOOT)}</textarea>
+    <div class="row tight" style="margin-top:10px">
+      <button class="tog ${DB.settings.smsMode!=="own"?"on":""}" data-set="smsModeFull">Πλήρης σειρά ημέρας</button>
+      <button class="tog ${DB.settings.smsMode==="own"?"on":""}" data-set="smsModeOwn">Μόνο τα δικά του ζεύγη</button>
+      <button class="tog ${DB.settings.smsJudges?"on":""}" data-set="smsJudges">Ονόματα κριτών</button>
+    </div>
+    <p class="tiny" style="margin-top:8px">Τα ελληνικά SMS χωρούν 70 χαρακτήρες στο πρώτο τμήμα και 67
+      σε κάθε επόμενο. Η πλήρης σειρά με 40 σκύλους βγάζει περίπου 15–20 τμήματα ανά μήνυμα.
+      Ο πραγματικός αριθμός φαίνεται στην καρτέλα SMS του αγώνα.</p>
+    <button class="b-sm b-pri" style="margin-top:8px" data-act="saveSms">Αποθήκευση</button></div>
+
+  <div class="card"><h3>Πίνακας βαθμών</h3>
+    <p class="tiny">Βασικοί βαθμοί ανά βαθμολογία/τίτλο. Πολλαπλασιάζονται με τον συντελεστή του αγώνα
+      (×2 ζεύγη, ×3 ή ×4 σε άγριο θήραμα για ΕΚ/ΠΚ).</p>
+    <table><tbody>${Object.keys(DB.settings.points).filter(k=>k!=="-").map(k=>`<tr>
+      <td>${esc(k)}</td>
+      <td style="width:110px"><input type="number" data-pt="${esc(k)}" value="${DB.settings.points[k]}"></td></tr>`).join("")}
+    </tbody></table>
+    <button class="b-sm b-pri" data-act="savePoints" style="margin-top:8px">Αποθήκευση</button>
+    <button class="b-sm" data-act="resetPoints">Επαναφορά κανονισμού</button></div>
+
+  <div class="card"><h3>Μεταφορά σε άλλη συσκευή</h3>
+    <p class="tiny">Δεν υπάρχει διακομιστής, οπότε αυτή είναι η μόνη συγχρόνιση. Η διαδρομή έχει
+      τρία βήματα:</p>
+    <ol class="tiny" style="padding-left:20px;line-height:1.8">
+      <li>Στον υπολογιστή, πριν τον αγώνα: μητρώο, συμμετοχές, τερέν και κριτές.
+        Μετά «Λήψη πλήρους αντιγράφου» και στείλτε το αρχείο στο κινητό.</li>
+      <li>Στο κινητό: «Φόρτωση αρχείου» → <b>Συγχώνευση</b>. Εκεί γίνεται η κλήρωση,
+        τα SMS, οι σημειώσεις και η βαθμολογία.</li>
+      <li>Μετά τον αγώνα: το ίδιο αντίστροφα, ώστε να έχει και ο υπολογιστής τα αποτελέσματα.</li>
+    </ol>
+    <div class="row tight" style="margin-top:12px">
+      <button class="b-pri" data-act="backup">Λήψη πλήρους αντιγράφου</button>
+      <button data-act="backupReg">Λήψη μόνο μητρώου</button>
+      <button data-act="restore">Φόρτωση αρχείου</button>
+    </div>
+    <p class="tiny" style="margin-top:12px"><b>Συγχώνευση</b> κρατά ό,τι υπάρχει ήδη και προσθέτει
+      ή ενημερώνει· <b>αντικατάσταση</b> σβήνει τα πάντα. Κινηθείτε προς μία κατεύθυνση κάθε φορά:
+      αν ο ίδιος αγώνας αλλάξει και στις δύο συσκευές, υπερισχύει το αρχείο που φορτώθηκε τελευταίο.
+      Το SMS δεν μπορεί να μεταφέρει τα δεδομένα — χρειάζεται αρχείο.</p></div>
+
+  <div class="card"><h3>Δεδομένα</h3>
+    <p class="tiny">Η εφαρμογή είναι μία σελίδα και λειτουργεί χωρίς σύνδεση. Τα δεδομένα μένουν
+      σε αυτή τη συσκευή και δεν συγχρονίζονται μόνα τους. Δύο κριτές σε δύο κινητά δεν βλέπουν
+      ο ένας τις αλλαγές του άλλου· ανταλλάσσουν αρχείο.
+      Κατάσταση αποθήκευσης: <b>${storageMode === "memory" ? "καμία — τα δεδομένα χάνονται με το κλείσιμο"
+        : storageMode === "app" ? "εφαρμογή" : "τοπική αποθήκευση"}</b>.</p>
+    <div class="row tight" style="margin-top:12px"><button class="b-warn" data-act="wipe">Διαγραφή όλων</button></div></div>`;
+}
+
+/* ---------- 13. Dialogs -------------------------------------------------- */
+function dlg(html){ el("dlgBody").innerHTML = html; el("dlg").showModal(); }
+function closeDlg(){ el("dlg").close(); }
+
+function fld(id,label,val,type){ return `<div class="grow"><label>${label}</label>
+  <input id="${id}" type="${type||"text"}" value="${esc(val??"")}"></div>`; }
+function sel(id,label,opts,val){ return `<div class="grow"><label>${label}</label><select id="${id}">
+  ${opts.map(o=>{const v=Array.isArray(o)?o[0]:o,t=Array.isArray(o)?o[1]:o;
+    return `<option value="${esc(v)}" ${String(val)===String(v)?"selected":""}>${esc(t)}</option>`;}).join("")}
+  </select></div>`; }
+
+function dlgTrial(t){
+  t = t || {};
+  dlg(`<h2>${t.id?"Επεξεργασία αγώνα":"Νέος αγώνας"}</h2>
+  <div class="row">${fld("t_title","Τίτλος αγώνα",t.title)}</div>
+  <div class="row">${sel("t_type","Είδος",TYPES,t.type||"Έρευνας Κυνηγίου")}
+    ${sel("t_format","Μορφή",[["ΖΕΥΓΗ","Ζεύγη"],["ΑΤΟΜΙΚΟΣ","Ατομικός"]],t.format||"ΖΕΥΓΗ")}</div>
+  <div class="row">${fld("t_game","Θήραμα",t.game||"Πέρδικα")}
+    ${sel("t_wild","Άγριο θήραμα",[["1","Ναι"],["0","Όχι"]],t.wild?"1":"0")}</div>
+  <div class="row">${sel("t_award","Αθλοθέτηση",["-","CACT","CACIT"],t.award||"-")}
+    ${fld("t_place","Τοποθεσία",t.place)}</div>
+  <div class="row">${fld("t_d1","Ημερομηνία έναρξης",t.dateStart||today(),"date")}
+    ${fld("t_days","Ημέρες",t.days?t.days.length:1,"number")}</div>
+  <div class="note" style="margin-top:10px">Η Μεγάλη Έρευνα γίνεται πάντα σε ζεύγη (Άρ. 4).
+    Για CACIT χρειάζονται 3 κριτές ανά τερέν (Άρ. 48).</div>
+  <div class="row"><button class="b-pri grow" data-act="saveTrial" data-id="${t.id||""}">Αποθήκευση</button>
+    <button class="grow" data-act="close">Άκυρο</button>
+    ${t.id?`<button class="b-warn" data-act="delTrial" data-id="${t.id}">Διαγραφή</button>`:""}</div>`);
+}
+
+function dlgDog(d){
+  d = d || {};
+  dlg(`<h2>${d.id?"Επεξεργασία σκύλου":"Νέος σκύλος"}</h2>
+  <div class="row">${fld("d_name","Όνομα",d.name)}${sel("d_breed","Φυλή",BREEDS,d.breed||BREEDS[0])}</div>
+  <div class="row">${sel("d_sex","Φύλο",[["Α","Αρσενικός"],["Θ","Θηλυκός"]],d.sex||"Α")}
+    ${fld("d_reg","Αρ. Κ.Ο.Κ.",d.reg)}</div>
+  <div class="row">${fld("d_chip","Τσιπ / δερματοστιξία",d.chip)}${fld("d_book","Αρ. βιβλιαρίου εργασίας",d.book)}</div>
+  <div class="row">${fld("d_dob","Ημ. γέννησης",d.dob,"date")}${fld("d_kennel","Εκτροφείο",d.kennel)}</div>
+  <hr><h3>Ιδιοκτήτης</h3>
+  <div class="row">${sel("d_owner","Επιλογή από το μητρώο",
+      [["","+ Νέος ιδιοκτήτης"]].concat(DB.people.map(p=>[p.id,p.name])),d.ownerId)}</div>
+  <div class="row">${fld("d_ownerName","Ονοματεπώνυμο",(perById(d.ownerId)||{}).name)}
+    ${fld("d_ownerPhone","Κινητό (+357…)",(perById(d.ownerId)||{}).phone,"tel")}</div>
+  <div class="tiny">Αν επιλέξετε υπάρχον πρόσωπο, οι αλλαγές εδώ ενημερώνουν και το μητρώο προσώπων.</div>
+  <div class="row" style="margin-top:10px">
+    ${sel("d_cy","Κυπριακής εκτροφής",[["1","Ναι"],["0","Όχι"]],d.cy?"1":"0")}</div>
+  <div class="row"><button class="b-pri grow" data-act="saveDog" data-id="${d.id||""}">Αποθήκευση</button>
+    <button class="grow" data-act="close">Άκυρο</button>
+    ${d.id?`<button class="b-warn" data-act="delDog" data-id="${d.id}">Διαγραφή</button>`:""}</div>`);
+}
+
+function dlgPerson(p){
+  p = p || {};
+  dlg(`<h2>${p.id?"Επεξεργασία προσώπου":"Νέο πρόσωπο"}</h2>
+  <div class="row">${fld("p_name","Ονοματεπώνυμο",p.name)}</div>
+  <div class="row">${fld("p_phone","Κινητό (μορφή +357…)",p.phone,"tel")}${fld("p_member","Αρ. μέλους",p.member)}</div>
+  <div class="tiny">Το τηλέφωνο χρησιμοποιείται μόνο για την ενημέρωση σειράς στους αγώνες.</div>
+  <div class="row"><button class="b-pri grow" data-act="savePerson" data-id="${p.id||""}">Αποθήκευση</button>
+    <button class="grow" data-act="close">Άκυρο</button></div>`);
+}
+
+function dlgJudge(j){
+  j = j || {};
+  dlg(`<h2>${j.id?"Επεξεργασία κριτή":"Νέος κριτής"}</h2>
+  <div class="row">${fld("j_name","Ονοματεπώνυμο",j.name)}</div>
+  <div class="row">${sel("j_lic","Ιδιότητα",["ΕΠΙΣΗΜΟΣ","ΔΟΚΙΜΟΣ"],j.licence||"ΕΠΙΣΗΜΟΣ")}
+    ${sel("j_me","Κριτής Μεγάλης Έρευνας",[["1","Ναι"],["0","Όχι"]],j.me?"1":"0")}</div>
+  <div class="row">${sel("j_person","Συνδεδεμένο πρόσωπο (για έλεγχο Άρθρου 49)",
+      [["","—"]].concat(DB.people.map(p=>[p.id,p.name])),j.personId)}</div>
+  <div class="tiny">Η σύνδεση με πρόσωπο επιτρέπει στην κλήρωση να μην τοποθετεί τον σκύλο του κριτή
+    στο τερέν που κρίνει (Άρθρο 49).</div>
+  <div class="row"><button class="b-pri grow" data-act="saveJudge" data-id="${j.id||""}">Αποθήκευση</button>
+    <button class="grow" data-act="close">Άκυρο</button></div>`);
+}
+
+function dlgTerrain(t, tr){
+  tr = tr || {};
+  dlg(`<h2>${tr.id?"Επεξεργασία τερέν":"Νέο τερέν"}</h2>
+  <div class="row">${fld("tr_name","Όνομα τερέν",tr.name||("Τερέν "+String.fromCharCode(913+t.days[S.day].terrains.length)))}</div>
+  <div class="row">${sel("tr_bg","Φυλή (μόνο για Derby)",[["","Όλες"],["POINTER","Pointer"],["SETTER","Setter"]],tr.breedGroup||"")}</div>
+  <label>Κριτές</label>
+  <div class="badge-list">${DB.judges.map(j=>
+    `<button class="tog ${(tr.judgeIds||[]).includes(j.id)?"on":""}" data-tj="${j.id}">${esc(j.name)}</button>`).join("")
+    ||`<span class="muted">Προσθέστε πρώτα κριτές στο Μητρώο.</span>`}</div>
+  <div class="row" style="margin-top:12px">
+    <button class="b-pri grow" data-act="saveTerrain" data-id="${tr.id||""}">Αποθήκευση</button>
+    <button class="grow" data-act="close">Άκυρο</button>
+    ${tr.id?`<button class="b-warn" data-act="delTerrain" data-id="${tr.id}">Διαγραφή</button>`:""}</div>`);
+}
+
+function femaleEntry(e){
+  const d = dogById(e && e.dogId ? e.dogId : (DB.dogs[0]||{}).id);
+  return d && d.sex === "Θ";
+}
+function dlgEntry(t, e){
+  e = e || {};
+  dlg(`<h2>${e.id?"Επεξεργασία συμμετοχής":"Νέα συμμετοχή"}</h2>
+  <div class="row">${sel("e_dog","Σκύλος",DB.dogs.map(d=>[d.id,d.name+" ("+d.breed+")"]),e.dogId)}</div>
+  <div class="row">${sel("e_handler","Κυναγωγός",[["","—"]].concat(DB.people.map(p=>[p.id,p.name])),e.handlerId)}</div>
+  <div class="row">${sel("e_status","Κατάσταση",["ΔΗΛΩΜΕΝΟΣ","ΑΠΟΣΥΡΘΗΚΕ","ΑΠΩΝ","ΣΥΜΠΛΗΡΩΜΑΤΙΚΟΣ"],e.status||"ΔΗΛΩΜΕΝΟΣ")}
+    ${sel("e_paid","Πληρωμένο",[["1","Ναι"],["0","Όχι"]],e.paid?"1":"0")}</div>
+  <div class="row" id="e_seasonRow" style="display:${femaleEntry(e)?"flex":"none"}">
+    ${sel("e_season","Σε οίστρο (Άρθρο 9)",[["0","Όχι"],["1","Ναι"]],e.season?"1":"0")}</div>
+  <div class="row"><button class="b-pri grow" data-act="saveEntry" data-id="${e.id||""}">Αποθήκευση</button>
+    <button class="grow" data-act="close">Άκυρο</button>
+    ${e.id?`<button class="b-warn" data-act="delEntry" data-id="${e.id}">Διαγραφή</button>`:""}</div>`);
+}
+
+function dlgTrailer(t, terrainId, braceId){
+  const drawn = new Set();
+  t.days[S.day].terrains.forEach(tr=>(tr.braces||[]).forEach(b=>{ drawn.add(b.a); if(b.b) drawn.add(b.b); }));
+  const opts = DB.dogs.slice().sort((a,b)=>a.name.localeCompare(b.name,"el"))
+    .map(d=>{ const e = t.entries.find(x=>x.dogId===d.id);
+      const used = e && drawn.has(e.id);
+      return [d.id, d.name + " (" + d.breed + ")" + (used ? " — τρέχει ήδη" : e ? " — δηλωμένος" : "")]; });
+  dlg(`<h2>Προσθήκη trailer</h2>
+  <p class="muted">Ο αριθμός σκύλων είναι μονός. Επιλέξτε σκύλο για να συμπληρωθεί το τελευταίο ζεύγος.
+    Ο trailer τρέχει για να ολοκληρωθεί η διαδρομή· δεν προστίθεται στην κλήρωση και δεν προσμετρά
+    στα ελάχιστα ζεύγη.</p>
+  <div class="row">${sel("tl_dog","Σκύλος",opts)}</div>
+  <div class="row">${sel("tl_handler","Κυναγωγός",[["","—"]].concat(DB.people.map(p=>[p.id,p.name])))}</div>
+  <div class="row" style="margin-top:12px">
+    <button class="b-pri grow" data-act="saveTrailer" data-id="${terrainId}|${braceId}">Προσθήκη</button>
+    <button class="grow" data-act="close">Άκυρο</button></div>`);
+}
+
+/* Structured judge notes — field mode, and the hardest screen. Chips and
+   steppers, not dropdowns: a point is three taps. The Άρθρο 33 faults sit
+   behind a red border and need a second confirmation, because eliminating a
+   dog is serious. */
+const WHITE_HINTS = [
+  "Καμία λευκή φέρμα.",
+  "Μία λευκή δεν εμποδίζει CAC (Άρθρο 27).",
+  "Δύο λευκές: μέγιστο ΠΟΛΥ ΚΑΛΟΣ (Άρθρο 27).",
+  "Τρεις λευκές σε διαφορετικές κατευθύνσεις: αποκλεισμός (Άρθρο 27)."
+];
+function dlgNote(t, runKey){
+  const entryId = runKey.split("::")[0];
+  const jid = S.judgeFilter || (DB.judges[0]||{}).id || "head";
+  const n = ((t.notes[runKey]||{})[jid]) || {points:[],faults:[]};
+  const entry = t.entries.find(e=>e.id===entryId) || {};
+
+  /* where the dog stands and in which brace — the judge is holding the phone
+     next to the dog and needs to know he is writing on the right sheet */
+  let where = "";
+  (t.days[S.day].terrains||[]).forEach(tr=>(tr.braces||[]).forEach(b=>{
+    if(b.id !== runKey.split("::")[1]) return;
+    where = `${tr.name} · ζεύγος ${b.no} · ${b.a===entryId?"δεξιά":"αριστερά"} της επιτροπής`
+      + (b.recall ? " · επανάκληση" : "");
+  }));
+
+  const scale = (k,label,v)=>`<div style="margin-bottom:14px">
+    <div style="font-size:17px">${label}</div>
+    <div class="scale" style="margin-top:8px">${[1,2,3,4,5].map(i=>
+      `<button class="tog ${v===i?"on":""}" data-nset="${k}|${i}">${i}</button>`).join("")}</div></div>`;
+  const widths = ["Στενή","Κανονική","Ανοικτή","Πολύ ανοικτή"];
+  const w = n.whites||0;
+
+  dlg(`<h2 style="margin-bottom:2px">${esc(dogName(entry.dogId))}</h2>
+  <div class="tiny" style="margin-bottom:16px">${esc(where||"")}${where?" · ":""}${esc(perName(entry.handlerId))}
+    <br>Κριτής: ${esc((judById(jid)||{}).name||"Πρόεδρος Κριτών")}</div>
+
+  <div class="card">
+    <div class="eyebrow">Έρευνα</div>
+    ${scale("passion","Πάθος",n.passion)}
+    ${scale("method","Μεθοδικότητα",n.method)}
+    ${scale("style","Καλπασμός και στυλ φυλής",n.style)}
+    ${scale("contact","Επαφή με κυναγωγό",n.contact)}
+    <div style="font-size:17px">Πλάτος έρευνας</div>
+    <div class="badge-list" style="margin-top:8px">${widths.map(x=>
+      `<button class="tog ${n.width===x?"on":""}" data-nwidth="${x}">${x}</button>`).join("")}</div>
+  </div>
+
+  <div class="card">
+    <div class="row"><span class="eyebrow grow" style="margin:0">Πόντοι</span>
+      <span class="muted" id="ptCount">${(n.points||[]).length} ${(n.points||[]).length===1?"πόντος":"πόντοι"}</span></div>
+    <div id="ptList" style="margin-top:12px">${(n.points||[]).map((p,i)=>ptRow(p,i)).join("")
+      ||`<div class="muted">Κανένας πόντος καταγεγραμμένος.</div>`}</div>
+    <button class="b-full" style="margin-top:12px" data-act="addPoint">+ Πόντος</button>
+  </div>
+
+  <div class="card">
+    <div class="row" style="align-items:flex-start;gap:14px">
+      <div class="grow">
+        <div class="eyebrow">Λευκές φέρμες</div>
+        <div class="tiny" id="whiteHint" style="max-width:230px">${WHITE_HINTS[Math.min(w,3)]}</div>
+      </div>
+      <div class="step">
+        <button data-nstep="whites|-1" aria-label="Μείωση">−</button>
+        <span class="val" id="v_whites">${w}</span>
+        <button data-nstep="whites|1" aria-label="Αύξηση">+</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="danger-zone">
+    <div class="eyebrow">Σφάλματα αποκλεισμού · Άρθρο 33</div>
+    <p style="font-size:16px">Ο αποκλεισμός τερματίζει τη διαδρομή. Επιλέξτε το σφάλμα και
+      επιβεβαιώστε· η ενέργεια καταγράφεται.</p>
+    <div class="badge-list">${FAULTS.map(f=>
+      `<button class="tog red ${(n.faults||[]).includes(f)?"on":""}" data-nfault="${esc(f)}">${f}</button>`).join("")}</div>
+    <button class="b-full" id="elimBtn" style="margin-top:14px;background:var(--bad);border-color:var(--bad);color:#fff"
+      data-act="confirmElim">Αποκλεισμός σκύλου</button>
+  </div>
+
+  <div class="card">
+    <div class="eyebrow">Ελεύθερο σχόλιο</div>
+    <textarea id="n_text" placeholder="Ό,τι δεν χωράει στα παραπάνω.">${esc(n.text||"")}</textarea>
+    <div class="row" style="margin-top:12px">
+      <button data-act="dictate" style="min-height:56px;padding:0 18px">🎙 Υπαγόρευση</button>
+      <span class="saved" id="noteSaved"></span>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top:16px">
+    <button class="b-pri grow" data-act="saveNote" data-id="${runKey}|${jid}">Αποθήκευση</button>
+    <button class="grow" data-act="close">Κλείσιμο</button></div>`);
+  window._note = JSON.parse(JSON.stringify(n));
+  window._noteKey = runKey + "|" + jid;
+}
+/* One point, logged with the thumb. Θήραμα and ποιότητα are two taps and the
+   point is on the sheet; everything below them is optional detail the judge
+   adds if the run gives him time. */
+function ptRow(p,i){
+  const grp=(id,label,opts)=>`<div style="margin-top:10px">
+    <div style="font-size:15px;color:var(--slate)">${label}</div>
+    <div class="badge-list" style="margin-top:6px">${opts.map(x=>
+      `<button class="tog ${p[id]===x?"on":""}" style="min-height:44px;font-size:16px;padding:0 12px"
+        data-ptset="${i}|${id}|${esc(x)}">${x}</button>`).join("")}</div></div>`;
+  /* θήραμα and ποιότητα are always open — that is the three-tap path. The rest
+     of the run is detail the judge opens when he has a hand free. */
+  const detail = ["ferma","pontar","akinF","akinS","aport","syn"].filter(k=>p[k]);
+  const summary = [p.quality, p.ferma, p.pontar].filter(Boolean).join(" · ");
+  return `<div style="border:1px solid var(--line-f);border-radius:var(--r);padding:12px;margin-bottom:10px">
+    <div class="row" style="flex-wrap:nowrap;align-items:baseline">
+      <div style="flex:1;min-width:0">
+        <b style="font:800 21px/1 var(--f-d)">${i+1}</b>
+        <span style="font:600 17px/1 var(--f-b);margin-left:8px">${esc(p.game||"—")}</span>
+        ${summary?`<div class="tiny">${esc(summary)}</div>`:""}
+      </div>
+      <button class="b-sm b-warn" style="flex:none" data-delpt="${i}">Διαγραφή</button></div>
+    ${grp("game","Θήραμα",["Πέρδικα","Φραγκολίνα","Μπεκάτσα","Ορτύκι","Άλλο"])}
+    ${grp("quality","Ποιότητα",["Ανέβασμα στην αναθυμίαση","Πόντος έκπληξης","Εξαίρετη ένδειξη"])}
+    <details ${detail.length?"open":""} style="margin-top:12px">
+      <summary style="font:600 16px/1 var(--f-b);color:var(--navy);padding:10px 0;cursor:pointer">
+        Λεπτομέρειες διαδρομής${detail.length?` · ${detail.length}`:""}</summary>
+      ${grp("ferma","Φέρμα",["Στέρεη","Μέτρια","Αδύναμη"])}
+      ${grp("pontar","Ποντάρισμα",["Αποφασιστικό","Με στήριξη","Άρνηση"])}
+      ${grp("akinF","Ακινησία στο πέταγμα",["Ναι","Μερική","Όχι"])}
+      ${grp("akinS","Ακινησία στον πυροβολισμό",["Ναι","Όχι"])}
+      ${grp("aport","Απόρτ",["Δεν ζητήθηκε","Σωστό","Ελλιπές","Άρνηση"])}
+      ${grp("syn","Συναίνεση",["Δεν προέκυψε","Αυθόρμητη","Κατόπιν εντολής","Άρνηση"])}
+    </details></div>`;
+}
+
+/* ---------- 14. Exports -------------------------------------------------- */
+function xmlEsc(s){ return esc(s); }
+function cell(v, formula, type){
+  if(formula) return `<Cell ss:Formula="${xmlEsc(formula)}"><Data ss:Type="Number"></Data></Cell>`;
+  const t = type || (typeof v === "number" ? "Number" : "String");
+  return `<Cell><Data ss:Type="${t}">${xmlEsc(v??"")}</Data></Cell>`;
+}
+function row(cells){ return `<Row>${cells.join("")}</Row>`; }
+function sheet(name, rows){ return `<Worksheet ss:Name="${xmlEsc(name)}"><Table>${rows.join("")}</Table></Worksheet>`; }
+function workbook(sheets){
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+<Styles><Style ss:ID="h"><Font ss:Bold="1"/></Style></Styles>
+${sheets.join("")}</Workbook>`;
+}
+function paramSheet(){
+  const keys = Object.keys(DB.settings.points).filter(k=>k!=="-");
+  return sheet("Παραμετροι", [row([cell("Κλειδι"),cell("Βασικοι βαθμοι")])]
+    .concat(keys.map(k=>row([cell(k),cell(DB.settings.points[k])]))));
+}
+function flatData(trials){
+  const rows = [row([cell("Σκυλος"),cell("Φυλη"),cell("Αγωνας"),cell("Ημερομηνια"),cell("Ειδος"),
+                     cell("Βαθμολογια"),cell("Τιτλος"),cell("Κλειδι"),cell("Συντελεστης"),cell("Βαθμοι")])];
+  trials.forEach(t=>t.entries.forEach(e=>{
+    const r = t.results[e.id]; if(!r) return;
+    const d = dogById(e.dogId)||{};
+    rows.push(row([cell(d.name||""),cell(d.breed||""),cell(t.title),cell(t.dateStart||""),cell(t.type),
+      cell(r.qual||"-"),cell(r.award||"-"),
+      cell(null,'=IF(RC[-1]<>"-",RC[-1],RC[-2])'),
+      cell(coefficient(t)),
+      cell(null,'=IFERROR(VLOOKUP(RC[-2],Παραμετροι!R2C1:R40C2,2,FALSE)*RC[-1],0)')]));
+  }));
+  return sheet("Δεδομενα", rows);
+}
+function statsSheet(trials){
+  const dogIds = [];
+  trials.forEach(t=>t.entries.forEach(e=>{ if(t.results[e.id] && !dogIds.includes(e.dogId)) dogIds.push(e.dogId); }));
+  const head = row([cell("Σκυλος")].concat(trials.map(t=>cell(t.title))).concat([cell("ΣΥΝΟΛΟ")]));
+  const rows = dogIds.map(id=>{
+    const cells = [cell(dogName(id))];
+    trials.forEach(()=>cells.push(cell(null,'=SUMIFS(Δεδομενα!C10,Δεδομενα!C1,RC1,Δεδομενα!C3,R1C)')));
+    cells.push(cell(null,`=SUM(RC[-${trials.length}]:RC[-1])`));
+    return row(cells);
+  });
+  return sheet("Στατιστικα", [head].concat(rows));
+}
+function bracesSheet(t){
+  const rows = [row([cell("Τερεν"),cell("Ζευγος"),cell("Σκυλος δεξια"),cell("Σκυλος αριστερα"),
+                     cell("Κυναγωγος δεξια"),cell("Κυναγωγος αριστερα"),cell("Κριτες")])];
+  t.days.forEach(day=>day.terrains.forEach(tr=>(tr.braces||[]).forEach(b=>{
+    const ea=t.entries.find(e=>e.id===b.a), eb=t.entries.find(e=>e.id===b.b);
+    rows.push(row([cell(tr.name),cell(b.no),cell(ea?dogName(ea.dogId):""),cell(eb?dogName(eb.dogId):"ΜΟΝΟΣ"),
+      cell(ea?perName(ea.handlerId):""),cell(eb?perName(eb.handlerId):""),
+      cell(tr.judgeIds.map(j=>(judById(j)||{}).name).join(", "))]));
+  })));
+  return sheet("Ζευγη", rows);
+}
+function exportTrialXls(t){
+  download(`KOAD_${t.title.replace(/\s+/g,"_")}.xls`, "application/vnd.ms-excel",
+    workbook([bracesSheet(t), flatData([t]), paramSheet(), statsSheet([t])]));
+  toast("Το αρχείο Excel κατέβηκε");
+}
+function exportStatsXls(){
+  const trials = DB.trials.slice().sort((a,b)=>(a.dateStart||"").localeCompare(b.dateStart||""));
+  download("KOAD_Statistika.xls","application/vnd.ms-excel",
+    workbook([flatData(trials), paramSheet(), statsSheet(trials)]));
+  toast("Το αρχείο Excel κατέβηκε");
+}
+function exportTrialCsv(t){
+  const lines = [["Τερέν","Ζεύγος","Δεξιά","Αριστερά","Κυναγωγός Δ","Κυναγωγός Α"].join(";")];
+  t.days.forEach(day=>day.terrains.forEach(tr=>(tr.braces||[]).forEach(b=>{
+    const ea=t.entries.find(e=>e.id===b.a), eb=t.entries.find(e=>e.id===b.b);
+    lines.push([tr.name,b.no,ea?dogName(ea.dogId):"",eb?dogName(eb.dogId):"ΜΟΝΟΣ",
+      ea?perName(ea.handlerId):"",eb?perName(eb.handlerId):""].join(";"));
+  })));
+  download(`KOAD_${t.title.replace(/\s+/g,"_")}.csv`,"text/csv","\uFEFF"+lines.join("\n"));
+}
+function exportTrialDoc(t){
+  const rows = [];
+  t.days.forEach(day=>day.terrains.forEach(tr=>(tr.braces||[]).forEach(b=>[b.a,b.b].forEach(id=>{
+    const e = t.entries.find(x=>x.id===id); if(!e) return;
+    const r = t.results[e.id]||{};
+    rows.push(`<tr><td>${esc(tr.name)}</td><td>${b.no}</td><td>${esc(dogName(e.dogId))}</td>
+      <td>${esc(perName(e.handlerId))}</td><td>${esc(r.qual||"-")}</td><td>${esc(r.award||"-")}</td>
+      <td>${pointsFor(t,r)}</td></tr>`);
+  }))));
+  const html = `<html><head><meta charset="utf-8"></head><body style="font-family:Calibri">
+    <h2>ΚΥΠΡΙΑΚΟΣ ΟΜΙΛΟΣ ΑΓΓΛΙΚΩΝ ΔΕΙΚΤΩΝ</h2>
+    <h3>${esc(t.title)}</h3>
+    <p>${esc(t.type)} · ${fmtDate(t.dateStart)} · ${esc(t.place||"")} · Θήραμα: ${esc(t.game||"")}</p>
+    <table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;font-size:11pt">
+    <tr><th>Τερέν</th><th>Ζεύγος</th><th>Σκύλος</th><th>Κυναγωγός</th><th>Βαθμολογία</th><th>Τίτλος</th><th>Βάθμοι</th></tr>
+    ${rows.join("")}</table>
+    <p style="font-size:9pt">Η σειρά είναι ενδεικτική (Άρθρο 16).</p></body></html>`;
+  download(`KOAD_${t.title.replace(/\s+/g,"_")}.doc`,"application/msword",html);
+}
+
+/* ---------- 15. Actions -------------------------------------------------- */
+document.addEventListener("click", ev=>{
+  const el2 = ev.target.closest("[data-nav],[data-tab],[data-day],[data-act],[data-open],[data-dog],[data-editdog],[data-editperson],[data-editjudge],[data-editterrain],[data-editentry],[data-note],[data-res],[data-bstat],[data-trailer],[data-untrailer],[data-recall],[data-sms],[data-copy],[data-wa],[data-smsdone],[data-set],[data-tj],[data-nstep],[data-nwidth],[data-nfault],[data-delpt],[data-nset],[data-ptset],[data-openbrace],[data-swap],[data-swapwith],[data-regtab]");
+  if(!el2) return;
+  const d = el2.dataset;
+  const t = trialById(S.trialId);
+
+  if(d.nav){ S.view=d.nav; S.trialId=null; render(); return; }
+  if(d.tab){ S.tab=d.tab; render(); return; }
+  if(d.day!==undefined && d.day!==""){ S.day=+d.day; render(); return; }
+  if(d.open){ S.view="trial"; S.trialId=d.open; S.tab="entries"; S.day=0; render(); return; }
+  if(d.dog){ S.view="dog"; S.dogId=d.dog; render(); return; }
+  if(d.editdog){ dlgDog(dogById(d.editdog)); return; }
+  if(d.editperson){ dlgPerson(perById(d.editperson)); return; }
+  if(d.editjudge){ dlgJudge(judById(d.editjudge)); return; }
+  if(d.editterrain){ dlgTerrain(t, t.days[S.day].terrains.find(x=>x.id===d.editterrain)); return; }
+  if(d.editentry){ dlgEntry(t, t.entries.find(x=>x.id===d.editentry)); return; }
+  if(d.note){ dlgNote(t, d.note); return; }
+
+  if(d.set === "smsModeFull"){ DB.settings.smsMode = "full"; save(); render(); return; }
+  if(d.set === "smsModeOwn"){  DB.settings.smsMode = "own";  save(); render(); return; }
+  if(d.set){ DB.settings[d.set] = !DB.settings[d.set]; save(); render(); return; }
+  if(d.tj){ el2.classList.toggle("on"); return; }
+  if(d.nwidth){ document.querySelectorAll("[data-nwidth]").forEach(b=>b.classList.remove("on"));
+    el2.classList.add("on"); window._note.width = d.nwidth; autosaveNote(); return; }
+  if(d.nfault){ el2.classList.toggle("on");
+    const f = window._note.faults || (window._note.faults=[]);
+    const i = f.indexOf(d.nfault); i>=0 ? f.splice(i,1) : f.push(d.nfault); autosaveNote(); return; }
+  /* the 1–5 scales: one tap sets the value, tapping the same one clears it */
+  if(d.nset){ const [k,v] = d.nset.split("|");
+    const val = window._note[k]===+v ? 0 : +v;
+    window._note[k] = val;
+    document.querySelectorAll(`[data-nset^="${k}|"]`).forEach(b=>
+      b.classList.toggle("on", +b.dataset.nset.split("|")[1] === val));
+    autosaveNote(); return; }
+  if(d.nstep){ const [k,delta] = d.nstep.split("|");
+    const max = k==="whites" ? 9 : 5;
+    window._note[k] = Math.max(0, Math.min(max, (window._note[k]||0) + (+delta)));
+    el("v_"+k).textContent = window._note[k];
+    /* Άρθρο 27 is advice to the judge, never a block */
+    if(k==="whites" && el("whiteHint"))
+      el("whiteHint").textContent = WHITE_HINTS[Math.min(window._note.whites,3)];
+    autosaveNote(); return; }
+  if(d.ptset){ const [i,f,v] = d.ptset.split("|");
+    const p = window._note.points[+i];
+    p[f] = p[f]===v ? "" : v;
+    redrawPoints(); autosaveNote(); return; }
+  if(d.delpt){ window._note.points.splice(+d.delpt,1); redrawPoints(); autosaveNote(); return; }
+  if(d.openbrace){ S.openBrace = S.openBrace===d.openbrace ? null : d.openbrace; render(); return; }
+
+  if(d.bstat){ const [tid,bid] = d.bstat.split("|");
+    const tr = t.days[S.day].terrains.find(x=>x.id===tid);
+    const b = tr.braces.find(x=>x.id===bid);
+    if(b){ setBraceStatus(b, b.status==="ΕΚΚΡΕΜΕΙ" ? "ΤΡΕΧΕΙ"
+      : b.status==="ΤΡΕΧΕΙ" ? "ΟΛΟΚΛΗΡΩΘΗΚΕ" : "ΕΚΚΡΕΜΕΙ");
+      save(); render(); }
+    return; }
+
+  /* Άρθρο 16 says the drawn order is an indication, so the head judge may
+     change it — but never silently. Both braces are marked and the mark is
+     printed. */
+  if(d.swap){ dlgSwap(t, d.swap); return; }
+  if(d.swapwith){ doSwap(t, el2.dataset.swapwith); return; }
+  if(d.regtab){ S.regTab = d.regtab; render(); return; }
+
+  if(d.trailer){ const [tid,bid] = d.trailer.split("|"); dlgTrailer(t, tid, bid); return; }
+
+  if(d.untrailer){ const [tid,bid] = d.untrailer.split("|");
+    const tr = t.days[S.day].terrains.find(x=>x.id===tid);
+    const b = tr.braces.find(x=>x.id===bid);
+    if(b){ b.b = null; b.solo = true; b.trailer = false; save(); render(); }
+    return; }
+
+  if(d.recall){                                  // Άρθρο 30 — επανάκληση
+    const [tid,eid] = d.recall.split("|");
+    const tr = t.days[S.day].terrains.find(x=>x.id===tid);
+    if(!tr) return;
+    if(!confirmAct("Επανάκληση του σκύλου; Θα προστεθεί νέα διαδρομή στο τέλος του τερέν.")) return;
+    tr.braces.push({id:uid(), no:tr.braces.length+1, a:eid, b:null, solo:true,
+                    recall:true, status:"ΕΚΚΡΕΜΕΙ"});
+    save(); render(); toast("Προστέθηκε επανάκληση");
+    return; }
+
+  if(d.sms!==undefined && el2.hasAttribute("data-sms")){
+    const x = smsQueue(t)[+d.sms];
+    location.href = `sms:${x.phone}?&body=${encodeURIComponent(x.body)}`;
+    t.sms[x.entry.id] = "ΕΣΤΑΛΗ"; save(); setTimeout(render,600); return; }
+  if(d.copy!==undefined && el2.hasAttribute("data-copy")){
+    const x = smsQueue(t)[+d.copy];
+    navigator.clipboard.writeText(x.body).then(()=>toast("Αντιγράφηκε")); return; }
+  if(d.wa!==undefined && el2.hasAttribute("data-wa")){
+    const x = smsQueue(t)[+d.wa];
+    window.open(`https://wa.me/${x.phone.replace(/\D/g,"")}?text=${encodeURIComponent(x.body)}`,"_blank"); return; }
+  if(d.smsdone){ t.sms[d.smsdone] = t.sms[d.smsdone]==="ΕΣΤΑΛΗ" ? "" : "ΕΣΤΑΛΗ"; save(); render(); return; }
+
+  ACT[d.act] && ACT[d.act](el2, t);
+});
+
+document.addEventListener("change", ev=>{
+  const t = trialById(S.trialId);
+  const r = ev.target.dataset.res;
+  if(r && t){ const [eid,f] = r.split("|");
+    t.results[eid] = t.results[eid] || {qual:"-",award:"-"};
+    t.results[eid][f] = ev.target.value; save(); render(); return; }
+  const p = ev.target.dataset.pt;
+  if(p && p.includes("|") && window._note){ const [i,f] = p.split("|");
+    window._note.points[+i][f] = ev.target.value; return; }
+  if(ev.target.id==="e_dog"){                       // οίστρος applies to bitches only
+    const dg = dogById(ev.target.value) || {};
+    const rowEl = el("e_seasonRow"); if(rowEl) rowEl.style.display = dg.sex==="Θ" ? "flex" : "none";
+    const h = el("e_handler"); if(h && !h.value && dg.ownerId) h.value = dg.ownerId;
+    return; }
+  if(ev.target.id==="d_owner"){                     // prefill owner details in the dog screen
+    const p = perById(ev.target.value) || {};
+    el("d_ownerName").value = p.name || ""; el("d_ownerPhone").value = p.phone || "";
+    return; }
+  if(ev.target.dataset.jfilter!==undefined){ S.judgeFilter = ev.target.value; render(); return; }
+});
+
+function redrawPoints(){
+  const pts = window._note.points || [];
+  /* a chip tap redraws the list; whatever the judge had open stays open */
+  const open = [...document.querySelectorAll("#ptList details")].map(d=>d.open);
+  el("ptList").innerHTML = pts.map((p,i)=>ptRow(p,i)).join("")
+    || `<div class="muted">Κανένας πόντος καταγεγραμμένος.</div>`;
+  document.querySelectorAll("#ptList details").forEach((d,i)=>{ if(open[i] !== undefined) d.open = open[i]; });
+  const c = el("ptCount");
+  if(c) c.textContent = pts.length + " " + (pts.length===1 ? "πόντος" : "πόντοι");
+}
+
+/* Autosave, with a quiet acknowledgement and never a modal. The judge is
+   walking; he cannot stop to dismiss a dialog. */
+let saveTick = null;
+function autosaveNote(){
+  const t = trialById(S.trialId);
+  if(!t || !window._noteKey) return;
+  const i = window._noteKey.lastIndexOf("|");
+  const key = window._noteKey.slice(0,i), jid = window._noteKey.slice(i+1);
+  const ta = el("n_text"); if(ta) window._note.text = ta.value.trim();
+  t.notes[key] = t.notes[key] || {};
+  t.notes[key][jid] = JSON.parse(JSON.stringify(window._note));
+  save();
+  const s = el("noteSaved");
+  if(s){ s.textContent = "Αποθηκεύτηκε";
+    clearTimeout(saveTick); saveTick = setTimeout(()=>{ if(el("noteSaved")) el("noteSaved").textContent = ""; }, 2500); }
+}
+
+/* Άρθρο 24 — the clock starts when the brace starts and stops when it ends */
+function setBraceStatus(b, status){
+  if(status==="ΤΡΕΧΕΙ" && b.status!=="ΤΡΕΧΕΙ"){ b.startedAt = Date.now(); }
+  if(status!=="ΤΡΕΧΕΙ" && b.status==="ΤΡΕΧΕΙ"){
+    b.elapsed = braceElapsed(b); b.startedAt = null;
+  }
+  if(status==="ΕΚΚΡΕΜΕΙ"){ b.elapsed = 0; b.startedAt = null; b.endedAt = null; }
+  if(status==="ΟΛΟΚΛΗΡΩΘΗΚΕ") b.endedAt = Date.now();
+  b.status = status;
+}
+
+/* --- manual change to a drawn order (Άρθρο 16) --- */
+function dlgSwap(t, spec){
+  const [tid, bid, eid] = spec.split("|");
+  const day = t.days[S.day];
+  const opts = [];
+  day.terrains.forEach(tr=>(tr.braces||[]).forEach(b=>[b.a,b.b].forEach(id=>{
+    if(!id || id===eid) return;
+    const e = t.entries.find(x=>x.id===id); if(!e) return;
+    opts.push({id, label:`${dogName(e.dogId)} — ${tr.name}, ζεύγος ${b.no}`});
+  })));
+  const me = t.entries.find(x=>x.id===eid) || {};
+  dlg(`<h2>Ανταλλαγή σκύλου</h2>
+  <p class="muted">Ο <b>${esc(dogName(me.dogId))}</b> θα πάρει τη θέση του σκύλου που θα επιλέξετε
+    και εκείνος τη δική του. Και τα δύο ζεύγη σημειώνονται ως χειροκίνητη αλλαγή και η σήμανση
+    τυπώνεται στη λίστα.</p>
+  ${opts.length ? `<div class="row"><div class="grow"><label>Ανταλλαγή με</label>
+    <select id="sw_with">${opts.map(o=>`<option value="${o.id}">${esc(o.label)}</option>`).join("")}</select></div></div>
+  <div class="row" style="margin-top:14px">
+    <button class="b-pri grow" data-swapwith="${tid}|${bid}|${eid}">Ανταλλαγή</button>
+    <button class="grow" data-act="close">Άκυρο</button></div>`
+  : `<div class="empty">Δεν υπάρχει άλλος κληρωμένος σκύλος για ανταλλαγή.</div>
+     <button class="b-full" data-act="close">Κλείσιμο</button>`}`);
+}
+function doSwap(t, spec){
+  const [,, eid] = spec.split("|");
+  const other = (el("sw_with")||{}).value;
+  if(!other) return;
+  if(!confirmAct("Χειροκίνητη αλλαγή στην κληρωμένη σειρά. Καταγράφεται και τυπώνεται. Συνέχεια;")) return;
+  const stamp = {by:"Πρόεδρος Κριτών", at:new Date().toLocaleString("el-GR")};
+  (t.days[S.day].terrains||[]).forEach(tr=>(tr.braces||[]).forEach(b=>{
+    let touched = false;
+    if(b.a===eid){ b.a = other; touched = true; } else if(b.a===other){ b.a = eid; touched = true; }
+    if(b.b===eid){ b.b = other; touched = true; } else if(b.b===other){ b.b = eid; touched = true; }
+    if(touched) b.manual = stamp;
+  }));
+  save(); closeDlg(); render(); toast("Η αλλαγή καταγράφηκε");
+}
+
+/* Printing a set of A4 sheets: fill the hidden container, print, put it back. */
+function printSheets(html){
+  el("sheets").innerHTML = html;
+  document.body.classList.add("sheets-only");
+  window.print();
+  setTimeout(()=>{ document.body.classList.remove("sheets-only"); el("sheets").innerHTML = ""; }, 500);
+}
+
+const ACT = {
+  close: ()=>closeDlg(),
+  /* the drawn order gets its own sheet rather than a squeezed screen */
+  print: (btn, t)=>{
+    if(!(t && S.view==="trial" && S.tab==="braces")) return window.print();
+    const day = t.days[S.day];
+    const terrains = day.terrains.filter(tr=>!S.judgeFilter || tr.judgeIds.includes(S.judgeFilter));
+    if(!day.draw || !terrains.length) return window.print();
+    printSheets(terrains.map(tr=>drawSheet(t, day, tr)).join(""));
+  },
+  newTrial: ()=>dlgTrial(),
+  editTrial: (b,t)=>dlgTrial(t),
+
+  /* the bottom bar of the live terrain */
+  nextBrace: (btn, t)=>{
+    const live = liveBrace(t);
+    if(live) setBraceStatus(live.b, "ΟΛΟΚΛΗΡΩΘΗΚΕ");
+    const next = nextPending(t);
+    if(next) setBraceStatus(next.b, "ΤΡΕΧΕΙ");
+    S.openBrace = null;
+    save(); render();
+    toast(next ? "Ζεύγος " + next.b.no : "Δεν απομένει άλλο ζεύγος");
+  },
+  pauseBrace: (btn, t)=>{
+    const live = liveBrace(t); if(!live) return;
+    const b = live.b;
+    if(b.startedAt){ b.elapsed = braceElapsed(b); b.startedAt = null; }
+    else b.startedAt = Date.now();
+    save(); render();
+  },
+
+  /* Eliminating a dog is serious, so it is stated plainly and asked twice. */
+  confirmElim: (btn, t)=>{
+    const faults = (window._note.faults||[]);
+    if(!faults.length) return toast("Επιλέξτε πρώτα το σφάλμα του Άρθρου 33");
+    const i = window._noteKey.lastIndexOf("|");
+    const entryId = window._noteKey.slice(0,i).split("::")[0];
+    const name = dogName((t.entries.find(e=>e.id===entryId)||{}).dogId);
+    if(!confirmAct(`Αποκλεισμός του ${name} για: ${faults.join(", ")}.\n\n`
+      + "Η διαδρομή τερματίζεται και η βαθμολογία γίνεται ΑΠΟΚΛΕΙΣΜΟΣ.")) return;
+    if(!confirmAct("Η ενέργεια καταγράφεται στο φύλλο του κριτή. Επιβεβαίωση αποκλεισμού;")) return;
+    t.results[entryId] = Object.assign({qual:"-",award:"-"}, t.results[entryId], {qual:"ΑΠΟΚΛΕΙΣΜΟΣ"});
+    autosaveNote(); save(); closeDlg(); render();
+    toast("Ο σκύλος αποκλείστηκε");
+  },
+
+  /* No dictation API on iOS Safari — the keyboard's own microphone is the one
+     that works everywhere, so say that instead of failing silently. */
+  dictate: ()=>{
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const ta = el("n_text"); if(!ta) return;
+    if(!SR){ ta.focus(); toast("Χρησιμοποιήστε το μικρόφωνο του πληκτρολογίου"); return; }
+    const r = new SR();
+    r.lang = "el-GR"; r.interimResults = false; r.continuous = true;
+    r.onresult = ev=>{
+      let s = "";
+      for(let i=ev.resultIndex;i<ev.results.length;i++) s += ev.results[i][0].transcript;
+      ta.value = (ta.value ? ta.value.replace(/\s*$/,"") + " " : "") + s.trim();
+      autosaveNote();
+    };
+    r.onerror = ()=>toast("Η υπαγόρευση δεν ξεκίνησε. Χρησιμοποιήστε το μικρόφωνο του πληκτρολογίου.");
+    try{ r.start(); toast("Ακούω…"); }catch(e){ ta.focus(); }
+  },
+  newDog: ()=>dlgDog(),
+  newPerson: ()=>dlgPerson(),
+  newJudge: ()=>dlgJudge(),
+  addTerrain: (e,t)=>dlgTerrain(t),
+  addEntry: (e,t)=>{ if(!DB.dogs.length) return toast("Προσθέστε πρώτα σκύλο («+ Νέος σκύλος») ή εισαγάγετε αρχείο"); dlgEntry(t); },
+  addPoint: ()=>{ (window._note.points = window._note.points||[]).push({}); redrawPoints(); autosaveNote(); },
+
+  saveTrial: (btn)=>{
+    const id = btn.dataset.id;
+    const nDays = Math.max(1, +el("t_days").value || 1);
+    let t = id ? trialById(id) : null;
+    const base = {
+      title: el("t_title").value.trim() || "Αγώνας",
+      type: el("t_type").value,
+      format: el("t_type").value==="Μεγάλης Έρευνας" ? "ΖΕΥΓΗ" : el("t_format").value,
+      game: el("t_game").value.trim(),
+      wild: el("t_wild").value==="1",
+      award: el("t_award").value,
+      place: el("t_place").value.trim(),
+      dateStart: el("t_d1").value
+    };
+    if(!t){
+      t = {id:uid(), ...base, status:"ΔΗΛΩΣΕΙΣ", entries:[], results:{}, notes:{}, sms:{}, days:[]};
+      DB.trials.push(t);
+    } else Object.assign(t, base);
+    while(t.days.length < nDays){
+      const dt = new Date(base.dateStart); dt.setDate(dt.getDate()+t.days.length);
+      t.days.push({date: dt.toISOString().slice(0,10), terrains:[], draw:null});
+    }
+    t.days.length = nDays;
+    save(); closeDlg(); S.view="trial"; S.trialId=t.id; S.day=0; render();
+  },
+  delTrial: (btn)=>{ if(!confirmAct("Οριστική διαγραφή του αγώνα και των αποτελεσμάτων του;")) return;
+    DB.trials = DB.trials.filter(x=>x.id!==btn.dataset.id); save(); closeDlg(); S.view="trials"; render(); },
+
+  saveDog: (btn)=>{
+    const id = btn.dataset.id;
+    const o = {name:el("d_name").value.trim(), breed:el("d_breed").value, sex:el("d_sex").value,
+      reg:el("d_reg").value.trim(), chip:el("d_chip").value.trim(), book:el("d_book").value.trim(),
+      dob:el("d_dob").value, kennel:el("d_kennel").value.trim(),
+      cy:el("d_cy").value==="1"};
+    if(!o.name) return toast("Το όνομα του σκύλου είναι υποχρεωτικό");
+    /* owner is created or updated from the same screen */
+    let ownerId = el("d_owner").value;
+    const on = el("d_ownerName").value.trim(), op = el("d_ownerPhone").value.trim();
+    if(ownerId){ const p = perById(ownerId); if(p){ if(on) p.name = on; if(op) p.phone = op; } }
+    else if(on){ ownerId = ensurePerson(on, op); }
+    o.ownerId = ownerId || "";
+    if(id) Object.assign(dogById(id), o); else DB.dogs.push({id:uid(), ...o});
+    save(); closeDlg(); render();
+  },
+  delDog: (btn)=>{ if(!confirmAct("Διαγραφή σκύλου από το μητρώο;")) return;
+    DB.dogs = DB.dogs.filter(x=>x.id!==btn.dataset.id); save(); closeDlg(); render(); },
+
+  savePerson: (btn)=>{
+    const id = btn.dataset.id;
+    const o = {name:el("p_name").value.trim(), phone:el("p_phone").value.trim(), member:el("p_member").value.trim()};
+    if(!o.name) return toast("Το ονοματεπώνυμο είναι υποχρεωτικό");
+    if(id) Object.assign(perById(id), o); else DB.people.push({id:uid(), ...o});
+    save(); closeDlg(); render();
+  },
+  saveJudge: (btn)=>{
+    const id = btn.dataset.id;
+    const o = {name:el("j_name").value.trim(), licence:el("j_lic").value,
+               me:el("j_me").value==="1", personId:el("j_person").value};
+    if(!o.name) return toast("Το ονοματεπώνυμο είναι υποχρεωτικό");
+    if(id) Object.assign(judById(id), o); else DB.judges.push({id:uid(), ...o});
+    save(); closeDlg(); render();
+  },
+  saveTerrain: (btn, t)=>{
+    const id = btn.dataset.id;
+    const judgeIds = [...document.querySelectorAll("[data-tj].on")].map(b=>b.dataset.tj);
+    const o = {name:el("tr_name").value.trim(), breedGroup:el("tr_bg").value, judgeIds};
+    const day = t.days[S.day];
+    if(id) Object.assign(day.terrains.find(x=>x.id===id), o);
+    else day.terrains.push({id:uid(), entryIds:[], braces:[], ...o});
+    save(); closeDlg(); render();
+  },
+  delTerrain: (btn, t)=>{ if(!confirmAct("Διαγραφή τερέν;")) return;
+    const day = t.days[S.day];
+    day.terrains = day.terrains.filter(x=>x.id!==btn.dataset.id); save(); closeDlg(); render(); },
+
+  saveEntry: (btn, t)=>{
+    const id = btn.dataset.id;
+    const dg = dogById(el("e_dog").value) || {};
+    const o = {dogId:el("e_dog").value, handlerId:el("e_handler").value, status:el("e_status").value,
+               paid:el("e_paid").value==="1",
+               season: dg.sex === "Θ" && el("e_season").value === "1"};
+    if(id) Object.assign(t.entries.find(x=>x.id===id), o); else t.entries.push({id:uid(), ...o});
+    save(); closeDlg(); render();
+  },
+  delEntry: (btn, t)=>{ t.entries = t.entries.filter(x=>x.id!==btn.dataset.id); save(); closeDlg(); render(); },
+
+  saveNote: ()=>{ autosaveNote(); closeDlg(); render(); toast("Οι σημειώσεις αποθηκεύτηκαν"); },
+
+  /* Re-drawing throws away an order handlers may already have been sent, so it
+     asks twice — once for the fact, once for the consequence. */
+  doDraw: (btn, t)=>{
+    const day = t.days[S.day];
+    if(day.draw){
+      if(!confirmAct("Υπάρχει ήδη κλήρωση για την ημέρα αυτή. Νέα κλήρωση την ακυρώνει και αλλάζει τη σειρά. Συνέχεια;")) return;
+      if(!confirmAct("Τα SMS που έχουν σταλεί δείχνουν την παλιά σειρά. Θα χρειαστεί να ξανασταλούν. Νέα κλήρωση;")) return;
+    }
+    const seed = (el("seedIn")||{}).value || "";
+    const mode = (el("drawMode")||{}).value || "ΚΛΗΡΩΣΗ";
+    const r = runDraw(t, S.day, seed.trim(), mode);
+    if(r.error){ alert(r.error); return; }
+    save(); S.tab="draw"; S.reveal = 0; render(); revealBraces(t);
+    if(r.warn && r.warn.length) setTimeout(()=>alert("Προσοχή:\n\n"+r.warn.join("\n")), 400);
+  },
+
+  smsAll: (btn, t)=>{
+    const q = smsQueue(t).filter(x=>t.sms[x.entry.id]!=="ΕΣΤΑΛΗ" && x.phone);
+    if(!q.length) return toast("Δεν εκκρεμούν μηνύματα");
+    const x = q[0];
+    location.href = `sms:${x.phone}?&body=${encodeURIComponent(x.body)}`;
+    t.sms[x.entry.id] = "ΕΣΤΑΛΗ"; save(); setTimeout(render,600);
+  },
+
+  saveTrailer: (btn, t)=>{
+    const [tid, bid] = btn.dataset.id.split("|");
+    const dogId = el("tl_dog").value;
+    const tr = t.days[S.day].terrains.find(x=>x.id===tid);
+    const b = (tr.braces||[]).find(x=>x.id===bid);
+    if(!tr || !b) return;
+    let e = t.entries.find(x=>x.dogId===dogId);
+    if(!e){ e = {id:uid(), dogId, handlerId:el("tl_handler").value||"", status:"ΣΥΜΠΛΗΡΩΜΑΤΙΚΟΣ",
+                 paid:false, season:false}; t.entries.push(e); }
+    else if(el("tl_handler").value) e.handlerId = el("tl_handler").value;
+    b.b = e.id; b.solo = false; b.trailer = true;
+    save(); closeDlg(); render(); toast("Ο trailer προστέθηκε");
+  },
+  /* One A4 sheet per dog of the day, identifying fields filled and everything
+     the judge writes left blank. */
+  printNotes: (btn, t)=>{
+    const day = t.days[S.day];
+    const sheets = [];
+    (day.terrains||[]).forEach(tr=>(tr.braces||[]).forEach(b=>[b.a,b.b].forEach(id=>{
+      const e = t.entries.find(x=>x.id===id); if(!e) return;
+      const d = dogById(e.dogId) || {};
+      sheets.push(noteSheet(t, day, tr, b, e, d));
+    })));
+    if(!sheets.length) return toast("Κάντε πρώτα την κλήρωση");
+    printSheets(sheets.join(""));
+  },
+  xlsTrial: (b,t)=>exportTrialXls(t),
+  csvTrial: (b,t)=>exportTrialCsv(t),
+  docTrial: (b,t)=>exportTrialDoc(t),
+  xlsStats: ()=>exportStatsXls(),
+
+  saveSms: ()=>{ DB.settings.sms = el("smsTpl").value;
+    DB.settings.smsFoot = el("smsFoot").value; save(); toast("Αποθηκεύτηκε"); },
+  savePoints: ()=>{ document.querySelectorAll("[data-pt]").forEach(i=>{
+      if(i.dataset.pt && i.type==="number") DB.settings.points[i.dataset.pt] = +i.value||0; });
+    save(); toast("Ο πίνακας βαθμών αποθηκεύτηκε"); },
+  resetPoints: ()=>{ DB.settings.points = {...DEFAULT_POINTS}; save(); render(); toast("Επαναφορά κανονισμού"); },
+
+  backup: ()=>download(`KOAD_${today()}.json`,"application/json",JSON.stringify(DB,null,1)),
+  backupReg: ()=>download(`KOAD_mitroo_${today()}.json`,"application/json",
+    JSON.stringify({v:1, people:DB.people, judges:DB.judges, dogs:DB.dogs, trials:[], settings:DB.settings},null,1)),
+  restore: ()=>{
+    const i = document.createElement("input"); i.type="file"; i.accept=".json,application/json";
+    i.onchange = () => { const f=i.files[0]; if(!f) return;
+      const r = new FileReader();
+      r.onload = () => {
+        let inc; try{ inc = JSON.parse(r.result); }catch(e){ return alert("Μη έγκυρο αρχείο."); }
+        if(!inc || !Array.isArray(inc.dogs)) return alert("Το αρχείο δεν είναι αντίγραφο της εφαρμογής.");
+        const counts = `${(inc.dogs||[]).length} σκύλοι, ${(inc.people||[]).length} πρόσωπα, `
+                     + `${(inc.judges||[]).length} κριτές, ${(inc.trials||[]).length} αγώνες`;
+        const merge = window.confirm(
+          "Το αρχείο περιέχει: " + counts + "\n\n"
+          + "ΟΚ = Συγχώνευση (κρατά τα υπάρχοντα, προσθέτει και ενημερώνει)\n"
+          + "Άκυρο = Αντικατάσταση όλων (σβήνει ό,τι υπάρχει στη συσκευή)");
+        if(!merge && !window.confirm("Σίγουρα αντικατάσταση; Ό,τι υπάρχει σε αυτή τη συσκευή θα χαθεί.")) return;
+        if(merge) mergeDB(inc); else DB = inc;
+        DB.settings = Object.assign({}, DEFAULT_SETTINGS, DB.settings||{});
+        migrate(); save(); S={view:"trials",tab:"entries",day:0,judgeFilter:""};
+        render(); toast(merge ? "Τα δεδομένα συγχωνεύτηκαν" : "Τα δεδομένα αντικαταστάθηκαν");
+      };
+      r.readAsText(f); };
+    i.click();
+  },
+  wipe: ()=>{ if(!confirmAct("Διαγραφή ΟΛΩΝ των δεδομένων; Δεν αναιρείται.")) return;
+    DB = blank(); save(); S={view:"trials",tab:"entries",day:0,judgeFilter:""}; render(); },
+  importEntries: null   // replaced by the Excel/Word importer below
+};
+
+/* ---------- 16. CSV import ---------------------------------------------- */
+function parseCsv(text){
+  return text.replace(/^\uFEFF/,"").split(/\r?\n/).filter(l=>l.trim())
+    .map(l => l.split(/[;,\t]/).map(c=>c.trim().replace(/^"|"$/g,"")));
+}
+function ensurePerson(name, phone){
+  if(!name) return "";
+  let p = DB.people.find(x=>x.name.toLowerCase()===name.toLowerCase());
+  if(!p){ p = {id:uid(), name, phone:phone||"", member:""}; DB.people.push(p); }
+  else if(phone && !p.phone) p.phone = phone;
+  return p.id;
+}
+/* Merge an incoming backup into the local one: for anything with the same id the
+   file wins; anything the file does not mention is left alone. This is what makes
+   laptop -> phone -> laptop round trips safe. */
+function mergeDB(inc){
+  ["people","judges","dogs","trials"].forEach(k=>{
+    DB[k] = DB[k] || [];
+    (inc[k]||[]).forEach(item=>{
+      const i = DB[k].findIndex(x=>x.id===item.id);
+      if(i>=0) DB[k][i] = item; else DB[k].push(item);
+    });
+  });
+}
+/* data saved before braces had ids — the per-run notes are keyed on them */
+function migrate(){
+  /* the old settings held one template with {ΣΚΥΛΟΣ}/{ΤΕΡΕΝ}/{ΖΕΥΓΟΣ}; the message
+     is now assembled from a header and a footer */
+  if(DB.settings && /\{ΣΚΥΛΟΣ\}|\{ΖΕΥΓΟΣ\}/.test(DB.settings.sms||"")){
+    DB.settings.sms = DEFAULT_SMS; DB.settings.smsFoot = DEFAULT_SMS_FOOT;
+  }
+  (DB.trials||[]).forEach(t=>{
+    t.notes = t.notes || {}; t.results = t.results || {}; t.sms = t.sms || {};
+    (t.days||[]).forEach(d=>(d.terrains||[]).forEach(tr=>(tr.braces||[]).forEach(b=>{
+      if(!b.id) b.id = uid();
+    })));
+  });
+}
+
+/* ---------- 17. Init ----------------------------------------------------- */
+window.addEventListener("online", render);
+window.addEventListener("offline", render);
+(async function(){
+  await probeStorage();
+  DB = await load();
+  DB.settings = Object.assign({}, DEFAULT_SETTINGS, DB.settings||{});
+  migrate();
+  render();
+})();
+</script>
+
+<script>
+/* ==========================================================================
+   18. Εισαγωγή από Excel (.xlsx) / Word (.docx) / CSV
+   .xlsx and .docx are ZIP containers. The browser can inflate them natively
+   with DecompressionStream, so no external library is needed and the app
+   keeps working with no internet connection.
+   ========================================================================== */
+
+/* ---- minimal ZIP reader ---- */
+async function unzip(buf){
+  const dv = new DataView(buf), u8 = new Uint8Array(buf);
+  let eocd = -1;
+  for(let i = u8.length - 22; i >= 0 && i > u8.length - 66000; i--){
+    if(dv.getUint32(i, true) === 0x06054b50){ eocd = i; break; }
+  }
+  if(eocd < 0) throw new Error("Το αρχείο δεν είναι έγκυρο ZIP/Office αρχείο.");
+  const count = dv.getUint16(eocd + 10, true);
+  let p = dv.getUint32(eocd + 16, true);
+  const files = {};
+  for(let n = 0; n < count; n++){
+    if(dv.getUint32(p, true) !== 0x02014b50) break;
+    const method  = dv.getUint16(p + 10, true);
+    const csize   = dv.getUint32(p + 20, true);
+    const nameLen = dv.getUint16(p + 28, true);
+    const extraLen= dv.getUint16(p + 30, true);
+    const cmtLen  = dv.getUint16(p + 32, true);
+    const lho     = dv.getUint32(p + 42, true);
+    const name    = new TextDecoder().decode(u8.subarray(p + 46, p + 46 + nameLen));
+    const lNameLen  = dv.getUint16(lho + 26, true);
+    const lExtraLen = dv.getUint16(lho + 28, true);
+    const start = lho + 30 + lNameLen + lExtraLen;
+    files[name] = {method, data: u8.subarray(start, start + csize)};
+    p += 46 + nameLen + extraLen + cmtLen;
+  }
+  return {
+    async text(name){
+      const f = files[name]; if(!f) return null;
+      if(f.method === 0) return new TextDecoder("utf-8").decode(f.data);
+      if(typeof DecompressionStream === "undefined")
+        throw new Error("Ο περιηγητής δεν υποστηρίζει αποσυμπίεση. Δοκιμάστε Chrome, Edge ή Safari 17+, ή αποθηκεύστε το αρχείο ως CSV.");
+      const st = new Blob([f.data]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+      return new TextDecoder("utf-8").decode(await new Response(st).arrayBuffer());
+    },
+    names: Object.keys(files)
+  };
+}
+
+/* ---- .xlsx ---- */
+const colIndex = ref => { let n = 0; for(const ch of ref.replace(/\d+/g,"")) n = n*26 + (ch.charCodeAt(0)-64); return n-1; };
+function xmlTexts(xml, tag){
+  const out = []; const re = new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>|<${tag}[^>]*/>`, "g");
+  let m; while((m = re.exec(xml))) out.push(m[1] ?? ""); return out;
+}
+const unxml = s => String(s).replace(/<[^>]+>/g,"")
+  .replace(/&#x([0-9a-fA-F]+);/g, (_,h)=>String.fromCodePoint(parseInt(h,16)))
+  .replace(/&#(\d+);/g,           (_,d)=>String.fromCodePoint(parseInt(d,10)))
+  .replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&amp;/g,"&");
+
+async function readXlsx(buf){
+  const z = await unzip(buf);
+  /* shared strings */
+  const ssXml = await z.text("xl/sharedStrings.xml");
+  const shared = ssXml ? xmlTexts(ssXml,"si").map(si => xmlTexts(si,"t").map(unxml).join("")) : [];
+
+  /* sheet order and names, straight from the workbook */
+  const wbXml = await z.text("xl/workbook.xml") || "";
+  const relXml = await z.text("xl/_rels/workbook.xml.rels") || "";
+  const rels = {};
+  (relXml.match(/<Relationship[^>]*>/g)||[]).forEach(r=>{
+    const id = (r.match(/Id="([^"]+)"/)||[])[1], tg = (r.match(/Target="([^"]+)"/)||[])[1];
+    if(id && tg) rels[id] = tg.replace(/^\/?xl\//,"").replace(/^\.\.\//,"");
+  });
+  let sheets = (wbXml.match(/<sheet[^>]*\/>/g)||[]).map(s=>({
+    name: unxml((s.match(/name="([^"]+)"/)||[])[1] || "Φύλλο"),
+    path: "xl/" + (rels[(s.match(/r:id="([^"]+)"/)||[])[1]] || "")
+  })).filter(s => z.names.includes(s.path));
+  if(!sheets.length)
+    sheets = z.names.filter(n=>/^xl\/worksheets\/sheet\d+\.xml$/.test(n)).sort()
+             .map((p,i)=>({name:"Φύλλο "+(i+1), path:p}));
+  if(!sheets.length) throw new Error("Δεν βρέθηκε φύλλο εργασίας.");
+
+  const readSheet = async path => {
+    const xml = await z.text(path); if(!xml) return [];
+    const rows = [];
+    (xml.match(/<row[^>]*>[\s\S]*?<\/row>|<row[^>]*\/>/g)||[]).forEach(rx=>{
+      const cells = [];
+      (rx.match(/<c[^>]*>[\s\S]*?<\/c>|<c[^>]*\/>/g)||[]).forEach(cx=>{
+        const ref = (cx.match(/r="([A-Z]+\d+)"/)||[])[1];
+        const type = (cx.match(/t="([^"]+)"/)||[])[1];
+        let v = "";
+        if(type === "inlineStr")      v = xmlTexts(cx,"t").map(unxml).join("");
+        else { const m = cx.match(/<v>([\s\S]*?)<\/v>/); const raw = m ? unxml(m[1]) : "";
+               v = (type === "s") ? (shared[+raw] ?? "") : raw; }
+        const i = ref ? colIndex(ref) : cells.length;
+        while(cells.length < i) cells.push("");
+        cells[i] = v;
+      });
+      rows.push(cells);
+    });
+    return rows;
+  };
+  const data = {};
+  for(const s of sheets) data[s.name] = await readSheet(s.path);
+  return {sheets: sheets.map(s=>s.name), data};
+}
+
+/* ---- .docx: first (or largest) table, else tab-separated paragraphs ---- */
+async function readDocx(buf){
+  const z = await unzip(buf);
+  const xml = await z.text("word/document.xml");
+  if(!xml) throw new Error("Δεν βρέθηκε περιεχόμενο εγγράφου Word.");
+  const tables = (xml.match(/<w:tbl>[\s\S]*?<\/w:tbl>/g)||[]);
+  if(tables.length){
+    const tbl = tables.sort((a,b)=>b.length-a.length)[0];
+    const rows = (tbl.match(/<w:tr[^>]*>[\s\S]*?<\/w:tr>/g)||[]).map(tr=>
+      (tr.match(/<w:tc>[\s\S]*?<\/w:tc>/g)||[]).map(tc=>
+        xmlTexts(tc,"w:t").map(unxml).join("").trim()));
+    return {sheets:["Πίνακας Word"], data:{"Πίνακας Word":rows}};
+  }
+  const paras = (xml.match(/<w:p[ >][\s\S]*?<\/w:p>/g)||[]).map(p=>
+    xmlTexts(p,"w:t").map(unxml).join("").trim()).filter(Boolean);
+  const rows = paras.map(l => l.split(/\t|\s{2,}|;/).map(c=>c.trim()));
+  return {sheets:["Κείμενο Word"], data:{"Κείμενο Word":rows}};
+}
+
+async function readAnyFile(file){
+  const ext = (file.name.split(".").pop()||"").toLowerCase();
+  if(ext === "csv" || ext === "txt"){
+    const txt = await file.text();
+    return {sheets:["CSV"], data:{CSV: parseCsv(txt)}};
+  }
+  const buf = await file.arrayBuffer();
+  if(ext === "xlsx" || ext === "xlsm") return readXlsx(buf);
+  if(ext === "docx") return readDocx(buf);
+  if(ext === "xls" || ext === "doc")
+    throw new Error("Οι παλιές μορφές .xls και .doc δεν υποστηρίζονται. Αποθηκεύστε το αρχείο ως .xlsx, .docx ή .csv.");
+  throw new Error("Άγνωστος τύπος αρχείου: ." + ext);
+}
+
+/* ---- normalisation ---- */
+const IMPORT_FIELDS = [["","— παράλειψη —"],["name","Όνομα σκύλου"],["breed","Φυλή"],["sex","Φύλο"],
+  ["reg","Αρ. Κ.Ο.Κ."],["chip","Τσιπ / δερματοστιξία"],["book","Βιβλιάριο εργασίας"],
+  ["dob","Ημ. γέννησης"],["kennel","Εκτροφείο"],["owner","Ιδιοκτήτης"],["ownerPhone","Τηλέφωνο ιδιοκτήτη"],
+  ["handler","Κυναγωγός"],["handlerPhone","Τηλέφωνο κυναγωγού"]];
+
+const GUESS = {
+  name:["όνομα σκύλου","ονομα σκυλου","σκύλος","σκυλος","dog","name","όνομα","ονομα"],
+  breed:["φυλή","φυλη","ράτσα","ratsa","breed"],
+  sex:["φύλο","φυλο","sex","gender"],
+  reg:["κ.ο.κ","κοκ","αρ. εγγρ","μητρώο","μητρωο","reg","pedigree","lof"],
+  chip:["τσιπ","chip","microchip","δερματ","tattoo"],
+  book:["βιβλιάριο","βιβλιαριο","work book","βιβλιο εργασιας"],
+  dob:["γέννησ","γεννησ","ημ. γεν","dob","birth","ηλικία"],
+  kennel:["εκτροφ","kennel","affix"],
+  owner:["ιδιοκτ","owner"],
+  ownerPhone:["τηλ. ιδιοκτ","τηλέφωνο ιδιοκτ","owner phone"],
+  handler:["κυναγωγ","χειριστ","handler","conductor"],
+  handlerPhone:["τηλ","τηλέφωνο","τηλεφωνο","phone","mobile","κινητό","κινητο"]
+};
+function guessField(header){
+  const h = String(header||"").toLowerCase().trim();
+  if(!h) return "";
+  for(const [f,keys] of Object.entries(GUESS))
+    if(keys.some(k=>h.includes(k))) return f;
+  return "";
+}
+function normBreed(v){
+  const s = String(v||"").toLowerCase();
+  if(!s) return null;
+  if(s.includes("point") || s.includes("πόιντ") || s.includes("ποιντ")) return "Pointer";
+  if(s.includes("irish") || s.includes("ιρλαν")) return "Ιρλανδικό Σέττερ";
+  if(s.includes("gordon")|| s.includes("σκωτ") || s.includes("scot")) return "Σκωτικό Σέττερ";
+  if(s.includes("sett")  || s.includes("σέττ") || s.includes("σετ"))  return "Αγγλικό Σέττερ";
+  return null;
+}
+function normSex(v){
+  const s = String(v||"").toLowerCase().trim();
+  return (s.startsWith("θ") || s.startsWith("f") || s.includes("θηλ")) ? "Θ" : "Α";
+}
+function normDate(v){
+  if(v === "" || v == null) return "";
+  const s = String(v).trim();
+  if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  if(/^\d+(\.\d+)?$/.test(s)){                       // Excel serial number
+    const n = parseFloat(s);
+    if(n > 1000 && n < 80000){
+      const d = new Date(Date.UTC(1899,11,30) + Math.round(n)*86400000);
+      return d.toISOString().slice(0,10);
+    }
+  }
+  const m = s.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{2,4})$/);
+  if(m){ let [_,d,mo,y] = m; if(y.length===2) y = "20"+y;
+    return `${y}-${String(mo).padStart(2,"0")}-${String(d).padStart(2,"0")}`; }
+  return "";
+}
+
+/* ---- import dialog ---- */
+async function startImport(file, trial){
+  let parsed;
+  try{ parsed = await readAnyFile(file); }
+  catch(e){ alert("Δεν ήταν δυνατή η ανάγνωση του αρχείου.\n\n" + e.message); return; }
+  const sheet = parsed.sheets[0];
+  if(!parsed.data[sheet] || !parsed.data[sheet].length){ alert("Το αρχείο δεν περιέχει δεδομένα."); return; }
+  window._imp = {parsed, sheet, header:0, map:{}, trial: trial||null, entries: !!trial,
+                 file: file.name};
+  window._imp.header = detectHeader(parsed.data[sheet]);
+  autoMap();
+  renderImport();
+}
+function impRows(){ return window._imp.parsed.data[window._imp.sheet] || []; }
+/* The real header is rarely row 1 — club files start with a title and a blank
+   line. Take the first row where at least two columns look like known fields. */
+function detectHeader(rows){
+  for(let i=0;i<Math.min(rows.length,15);i++){
+    const hits = (rows[i]||[]).filter(c=>guessField(c)).length;
+    if(hits >= 2) return i;
+  }
+  return 0;
+}
+function autoMap(){
+  const I = window._imp, rows = impRows(), hdr = rows[I.header] || [];
+  I.map = {};
+  let lastPerson = "";
+  hdr.forEach((h,i)=>{
+    let f = guessField(h);
+    /* a bare "Τηλέφωνο"/"Κινητό" belongs to whichever person column precedes it */
+    if(f === "handlerPhone" && lastPerson === "owner") f = "ownerPhone";
+    if(f === "owner" || f === "handler") lastPerson = f;
+    if(f && !Object.values(I.map).includes(f)) I.map[i] = f;
+  });
+  if(!Object.values(I.map).includes("name") && hdr.length) I.map[0] = "name";   // first column fallback
+}
+/* The mapping step. This screen decides whether the import is trusted: each
+   column of their file on the left with a sample value, the field it maps to on
+   the right, a header-row selector and a preview. It is the only chance to
+   catch a wrong column, so it is shown even when every guess was right. */
+function renderImport(){
+  const I = window._imp, rows = impRows(), hdr = rows[I.header] || [];
+  const preview = rows.slice(I.header+1, I.header+5);
+  const nCols = Math.max(hdr.length, ...rows.slice(0,10).map(r=>r.length));
+  const nData = Math.max(0, rows.length - I.header - 1);
+
+  const cols = [];
+  const ignored = [];
+  for(let i=0;i<nCols;i++){
+    if(!I.map[i]) ignored.push(hdr[i] || "Στήλη "+(i+1));
+    cols.push(`<div class="map-row">
+      <div class="from"><b>${esc(hdr[i]||"Στήλη "+(i+1))}</b>
+        <span>π.χ. ${esc((preview[0]||[])[i] || "—")}</span></div>
+      <div class="to"><select data-impmap="${i}">
+        ${IMPORT_FIELDS.map(([v,l])=>`<option value="${v}" ${I.map[i]===v?"selected":""}>${l}</option>`).join("")}
+      </select></div></div>`);
+  }
+
+  /* what the import will do, counted before it does it */
+  const idx = f => Object.keys(I.map).find(k=>I.map[k]===f);
+  const val = (r,f)=>{ const i = idx(f); return i===undefined ? "" : String(r[i]??"").trim(); };
+  let blank=0, known=0, noBreed=0, serials=0;
+  for(let n=I.header+1;n<rows.length;n++){
+    const r = rows[n]||[];
+    const name = val(r,"name");
+    if(!name){ blank++; continue; }
+    const reg = val(r,"reg");
+    if((reg && DB.dogs.some(d=>d.reg && d.reg.toLowerCase()===reg.toLowerCase()))
+      || DB.dogs.some(d=>d.name.toLowerCase()===name.toLowerCase())) known++;
+    if(!normBreed(val(r,"breed"))) noBreed++;
+    if(/^\d+(\.\d+)?$/.test(val(r,"dob"))) serials++;
+  }
+  const willImport = nData - blank;
+
+  const previewCols = ["name","reg","sex","dob","handler"];
+  const previewHead = {name:"Όνομα", reg:"Κ.Ο.Κ.", sex:"Φύλο", dob:"Γέννηση", handler:"Κυναγωγός"};
+
+  dlg(`<div class="eyebrow">${esc(I.file||"")}${I.parsed.sheets.length>1?" · φύλλο «"+esc(I.sheet)+"»":""}</div>
+  <h2>Αντιστοίχιση στηλών</h2>
+  <p class="muted">Η γραμμή επικεφαλίδων εντοπίστηκε αυτόματα. Ελέγξτε κάθε στήλη πριν την εισαγωγή·
+    είναι η μόνη ευκαιρία να πιαστεί λάθος στήλη.</p>
+
+  <div class="row" style="margin:16px 0">
+    ${I.parsed.sheets.length>1?`<div class="grow"><label>Φύλλο</label><select data-impsheet>
+      ${I.parsed.sheets.map(s=>`<option ${s===I.sheet?"selected":""}>${esc(s)}</option>`).join("")}</select></div>`:""}
+    <div class="grow"><label>Γραμμή επικεφαλίδων</label>
+      <input type="number" min="1" value="${I.header+1}" data-imphdr></div>
+  </div>
+
+  <div class="card" style="padding:0 var(--s4)">${cols.join("")}
+    ${ignored.length?`<p class="tiny" style="padding:12px 0">Δεν αντιστοιχίστηκαν και θα αγνοηθούν:
+      ${esc(ignored.join(", "))}.</p>`:""}</div>
+
+  <div class="eyebrow">Προεπισκόπηση · πρώτες ${preview.length} γραμμές</div>
+  <div class="card" style="padding:0"><div class="scroll" style="max-height:none"><table>
+    <thead><tr>${previewCols.map(c=>`<th>${previewHead[c]}</th>`).join("")}</tr></thead>
+    <tbody>${preview.map(r=>`<tr>${previewCols.map(c=>{
+      let v = val(r,c);
+      if(c==="dob") v = normDate(v) ? fmtDate(normDate(v)) : v;
+      if(c==="sex" && v) v = normSex(v);
+      return `<td>${esc(v||"—")}</td>`;}).join("")}</tr>`).join("")}</tbody>
+  </table></div></div>
+
+  <div class="note">
+    <b>Θα εισαχθούν ${willImport} σκύλοι</b><br>
+    ${willImport-known} νέοι, ${known} ενημερώνονται με βάση το Κ.Ο.Κ. ή το όνομα.
+    ${blank?`<br>${blank} ${blank===1?"κενή γραμμή παραλείφθηκε":"κενές γραμμές παραλείφθηκαν"}.`:""}
+    ${noBreed?`<br>${noBreed} χωρίς αναγνωρίσιμη φυλή καταχωρούνται ως ${BREEDS[0]}.`:""}
+    ${serials?`<br>${serials} ημερομηνίες από σειριακό αριθμό Excel.`:""}
+  </div>
+
+  ${I.trial?`<label style="display:flex;gap:10px;align-items:center;font-size:17px;color:var(--ink);margin:14px 0">
+    <input type="checkbox" data-impentries ${I.entries?"checked":""} style="width:24px;height:24px;min-height:0;flex:none">
+    Δημιουργία συμμετοχών στον αγώνα «${esc(I.trial.title)}»</label>`:""}
+
+  <div class="row" style="margin-top:16px">
+    <button data-act="close">Άκυρο</button>
+    <div class="grow"></div>
+    <button class="b-act" data-act="doImport">Εισαγωγή ${willImport} σκύλων</button>
+  </div>
+  <p class="tiny" style="margin-top:10px">Οι σκύλοι που υπάρχουν ήδη (ίδιος αρ. Κ.Ο.Κ. ή ίδιο όνομα)
+    ενημερώνονται αντί να διπλογραφούν.</p>`);
+}
+function doImport(){
+  const I = window._imp, rows = impRows();
+  const get = (r, f) => { const i = Object.keys(I.map).find(k=>I.map[k]===f);
+                          return i===undefined ? "" : String(r[i]??"").trim(); };
+  let added=0, updated=0, entries=0, skipped=0, breedGuessed=0;
+  for(let n = I.header+1; n < rows.length; n++){
+    const r = rows[n];
+    const name = get(r,"name");
+    if(!name){ skipped++; continue; }
+    const reg = get(r,"reg");
+    let dog = (reg && DB.dogs.find(d=>d.reg && d.reg.toLowerCase()===reg.toLowerCase()))
+           || DB.dogs.find(d=>d.name.toLowerCase()===name.toLowerCase());
+    const breed = normBreed(get(r,"breed"));
+    if(!breed && get(r,"breed")==="" ) breedGuessed++;
+    const ownerId   = get(r,"owner")   ? ensurePerson(get(r,"owner"),   get(r,"ownerPhone"))   : "";
+    const handlerId = get(r,"handler") ? ensurePerson(get(r,"handler"), get(r,"handlerPhone")) : ownerId;
+    const fields = {
+      name, breed: breed || (dog && dog.breed) || BREEDS[0],
+      sex: get(r,"sex") ? normSex(get(r,"sex")) : (dog ? dog.sex : "Α"),
+      reg: reg || (dog&&dog.reg) || "", chip: get(r,"chip") || (dog&&dog.chip) || "",
+      book: get(r,"book") || (dog&&dog.book) || "", dob: normDate(get(r,"dob")) || (dog&&dog.dob) || "",
+      kennel: get(r,"kennel") || (dog&&dog.kennel) || "",
+      ownerId: ownerId || (dog&&dog.ownerId) || ""
+    };
+    if(dog){ Object.assign(dog, fields); updated++; }
+    else { dog = {id:uid(), cy:true, ...fields}; DB.dogs.push(dog); added++; }
+
+    if(I.trial && I.entries && !I.trial.entries.some(e=>e.dogId===dog.id)){
+      I.trial.entries.push({id:uid(), dogId:dog.id, handlerId: handlerId || dog.ownerId || "",
+                            status:"ΔΗΛΩΜΕΝΟΣ", paid:false, season:false});
+      entries++;
+    }
+  }
+  save(); closeDlg(); render();
+  alert(`Εισαγωγή ολοκληρώθηκε.\n\n`
+    + `Νέοι σκύλοι: ${added}\nΕνημερώθηκαν: ${updated}\n`
+    + (I.trial ? `Νέες συμμετοχές: ${entries}\n` : "")
+    + (skipped ? `Γραμμές χωρίς όνομα (αγνοήθηκαν): ${skipped}\n` : "")
+    + (breedGuessed ? `\nΠροσοχή: ${breedGuessed} σκύλοι δεν είχαν φυλή και καταχωρήθηκαν ως «${BREEDS[0]}». Διορθώστε τους από το Μητρώο.` : ""));
+}
+
+/* ---- wiring ---- */
+document.addEventListener("change", ev=>{
+  const I = window._imp;
+  if(!I) return;
+  if(ev.target.dataset.impsheet!==undefined){ I.sheet = ev.target.value;
+    I.header = detectHeader(impRows()); autoMap(); renderImport(); return; }
+  if(ev.target.dataset.imphdr!==undefined){ I.header = Math.max(0,(+ev.target.value||1)-1); autoMap(); renderImport(); return; }
+  if(ev.target.dataset.impmap!==undefined){
+    const i = ev.target.dataset.impmap, v = ev.target.value;
+    if(v) Object.keys(I.map).forEach(k=>{ if(I.map[k]===v && k!==i) delete I.map[k]; });
+    v ? I.map[i]=v : delete I.map[i];
+    return;
+  }
+  if(ev.target.dataset.impentries!==undefined){ I.entries = ev.target.checked; return; }
+});
+
+ACT.doImport = () => doImport();
+ACT.importDogs = () => pickFile(null);
+ACT.importEntries = (b,t) => pickFile(t);
+function pickFile(trial){
+  const i = document.createElement("input");
+  i.type = "file"; i.accept = ".xlsx,.xlsm,.docx,.csv,.txt";
+  i.onchange = () => { if(i.files[0]) startImport(i.files[0], trial); };
+  i.click();
+}
+</script>
+
+<script>
+/* ==========================================================================
+   19. Αποστολή / μεταφορά — WhatsApp, Viber, Messenger, email, SMS
+   Files go through the phone's own share sheet (navigator.share), which is what
+   puts WhatsApp, Viber, Messenger and Mail in the list. On a laptop that sheet
+   usually does not exist, so we fall back to a download plus a pre-written email.
+   ========================================================================== */
+
+async function shareFile(filename, mime, content, note){
+  try{
+    if(navigator.canShare && typeof File !== "undefined"){
+      let f = new File([content], filename, {type:mime});
+      /* some apps refuse application/json — offer the same bytes as .txt */
+      if(!navigator.canShare({files:[f]}))
+        f = new File([content], filename.replace(/\.json$/,".txt"), {type:"text/plain"});
+      if(navigator.canShare({files:[f]})){
+        await navigator.share({files:[f], title:filename, text:note||""});
+        return "shared";
+      }
+    }
+  }catch(e){
+    if(e && e.name === "AbortError") return "cancelled";
+  }
+  download(filename, mime, content);
+  return "downloaded";
+}
+
+async function shareOrCopy(text, subject){
+  try{
+    if(navigator.share){ await navigator.share({text, title:subject||"Κ.Ο.Α.Δ."}); return; }
+  }catch(e){ if(e && e.name === "AbortError") return; }
+  try{ await navigator.clipboard.writeText(text); toast("Αντιγράφηκε — επικολλήστε στην εφαρμογή σας"); }
+  catch(e){ alert(text); }
+}
+
+/* one trial plus only the people and dogs it references — a small file to send */
+function trialPacket(t){
+  const dogIds = new Set(t.entries.map(e=>e.dogId));
+  const dogs   = DB.dogs.filter(d=>dogIds.has(d.id));
+  const perIds = new Set();
+  t.entries.forEach(e=>{ if(e.handlerId) perIds.add(e.handlerId); if(e.ownerId) perIds.add(e.ownerId); });
+  dogs.forEach(d=>{ if(d.ownerId) perIds.add(d.ownerId); });
+  const judgeIds = new Set();
+  (t.days||[]).forEach(d=>(d.terrains||[]).forEach(tr=>(tr.judgeIds||[]).forEach(j=>judgeIds.add(j))));
+  const judges = DB.judges.filter(j=>judgeIds.has(j.id));
+  judges.forEach(j=>{ if(j.personId) perIds.add(j.personId); });
+  return JSON.stringify({v:1, people:DB.people.filter(p=>perIds.has(p.id)),
+    judges, dogs, trials:[t], settings:DB.settings}, null, 1);
+}
+
+/* the running order as plain text — short enough for WhatsApp, Viber or SMS */
+function drawText(t){
+  const day = t.days[S.day];
+  return [`Κ.Ο.Α.Δ. – ${t.title}`, fmtDate(day.date), "", "ΣΕΙΡΑ ΖΕΥΓΩΝ", "",
+          orderText(t, null, DB.settings.smsJudges), "",
+          DB.settings.smsFoot || DEFAULT_SMS_FOOT].join("\n");
+}
+
+function mailWith(subject, body){
+  location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+/* ---- actions ---- */
+Object.assign(ACT, {
+  shareAll: async ()=>{
+    const r = await shareFile(`KOAD_${today()}.json`, "application/json", JSON.stringify(DB,null,1),
+      "Αντίγραφο Κ.Ο.Α.Δ. — ανοίξτε το στην εφαρμογή με «Φόρτωση αρχείου».");
+    if(r === "downloaded") afterDownload(`KOAD_${today()}.json`);
+  },
+  shareReg: async ()=>{
+    const c = JSON.stringify({v:1, people:DB.people, judges:DB.judges, dogs:DB.dogs,
+                              trials:[], settings:DB.settings}, null, 1);
+    const r = await shareFile(`KOAD_mitroo_${today()}.json`, "application/json", c,
+      "Μητρώο σκύλων Κ.Ο.Α.Δ.");
+    if(r === "downloaded") afterDownload(`KOAD_mitroo_${today()}.json`);
+  },
+  shareTrial: async (b,t)=>{
+    const name = `KOAD_${t.title.replace(/\s+/g,"_")}.json`;
+    const r = await shareFile(name, "application/json", trialPacket(t),
+      `Αγώνας: ${t.title} — φορτώστε το αρχείο στην εφαρμογή.`);
+    if(r === "downloaded") afterDownload(name);
+  },
+  mailBackup: ()=>{
+    const name = `KOAD_${today()}.json`;
+    download(name, "application/json", JSON.stringify(DB,null,1));
+    setTimeout(()=>mailWith("Αντίγραφο Κ.Ο.Α.Δ. " + today(),
+      `Επισυνάψτε το αρχείο ${name} που μόλις κατέβηκε.\n\n`
+      + `Στην άλλη συσκευή: ανοίξτε την εφαρμογή, Ρυθμίσεις → Φόρτωση αρχείου → Συγχώνευση.`), 700);
+  },
+
+  /* the running order as text */
+  shareDraw:  (b,t)=>shareOrCopy(drawText(t), t.title),
+  waDraw:     (b,t)=>window.open("https://wa.me/?text=" + encodeURIComponent(drawText(t)), "_blank"),
+  viberDraw:  (b,t)=>{ location.href = "viber://forward?text=" + encodeURIComponent(drawText(t)); },
+  smsDraw:    (b,t)=>{ location.href = "sms:?&body=" + encodeURIComponent(drawText(t)); },
+  mailDraw:   (b,t)=>mailWith(`${t.title} — σειρά ζευγών`, drawText(t))
+});
+
+/* Installable, fully offline app — only possible when served over http(s).
+   Opened straight from a file the registration is skipped without complaint. */
+if("serviceWorker" in navigator && location.protocol.startsWith("http")){
+  window.addEventListener("load", ()=>{
+    navigator.serviceWorker.register("./sw.js").catch(()=>{});
+  });
+}
+
+function afterDownload(name){
+  toast("Το αρχείο κατέβηκε: " + name);
+}
+</script>
+
+</body>
+</html>
