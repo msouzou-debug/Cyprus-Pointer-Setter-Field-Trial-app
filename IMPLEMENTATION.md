@@ -78,6 +78,44 @@ which also means it travels with a backup.
   connection state, so «Χωρίς αποθήκευση» could never appear. The storage state now wins, which is
   what the brief asks for.
 
+## Second round — field feedback
+
+Reported after the first trial run, plus the intuitiveness pass.
+
+- **The Excel export now really is Excel.** It was SpreadsheetML 2003 written to a `.xls`, which
+  Excel greets with "the file format and extension don't match", and every formula cell declared
+  itself an empty number while the key column returned text. It is now a genuine `.xlsx` — a ZIP
+  of OOXML parts, CRC32 and all, written here rather than with a library like everything else.
+  Points still come from `Παράμετροι` by VLOOKUP and the standings still add up `Δεδομένα` with
+  SUMIFS, so the arithmetic stays auditable. The harness opens every generated workbook with a
+  real xlsx parser and checks the sheets, cells and formulas; it does not ship.
+- **Dogs can be assigned to a terrain by hand.** The draw engine had always honoured
+  `terrain.assigned` + `entryIds`; no screen ever set them, so the capability was unreachable.
+  Anything left unassigned still falls to the draw. *This exposed a real bug:* a hand assignment
+  used to bypass Άρθρο 49 entirely. It does not outrank the regulation — an assignment that would
+  put a judge's own dog in his terrain is refused, the dog is allocated elsewhere, and the head
+  judge is told which ones moved.
+- **Braces can be reordered after the draw.** Numbering is positional, so brace 1 moved three
+  places down becomes brace 4. Both braces are marked as a manual change and the mark prints on
+  the draw list, per Άρθρο 16 — the order may be changed, never silently.
+- **Run length is a trial setting** (default 15, Άρθρο 24) with **+5′** on the running brace for a
+  judge who extends a run. The clock already counted past the limit rather than stopping; only the
+  fifteen was hard-coded.
+- **The Word export carries the judges' notes** — a section per run with each judge's scores,
+  points, λευκές φέρμες, Άρθρο 33 faults and free text, both runs when a dog was recalled, and the
+  unlock trail if any terrain was reopened.
+- **A progress strip** on the trial screen: Συμμετοχές → Τερέν → Κλήρωση → SMS → Βαθμολογία, what
+  is done and what is next. The app always had an order of operations and nothing conveyed it.
+- **A pre-draw check** — judges per terrain (Άρθρο 48), Άρθρο 49 conflicts, the three-brace
+  minimum (Άρθρο 40), manual assignments, an existing draw — said before the button, not in an
+  alert after it.
+- **Sign-off** locks a terrain's scores and notes; the sheet still opens, read-only. Unlocking
+  needs a reason, which is kept and printed. Spec §7 asked for this and it had never been built.
+- **Smaller:** a search box on Συμμετοχές; a dog can be created without leaving the entries screen
+  (an empty registry used to be a dead end with a toast pointing elsewhere); the trial's tabs are
+  one scrolling row instead of wrapping to three, which gives the field screens back their
+  vertical space.
+
 ## Deliberate departures from the canvas
 
 - **Offline chip.** The canvas shows «Εκτός σύνδεσης – 6 αλλαγές σε αναμονή». There is no server

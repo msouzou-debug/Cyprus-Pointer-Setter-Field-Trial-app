@@ -283,8 +283,33 @@ hr{border:0;border-top:1px solid var(--line);margin:var(--s4) 0}
 .tog.opt{min-height:44px;font-size:15px;padding:0 12px}
 .tog.opt.on{background:var(--navy-l);color:var(--navy);border-color:var(--navy)}
 .tog.opt.on::before{content:"✓ ";font-weight:700}
+.tog.assign{border-color:var(--line-s);background:#fff;color:var(--ink);font-weight:400}
+.tog.assign.on{background:var(--navy-l);border-color:var(--navy);color:var(--ink)}
+.tog.assign.on::before{content:"✓";font-weight:700;color:var(--navy);margin-right:10px;flex:none}
+button[disabled]{opacity:.4}
 .tog.red.on{background:var(--bad);border-color:var(--bad);color:#fff}
 .badge-list{display:flex;flex-wrap:wrap;gap:6px}
+/* the trial's own tabs: one row that scrolls, so the field screens keep their
+   vertical space instead of losing three rows to a wrapped tab bar */
+.tabstrip{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;
+  margin:0 calc(var(--s4) * -1) var(--s4);padding:0 var(--s4) 2px}
+.tabstrip::-webkit-scrollbar{display:none}
+.tabstrip .tog{flex:none;white-space:nowrap}
+/* the progress strip */
+.steps{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;
+  margin:0 calc(var(--s4) * -1) var(--s3);padding:0 var(--s4) 2px}
+.steps::-webkit-scrollbar{display:none}
+.step-i{flex:none;display:flex;align-items:center;gap:8px;min-height:44px;padding:6px 12px;
+  border:1px solid var(--line);background:#fff;border-radius:var(--r);cursor:pointer}
+.step-i .mark{width:22px;height:22px;border-radius:50%;flex:none;background:var(--line-f);
+  color:var(--slate);font:700 12px/22px var(--f-b);text-align:center}
+.step-i .lbl{font:600 15px/1.1 var(--f-b);color:var(--ink);white-space:nowrap;text-align:left}
+.step-i .lbl span{display:block;font:400 12px/1.3 var(--f-b);color:var(--slate);margin-top:2px}
+.step-i.done .mark{background:var(--ok);color:#fff}
+.step-i.now{border-color:var(--setter);box-shadow:inset 0 0 0 1px var(--setter)}
+.step-i.now .mark{background:var(--setter);color:#fff}
+@media (min-width:900px){ .steps{margin-left:0;margin-right:0;padding-left:0;padding-right:0} }
+@media (min-width:900px){ .tabstrip{margin-left:0;margin-right:0;padding-left:0;padding-right:0;flex-wrap:wrap} }
 .step{display:flex;align-items:center;gap:10px}
 .step button{width:52px;height:52px;min-height:52px;padding:0;font:600 24px/1 var(--f-b);
   border-color:var(--navy);color:var(--navy)}
@@ -598,7 +623,9 @@ function toast(msg){
 const BADGE = document.querySelector("header img").getAttribute("src");
 function confirmAct(msg){ return window.confirm(msg); }
 function download(name, mime, content){
-  const b = new Blob([content], {type:mime+";charset=utf-8"});
+  /* text gets a charset; a workbook is bytes and must not be labelled as text */
+  const binary = content instanceof Uint8Array;
+  const b = new Blob([content], {type: binary ? mime : mime + ";charset=utf-8"});
   const a = document.createElement("a");
   a.href = URL.createObjectURL(b); a.download = name; a.click();
   setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
@@ -650,7 +677,8 @@ function runDraw(trial, dayIdx, seedIn, mode){
   const seed = seedIn || (uid()+Date.now());
   const rnd  = mulberry32(hashStr(seed));
   const active = trial.entries.filter(e=>e.status==="ΔΗΛΩΜΕΝΟΣ");
-  const problems = [];
+  const problems = [];   /* dogs with nowhere to run — these stop the draw */
+  const notices  = [];   /* things he must be told, which do not stop it */
 
   if(!day.terrains.length) return {error:"Δεν έχουν οριστεί τερέν."};
   if(!active.length)       return {error:"Δεν υπάρχουν ενεργές συμμετοχές."};
@@ -678,11 +706,22 @@ function runDraw(trial, dayIdx, seedIn, mode){
       const t = eligibleTerrain(e); if(t) alloc[t.id].push(e); else problems.push(dogName(e.dogId));
     });
   } else if(manual){
+    /* A hand assignment says where the head judge wants a dog. It does not
+       outrank Άρθρο 49 — a judge may not have his own dog in the terrain he
+       judges — so an assignment that would break it is refused, the dog falls
+       through to normal allocation, and the head judge is told which ones
+       moved rather than discovering it on the running order. */
+    const refused = [];
     day.terrains.forEach(t=>{
       (t.entryIds||[]).forEach(eid=>{
-        const e = active.find(x=>x.id===eid); if(e) alloc[t.id].push(e);
+        const e = active.find(x=>x.id===eid); if(!e) return;
+        if(judgeConflict(t, e, trial)){ refused.push(dogName(e.dogId) + " → " + t.name); return; }
+        alloc[t.id].push(e);
       });
     });
+    if(refused.length) notices.push(
+      "Χειροκίνητη ανάθεση σε τερέν όπου ο κριτής έχει δικό του σκύλο (Άρθρο 49). "
+      + "Μετακινήθηκαν: " + refused.join(", ") + ".");
     const placed = new Set(Object.values(alloc).flat().map(e=>e.id));
     active.filter(e=>!placed.has(e.id)).forEach(e=>{
       const t = eligibleTerrain(e); if(t) alloc[t.id].push(e); else problems.push(dogName(e.dogId));
@@ -799,7 +838,7 @@ function runDraw(trial, dayIdx, seedIn, mode){
   day.draw = {seed, at:new Date().toISOString(), hash, mode:mode||"ΚΛΗΡΩΣΗ",
               constraints:{avoidOwner:soft.avoidOwner,avoidKennel:soft.avoidKennel,seasonLast:soft.seasonLast}};
   trial.status = "ΚΛΗΡΩΜΕΝΟΣ";
-  return {ok:true, warn};
+  return {ok:true, warn: notices.concat(warn)};
 }
 
 /* ---------- 6. Router / state ------------------------------------------- */
@@ -807,7 +846,7 @@ function runDraw(trial, dayIdx, seedIn, mode){
    been read out so far during the draw animation. openBrace is the collapsed
    brace the judge tapped open in the live terrain. */
 let S = {view:"trials", trialId:null, tab:"entries", day:0, judgeFilter:"", dogId:null,
-         reveal:null, openBrace:null};
+         reveal:null, openBrace:null, reorder:false, entryQ:""};
 
 function nav(){
   const tabs = [["trials","Αγώνες"],["registry","Μητρώο"],["stats","Στατιστικά"],
@@ -887,8 +926,10 @@ function fabFor(){
       return `<button class="b-act" data-act="doDraw">${label}</button>`;
     }
     if(S.tab==="braces"){
+      if(S.reorder) return "";
       const live = liveBrace(t);
       if(live) return `<button data-act="pauseBrace" style="flex:0 0 auto">${live.b.startedAt?"Παύση":"Συνέχεια"}</button>
+        <button data-act="extendBrace" style="flex:0 0 auto">+5′</button>
         <button class="b-act" data-act="nextBrace">Επόμενο ζεύγος</button>`;
       const next = nextPending(t);
       return next ? `<button class="b-act" data-act="nextBrace">Έναρξη ζεύγους ${next.b.no}</button>` : "";
@@ -931,7 +972,8 @@ function vTrial(){
   <div class="muted" style="margin-bottom:14px">${esc(t.type)} · ${t.format==="ΖΕΥΓΗ"?"Ζεύγη":"Ατομικός"}
    · ${esc(t.game||"—")}${t.wild?" (άγριο θήραμα)":""} · ${fmtDate(t.dateStart)} · ${esc(t.place||"")}
    · Συντελεστής ×${coefficient(t)}</div>
-  <div class="badge-list noprint" style="margin-bottom:14px">
+  ${progressStrip(t)}
+  <div class="tabstrip noprint">
     ${tabs.map(([k,l])=>`<button class="tog ${S.tab===k?"on":""}" data-tab="${k}">${l}</button>`).join("")}
   </div>
   ${t.days.length>1?`<div class="row tight noprint" style="margin-bottom:14px">
@@ -940,11 +982,39 @@ function vTrial(){
   ${body}`;
 }
 
+/* The app has an order of operations — entries, terrains, the draw, the SMS,
+   the scoring — and nothing on screen said so. This says it, and each step is
+   a way in. */
+function progressStrip(t){
+  const day = t.days[S.day];
+  const active = t.entries.filter(e=>e.status==="ΔΗΛΩΜΕΝΟΣ").length;
+  const judged = day.terrains.length && day.terrains.every(tr=>tr.judgeIds.length);
+  const q = day.draw ? smsQueue(t) : [];
+  const sent = q.filter(x=>t.sms[x.entry.id]==="ΕΣΤΑΛΗ").length;
+  const scored = t.entries.filter(e=>{ const r = t.results[e.id]; return r && r.qual && r.qual!=="-"; }).length;
+  const steps = [
+    ["entries",  "Συμμετοχές", active >= 6,        active ? active + " σκύλοι" : "καμία"],
+    ["terrains", "Τερέν",      day.terrains.length && judged,
+                                                   day.terrains.length ? day.terrains.length + " τερέν" : "κανένα"],
+    ["draw",     "Κλήρωση",    !!day.draw,         day.draw ? "έγινε" : "εκκρεμεί"],
+    ["sms",      "SMS",        q.length > 0 && sent === q.length,
+                                                   q.length ? sent + "/" + q.length : "—"],
+    ["results",  "Βαθμολογία", active > 0 && scored === active,
+                                                   scored ? scored + "/" + active : "—"]
+  ];
+  const firstOpen = steps.findIndex(x=>!x[2]);
+  return `<div class="steps noprint">${steps.map(([k,label,done,note],i)=>
+    `<button class="step-i ${done?"done":""} ${i===firstOpen?"now":""}" data-tab="${k}">
+      <span class="mark">${done?"✓":i+1}</span>
+      <span class="lbl">${label}<span>${esc(note)}</span></span>
+    </button>`).join("")}</div>`;
+}
+
 /* --- 8a. entries --- */
 function tEntries(t){
   const rows = t.entries.map(e=>{
     const d = dogById(e.dogId)||{};
-    return `<tr>
+    return `<tr data-find="${esc(((d.name||"") + " " + (d.reg||"") + " " + perName(e.handlerId)).toLowerCase())}">
       <td>${esc(d.name||"—")}<div class="tiny">${esc(d.breed||"")} ${d.sex?("· "+d.sex):""} ${d.reg?("· "+esc(d.reg)):""}</div></td>
       <td>${esc(perName(e.handlerId))}</td>
       <td class="n">${e.season?'<span class="chip y">οίστρος</span>':""} ${e.paid?'<span class="chip g">πληρ.</span>':'<span class="chip r">απλήρωτο</span>'}</td>
@@ -959,7 +1029,10 @@ function tEntries(t){
    ${min ? "Πληρούνται τα ελάχιστα: 6 σκύλοι και 3 ζεύγη."
      : `<b>Δεν πληρούνται τα ελάχιστα.</b> Χρειάζονται τουλάχιστον 6 σκύλοι και 3 ζεύγη
         (ΕΚ Άρθρο 5, Άρθρο 40). Προσθέστε συμμετοχές ή συγχωνεύστε τερέν.`}</div>
-  <div class="row tight noprint" style="margin-bottom:14px">
+  <div class="row noprint" style="margin-bottom:14px">
+    <div class="grow" style="max-width:340px">
+      <input id="entryQ" placeholder="Αναζήτηση σκύλου ή κυναγωγού"
+        value="${esc(S.entryQ||"")}" oninput="filterEntries(this.value)"></div>
     <button class="b-act" data-act="addEntry">+ Συμμετοχή</button>
     <button data-act="importEntries">Εισαγωγή αρχείου</button></div>
   ${rows ? `<div class="card" style="padding:0"><div class="scroll"><table>
@@ -984,7 +1057,17 @@ function tTerrains(t){
       <div class="row"><h3 class="grow" style="margin:0">${esc(tr.name)}</h3>
         <button class="b-sm" data-editterrain="${tr.id}">Επεξεργασία</button></div>
       <div class="muted" style="margin-top:8px">Κριτές: ${judges||"— κανένας —"}${tr.breedGroup?` · Φυλή: ${tr.breedGroup==="POINTER"?"Pointer":"Setter"}`:""}</div>
-      <div class="muted num">${(tr.entryIds||[]).length} σκύλοι · ${(tr.braces||[]).length} ζεύγη</div>
+      <div class="muted num">${(tr.entryIds||[]).length} σκύλοι · ${(tr.braces||[]).length} ζεύγη
+        ${tr.assigned?`<span class="chip n" style="margin-right:6px">ΧΕΙΡΟΚΙΝΗΤΗ ΑΝΑΘΕΣΗ</span>`:""}</div>
+      ${(tr.entryIds||[]).length ? `<div class="tiny" style="margin-top:6px">${
+        (tr.entryIds||[]).map(id=>{
+          const e = t.entries.find(x=>x.id===id);
+          return e ? esc(dogName(e.dogId)) : "";
+        }).filter(Boolean).join(" · ")}</div>` : ""}
+      <div class="row tight noprint" style="margin-top:12px">
+        <button class="b-sm" data-assign="${tr.id}">Ανάθεση σκύλων</button>
+        ${tr.assigned?`<button class="b-sm" data-autoassign="${tr.id}">Αυτόματη κατανομή</button>`:""}
+      </div>
       ${bad?`<div class="err" style="margin-top:12px;margin-bottom:0">
         <b>Το ${esc(tr.name)} έχει ${tr.judgeIds.length} ${tr.judgeIds.length===1?"κριτή":"κριτές"}.</b>
         Χρειάζονται τουλάχιστον ${cacit?3:need} (Άρθρο 48${cacit?" — για CACIT τρεις, ο ένας Μεγάλης Έρευνας":""}).
@@ -1039,6 +1122,8 @@ function tDraw(t){
       Ο ίδιος σπόρος με τις ίδιες συμμετοχές δίνει πάντα την ίδια σειρά.</div>
   </div>
 
+  ${drawCheck(t)}
+
   ${!d ? `<div class="empty">Καμία κλήρωση ακόμη για την ημέρα ${S.day+1}. Πατήστε «Κλήρωση» για
       να κατανεμηθούν οι σκύλοι στα τερέν και να σχηματιστούν τα ζεύγη.</div>`
     : `<div style="display:flex;flex-direction:column;gap:10px">
@@ -1068,7 +1153,14 @@ function tDraw(t){
 /* Άρθρο 24 — each run lasts 15 minutes. The clock counts that down and keeps
    counting past zero rather than stopping, because the judge decides when the
    run ends, not the timer. */
-const RUN_SECS = 15*60;
+const RUN_SECS = 15*60;                                  /* Άρθρο 24 */
+/* The regulation says fifteen minutes. Some trials run longer and a judge may
+   extend a run he wants to see more of, so the length is a trial setting and
+   the extension is per brace. */
+function runSecs(t, b){
+  const base = (t && +t.runMins > 0 ? +t.runMins : 15) * 60;
+  return base + ((b && b.extra) || 0);
+}
 function braceElapsed(b){
   let s = b.elapsed || 0;
   if(b.startedAt) s += Math.floor((Date.now() - b.startedAt)/1000);
@@ -1085,7 +1177,7 @@ function startClocks(){
   if(!document.querySelector("[data-clock]")) return;
   const tick = ()=>{
     document.querySelectorAll("[data-clock]").forEach(n=>{
-      const left = RUN_SECS - (+n.dataset.elapsed + (n.dataset.running==="1"
+      const left = (+n.dataset.allow || RUN_SECS) - (+n.dataset.elapsed + (n.dataset.running==="1"
         ? Math.floor((Date.now() - +n.dataset.since)/1000) : 0));
       n.textContent = clockText(left);
       n.classList.toggle("over", left < 0);
@@ -1093,10 +1185,11 @@ function startClocks(){
   };
   tick(); clockTimer = setInterval(tick, 1000);
 }
-function clockEl(b, big){
-  const running = !!b.startedAt;
+function clockEl(b, big, t){
+  const running = !!b.startedAt, allow = runSecs(t, b);
   return `<span class="clock${big?" big":""}" data-clock data-elapsed="${b.elapsed||0}"
-    data-running="${running?1:0}" data-since="${b.startedAt||0}">${clockText(RUN_SECS - braceElapsed(b))}</span>`;
+    data-running="${running?1:0}" data-since="${b.startedAt||0}" data-allow="${allow}"
+    >${clockText(allow - braceElapsed(b))}</span>`;
 }
 
 function qualChip(t, id){
@@ -1162,13 +1255,13 @@ function braceCard(t, tr, b, opts){
     <div class="bhead">
       <div class="bno">${b.no}</div>
       ${opts.big&&running?`<div style="margin-left:auto;text-align:right">
-          ${state}${clockEl(b,true)}
-          <div class="tiny" style="color:#ffffffcc;margin-top:4px">από 15:00 (Άρθρο 24)</div></div>`
+          ${state}${clockEl(b,true,t)}
+          <div class="tiny" style="color:#ffffffcc;margin-top:4px">από ${clockText(runSecs(t,b))} (Άρθρο 24)</div></div>`
         :`${b.recall?`<span class="chip y">ΕΠΑΝΑΚΛΗΣΗ</span>`:""}
           ${b.trailer?`<span class="chip n">ΜΕ ΣΥΜΠΛΗΡΩΜΑΤΙΚΟ</span>`:""}
           ${b.manual?`<span class="chip dash">ΧΕΙΡΟΚΙΝΗΤΗ ΑΛΛΑΓΗ</span>`:""}
           ${qualChip(t,b.a)} ${b.b?qualChip(t,b.b):""}
-          ${state}${running?clockEl(b):""}`}
+          ${state}${running?clockEl(b,false,t):""}`}
       <button class="b-sm noprint" data-bstat="${tr.id}|${b.id}">${
         b.status==="ΕΚΚΡΕΜΕΙ"?"Έναρξη":running?"Λήξη":"Επαναφορά"}</button>
     </div>
@@ -1179,6 +1272,24 @@ function braceCard(t, tr, b, opts){
     </div>
     ${foot.length?`<div class="bfoot">${foot.join("<br>")}</div>`:""}
     ${extra.length?`<div class="bfoot noprint"><div class="row tight">${extra.join("")}</div></div>`:""}</div>`;
+}
+
+/* reorder mode: the same row with a handle at each end. Deliberately not
+   drag-and-drop — a gloved thumb on a hillside wants a target it can hit. */
+function braceMove(t, tr, b, i, n){
+  const ea = t.entries.find(e=>e.id===b.a), eb = t.entries.find(e=>e.id===b.b);
+  const names = (ea?dogName(ea.dogId):"—") + " / " + (eb?dogName(eb.dogId):"ΜΟΝΟΣ");
+  return `<div class="brief" style="cursor:default">
+    <span class="n">${b.no}</span>
+    <span class="who"><b>${esc(names)}</b>
+      ${b.manual?`<span class="tiny">χειροκίνητη αλλαγή</span>`:""}</span>
+    <span class="row tight" style="flex:none;flex-wrap:nowrap">
+      <button class="b-sm" data-bmove="${tr.id}|${b.id}|-1" ${i===0?"disabled":""}
+        aria-label="Πάνω" style="width:52px;padding:0">↑</button>
+      <button class="b-sm" data-bmove="${tr.id}|${b.id}|1" ${i===n-1?"disabled":""}
+        aria-label="Κάτω" style="width:52px;padding:0">↓</button>
+    </span>
+  </div>`;
 }
 
 /* collapsed: a number and two names, which is all you need to know where you are */
@@ -1216,7 +1327,12 @@ function tBraces(t){
       ${DB.judges.map(j=>`<option value="${j.id}" ${jf===j.id?"selected":""}>${esc(j.name)}</option>`).join("")}
     </select></div>
     <button class="b-sm" data-act="print" style="align-self:flex-end">Εκτύπωση / PDF</button>
+    <button class="b-sm ${S.reorder?"tog on":""}" data-act="toggleReorder"
+      style="align-self:flex-end">Αναδιάταξη</button>
   </div>
+  ${S.reorder?`<div class="note">Μετακινήστε ένα ζεύγος πάνω ή κάτω. Η αρίθμηση ακολουθεί τη θέση:
+    το ζεύγος 1 που κατεβαίνει τρεις θέσεις γίνεται ζεύγος 4. Κάθε μετακίνηση σημειώνεται ως
+    χειροκίνητη αλλαγή και τυπώνεται στη λίστα.</div>`:""}
   ${printHd}
   ${terrains.map(tr=>{
     const braces = tr.braces||[];
@@ -1227,16 +1343,58 @@ function tBraces(t){
       <span class="muted">${braces.length} ${braces.length===1?"ζεύγος":"ζεύγη"}
         ${tr.judgeIds.length?"· "+tr.judgeIds.map(j=>esc((judById(j)||{}).name||"?")).join(", "):""}</span>
     </div>
-    ${braces.length ? braces.map(b=>{
-        const open = b===live || S.openBrace===b.id;
-        return open ? braceCard(t,tr,b,{big:b===live, actions:true}) : braceBrief(t,tr,b);
-      }).join("")
+    ${braces.length ? (S.reorder
+        ? braces.map((b,i)=>braceMove(t,tr,b,i,braces.length)).join("")
+        : braces.map(b=>{
+            const open = b===live || S.openBrace===b.id;
+            return open ? braceCard(t,tr,b,{big:b===live, actions:true}) : braceBrief(t,tr,b);
+          }).join(""))
       : `<div class="empty">Χωρίς ζεύγη σε αυτό το τερέν.</div>`}`;
   }).join("")}
   <div class="tiny noprint" style="margin-top:16px">Άρθρο 30: ο κριτής μπορεί να ζητήσει
   <b>επανάκληση</b> σκύλου μεγάλης αξίας — προστίθεται νέα διαδρομή στο τέλος του τερέν με δικές
   της σημειώσεις. Σε μονό αριθμό σκύλων μπορεί να προστεθεί <b>συμπληρωματικός</b> για να
   συμπληρωθεί το τελευταίο ζεύγος.</div>`;
+}
+
+/* What would go wrong if he pressed the button now — said before he presses
+   it, not in an alert afterwards. Each line names the article and the fix. */
+function drawCheck(t){
+  const day = t.days[S.day];
+  const active = t.entries.filter(e=>e.status==="ΔΗΛΩΜΕΝΟΣ");
+  const need = t.format==="ΖΕΥΓΗ" ? 2 : 1;
+  const cacit = t.award==="CACIT";
+  const stop = [], warn = [];
+
+  if(!day.terrains.length)
+    stop.push("Δεν έχουν οριστεί τερέν. Προσθέστε τουλάχιστον ένα στην καρτέλα «Τερέν & Κριτές».");
+  if(!active.length)
+    stop.push("Καμία δηλωμένη συμμετοχή. Προσθέστε συμμετοχές ή εισαγάγετε αρχείο.");
+
+  day.terrains.forEach(tr=>{
+    if(tr.judgeIds.length < (cacit?3:need))
+      stop.push(`Το ${tr.name} έχει ${tr.judgeIds.length} ${tr.judgeIds.length===1?"κριτή":"κριτές"}. `
+        + `Χρειάζονται ${cacit?3:need} (Άρθρο 48${cacit?", ο ένας Μεγάλης Έρευνας":""}).`);
+    const bad = active.filter(e=>(tr.entryIds||[]).includes(e.id) && judgeConflict(tr,e,t))
+      .map(e=>dogName(e.dogId));
+    if(bad.length)
+      warn.push(`Στο ${tr.name} ο κριτής έχει δικό του σκύλο (Άρθρο 49): ${bad.join(", ")}. `
+        + "Η κλήρωση θα τους μετακινήσει.");
+  });
+
+  const braces = Math.ceil(active.length / need);
+  if(active.length && braces < 3)
+    warn.push(`${active.length} σκύλοι δίνουν ${braces} ${braces===1?"ζεύγος":"ζεύγη"}. `
+      + "Ο αγώνας μετρά με τουλάχιστον 3 (Άρθρο 40, ΕΚ Άρθρο 5).");
+  const assigned = day.terrains.reduce((a,tr)=>a + (tr.assigned ? (tr.entryIds||[]).length : 0), 0);
+  if(assigned) warn.push(`${assigned} σκύλοι έχουν ανατεθεί χειροκίνητα σε τερέν. `
+    + "Οι υπόλοιποι κατανέμονται από την κλήρωση.");
+  if(day.draw) warn.push("Υπάρχει ήδη κλήρωση για την ημέρα αυτή. Νέα κλήρωση την ακυρώνει.");
+
+  if(!stop.length && !warn.length) return "";
+  return `${stop.length?`<div class="err"><b>Η κλήρωση δεν μπορεί να γίνει ακόμη.</b><br>
+    ${stop.map(esc).join("<br>")}</div>`:""}
+    ${warn.length?`<div class="note">${warn.map(esc).join("<br>")}</div>`:""}`;
 }
 
 /* The reveal is not decoration: it reads the braces out one at a time the way
@@ -1476,6 +1634,7 @@ function tResults(t){
     const r = t.results[e.id] || {};
     /* The app's arithmetic is advice and clearly subordinate: Άρθρο 27 caps are
        shown as a hint, never as a block. The judge always overrides. */
+    const locked = !!(t.signoff||{})[tr.id];
     const notes = t.notes[e.id+"::"+b.id] || {};
     const whites = Math.max(0, ...Object.values(notes).map(n=>n.whites||0));
     const faults = [].concat(...Object.values(notes).map(n=>n.faults||[]));
@@ -1486,20 +1645,36 @@ function tResults(t){
     rows.push(`<tr>
       <td><b>${esc(dogName(e.dogId))}</b><div class="tiny">${esc(tr.name)} · ζεύγος ${b.no}${b.recall?" · επανάκληση":""}</div>
         ${hint?`<div class="tiny" style="color:var(--stubble-ink)">${hint}</div>`:""}</td>
-      <td><select data-res="${e.id}|qual">${QUALS.map(q=>`<option ${r.qual===q?"selected":""}>${q}</option>`).join("")}</select></td>
-      <td><select data-res="${e.id}|award">${AWARDS.map(a=>`<option ${r.award===a?"selected":""}>${a}</option>`).join("")}</select></td>
+      <td><select data-res="${e.id}|qual" ${locked?"disabled":""}>${QUALS.map(q=>`<option ${r.qual===q?"selected":""}>${q}</option>`).join("")}</select></td>
+      <td><select data-res="${e.id}|award" ${locked?"disabled":""}>${AWARDS.map(a=>`<option ${r.award===a?"selected":""}>${a}</option>`).join("")}</select></td>
       <td class="num"><b style="font:800 21px/1 var(--f-d)">${pointsFor(t,r)}</b></td>
-      <td class="noprint"><button class="b-sm" data-note="${e.id}::${b.id}">Σημειώσεις</button></td>
+      <td class="noprint"><button class="b-sm" data-note="${e.id}::${b.id}">${locked?"Προβολή":"Σημειώσεις"}</button></td>
     </tr>`);
   })));
   if(!rows.length) return `<div class="empty">Κάντε πρώτα την κλήρωση. Η βαθμολογία ακολουθεί τα ζεύγη.</div>`;
+  const signRows = day.terrains.map(tr=>{
+    const sg = (t.signoff||{})[tr.id];
+    return `<div class="row" style="padding:10px 0;border-bottom:1px solid var(--line-f)">
+      <div class="grow"><b>${esc(tr.name)}</b>
+        <div class="tiny">${sg ? "Υπογράφηκε από " + esc(sg.by) + ", " + esc(sg.at)
+          : "Ανοικτό για αλλαγές"}</div></div>
+      ${sg ? `<span class="chip g">ΚΛΕΙΔΩΜΕΝΟ</span>
+             <button class="b-sm b-warn" data-unlock="${tr.id}">Ξεκλείδωμα</button>`
+           : `<button class="b-sm b-pri" data-signoff="${tr.id}">Υπογραφή</button>`}
+    </div>`;
+  }).join("");
   return `<div class="note">Πόντοι = βασικοί πόντοι × συντελεστής ${coefficient(t)}
     (${t.format==="ΖΕΥΓΗ"?"ζεύγη":"ατομικός"}${t.wild&&(t.type==="Έρευνας Κυνηγίου"||t.type==="Πρακτικού Κυνηγίου")?", άγριο θήραμα":""}).
     Ο πίνακας πόντων είναι δεδομένα και αλλάζει από τις Ρυθμίσεις. Ο κριτής αποφασίζει τη
     βαθμολογία· οι υποδείξεις της εφαρμογής είναι ενδεικτικές.</div>
   <div class="card" style="padding:0"><div class="scroll"><table>
     <thead><tr><th>Σκύλος</th><th>Βαθμολογία</th><th>Τίτλος</th><th>Πόντοι</th><th class="noprint"></th></tr></thead>
-    <tbody>${rows.join("")}</tbody></table></div></div>`;
+    <tbody>${rows.join("")}</tbody></table></div></div>
+  <div class="card noprint">
+    <div class="eyebrow">Υπογραφή κριτή</div>
+    <p class="tiny">Η υπογραφή κλειδώνει τη βαθμολογία και τις σημειώσεις του τερέν. Το ξεκλείδωμα
+      γίνεται από τον Πρόεδρο Κριτών με αιτιολογία, που καταγράφεται.</p>
+    <div style="margin-top:10px">${signRows}</div></div>`;
 }
 
 /* --- 8g. export --- */
@@ -1632,6 +1807,14 @@ function vRegistry(){
     <button class="tog ${tab==="judges"?"on":""}" data-regtab="judges">Κριτές · ${DB.judges.length}</button>
   </div>`;
   return `<div class="reg">${side}<div class="main">${phoneTabs}${body}</div></div>`;
+}
+/* the entries table filters in place; re-rendering would drop the keyboard */
+function filterEntries(v){
+  S.entryQ = v || "";
+  const q = S.entryQ.toLowerCase();
+  document.querySelectorAll("[data-find]").forEach(tr=>{
+    tr.style.display = !q || (tr.dataset.find||"").includes(q) ? "" : "none";
+  });
 }
 function filterDogs(v){
   v = (v||"").toLowerCase();
@@ -1836,6 +2019,7 @@ function dlgTrial(t){
     ${fld("t_place","Τοποθεσία",t.place)}</div>
   <div class="row">${fld("t_d1","Ημερομηνία έναρξης",t.dateStart||today(),"date")}
     ${fld("t_days","Ημέρες",t.days?t.days.length:1,"number")}</div>
+  <div class="row">${fld("t_run","Διάρκεια διαδρομής (λεπτά)",t.runMins||15,"number")}</div>
   <div class="note" style="margin-top:10px">Η Μεγάλη Έρευνα γίνεται πάντα σε ζεύγη (Άρ. 4).
     Για CACIT χρειάζονται 3 κριτές ανά τερέν (Άρ. 48).</div>
   <div class="row"><button class="b-pri grow" data-act="saveTrial" data-id="${t.id||""}">Αποθήκευση</button>
@@ -1903,6 +2087,60 @@ function dlgTerrain(t, tr){
     ${tr.id?`<button class="b-warn" data-act="delTerrain" data-id="${tr.id}">Διαγραφή</button>`:""}</div>`);
 }
 
+/* Assigning dogs to a terrain by hand.
+   The draw engine has always honoured `terrain.assigned` + `entryIds` — it just
+   had no way to be told. Anything left unassigned still falls to the draw, so
+   the head judge can pin two or three dogs and let the rest sort themselves. */
+function dlgAssign(t, terrainId){
+  const day = t.days[S.day];
+  const tr = day.terrains.find(x=>x.id===terrainId); if(!tr) return;
+  const here = new Set(tr.entryIds||[]);
+  const whereElse = {};
+  day.terrains.forEach(o=>{ if(o.id!==tr.id) (o.entryIds||[]).forEach(id=>{ whereElse[id] = o.name; }); });
+  const active = t.entries.filter(e=>e.status==="ΔΗΛΩΜΕΝΟΣ");
+
+  const rows = active.map(e=>{
+    const d = dogById(e.dogId) || {};
+    const conflict = judgeConflict(tr, e, t);
+    const taken = whereElse[e.id];
+    return `<button class="tog assign ${here.has(e.id)?"on":""}" data-pick="${e.id}"
+      style="width:100%;justify-content:flex-start;text-align:left;min-height:52px;margin-bottom:6px">
+      <span style="flex:1;min-width:0">
+        <b style="display:block;font:600 17px/1.2 var(--f-b)">${esc(d.name||"—")}</b>
+        <span class="tiny" style="color:inherit;opacity:.75">${esc(d.breed||"")}${d.sex?" · "+d.sex:""} · ${esc(perName(e.handlerId))}${
+          taken?` · τώρα στο ${esc(taken)}`:""}</span>
+      </span>
+      ${conflict?`<span class="chip r" style="flex:none">ΑΡΘΡΟ 49</span>`:""}
+    </button>`;
+  }).join("");
+
+  dlg(`<div class="eyebrow">${esc(tr.name)}</div>
+  <h2>Ανάθεση σκύλων</h2>
+  <p class="muted">Επιλέξτε ποιοι σκύλοι τρέχουν σε αυτό το τερέν. Όσοι δεν ανατεθούν πουθενά
+    κατανέμονται από την κλήρωση. Ένας σκύλος ανήκει σε ένα μόνο τερέν.</p>
+  ${active.length ? `<div style="max-height:52vh;overflow:auto;margin-top:14px">${rows}</div>`
+    : `<div class="empty">Καμία δηλωμένη συμμετοχή. Προσθέστε συμμετοχές πρώτα.</div>`}
+  <div class="err" id="assignWarn" style="display:none;margin-top:12px"></div>
+  <div class="row" style="margin-top:16px">
+    <button class="b-pri grow" data-act="saveAssign" data-id="${tr.id}">Αποθήκευση</button>
+    <button class="grow" data-act="close">Άκυρο</button></div>`);
+  window._assign = { terrainId: tr.id, picked: new Set(here) };
+  assignWarn(t);
+}
+/* Άρθρο 49 is a hard constraint in the draw, so say so while he is choosing
+   rather than letting the draw refuse afterwards. */
+function assignWarn(t){
+  const A = window._assign; if(!A) return;
+  const tr = t.days[S.day].terrains.find(x=>x.id===A.terrainId);
+  const bad = [...A.picked].map(id=>t.entries.find(e=>e.id===id))
+    .filter(e=>e && judgeConflict(tr, e, t)).map(e=>dogName(e.dogId));
+  const w = el("assignWarn"); if(!w) return;
+  if(!bad.length){ w.style.display = "none"; return; }
+  w.style.display = "";
+  w.innerHTML = `<b>Ο κριτής του τερέν έχει δικό του σκύλο εδώ (Άρθρο 49):</b> ${esc(bad.join(", "))}.
+    Η κλήρωση θα τους μετακινήσει αλλού.`;
+}
+
 function femaleEntry(e){
   const d = dogById(e && e.dogId ? e.dogId : (DB.dogs[0]||{}).id);
   return d && d.sex === "Θ";
@@ -1910,7 +2148,8 @@ function femaleEntry(e){
 function dlgEntry(t, e){
   e = e || {};
   dlg(`<h2>${e.id?"Επεξεργασία συμμετοχής":"Νέα συμμετοχή"}</h2>
-  <div class="row">${sel("e_dog","Σκύλος",DB.dogs.map(d=>[d.id,d.name+" ("+d.breed+")"]),e.dogId)}</div>
+  <div class="row">${sel("e_dog","Σκύλος",DB.dogs.map(d=>[d.id,d.name+" ("+d.breed+")"]),e.dogId)}
+    <button class="b-sm" style="align-self:flex-end" data-act="newDogForEntry">+ Νέος σκύλος</button></div>
   <div class="row">${sel("e_handler","Κυναγωγός",[["","—"]].concat(DB.people.map(p=>[p.id,p.name])),e.handlerId)}</div>
   <div class="row">${sel("e_status","Κατάσταση",["ΔΗΛΩΜΕΝΟΣ","ΑΠΟΣΥΡΘΗΚΕ","ΑΠΩΝ","ΣΥΜΠΛΗΡΩΜΑΤΙΚΟΣ"],e.status||"ΔΗΛΩΜΕΝΟΣ")}
     ${sel("e_paid","Πληρωμένο",[["1","Ναι"],["0","Όχι"]],e.paid?"1":"0")}</div>
@@ -1971,6 +2210,22 @@ function dlgNote(t, runKey){
   const widths = ["Στενή","Κανονική","Ανοικτή","Πολύ ανοικτή"];
   const w = n.whites||0;
 
+  /* a signed terrain is read-only: the sheet can be read, not rewritten */
+  let signedBy = null;
+  (t.days[S.day].terrains||[]).forEach(tr=>{
+    if((tr.braces||[]).some(b=>b.id === runKey.split("::")[1]) && (t.signoff||{})[tr.id])
+      signedBy = (t.signoff||{})[tr.id];
+  });
+  if(signedBy){
+    dlg(`<h2 style="margin-bottom:2px">${esc(dogName(entry.dogId))}</h2>
+      <div class="tiny" style="margin-bottom:16px">${esc(where||"")}</div>
+      <div class="note"><b>Το τερέν είναι υπογεγραμμένο.</b> Υπογραφή από ${esc(signedBy.by)},
+        ${esc(signedBy.at)}. Οι σημειώσεις δεν αλλάζουν χωρίς ξεκλείδωμα από τον Πρόεδρο Κριτών
+        (Βαθμολογία → Ξεκλείδωμα).</div>
+      <div class="card">${noteSummary(n)}</div>
+      <button class="b-full" data-act="close">Κλείσιμο</button>`);
+    return;
+  }
   dlg(`<h2 style="margin-bottom:2px">${esc(dogName(entry.dogId))}</h2>
   <div class="tiny" style="margin-bottom:16px">${esc(where||"")}${where?" · ":""}${esc(perName(entry.handlerId))}
     <br>Κριτής: ${esc((judById(jid)||{}).name||"Πρόεδρος Κριτών")}</div>
@@ -2068,74 +2323,212 @@ function ptRow(p,i){
     </details></div>`;
 }
 
-/* ---------- 14. Exports -------------------------------------------------- */
-function xmlEsc(s){ return esc(s); }
-function cell(v, formula, type){
-  if(formula) return `<Cell ss:Formula="${xmlEsc(formula)}"><Data ss:Type="Number"></Data></Cell>`;
-  const t = type || (typeof v === "number" ? "Number" : "String");
-  return `<Cell><Data ss:Type="${t}">${xmlEsc(v??"")}</Data></Cell>`;
+/* ---------- 14. Exports --------------------------------------------------
+   A real Office Open XML workbook — a ZIP of XML parts — written here rather
+   than with a library, like everything else in this build. The previous export
+   was SpreadsheetML 2003 saved as .xls, which Excel greets with "the file
+   format and extension don't match" and which declared formula cells as empty
+   numbers; this opens without a word anywhere.
+
+   Entries are stored uncompressed. A trial workbook is a few kilobytes and
+   DEFLATE would cost another two hundred lines for nothing.
+   ------------------------------------------------------------------------- */
+const CRC_TABLE = (()=>{
+  const t = new Uint32Array(256);
+  for(let i=0;i<256;i++){ let c=i; for(let k=0;k<8;k++) c = (c & 1) ? (0xEDB88320 ^ (c>>>1)) : (c>>>1); t[i]=c>>>0; }
+  return t;
+})();
+function crc32(u8){
+  let c = 0xFFFFFFFF;
+  for(let i=0;i<u8.length;i++) c = CRC_TABLE[(c ^ u8[i]) & 0xFF] ^ (c >>> 8);
+  return (c ^ 0xFFFFFFFF) >>> 0;
 }
-function row(cells){ return `<Row>${cells.join("")}</Row>`; }
-function sheet(name, rows){ return `<Worksheet ss:Name="${xmlEsc(name)}"><Table>${rows.join("")}</Table></Worksheet>`; }
-function workbook(sheets){
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<?mso-application progid="Excel.Sheet"?>
-<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
- xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
-<Styles><Style ss:ID="h"><Font ss:Bold="1"/></Style></Styles>
-${sheets.join("")}</Workbook>`;
+function zipStore(files){
+  const enc = new TextEncoder();
+  const u16 = n => [n & 255, (n>>8) & 255];
+  const u32 = n => [n & 255, (n>>8) & 255, (n>>16) & 255, (n>>>24) & 255];
+  const parts = [], central = [];
+  let offset = 0;
+  files.forEach(f=>{
+    const name = enc.encode(f.name);
+    const data = typeof f.data === "string" ? enc.encode(f.data) : f.data;
+    const crc = crc32(data), len = data.length;
+    const lh = new Uint8Array([].concat(
+      [0x50,0x4b,0x03,0x04], u16(20), u16(0), u16(0), u16(0), u16(0),
+      u32(crc), u32(len), u32(len), u16(name.length), u16(0)));
+    parts.push(lh, name, data);
+    central.push({name, crc, len, offset});
+    offset += lh.length + name.length + len;
+  });
+  const cdStart = offset, cd = [];
+  central.forEach(c=>{
+    const h = new Uint8Array([].concat(
+      [0x50,0x4b,0x01,0x02], u16(20), u16(20), u16(0), u16(0), u16(0), u16(0),
+      u32(c.crc), u32(c.len), u32(c.len), u16(c.name.length),
+      u16(0), u16(0), u16(0), u16(0), u32(0), u32(c.offset)));
+    cd.push(h, c.name);
+    offset += h.length + c.name.length;
+  });
+  const eocd = new Uint8Array([].concat(
+    [0x50,0x4b,0x05,0x06], u16(0), u16(0), u16(files.length), u16(files.length),
+    u32(offset - cdStart), u32(cdStart), u16(0)));
+  const all = parts.concat(cd, [eocd]);
+  const out = new Uint8Array(all.reduce((a,x)=>a+x.length,0));
+  let p = 0; all.forEach(x=>{ out.set(x, p); p += x.length; });
+  return out;
 }
-function paramSheet(){
+
+/* --- cells --- */
+const xmlEsc = s => esc(s);
+function colName(n){                                   /* 1 -> A, 27 -> AA */
+  let s = "";
+  while(n > 0){ const r = (n - 1) % 26; s = String.fromCharCode(65 + r) + s; n = (n - 1 - r) / 26; }
+  return s;
+}
+/* A cell is {v} for a value, {f} for a formula, str:true when a formula
+   returns text. Excel refuses a formula typed as a number that returns text —
+   that was one of the defects in the old export. */
+const txt = v => ({ v: String(v ?? ""), t: "s" });
+const num = v => ({ v: Number(v) || 0, t: "n" });
+const fml = (f, str) => ({ f, t: str ? "fs" : "fn" });
+function cellXml(c, ref, styled){
+  const s = styled ? ' s="1"' : "";
+  if(c.t === "fn") return `<c r="${ref}"${s}><f>${xmlEsc(c.f)}</f></c>`;
+  if(c.t === "fs") return `<c r="${ref}"${s} t="str"><f>${xmlEsc(c.f)}</f></c>`;
+  if(c.t === "n")  return `<c r="${ref}"${s}><v>${c.v}</v></c>`;
+  return `<c r="${ref}"${s} t="inlineStr"><is><t xml:space="preserve">${xmlEsc(c.v)}</t></is></c>`;
+}
+function sheetXml(rows){
+  const body = rows.map((cells, ri)=>{
+    const r = ri + 1;
+    return `<row r="${r}">` + cells.map((c, ci)=>
+      cellXml(c, colName(ci+1) + r, ri === 0)).join("") + `</row>`;
+  }).join("");
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>${body}</sheetData></worksheet>`;
+}
+/* sheets: [{name, rows}] */
+function xlsx(sheets){
+  const rel = i => "rId" + (i + 1);
+  const files = [
+    { name: "[Content_Types].xml", data:
+`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+<Default Extension="xml" ContentType="application/xml"/>
+<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
+${sheets.map((_,i)=>`<Override PartName="/xl/worksheets/sheet${i+1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join("")}
+<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>
+</Types>` },
+    { name: "_rels/.rels", data:
+`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>
+</Relationships>` },
+    { name: "xl/workbook.xml", data:
+`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+ xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+<sheets>${sheets.map((s,i)=>`<sheet name="${xmlEsc(s.name)}" sheetId="${i+1}" r:id="${rel(i)}"/>`).join("")}</sheets>
+</workbook>` },
+    { name: "xl/_rels/workbook.xml.rels", data:
+`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+${sheets.map((_,i)=>`<Relationship Id="${rel(i)}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i+1}.xml"/>`).join("")}
+<Relationship Id="rId${sheets.length+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
+</Relationships>` },
+    { name: "xl/styles.xml", data:
+`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+<fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts>
+<fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills>
+<borders count="1"><border/></borders>
+<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
+<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>
+<cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>
+<xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs>
+</styleSheet>` }
+  ];
+  sheets.forEach((s,i)=> files.push({ name: `xl/worksheets/sheet${i+1}.xml`, data: sheetXml(s.rows) }));
+  return zipStore(files);
+}
+
+/* --- the four sheets ---
+   No constant is ever baked into a formula: the points come from Παράμετροι by
+   VLOOKUP and the standings add up Δεδομένα with SUMIFS, so anyone who opens
+   the workbook can audit the arithmetic and change the club's scoring without
+   touching the app. */
+const SH_PAR = "Παράμετροι", SH_DATA = "Δεδομένα", SH_STATS = "Στατιστικά", SH_BR = "Ζεύγη";
+const qname = n => "'" + n + "'";
+
+function parSheet(){
   const keys = Object.keys(DB.settings.points).filter(k=>k!=="-");
-  return sheet("Παραμετροι", [row([cell("Κλειδι"),cell("Βασικοι βαθμοι")])]
-    .concat(keys.map(k=>row([cell(k),cell(DB.settings.points[k])]))));
+  return { name: SH_PAR, rows: [[txt("Κλειδί"), txt("Βασικοί πόντοι")]]
+    .concat(keys.map(k=>[txt(k), num(DB.settings.points[k])])) };
 }
-function flatData(trials){
-  const rows = [row([cell("Σκυλος"),cell("Φυλη"),cell("Αγωνας"),cell("Ημερομηνια"),cell("Ειδος"),
-                     cell("Βαθμολογια"),cell("Τιτλος"),cell("Κλειδι"),cell("Συντελεστης"),cell("Βαθμοι")])];
+function dataSheet(trials){
+  const rows = [[txt("Σκύλος"),txt("Φυλή"),txt("Αγώνας"),txt("Ημερομηνία"),txt("Είδος"),
+                 txt("Βαθμολογία"),txt("Τίτλος"),txt("Κλειδί"),txt("Συντελεστής"),txt("Πόντοι")]];
   trials.forEach(t=>t.entries.forEach(e=>{
     const r = t.results[e.id]; if(!r) return;
-    const d = dogById(e.dogId)||{};
-    rows.push(row([cell(d.name||""),cell(d.breed||""),cell(t.title),cell(t.dateStart||""),cell(t.type),
-      cell(r.qual||"-"),cell(r.award||"-"),
-      cell(null,'=IF(RC[-1]<>"-",RC[-1],RC[-2])'),
-      cell(coefficient(t)),
-      cell(null,'=IFERROR(VLOOKUP(RC[-2],Παραμετροι!R2C1:R40C2,2,FALSE)*RC[-1],0)')]));
+    const d = dogById(e.dogId) || {};
+    const n = rows.length + 1;
+    rows.push([txt(d.name||""), txt(d.breed||""), txt(t.title), txt(fmtDate(t.dateStart)), txt(t.type),
+      txt(r.qual||"-"), txt(r.award||"-"),
+      fml(`IF(G${n}<>"-",G${n},F${n})`, true),
+      num(coefficient(t)),
+      fml(`IFERROR(VLOOKUP(H${n},${qname(SH_PAR)}!$A$2:$B$40,2,FALSE)*I${n},0)`)]);
   }));
-  return sheet("Δεδομενα", rows);
+  return { name: SH_DATA, rows };
 }
 function statsSheet(trials){
   const dogIds = [];
-  trials.forEach(t=>t.entries.forEach(e=>{ if(t.results[e.id] && !dogIds.includes(e.dogId)) dogIds.push(e.dogId); }));
-  const head = row([cell("Σκυλος")].concat(trials.map(t=>cell(t.title))).concat([cell("ΣΥΝΟΛΟ")]));
-  const rows = dogIds.map(id=>{
-    const cells = [cell(dogName(id))];
-    trials.forEach(()=>cells.push(cell(null,'=SUMIFS(Δεδομενα!C10,Δεδομενα!C1,RC1,Δεδομενα!C3,R1C)')));
-    cells.push(cell(null,`=SUM(RC[-${trials.length}]:RC[-1])`));
-    return row(cells);
+  trials.forEach(t=>t.entries.forEach(e=>{
+    if(t.results[e.id] && !dogIds.includes(e.dogId)) dogIds.push(e.dogId); }));
+  const rows = [[txt("Σκύλος")].concat(trials.map(t=>txt(t.title))).concat([txt("ΣΥΝΟΛΟ")])];
+  dogIds.forEach(id=>{
+    const n = rows.length + 1;
+    const cells = [txt(dogName(id))];
+    trials.forEach((_, i)=>{
+      const c = colName(i + 2);
+      cells.push(fml(`SUMIFS(${qname(SH_DATA)}!$J:$J,${qname(SH_DATA)}!$A:$A,$A${n},${qname(SH_DATA)}!$C:$C,${c}$1)`));
+    });
+    cells.push(fml(`SUM(B${n}:${colName(trials.length + 1)}${n})`));
+    rows.push(cells);
   });
-  return sheet("Στατιστικα", [head].concat(rows));
+  const last = rows.length;
+  const tot = [txt("ΣΥΝΟΛΟ ΑΓΩΝΑ")];
+  for(let i = 0; i < trials.length + 1; i++){
+    const c = colName(i + 2);
+    tot.push(fml(last > 1 ? `SUM(${c}2:${c}${last})` : "0"));
+  }
+  rows.push(tot);
+  return { name: SH_STATS, rows };
 }
 function bracesSheet(t){
-  const rows = [row([cell("Τερεν"),cell("Ζευγος"),cell("Σκυλος δεξια"),cell("Σκυλος αριστερα"),
-                     cell("Κυναγωγος δεξια"),cell("Κυναγωγος αριστερα"),cell("Κριτες")])];
+  const rows = [[txt("Τερέν"),txt("Ζεύγος"),txt("Σκύλος δεξιά"),txt("Σκύλος αριστερά"),
+                 txt("Κυναγωγός δεξιά"),txt("Κυναγωγός αριστερά"),txt("Κριτές"),txt("Σημείωση")]];
   t.days.forEach(day=>day.terrains.forEach(tr=>(tr.braces||[]).forEach(b=>{
-    const ea=t.entries.find(e=>e.id===b.a), eb=t.entries.find(e=>e.id===b.b);
-    rows.push(row([cell(tr.name),cell(b.no),cell(ea?dogName(ea.dogId):""),cell(eb?dogName(eb.dogId):"ΜΟΝΟΣ"),
-      cell(ea?perName(ea.handlerId):""),cell(eb?perName(eb.handlerId):""),
-      cell(tr.judgeIds.map(j=>(judById(j)||{}).name).join(", "))]));
+    const ea = t.entries.find(e=>e.id===b.a), eb = t.entries.find(e=>e.id===b.b);
+    const marks = [b.recall && "επανάκληση", b.trailer && "συμπληρωματικός",
+                   b.manual && "χειροκίνητη αλλαγή"].filter(Boolean).join(" · ");
+    rows.push([txt(tr.name), num(b.no), txt(ea?dogName(ea.dogId):""), txt(eb?dogName(eb.dogId):"ΜΟΝΟΣ"),
+      txt(ea?perName(ea.handlerId):""), txt(eb?perName(eb.handlerId):""),
+      txt(tr.judgeIds.map(j=>(judById(j)||{}).name).filter(Boolean).join(", ")), txt(marks)]);
   })));
-  return sheet("Ζευγη", rows);
+  return { name: SH_BR, rows };
 }
 function exportTrialXls(t){
-  download(`KOAD_${t.title.replace(/\s+/g,"_")}.xls`, "application/vnd.ms-excel",
-    workbook([bracesSheet(t), flatData([t]), paramSheet(), statsSheet([t])]));
+  download(`KOAD_${t.title.replace(/\s+/g,"_")}.xlsx`,
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    xlsx([bracesSheet(t), dataSheet([t]), parSheet(), statsSheet([t])]));
   toast("Το αρχείο Excel κατέβηκε");
 }
 function exportStatsXls(){
   const trials = DB.trials.slice().sort((a,b)=>(a.dateStart||"").localeCompare(b.dateStart||""));
-  download("KOAD_Statistika.xls","application/vnd.ms-excel",
-    workbook([flatData(trials), paramSheet(), statsSheet(trials)]));
+  download("KOAD_Statistika.xlsx",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    xlsx([dataSheet(trials), parSheet(), statsSheet(trials)]));
   toast("Το αρχείο Excel κατέβηκε");
 }
 function exportTrialCsv(t){
@@ -2149,27 +2542,66 @@ function exportTrialCsv(t){
 }
 function exportTrialDoc(t){
   const rows = [];
+  const blocks = [];
   t.days.forEach(day=>day.terrains.forEach(tr=>(tr.braces||[]).forEach(b=>[b.a,b.b].forEach(id=>{
     const e = t.entries.find(x=>x.id===id); if(!e) return;
     const r = t.results[e.id]||{};
+    const d = dogById(e.dogId)||{};
     rows.push(`<tr><td>${esc(tr.name)}</td><td>${b.no}</td><td>${esc(dogName(e.dogId))}</td>
       <td>${esc(perName(e.handlerId))}</td><td>${esc(r.qual||"-")}</td><td>${esc(r.award||"-")}</td>
       <td>${pointsFor(t,r)}</td></tr>`);
+
+    /* One block per run. A dog recalled under Άρθρο 30 ran twice and each run
+       has its own sheet, so both appear rather than the second overwriting the
+       first — which is the whole reason notes are keyed on the brace. */
+    const notes = t.notes[e.id + "::" + b.id] || {};
+    const judged = Object.entries(notes);
+    if(!judged.length) return;
+    const parts = judged.map(([jid, n])=>{
+      const scale = [["passion","Πάθος"],["method","Μεθοδικότητα"],
+                     ["style","Καλπασμός και στυλ φυλής"],["contact","Επαφή με κυναγωγό"]]
+        .filter(([k])=>n[k]).map(([k,l])=>`${l} ${n[k]}/5`).join(" · ");
+      const pts = (n.points||[]).map((p,i)=>
+        `<li>${i+1}. ${esc([p.game,p.quality,p.ferma,p.pontar,p.akinF && "ακινησία στο πέταγμα: "+p.akinF,
+           p.akinS && "στον πυροβολισμό: "+p.akinS, p.aport && "απόρτ: "+p.aport,
+           p.syn && "συναίνεση: "+p.syn].filter(Boolean).join(" · "))}</li>`).join("");
+      return `<p style="margin:6pt 0 2pt"><b>${esc((judById(jid)||{}).name || "Κριτής")}</b></p>
+        ${scale?`<p style="margin:0">${esc(scale)}${n.width?" · έρευνα "+esc(n.width.toLowerCase()):""}</p>`:""}
+        ${pts?`<p style="margin:4pt 0 0"><i>Πόντοι</i></p><ul style="margin:0">${pts}</ul>`:""}
+        ${n.whites?`<p style="margin:2pt 0 0">Λευκές φέρμες: ${n.whites}</p>`:""}
+        ${(n.faults||[]).length?`<p style="margin:2pt 0 0;color:#B3261E">Σφάλματα αποκλεισμού (Άρθρο 33):
+          ${esc(n.faults.join(", "))}</p>`:""}
+        ${n.text?`<p style="margin:4pt 0 0">«${esc(n.text)}»</p>`:""}`;
+    }).join("");
+    blocks.push(`<div style="margin:0 0 14pt">
+      <p style="margin:0"><b>${esc(dogName(e.dogId))}</b> — ${esc(d.breed||"")}${d.sex?" · "+d.sex:""}
+        ${d.reg?" · Κ.Ο.Κ. "+esc(d.reg):""}</p>
+      <p style="margin:0;font-size:9pt">${esc(tr.name)} · ζεύγος ${b.no}${b.recall?" · επανάκληση (Άρθρο 30)":""}
+        · ${b.a===e.id?"δεξιά":"αριστερά"} της επιτροπής · κυναγωγός ${esc(perName(e.handlerId))}
+        · βαθμολογία ${esc(r.qual||"-")}${r.award&&r.award!=="-"?" · "+esc(r.award):""}
+        · ${pointsFor(t,r)} πόντοι</p>
+      ${parts}</div>`);
   }))));
+
   const html = `<html><head><meta charset="utf-8"></head><body style="font-family:Calibri">
     <h2>ΚΥΠΡΙΑΚΟΣ ΟΜΙΛΟΣ ΑΓΓΛΙΚΩΝ ΔΕΙΚΤΩΝ</h2>
     <h3>${esc(t.title)}</h3>
-    <p>${esc(t.type)} · ${fmtDate(t.dateStart)} · ${esc(t.place||"")} · Θήραμα: ${esc(t.game||"")}</p>
+    <p>${esc(t.type)} · ${fmtDate(t.dateStart)} · ${esc(t.place||"")} · Θήραμα: ${esc(t.game||"")}${
+      t.wild?" (άγριο θήραμα)":""} · Συντελεστής ×${coefficient(t)}</p>
     <table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;font-size:11pt">
-    <tr><th>Τερέν</th><th>Ζεύγος</th><th>Σκύλος</th><th>Κυναγωγός</th><th>Βαθμολογία</th><th>Τίτλος</th><th>Βάθμοι</th></tr>
+    <tr><th>Τερέν</th><th>Ζεύγος</th><th>Σκύλος</th><th>Κυναγωγός</th><th>Βαθμολογία</th><th>Τίτλος</th><th>Πόντοι</th></tr>
     ${rows.join("")}</table>
+    ${blocks.length?`<h3 style="margin-top:18pt">Σημειώσεις κριτών</h3>${blocks.join("")}`:""}
+    ${(t.unlocks||[]).length?`<h3 style="margin-top:12pt">Ξεκλειδώματα</h3>
+      <ul style="font-size:10pt">${t.unlocks.map(u=>
+        `<li>${esc(u.terrain)} — ${esc(u.at)} — ${esc(u.by)} — «${esc(u.why)}»</li>`).join("")}</ul>`:""}
     <p style="font-size:9pt">Η σειρά είναι ενδεικτική (Άρθρο 16).</p></body></html>`;
   download(`KOAD_${t.title.replace(/\s+/g,"_")}.doc`,"application/msword",html);
 }
 
 /* ---------- 15. Actions -------------------------------------------------- */
 document.addEventListener("click", ev=>{
-  const el2 = ev.target.closest("[data-nav],[data-tab],[data-day],[data-act],[data-open],[data-dog],[data-editdog],[data-editperson],[data-editjudge],[data-editterrain],[data-editentry],[data-note],[data-res],[data-bstat],[data-trailer],[data-untrailer],[data-recall],[data-sms],[data-copy],[data-wa],[data-smsdone],[data-set],[data-tj],[data-nstep],[data-nwidth],[data-nfault],[data-delpt],[data-nset],[data-ptset],[data-openbrace],[data-swap],[data-swapwith],[data-regtab]");
+  const el2 = ev.target.closest("[data-nav],[data-tab],[data-day],[data-act],[data-open],[data-dog],[data-editdog],[data-editperson],[data-editjudge],[data-editterrain],[data-editentry],[data-note],[data-res],[data-bstat],[data-trailer],[data-untrailer],[data-recall],[data-sms],[data-copy],[data-wa],[data-smsdone],[data-set],[data-tj],[data-nstep],[data-nwidth],[data-nfault],[data-delpt],[data-nset],[data-ptset],[data-openbrace],[data-swap],[data-swapwith],[data-regtab],[data-assign],[data-autoassign],[data-pick],[data-bmove],[data-signoff],[data-unlock]");
   if(!el2) return;
   const d = el2.dataset;
   const t = trialById(S.trialId);
@@ -2228,9 +2660,62 @@ document.addEventListener("click", ev=>{
   /* Άρθρο 16 says the drawn order is an indication, so the head judge may
      change it — but never silently. Both braces are marked and the mark is
      printed. */
+  if(d.assign){ dlgAssign(t, d.assign); return; }
+  if(d.autoassign){
+    const tr = t.days[S.day].terrains.find(x=>x.id===d.autoassign);
+    if(tr){ tr.assigned = false; tr.entryIds = []; save(); render();
+      toast("Η κατανομή επιστρέφει στην κλήρωση"); }
+    return; }
+  if(d.pick){
+    const A = window._assign; if(!A) return;
+    A.picked.has(d.pick) ? A.picked.delete(d.pick) : A.picked.add(d.pick);
+    el2.classList.toggle("on");
+    assignWarn(t);
+    return; }
+
+  /* Άρθρο 16 — the order is an indication, so the head judge may move a brace
+     up or down the running order. Numbering is positional, so brace 1 moved
+     three places down becomes brace 4. Both the move and the mark are kept. */
+  if(d.bmove){
+    const [tid, bid, dir] = d.bmove.split("|");
+    const tr = t.days[S.day].terrains.find(x=>x.id===tid);
+    if(!tr) return;
+    const bs = tr.braces || [];
+    const i = bs.findIndex(b=>b.id===bid), j = i + (+dir);
+    if(i < 0 || j < 0 || j >= bs.length) return;
+    [bs[i], bs[j]] = [bs[j], bs[i]];
+    const stamp = {by:"Πρόεδρος Κριτών", at:new Date().toLocaleString("el-GR")};
+    bs[i].manual = stamp; bs[j].manual = stamp;
+    bs.forEach((b,k)=>{ b.no = k + 1; });
+    save(); render();
+    return; }
+
   if(d.swap){ dlgSwap(t, d.swap); return; }
   if(d.swapwith){ doSwap(t, el2.dataset.swapwith); return; }
   if(d.regtab){ S.regTab = d.regtab; render(); return; }
+
+  /* Sign-off locks the terrain's scores and notes. Unlocking is the head
+     judge's call, needs a reason, and the reason is kept on the record. */
+  if(d.signoff){
+    const tr = t.days[S.day].terrains.find(x=>x.id===d.signoff);
+    if(!tr) return;
+    if(!confirmAct(`Υπογραφή του ${tr.name}. Η βαθμολογία και οι σημειώσεις κλειδώνουν. Συνέχεια;`)) return;
+    t.signoff = t.signoff || {};
+    t.signoff[tr.id] = { by: "Πρόεδρος Κριτών", at: new Date().toLocaleString("el-GR") };
+    save(); render(); toast("Το τερέν υπογράφηκε");
+    return; }
+  if(d.unlock){
+    const tr = t.days[S.day].terrains.find(x=>x.id===d.unlock);
+    if(!tr) return;
+    const why = window.prompt("Αιτιολογία ξεκλειδώματος — καταγράφεται στο φύλλο:", "");
+    if(why === null) return;
+    if(!why.trim()) return toast("Χρειάζεται αιτιολογία");
+    t.unlocks = t.unlocks || [];
+    t.unlocks.push({ terrain: tr.name, why: why.trim(), by: "Πρόεδρος Κριτών",
+                     at: new Date().toLocaleString("el-GR") });
+    delete (t.signoff||{})[tr.id];
+    save(); render(); toast("Ξεκλειδώθηκε· η αιτιολογία καταγράφηκε");
+    return; }
 
   if(d.trailer){ const [tid,bid] = d.trailer.split("|"); dlgTrailer(t, tid, bid); return; }
 
@@ -2385,6 +2870,7 @@ const ACT = {
   editTrial: (b,t)=>dlgTrial(t),
 
   /* the bottom bar of the live terrain */
+  toggleReorder: ()=>{ S.reorder = !S.reorder; S.openBrace = null; render(); },
   nextBrace: (btn, t)=>{
     const live = liveBrace(t);
     if(live) setBraceStatus(live.b, "ΟΛΟΚΛΗΡΩΘΗΚΕ");
@@ -2393,6 +2879,12 @@ const ACT = {
     S.openBrace = null;
     save(); render();
     toast(next ? "Ζεύγος " + next.b.no : "Δεν απομένει άλλο ζεύγος");
+  },
+  extendBrace: (btn, t)=>{
+    const live = liveBrace(t); if(!live) return;
+    live.b.extra = (live.b.extra || 0) + 300;
+    save(); render();
+    toast("Η διαδρομή επεκτάθηκε σε " + clockText(runSecs(t, live.b)));
   },
   pauseBrace: (btn, t)=>{
     const live = liveBrace(t); if(!live) return;
@@ -2438,7 +2930,10 @@ const ACT = {
   newPerson: ()=>dlgPerson(),
   newJudge: ()=>dlgJudge(),
   addTerrain: (e,t)=>dlgTerrain(t),
-  addEntry: (e,t)=>{ if(!DB.dogs.length) return toast("Προσθέστε πρώτα σκύλο («+ Νέος σκύλος») ή εισαγάγετε αρχείο"); dlgEntry(t); },
+  /* An empty registry used to be a dead end with a toast pointing elsewhere.
+     Now it opens the dog form, and saving comes straight back here. */
+  addEntry: (e,t)=>{ if(!DB.dogs.length){ window._afterDog = "entry"; return dlgDog(); } dlgEntry(t); },
+  newDogForEntry: ()=>{ window._afterDog = "entry"; dlgDog(); },
   addPoint: ()=>{ (window._note.points = window._note.points||[]).push({}); redrawPoints(); autosaveNote(); },
 
   saveTrial: (btn)=>{
@@ -2453,7 +2948,8 @@ const ACT = {
       wild: el("t_wild").value==="1",
       award: el("t_award").value,
       place: el("t_place").value.trim(),
-      dateStart: el("t_d1").value
+      dateStart: el("t_d1").value,
+      runMins: Math.max(1, +el("t_run").value || 15)
     };
     if(!t){
       t = {id:uid(), ...base, status:"ΔΗΛΩΣΕΙΣ", entries:[], results:{}, notes:{}, sms:{}, days:[]};
@@ -2484,6 +2980,11 @@ const ACT = {
     o.ownerId = ownerId || "";
     if(id) Object.assign(dogById(id), o); else DB.dogs.push({id:uid(), ...o});
     save(); closeDlg(); render();
+    if(window._afterDog === "entry"){
+      window._afterDog = null;
+      const t = trialById(S.trialId);
+      if(t) setTimeout(()=>dlgEntry(t), 60);
+    }
   },
   delDog: (btn)=>{ if(!confirmAct("Διαγραφή σκύλου από το μητρώο;")) return;
     DB.dogs = DB.dogs.filter(x=>x.id!==btn.dataset.id); save(); closeDlg(); render(); },
@@ -2502,6 +3003,20 @@ const ACT = {
     if(!o.name) return toast("Το ονοματεπώνυμο είναι υποχρεωτικό");
     if(id) Object.assign(judById(id), o); else DB.judges.push({id:uid(), ...o});
     save(); closeDlg(); render();
+  },
+  saveAssign: (btn, t)=>{
+    const A = window._assign; if(!A) return;
+    const day = t.days[S.day];
+    const tr = day.terrains.find(x=>x.id===btn.dataset.id); if(!tr) return;
+    /* a dog belongs to one terrain, so taking him here takes him from there */
+    day.terrains.forEach(o=>{ if(o.id !== tr.id)
+      o.entryIds = (o.entryIds||[]).filter(id=>!A.picked.has(id)); });
+    tr.entryIds = [...A.picked];
+    tr.assigned = tr.entryIds.length > 0;
+    save(); closeDlg(); render();
+    toast(tr.entryIds.length
+      ? tr.entryIds.length + (tr.entryIds.length === 1 ? " σκύλος ανατέθηκε" : " σκύλοι ανατέθηκαν")
+      : "Καμία ανάθεση· η κλήρωση κατανέμει");
   },
   saveTerrain: (btn, t)=>{
     const id = btn.dataset.id;
