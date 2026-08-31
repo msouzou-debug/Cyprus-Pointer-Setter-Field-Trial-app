@@ -171,6 +171,10 @@ th{font:600 13px/1 var(--f-b);letter-spacing:.06em;color:var(--slate);text-trans
 tbody tr:last-child td{border-bottom:0}
 .scroll{overflow:auto;max-height:70vh;-webkit-overflow-scrolling:touch}
 .split{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--s3)}
+/* a κυναγωγός with one dog should not be as tall as one with four */
+.split.top{align-items:start}
+/* the register carries a longer line per dog than the entry list does */
+.split.wide{grid-template-columns:repeat(auto-fit,minmax(348px,1fr))}
 
 /* notices: an error states the fact and the fix, so it needs room to say both */
 .note{background:var(--stubble-soft);border:1px solid var(--stubble);border-radius:var(--r);
@@ -296,6 +300,12 @@ hr{border:0;border-top:1px solid var(--line);margin:var(--s4) 0}
 .entry-row .acts{display:flex;align-items:center;gap:6px;flex:0 0 auto;margin-left:auto;flex-wrap:wrap;
   justify-content:flex-end}
 .card.handler{break-inside:avoid}
+/* the dog's name is how you open him — a button that reads as the heading it is */
+.entry-row .open{display:block;width:100%;min-height:0;text-align:left;background:none;border:0;
+  padding:0;color:var(--ink);cursor:pointer;font:600 17px/1.25 var(--f-b);overflow-wrap:anywhere;
+  text-decoration:underline;text-decoration-color:var(--stubble);text-decoration-thickness:1px;
+  text-underline-offset:3px}
+.entry-row .open:hover{color:var(--setter);text-decoration-color:currentColor}
 .tog.assign{border-color:var(--line-s);background:#fff;color:var(--ink);font-weight:400}
 .tog.assign.on{background:var(--navy-l);border-color:var(--navy);color:var(--ink)}
 .tog.assign.on::before{content:"✓";font-weight:700;color:var(--navy);margin-right:10px;flex:none}
@@ -1053,7 +1063,8 @@ function tEntries(t){
         return `<div class="entry-row" data-find="${esc(find)}">
           <div class="who">
             <b>${esc(d.name||"—")}</b>
-            <span class="tiny">${esc(d.breed||"")}${d.sex?" · "+d.sex:""}${d.reg?" · "+esc(d.reg):""}</span>
+            <span class="tiny">${esc(d.breed||"")}${d.sex?" · "+(d.sex==="Θ"?"θηλυκός":"αρσενικός"):""}${
+              d.reg?" · "+esc(d.reg):""}</span>
           </div>
           <div class="acts">
             ${e.season?`<span class="chip y">οίστρος</span>`:""}
@@ -1062,7 +1073,7 @@ function tEntries(t){
             <button class="b-sm noprint" data-editentry="${e.id}">Επεξ.</button>
           </div></div>`;
       }).join("");
-    return `<div class="card handler" data-group>
+    return `<div class="card handler" data-group="${esc(who.toLowerCase())}">
       <div class="row" style="align-items:baseline;gap:10px">
         <h3 class="grow" style="margin:0">${esc(who)}</h3>
         <span class="muted num">${running} ${running===1?"σκύλος":"σκύλοι"}</span>
@@ -1089,7 +1100,7 @@ function tEntries(t){
     <button class="b-act" data-act="addEntry">+ Συμμετοχή</button>
     <button data-act="importEntries">Εισαγωγή αρχείου</button></div>
   <div id="entryNone" class="empty" style="display:none">Καμία συμμετοχή δεν ταιριάζει.</div>
-  ${cards ? `<div class="split">${cards}</div>`
+  ${cards ? `<div class="split top">${cards}</div>`
     : `<div class="empty">Καμία συμμετοχή ακόμη. Εισαγάγετε αρχείο Excel ή προσθέστε σκύλο.</div>`}`;
 }
 
@@ -1171,7 +1182,8 @@ function tDraw(t){
     </div>
     <div class="tiny" style="margin-top:12px">Πάντα ισχύουν: ποτέ δύο σκύλοι του ίδιου κυναγωγού
       στο ίδιο ζεύγος · κανένας κριτής δεν κρίνει τερέν με δικό του σκύλο (Άρθρο 49).
-      Ο ίδιος σπόρος με τις ίδιες συμμετοχές δίνει πάντα την ίδια σειρά.</div>
+      Ο «ίδιος ιδιοκτήτης» πιάνει τους σκύλους που ανήκουν στον ίδιο αλλά τους τρέχουν
+      διαφορετικοί κυναγωγοί. Ο ίδιος σπόρος με τις ίδιες συμμετοχές δίνει πάντα την ίδια σειρά.</div>
   </div>
 
   ${drawCheck(t)}
@@ -1189,7 +1201,7 @@ function tDraw(t){
     </div>
     <div style="border-top:1px solid var(--line);margin-top:18px;padding-top:14px">
       <div class="fingerprint">σπόρος ${esc(d.seed)}<br>${new Date(d.at).toLocaleString("el-GR")} · ${esc(d.mode)}<br>αποτύπωμα ${esc(d.hash)}</div>
-      <p style="margin-top:8px">Η σειρά είναι ενδεικτική – Άρθρο 16.</p>
+      <p style="margin-top:8px">Η σειρά είναι ενδεικτική — Άρθρο 16.</p>
       <button class="b-redraw noprint" data-act="doDraw">Νέα κλήρωση — ακυρώνει την τρέχουσα</button>
     </div>`}`;
 }
@@ -1500,7 +1512,7 @@ function drawSheet(t, day, tr){
       ${rows || `<tr><td colspan="4">Χωρίς ζεύγη.</td></tr>`}
     </table>
     <p style="font:400 9pt/1.4 var(--f-b);margin-top:10px;border-top:1px solid #000;padding-top:8px">
-      Η σειρά είναι ενδεικτική – Άρθρο 16.${manual.length
+      Η σειρά είναι ενδεικτική — Άρθρο 16.${manual.length
         ? ` Χειροκίνητη αλλαγή στο ${manual.length===1?"ζεύγος":"ζεύγη"} ${manual.join(", ")}.` : ""}</p>
   </div>`;
 }
@@ -1559,7 +1571,7 @@ function printHead(t, day, terrain){
     <img src="${BADGE}" alt="">
     <div class="t"><b>ΚΥΠΡΙΑΚΟΣ ΟΜΙΛΟΣ ΑΓΓΛΙΚΩΝ ΔΕΙΚΤΩΝ</b>
       <span>${esc(t.title)} · ${esc(t.type)} · ${esc(t.place||"")} · ${fmtDate(day.date)}</span>
-      <span>Η σειρά είναι ενδεικτική – Άρθρο 16.</span></div>
+      <span>Η σειρά είναι ενδεικτική — Άρθρο 16.</span></div>
     ${terrain?`<div class="pg">${esc(terrain)}</div>`:""}
   </div>`;
 }
@@ -1673,7 +1685,7 @@ function tSms(t){
         <button class="b-sm" data-wa="${i}" ${x.phone?"":"disabled"}>WhatsApp</button>
         <button class="b-sm" data-smsdone="${x.entry.id}">${stt?"Αναίρεση":"Σήμανση"}</button>
       </div></div>`;}).join("")}
-  <p class="tiny">Η σειρά είναι ενδεικτική – Άρθρο 16. Το μήνυμα ανοίγει στην εφαρμογή μηνυμάτων
+  <p class="tiny">Η σειρά είναι ενδεικτική — Άρθρο 16. Το μήνυμα ανοίγει στην εφαρμογή μηνυμάτων
     του τηλεφώνου· η αποστολή γίνεται από εκεί.</p>`;
 }
 
@@ -1733,7 +1745,7 @@ function tResults(t){
 function tExport(t){
   return `<div class="card">
     <div class="eyebrow">Εξαγωγές αγώνα</div>
-    <p class="tiny">Το Excel περιέχει φύλλο «Παραμετροι» με τον πίνακα πόντων. Όλοι οι πόντοι
+    <p class="tiny">Το Excel περιέχει φύλλο «Παράμετροι» με τον πίνακα πόντων. Όλοι οι πόντοι
       υπολογίζονται με τύπους VLOOKUP/SUMIFS που δείχνουν εκεί — καμία σταθερή τιμή μέσα σε τύπο,
       ώστε όποιος ανοίξει το αρχείο να μπορεί να ελέγξει την αριθμητική. Ανοίγει σε Excel και
       LibreOffice. Η εκτύπωση είναι ασπρόμαυρη, για φωτοτυπία.</p>
@@ -1759,7 +1771,7 @@ function tExport(t){
 
   <div class="card">
     <div class="eyebrow">Μεταφορά σε άλλη συσκευή</div>
-    <p class="tiny">Στέλνει μόνο αυτόν τον αγώνα, με τους σκύλους και τα πρόσωπά του — μικρό αρχείο
+    <p class="tiny">Στέλνει μόνο αυτόν τον αγώνα, με τους σκύλους και τους κυναγωγούς του — μικρό αρχείο
       που περνά από κάθε εφαρμογή μηνυμάτων. Στην άλλη συσκευή: Ρυθμίσεις → Φόρτωση αρχείου →
       Συγχώνευση. Κινηθείτε προς μία κατεύθυνση κάθε φορά: αν ο ίδιος αγώνας αλλάξει και στις δύο
       συσκευές, υπερισχύει το αρχείο που φορτώθηκε τελευταίο.</p>
@@ -1776,14 +1788,14 @@ function tExport(t){
 /* Desk mode: dense, the same tokens. A sidebar of counts on the left, the
    register in the middle. */
 function vRegistry(){
-  const tab = S.regTab || "dogs";
+  const tab = S.regTab || "handlers";
   const dogs = DB.dogs.slice().sort((a,b)=>a.name.localeCompare(b.name,"el"));
   const byBreed = {};
   DB.dogs.forEach(d=>{ byBreed[d.breed||"—"] = (byBreed[d.breed||"—"]||0)+1; });
 
   const side = `<div class="side noprint">
+    <button class="item ${tab==="handlers"?"on":""}" data-regtab="handlers">Κυναγωγοί · ${DB.people.length}</button>
     <button class="item ${tab==="dogs"?"on":""}" data-regtab="dogs">Σκύλοι · ${DB.dogs.length}</button>
-    <button class="item ${tab==="people"?"on":""}" data-regtab="people">Πρόσωπα · ${DB.people.length}</button>
     <button class="item ${tab==="judges"?"on":""}" data-regtab="judges">Κριτές · ${DB.judges.length}</button>
     <hr style="margin:16px 20px">
     <div class="eyebrow" style="padding:0 20px">Φυλή</div>
@@ -1796,24 +1808,11 @@ function vRegistry(){
     <div class="grow"><div class="eyebrow">${eyebrow}</div><h2 style="margin:0">${title}</h2></div>${right||""}</div>`;
 
   let body;
-  if(tab === "people"){
-    body = heading("Μητρώο","Πρόσωπα",
-      `<button class="b-act" data-act="newPerson">Νέο πρόσωπο</button>`)
-      + (DB.people.length ? `<div class="card" style="padding:0"><table>
-        <thead><tr><th>Ονοματεπώνυμο</th><th>Κινητό</th><th>Αρ. μέλους</th><th class="noprint"></th></tr></thead>
-        <tbody>${DB.people.map(p=>`<tr>
-          <td><b>${esc(p.name)}</b></td>
-          <td class="num">${esc(p.phone||"—")}</td>
-          <td class="num">${esc(p.member||"—")}</td>
-          <td class="noprint"><button class="b-sm" data-editperson="${p.id}">Επεξεργασία</button></td>
-        </tr>`).join("")}</tbody></table></div>`
-      : `<div class="empty">Κανένα πρόσωπο ακόμη. Τα πρόσωπα δημιουργούνται και μόνα τους
-          όταν καταχωρείτε σκύλο ή εισάγετε αρχείο.</div>`);
-  } else if(tab === "judges"){
+  if(tab === "judges"){
     body = heading("Μητρώο","Κριτές",
       `<button class="b-act" data-act="newJudge">Νέος κριτής</button>`)
       + (DB.judges.length ? `<div class="card" style="padding:0"><table>
-        <thead><tr><th>Ονοματεπώνυμο</th><th>Ιδιότητα</th><th>Μεγάλη Έρευνα</th><th>Πρόσωπο</th><th class="noprint"></th></tr></thead>
+        <thead><tr><th>Ονοματεπώνυμο</th><th>Ιδιότητα</th><th>Μεγάλη Έρευνα</th><th>Κυναγωγός</th><th class="noprint"></th></tr></thead>
         <tbody>${DB.judges.map(j=>`<tr>
           <td><b>${esc(j.name)}</b></td>
           <td>${esc(j.licence||"—")}</td>
@@ -1821,8 +1820,68 @@ function vRegistry(){
           <td>${esc(perName(j.personId))}</td>
           <td class="noprint"><button class="b-sm" data-editjudge="${j.id}">Επεξεργασία</button></td>
         </tr>`).join("")}</tbody></table></div>`
-      : `<div class="empty">Κανένας κριτής ακόμη. Η σύνδεση κριτή με πρόσωπο επιτρέπει στην
-          κλήρωση να μην βάζει τον σκύλο του στο τερέν που κρίνει (Άρθρο 49).</div>`);
+      : `<div class="empty">Κανένας κριτής ακόμη. Συνδέστε κάθε κριτή με τον κυναγωγό του ίδιου
+          ονόματος, ώστε η κλήρωση να μην βάζει τον σκύλο του στο τερέν που κρίνει (Άρθρο 49).</div>`);
+  } else if(tab === "handlers"){
+    /* The head judge builds the register from the man down: a κυναγωγός, then
+       his dogs under him — the same shape as Συμμετοχές, because it is the same
+       job. Handlers stay with the club for years; the dogs change around them. */
+    const dogsOf = new Map();
+    DB.dogs.forEach(d=>{ const k = d.ownerId||"";
+      if(!dogsOf.has(k)) dogsOf.set(k, []); dogsOf.get(k).push(d); });
+    const dogRow = (d, who)=>{
+      const find = ((d.name||"") + " " + (d.reg||"") + " " + (d.breed||"") + " "
+        + (d.kennel||"") + " " + who).toLowerCase();
+      return `<div class="entry-row" data-find="${esc(find)}">
+        <div class="who">
+          <button class="open" data-dog="${d.id}">${esc(d.name||"—")}</button>
+          <span class="tiny">${esc(d.breed||"")}${d.sex?" · "+(d.sex==="Θ"?"θηλυκός":"αρσενικός"):""}${
+            d.reg?" · "+esc(d.reg):""}</span>
+        </div>
+        <div class="acts">
+          <button class="b-sm noprint" data-editdog="${d.id}">Επεξ.</button>
+        </div></div>`;
+    };
+
+    const people = DB.people.slice().sort((a,b)=>a.name.localeCompare(b.name,"el"));
+    const cards = people.map(p=>{
+      const mine = (dogsOf.get(p.id)||[]).slice().sort((a,b)=>a.name.localeCompare(b.name,"el"));
+      const bits = [p.phone, p.member ? "μέλος "+p.member : ""].filter(Boolean).join(" · ");
+      return `<div class="card handler" data-group="${esc(p.name.toLowerCase())}">
+        <div class="row" style="align-items:baseline;gap:10px">
+          <h3 class="grow" style="margin:0">${esc(p.name)}</h3>
+          ${mine.length?`<span class="muted num">${mine.length} ${
+            mine.length===1?"σκύλος":"σκύλοι"}</span>`:""}
+        </div>
+        ${bits?`<div class="fingerprint">${esc(bits)}</div>`:""}
+        <div style="margin-top:10px">${mine.length ? mine.map(d=>dogRow(d, p.name)).join("")
+          : `<div class="tiny" style="padding:8px 0">Καταχωρήστε τον πρώτο του σκύλο.</div>`}</div>
+        <div class="row tight noprint" style="margin-top:12px">
+          <button class="b-sm" data-newdogfor="${p.id}">+ Σκύλος</button>
+          <button class="b-sm" data-edithandler="${p.id}">Επεξεργασία στοιχείων</button>
+        </div></div>`;
+    }).join("");
+
+    const orphans = (dogsOf.get("")||[]).slice().sort((a,b)=>a.name.localeCompare(b.name,"el"));
+    const loose = orphans.length ? `<div class="card handler" data-group="χωρίς κυναγωγό">
+      <div class="row" style="align-items:baseline;gap:10px">
+        <h3 class="grow" style="margin:0">— χωρίς κυναγωγό —</h3>
+        <span class="muted num">${orphans.length} ${orphans.length===1?"σκύλος":"σκύλοι"}</span>
+      </div>
+      <div class="tiny" style="margin-top:4px">Ανοίξτε τον καθένα με το Επεξ. και δώστε του κυναγωγό.</div>
+      <div style="margin-top:10px">${orphans.map(d=>dogRow(d, "")).join("")}</div></div>` : "";
+
+    body = heading("Μητρώο","Κυναγωγοί",
+      `<button class="b-act" data-act="newHandler">Νέος κυναγωγός</button>`)
+      + (DB.people.length || orphans.length ? `
+        <div class="row noprint" style="margin-bottom:14px">
+          <div class="grow" style="max-width:340px">
+            <input id="regQ" placeholder="Αναζήτηση κυναγωγού ή σκύλου"
+              value="${esc(S.regQ||"")}" oninput="filterReg(this.value)"></div></div>
+        <div id="regNone" class="empty" style="display:none">Κανείς δεν ταιριάζει.</div>
+        <div class="split wide top">${cards}${loose}</div>`
+      : `<div class="empty">Κανένας κυναγωγός ακόμη. Καταχωρήστε πρώτα τον κυναγωγό και μετά
+          τους σκύλους του, ή εισαγάγετε αρχείο από την καρτέλα Σκύλοι.</div>`);
   } else {
     body = heading("Μητρώο","Σκύλοι",
       `<div style="width:300px;max-width:100%"><input id="q" placeholder="Αναζήτηση ονόματος ή Κ.Ο.Κ."
@@ -1830,7 +1889,7 @@ function vRegistry(){
        <button class="b-act" data-act="newDog">Νέος σκύλος</button>`)
       + (dogs.length ? `<div class="card" style="padding:0"><div class="scroll"><table id="dogTbl">
         <thead><tr><th>Όνομα</th><th>Κ.Ο.Κ.</th><th>Φύλο</th><th>Έτος</th><th>Φυλή</th>
-          <th>Ιδιοκτήτης</th><th>Αγώνες</th><th class="noprint"></th></tr></thead>
+          <th>Κυναγωγός</th><th>Αγώνες</th><th class="noprint"></th></tr></thead>
         <tbody>${dogs.map(d=>{
           const n = DB.trials.filter(t=>t.entries.some(e=>e.dogId===d.id)).length;
           return `<tr data-name="${esc((d.name+" "+(d.reg||"")+" "+(d.kennel||"")).toLowerCase())}">
@@ -1854,29 +1913,33 @@ function vRegistry(){
   }
   /* the sidebar is a desk affordance; on a phone the same three live in a row */
   const phoneTabs = `<div class="badge-list reg-tabs noprint" style="margin-bottom:16px">
+    <button class="tog ${tab==="handlers"?"on":""}" data-regtab="handlers">Κυναγωγοί · ${DB.people.length}</button>
     <button class="tog ${tab==="dogs"?"on":""}" data-regtab="dogs">Σκύλοι · ${DB.dogs.length}</button>
-    <button class="tog ${tab==="people"?"on":""}" data-regtab="people">Πρόσωπα · ${DB.people.length}</button>
     <button class="tog ${tab==="judges"?"on":""}" data-regtab="judges">Κριτές · ${DB.judges.length}</button>
   </div>`;
   return `<div class="reg">${side}<div class="main">${phoneTabs}${body}</div></div>`;
 }
-/* Filters in place — re-rendering would drop the keyboard mid-word. A handler
-   whose dogs all fall out of the search disappears with them. */
-function filterEntries(v){
-  S.entryQ = v || "";
-  const q = S.entryQ.trim().toLowerCase();
+/* Filters in place — re-rendering would drop the keyboard mid-word. A κυναγωγός
+   whose dogs all fall out of the search disappears with them, unless his own
+   name is what was typed: in the register he may have no dogs yet. */
+function filterCards(v, noneId){
+  const q = (v||"").trim().toLowerCase();
   document.querySelectorAll("[data-find]").forEach(row=>{
     row.style.display = !q || (row.dataset.find||"").includes(q) ? "" : "none";
   });
   let shown = 0;
   document.querySelectorAll("[data-group]").forEach(g=>{
     const any = [...g.querySelectorAll("[data-find]")].some(r=>r.style.display !== "none");
-    g.style.display = any ? "" : "none";
-    if(any) shown++;
+    const self = !q || (g.dataset.group||"").includes(q);
+    const on = any || self;
+    g.style.display = on ? "" : "none";
+    if(on) shown++;
   });
-  const none = el("entryNone");
+  const none = el(noneId);
   if(none) none.style.display = (q && !shown) ? "" : "none";
 }
+function filterEntries(v){ S.entryQ = v || ""; filterCards(v, "entryNone"); }
+function filterReg(v){ S.regQ = v || ""; filterCards(v, "regNone"); }
 function filterDogs(v){
   v = (v||"").toLowerCase();
   document.querySelectorAll("#dogTbl tbody tr").forEach(tr=>{
@@ -1913,7 +1976,7 @@ function vDog(){
       <div class="eyebrow">Ιστορικό σκύλου</div>
       <h1>${esc(d.name)}</h1>
       <div class="meta num">${esc(d.breed||"")}${d.sex?" · "+(d.sex==="Θ"?"Θηλυκό":"Αρσενικό"):""}${d.dob?" · "+fmtDate(d.dob):""}${d.reg?" · Κ.Ο.Κ. "+esc(d.reg):""}${d.cy?" · κυπριακής εκτροφής":""}
-        <br>Ιδιοκτήτης ${esc(perName(d.ownerId))}${d.kennel?" · εκτροφείο «"+esc(d.kennel)+"»":""}</div>
+        <br>Κυναγωγός ${esc(perName(d.ownerId))}${d.kennel?" · εκτροφείο «"+esc(d.kennel)+"»":""}</div>
     </div>
     <div class="score"><b>${total}</b><span>πόντοι · ${hist.length} ${hist.length===1?"συμμετοχή":"συμμετοχές"}</span></div>
   </div>
@@ -2033,7 +2096,7 @@ function vSettings(){
       τρία βήματα:</p>
     <ol class="tiny" style="padding-left:20px;line-height:1.8">
       <li>Στον υπολογιστή, πριν τον αγώνα: μητρώο, συμμετοχές, τερέν και κριτές.
-        Μετά «Λήψη πλήρους αντιγράφου» και στείλτε το αρχείο στο κινητό.</li>
+        Μετά πατήστε «Λήψη πλήρους αντιγράφου» και στείλτε το αρχείο στο κινητό.</li>
       <li>Στο κινητό: «Φόρτωση αρχείου» → <b>Συγχώνευση</b>. Εκεί γίνεται η κλήρωση,
         τα SMS, οι σημειώσεις και η βαθμολογία.</li>
       <li>Μετά τον αγώνα: το ίδιο αντίστροφα, ώστε να έχει και ο υπολογιστής τα αποτελέσματα.</li>
@@ -2096,12 +2159,14 @@ function dlgDog(d){
     ${fld("d_reg","Αρ. Κ.Ο.Κ.",d.reg)}</div>
   <div class="row">${fld("d_chip","Τσιπ / δερματοστιξία",d.chip)}${fld("d_book","Αρ. βιβλιαρίου εργασίας",d.book)}</div>
   <div class="row">${fld("d_dob","Ημ. γέννησης",d.dob,"date")}${fld("d_kennel","Εκτροφείο",d.kennel)}</div>
-  <hr><h3>Ιδιοκτήτης</h3>
+  <hr><h3>Κυναγωγός</h3>
   <div class="row">${sel("d_owner","Επιλογή από το μητρώο",
-      [["","+ Νέος ιδιοκτήτης"]].concat(DB.people.map(p=>[p.id,p.name])),d.ownerId)}</div>
+      [["","+ Νέος κυναγωγός"]].concat(DB.people.slice().sort((a,b)=>a.name.localeCompare(b.name,"el"))
+        .map(p=>[p.id,p.name])),d.ownerId)}</div>
   <div class="row">${fld("d_ownerName","Ονοματεπώνυμο",(perById(d.ownerId)||{}).name)}
     ${fld("d_ownerPhone","Κινητό (+357…)",(perById(d.ownerId)||{}).phone,"tel")}</div>
-  <div class="tiny">Αν επιλέξετε υπάρχον πρόσωπο, οι αλλαγές εδώ ενημερώνουν και το μητρώο προσώπων.</div>
+  <div class="tiny">Ο κυναγωγός που δηλώνεται εδώ έρχεται πρώτος στη λίστα όταν ο σκύλος μπαίνει
+    σε αγώνα. Όνομα και τηλέφωνο ενημερώνουν και το μητρώο κυναγωγών.</div>
   <div class="row" style="margin-top:10px">
     ${sel("d_cy","Κυπριακής εκτροφής",[["1","Ναι"],["0","Όχι"]],d.cy?"1":"0")}</div>
   <div class="row"><button class="b-pri grow" data-act="saveDog" data-id="${d.id||""}">Αποθήκευση</button>
@@ -2109,13 +2174,16 @@ function dlgDog(d){
     ${d.id?`<button class="b-warn" data-act="delDog" data-id="${d.id}">Διαγραφή</button>`:""}</div>`);
 }
 
-function dlgPerson(p){
+/* `DB.people` is the storage name and stays — every backup and transfer packet
+   in the field carries that key. In the club these men are κυναγωγοί, and that
+   is the word the screen uses. */
+function dlgHandler(p){
   p = p || {};
-  dlg(`<h2>${p.id?"Επεξεργασία προσώπου":"Νέο πρόσωπο"}</h2>
+  dlg(`<h2>${p.id?"Επεξεργασία κυναγωγού":"Νέος κυναγωγός"}</h2>
   <div class="row">${fld("p_name","Ονοματεπώνυμο",p.name)}</div>
   <div class="row">${fld("p_phone","Κινητό (μορφή +357…)",p.phone,"tel")}${fld("p_member","Αρ. μέλους",p.member)}</div>
   <div class="tiny">Το τηλέφωνο χρησιμοποιείται μόνο για την ενημέρωση σειράς στους αγώνες.</div>
-  <div class="row"><button class="b-pri grow" data-act="savePerson" data-id="${p.id||""}">Αποθήκευση</button>
+  <div class="row"><button class="b-pri grow" data-act="saveHandler" data-id="${p.id||""}">Αποθήκευση</button>
     <button class="grow" data-act="close">Άκυρο</button></div>`);
 }
 
@@ -2125,10 +2193,11 @@ function dlgJudge(j){
   <div class="row">${fld("j_name","Ονοματεπώνυμο",j.name)}</div>
   <div class="row">${sel("j_lic","Ιδιότητα",["ΕΠΙΣΗΜΟΣ","ΔΟΚΙΜΟΣ"],j.licence||"ΕΠΙΣΗΜΟΣ")}
     ${sel("j_me","Κριτής Μεγάλης Έρευνας",[["1","Ναι"],["0","Όχι"]],j.me?"1":"0")}</div>
-  <div class="row">${sel("j_person","Συνδεδεμένο πρόσωπο (για έλεγχο Άρθρου 49)",
-      [["","—"]].concat(DB.people.map(p=>[p.id,p.name])),j.personId)}</div>
-  <div class="tiny">Η σύνδεση με πρόσωπο επιτρέπει στην κλήρωση να μην τοποθετεί τον σκύλο του κριτή
-    στο τερέν που κρίνει (Άρθρο 49).</div>
+  <div class="row">${sel("j_person","Ο ίδιος στο μητρώο κυναγωγών (Άρθρο 49)",
+      [["","—"]].concat(DB.people.slice().sort((a,b)=>a.name.localeCompare(b.name,"el"))
+        .map(p=>[p.id,p.name])),j.personId)}</div>
+  <div class="tiny">Με τη σύνδεση, η κλήρωση δεν τοποθετεί τον σκύλο του κριτή στο τερέν που
+    κρίνει (Άρθρο 49).</div>
   <div class="row"><button class="b-pri grow" data-act="saveJudge" data-id="${j.id||""}">Αποθήκευση</button>
     <button class="grow" data-act="close">Άκυρο</button></div>`);
 }
@@ -2232,6 +2301,12 @@ function dogSelect(hid, selId){
 }
 /* If the handler has exactly one dog that is not already entered, that is
    almost certainly the one — offer it rather than making him pick it. */
+function dogHint(hid){
+  if(!DB.dogs.length) return "Το μητρώο σκύλων είναι άδειο. Προσθέστε τον σκύλο με το + Νέος.";
+  if(hid && !dogsForHandler(hid).own.length)
+    return "Ο κυναγωγός δεν έχει σκύλο στο μητρώο. Επιλέξτε από τους υπόλοιπους ή προσθέστε νέο.";
+  return "Πρώτοι στη λίστα οι σκύλοι που έχει ή έχει τρέξει.";
+}
 function suggestDog(t, hid, current){
   if(current) return current;
   const { own } = dogsForHandler(hid);
@@ -2253,13 +2328,11 @@ function dlgEntry(t, e){
         ${DB.people.slice().sort((a,b)=>a.name.localeCompare(b.name,"el"))
           .map(p=>`<option value="${p.id}" ${hid===p.id?"selected":""}>${esc(p.name)}</option>`).join("")}
       </select></div>
-    <button class="b-sm" style="align-self:flex-end" data-act="newPersonForEntry">+ Νέος</button></div>
+    <button class="b-sm" style="align-self:flex-end" data-act="newHandlerForEntry">+ Νέος</button></div>
   <div class="row">
     <div class="grow"><label>Σκύλος</label><span id="e_dogWrap">${dogSelect(hid, did)}</span></div>
     <button class="b-sm" style="align-self:flex-end" data-act="newDogForEntry">+ Νέος</button></div>
-  <div class="tiny" id="e_dogHint">${hid && !dogsForHandler(hid).own.length
-    ? "Ο κυναγωγός δεν έχει σκύλους στο μητρώο. Επιλέξτε από όλους ή προσθέστε νέο."
-    : "Πρώτοι στη λίστα οι σκύλοι που έχει ή έχει τρέξει."}</div>
+  <div class="tiny" id="e_dogHint">${dogHint(hid)}</div>
   <div class="row" style="margin-top:14px">${sel("e_status","Κατάσταση",["ΔΗΛΩΜΕΝΟΣ","ΑΠΟΣΥΡΘΗΚΕ","ΑΠΩΝ","ΣΥΜΠΛΗΡΩΜΑΤΙΚΟΣ"],e.status||"ΔΗΛΩΜΕΝΟΣ")}
     ${sel("e_paid","Πληρωμένο",[["1","Ναι"],["0","Όχι"]],e.paid?"1":"0")}</div>
   <div class="row" id="e_seasonRow" style="display:${femaleEntry({dogId:did})?"flex":"none"}">
@@ -2711,7 +2784,7 @@ function exportTrialDoc(t){
 
 /* ---------- 15. Actions -------------------------------------------------- */
 document.addEventListener("click", ev=>{
-  const el2 = ev.target.closest("[data-nav],[data-tab],[data-day],[data-act],[data-open],[data-dog],[data-editdog],[data-editperson],[data-editjudge],[data-editterrain],[data-editentry],[data-note],[data-res],[data-bstat],[data-trailer],[data-untrailer],[data-recall],[data-sms],[data-copy],[data-wa],[data-smsdone],[data-set],[data-tj],[data-nstep],[data-nwidth],[data-nfault],[data-delpt],[data-nset],[data-ptset],[data-openbrace],[data-swap],[data-swapwith],[data-regtab],[data-assign],[data-autoassign],[data-pick],[data-bmove],[data-signoff],[data-unlock]");
+  const el2 = ev.target.closest("[data-nav],[data-tab],[data-day],[data-act],[data-open],[data-dog],[data-editdog],[data-edithandler],[data-newdogfor],[data-editjudge],[data-editterrain],[data-editentry],[data-note],[data-res],[data-bstat],[data-trailer],[data-untrailer],[data-recall],[data-sms],[data-copy],[data-wa],[data-smsdone],[data-set],[data-tj],[data-nstep],[data-nwidth],[data-nfault],[data-delpt],[data-nset],[data-ptset],[data-openbrace],[data-swap],[data-swapwith],[data-regtab],[data-assign],[data-autoassign],[data-pick],[data-bmove],[data-signoff],[data-unlock]");
   if(!el2) return;
   const d = el2.dataset;
   const t = trialById(S.trialId);
@@ -2722,7 +2795,8 @@ document.addEventListener("click", ev=>{
   if(d.open){ S.view="trial"; S.trialId=d.open; S.tab="entries"; S.day=0; render(); return; }
   if(d.dog){ S.view="dog"; S.dogId=d.dog; render(); return; }
   if(d.editdog){ dlgDog(dogById(d.editdog)); return; }
-  if(d.editperson){ dlgPerson(perById(d.editperson)); return; }
+  if(d.edithandler){ dlgHandler(perById(d.edithandler)); return; }
+  if(d.newdogfor){ dlgDog({ ownerId: d.newdogfor }); return; }
   if(d.editjudge){ dlgJudge(judById(d.editjudge)); return; }
   if(d.editterrain){ dlgTerrain(t, t.days[S.day].terrains.find(x=>x.id===d.editterrain)); return; }
   if(d.editentry){ dlgEntry(t, t.entries.find(x=>x.id===d.editentry)); return; }
@@ -2877,9 +2951,7 @@ document.addEventListener("change", ev=>{
       const keep = (el("e_dog")||{}).value || "";
       wrap.innerHTML = dogSelect(hid, suggestDog(t2, hid, keep));
       const hint = el("e_dogHint");
-      if(hint) hint.textContent = hid && !dogsForHandler(hid).own.length
-        ? "Ο κυναγωγός δεν έχει σκύλους στο μητρώο. Επιλέξτε από όλους ή προσθέστε νέο."
-        : "Πρώτοι στη λίστα οι σκύλοι που έχει ή έχει τρέξει.";
+      if(hint) hint.textContent = dogHint(hid);
       const dg = dogById((el("e_dog")||{}).value) || {};
       const rowEl = el("e_seasonRow");
       if(rowEl) rowEl.style.display = dg.sex==="Θ" ? "flex" : "none";
@@ -3053,13 +3125,16 @@ const ACT = {
     try{ r.start(); toast("Ακούω…"); }catch(e){ ta.focus(); }
   },
   newDog: ()=>dlgDog(),
-  newPerson: ()=>dlgPerson(),
+  newHandler: ()=>dlgHandler(),
   newJudge: ()=>dlgJudge(),
   addTerrain: (e,t)=>dlgTerrain(t),
   /* An empty registry used to be a dead end with a toast pointing elsewhere.
      Now it opens the dog form, and saving comes straight back here. */
   addEntry: (e,t)=>{
-    if(!DB.people.length && !DB.dogs.length){ window._afterDog = "entry"; return dlgDog(); }
+    /* No κυναγωγός in the register means there is nothing to choose from. Ask
+       for the man first — the order the entry form itself asks in — and come
+       straight back with him already selected. */
+    if(!DB.people.length){ window._afterHandler = "entry"; return dlgHandler(); }
     dlgEntry(t);
   },
   /* A new dog opened from here comes back with the handler still chosen, and
@@ -3070,7 +3145,7 @@ const ACT = {
     window._afterDog = "entry";
     dlgDog(hid ? { ownerId: hid } : null);
   },
-  newPersonForEntry: ()=>{ window._afterPerson = "entry"; dlgPerson(); },
+  newHandlerForEntry: ()=>{ window._afterHandler = "entry"; dlgHandler(); },
   addPoint: ()=>{ (window._note.points = window._note.points||[]).push({}); redrawPoints(); autosaveNote(); },
 
   saveTrial: (btn)=>{
@@ -3128,7 +3203,7 @@ const ACT = {
   delDog: (btn)=>{ if(!confirmAct("Διαγραφή σκύλου από το μητρώο;")) return;
     DB.dogs = DB.dogs.filter(x=>x.id!==btn.dataset.id); save(); closeDlg(); render(); },
 
-  savePerson: (btn)=>{
+  saveHandler: (btn)=>{
     const id = btn.dataset.id;
     const o = {name:el("p_name").value.trim(), phone:el("p_phone").value.trim(), member:el("p_member").value.trim()};
     if(!o.name) return toast("Το ονοματεπώνυμο είναι υποχρεωτικό");
@@ -3136,8 +3211,8 @@ const ACT = {
     if(id) Object.assign(perById(id), o);
     else { nid = uid(); DB.people.push({id:nid, ...o}); }
     save(); closeDlg(); render();
-    if(window._afterPerson === "entry"){
-      window._afterPerson = null;
+    if(window._afterHandler === "entry"){
+      window._afterHandler = null;
       window._entryDraft = { handlerId: nid };
       const t = trialById(S.trialId);
       if(t) setTimeout(()=>dlgEntry(t), 60);
@@ -3267,7 +3342,7 @@ const ACT = {
       r.onload = () => {
         let inc; try{ inc = JSON.parse(r.result); }catch(e){ return alert("Μη έγκυρο αρχείο."); }
         if(!inc || !Array.isArray(inc.dogs)) return alert("Το αρχείο δεν είναι αντίγραφο της εφαρμογής.");
-        const counts = `${(inc.dogs||[]).length} σκύλοι, ${(inc.people||[]).length} πρόσωπα, `
+        const counts = `${(inc.dogs||[]).length} σκύλοι, ${(inc.people||[]).length} κυναγωγοί, `
                      + `${(inc.judges||[]).length} κριτές, ${(inc.trials||[]).length} αγώνες`;
         const merge = window.confirm(
           "Το αρχείο περιέχει: " + counts + "\n\n"
@@ -3485,8 +3560,8 @@ async function readAnyFile(file){
 /* ---- normalisation ---- */
 const IMPORT_FIELDS = [["","— παράλειψη —"],["name","Όνομα σκύλου"],["breed","Φυλή"],["sex","Φύλο"],
   ["reg","Αρ. Κ.Ο.Κ."],["chip","Τσιπ / δερματοστιξία"],["book","Βιβλιάριο εργασίας"],
-  ["dob","Ημ. γέννησης"],["kennel","Εκτροφείο"],["owner","Ιδιοκτήτης"],["ownerPhone","Τηλέφωνο ιδιοκτήτη"],
-  ["handler","Κυναγωγός"],["handlerPhone","Τηλέφωνο κυναγωγού"]];
+  ["dob","Ημ. γέννησης"],["kennel","Εκτροφείο"],["owner","Κυναγωγός (ιδιοκτήτης)"],["ownerPhone","Τηλέφωνο ιδιοκτήτη"],
+  ["handler","Κυναγωγός (στον αγώνα)"],["handlerPhone","Τηλέφωνο κυναγωγού"]];
 
 const GUESS = {
   name:["όνομα σκύλου","ονομα σκυλου","σκύλος","σκυλος","dog","name","όνομα","ονομα"],
@@ -3543,7 +3618,7 @@ function normDate(v){
 async function startImport(file, trial){
   let parsed;
   try{ parsed = await readAnyFile(file); }
-  catch(e){ alert("Δεν ήταν δυνατή η ανάγνωση του αρχείου.\n\n" + e.message); return; }
+  catch(e){ alert("Το αρχείο δεν διαβάστηκε.\n\n" + e.message); return; }
   const sheet = parsed.sheets[0];
   if(!parsed.data[sheet] || !parsed.data[sheet].length){ alert("Το αρχείο δεν περιέχει δεδομένα."); return; }
   window._imp = {parsed, sheet, header:0, map:{}, trial: trial||null, entries: !!trial,
@@ -4120,8 +4195,8 @@ function vInstall(){
       <ol class="tiny" style="padding-left:20px;line-height:1.9">
         <li>Ανοίξτε τη διεύθυνση στο Safari.</li>
         <li>Πατήστε το κουμπί Κοινή χρήση, κάτω στη μέση.</li>
-        <li>«Πρόσθεση στην Οθόνη Αφετηρίας».</li>
-        <li>Πρόσθεση.</li>
+        <li>«Προσθήκη στην οθόνη Αφετηρίας».</li>
+        <li>Πάνω δεξιά, Προσθήκη.</li>
       </ol>
     </div>
     <div class="card">
@@ -4175,7 +4250,7 @@ function qrPoster(){
     <div style="font:400 10pt/1.4 var(--f-b);margin-top:5mm;word-break:break-all">${esc(url)}</div>
     <div style="font:400 9.5pt/1.6 var(--f-b);margin-top:6mm;text-align:left;
       max-width:120mm;margin-left:auto;margin-right:auto">
-      <b>iPhone:</b> Safari → Κοινή χρήση → Πρόσθεση στην Οθόνη Αφετηρίας.<br>
+      <b>iPhone:</b> Safari → Κοινή χρήση → Προσθήκη στην οθόνη Αφετηρίας.<br>
       <b>Android:</b> Chrome → μενού ⋮ → Εγκατάσταση εφαρμογής.<br>
       Μετά την πρώτη φορά λειτουργεί χωρίς σήμα.
     </div>

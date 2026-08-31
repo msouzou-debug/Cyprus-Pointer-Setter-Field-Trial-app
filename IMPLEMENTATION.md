@@ -22,7 +22,7 @@ and the printed sheets.
 | 1d Τερέν live | `tBraces()`, countdown in `clockEl()` / `startClocks()` |
 | 1e Σημειώσεις | `dlgNote()` + `ptRow()` |
 | 1f SMS | `tSms()` |
-| 1g Μητρώο | `vRegistry()` |
+| 1g Μητρώο | `vRegistry()` — now handler-first, see below |
 | 1h Εισαγωγή, the mapping step | `renderImport()` |
 | 1i Στατιστικά | `vStats()` |
 | 1j Ιστορικό σκύλου | `vDog()` |
@@ -129,6 +129,46 @@ Reported after the first trial run, plus the intuitiveness pass.
   (an empty registry used to be a dead end with a toast pointing elsewhere); the trial's tabs are
   one scrolling row instead of wrapping to three, which gives the field screens back their
   vertical space.
+
+## Third round — the word is κυναγωγός, and the register follows the man
+
+The app called these men **πρόσωπα** and, on the dog form, **ιδιοκτήτες**. Neither is the club's
+word. The brief is explicit — τερέν, ζεύγος, κυναγωγός, φέρμα, πόντος, λευκή φέρμα, ποντάρισμα,
+συναίνεση, μπαράζ, κλήρωση, επανάκληση, βαθμολογία, οίστρος, never a synonym — and this one had
+slipped through on the screens the designer had not drawn.
+
+- **Πρόσωπα is now Κυναγωγοί** everywhere it shows: the Μητρώο tab and its counts, the dialog
+  titles, the dog form's section, the judges table column, the judge-linking field, the import
+  field labels, the transfer and backup wording. `DB.people` keeps its name — it is the storage
+  key, and every backup and transfer packet already in the field carries it.
+- **Μητρώο is handler-first and lands there.** A card per κυναγωγός: his phone and membership
+  number under his name, his dogs under that, «+ Σκύλος» which opens the dog form with him
+  already filled in, and «Επεξεργασία στοιχείων». It is deliberately the same object as a
+  Συμμετοχές card, because it is the same job — the head judge thinks in men, and the dogs move
+  around underneath them. The search filters dogs and drops a κυναγωγός whose dogs all fall out,
+  but keeps one whose own name matches: in the register he may have no dogs yet. Dogs with no
+  κυναγωγός collect in a final card rather than disappearing.
+- **The flat Σκύλοι table stays** as the second tab, with the import card. It is the desk view
+  for looking a dog up by Κ.Ο.Κ., which the cards are not.
+- **An entry on an empty register now asks for the κυναγωγός**, not the dog — the same order the
+  entry form itself asks in, and it comes back with him already chosen.
+- **Smaller:** a κυναγωγός with one dog is no longer stretched to the height of one with four;
+  the dog's name in a card opens its history, so the row carries one control instead of three;
+  the sex reads «αρσενικός / θηλυκός» on both screens instead of «Α / Θ» on one of them.
+
+### Greek
+
+The strings were read against the club's vocabulary and modern usage rather than spot-checked.
+Nothing polytonic, no Latin lookalikes inside Greek words, άνω τελεία used where it belongs.
+Four real errors: the workbook sheet is «Παράμετροι» and the prose had lost the accent; the iOS
+install steps said «Πρόσθεση», which is the arithmetic word — Safari's own Greek is «Προσθήκη
+στην οθόνη Αφετηρίας»; the Άρθρο 16 line used an en dash where the rest of the app uses an em
+dash; and one instruction had lost its verb. The import failure now says «Το αρχείο δεν
+διαβάστηκε» rather than the nominalised «Δεν ήταν δυνατή η ανάγνωση».
+
+Question marks stay as U+003B. That is what a Greek keyboard produces and what Unicode
+recommends; U+037E normalises back to it under NFC, so switching would be a change that undoes
+itself. No `?` appears in Greek prose anywhere.
 
 ## Deliberate departures from the canvas
 
