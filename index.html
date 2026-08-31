@@ -415,6 +415,9 @@ dialog{border:0;border-radius:var(--r);padding:0;max-width:640px;width:calc(100%
 dialog::backdrop{background:#000000a6}
 .dlg{padding:var(--s4) var(--s4) var(--s5)}
 .dlg h2{margin-bottom:var(--s3)}
+/* stacked fields in a dialog: leave room for the focus ring so it never
+   crosses the label of the field below */
+.dlg .row{margin-bottom:8px}
 .toast{position:fixed;left:50%;transform:translateX(-50%);
   bottom:calc(84px + env(safe-area-inset-bottom));background:var(--navy);color:#fff;
   padding:12px 16px;border-radius:var(--r);font:400 16px/1.3 var(--f-b);z-index:60;
@@ -2145,17 +2148,66 @@ function femaleEntry(e){
   const d = dogById(e && e.dogId ? e.dogId : (DB.dogs[0]||{}).id);
   return d && d.sex === "Θ";
 }
+/* Which dogs belong to a handler: the ones he owns, plus any he has run in a
+   previous trial. A handler often brings someone else's dog, and the club's
+   handlers outlast the dogs by years — which is why this screen asks for the
+   handler first and lets him narrow the list, rather than making the head
+   judge find a dog among a hundred and hope the owner comes out right. */
+function dogsForHandler(hid){
+  const byName = (a,b)=>a.name.localeCompare(b.name,"el");
+  if(!hid) return { own: [], rest: DB.dogs.slice().sort(byName) };
+  const handled = new Set();
+  DB.trials.forEach(t=>t.entries.forEach(en=>{ if(en.handlerId === hid) handled.add(en.dogId); }));
+  const own = DB.dogs.filter(d=>d.ownerId === hid || handled.has(d.id)).sort(byName);
+  const ownIds = new Set(own.map(d=>d.id));
+  return { own, rest: DB.dogs.filter(d=>!ownIds.has(d.id)).sort(byName) };
+}
+function dogSelect(hid, selId){
+  const { own, rest } = dogsForHandler(hid);
+  const opt = d => `<option value="${d.id}" ${selId===d.id?"selected":""}>${esc(d.name)}${
+    d.breed?" ("+esc(d.breed)+")":""}</option>`;
+  return `<select id="e_dog">
+    <option value="">— επιλέξτε σκύλο —</option>
+    ${own.length?`<optgroup label="Σκύλοι του κυναγωγού">${own.map(opt).join("")}</optgroup>`:""}
+    ${rest.length?`<optgroup label="${own.length?"Άλλοι σκύλοι":"Όλοι οι σκύλοι"}">${rest.map(opt).join("")}</optgroup>`:""}
+  </select>`;
+}
+/* If the handler has exactly one dog that is not already entered, that is
+   almost certainly the one — offer it rather than making him pick it. */
+function suggestDog(t, hid, current){
+  if(current) return current;
+  const { own } = dogsForHandler(hid);
+  const free = own.filter(d=>!t.entries.some(en=>en.dogId === d.id));
+  return free.length === 1 ? free[0].id : "";
+}
 function dlgEntry(t, e){
   e = e || {};
+  const draft = window._entryDraft || {};
+  const hid = e.handlerId || draft.handlerId || "";
+  const did = e.dogId || draft.dogId || suggestDog(t, hid, "");
+  window._entryDraft = null;
   dlg(`<h2>${e.id?"Επεξεργασία συμμετοχής":"Νέα συμμετοχή"}</h2>
-  <div class="row">${sel("e_dog","Σκύλος",DB.dogs.map(d=>[d.id,d.name+" ("+d.breed+")"]),e.dogId)}
-    <button class="b-sm" style="align-self:flex-end" data-act="newDogForEntry">+ Νέος σκύλος</button></div>
-  <div class="row">${sel("e_handler","Κυναγωγός",[["","—"]].concat(DB.people.map(p=>[p.id,p.name])),e.handlerId)}</div>
-  <div class="row">${sel("e_status","Κατάσταση",["ΔΗΛΩΜΕΝΟΣ","ΑΠΟΣΥΡΘΗΚΕ","ΑΠΩΝ","ΣΥΜΠΛΗΡΩΜΑΤΙΚΟΣ"],e.status||"ΔΗΛΩΜΕΝΟΣ")}
+  <p class="muted">Πρώτα ο κυναγωγός, μετά ο σκύλος: οι κυναγωγοί μένουν χρόνια, οι σκύλοι αλλάζουν.</p>
+  <div class="row" style="margin-top:14px">
+    <div class="grow"><label>Κυναγωγός</label>
+      <select id="e_handler">
+        <option value="">— επιλέξτε κυναγωγό —</option>
+        ${DB.people.slice().sort((a,b)=>a.name.localeCompare(b.name,"el"))
+          .map(p=>`<option value="${p.id}" ${hid===p.id?"selected":""}>${esc(p.name)}</option>`).join("")}
+      </select></div>
+    <button class="b-sm" style="align-self:flex-end" data-act="newPersonForEntry">+ Νέος</button></div>
+  <div class="row">
+    <div class="grow"><label>Σκύλος</label><span id="e_dogWrap">${dogSelect(hid, did)}</span></div>
+    <button class="b-sm" style="align-self:flex-end" data-act="newDogForEntry">+ Νέος</button></div>
+  <div class="tiny" id="e_dogHint">${hid && !dogsForHandler(hid).own.length
+    ? "Ο κυναγωγός δεν έχει σκύλους στο μητρώο. Επιλέξτε από όλους ή προσθέστε νέο."
+    : "Πρώτοι στη λίστα οι σκύλοι που έχει ή έχει τρέξει."}</div>
+  <div class="row" style="margin-top:14px">${sel("e_status","Κατάσταση",["ΔΗΛΩΜΕΝΟΣ","ΑΠΟΣΥΡΘΗΚΕ","ΑΠΩΝ","ΣΥΜΠΛΗΡΩΜΑΤΙΚΟΣ"],e.status||"ΔΗΛΩΜΕΝΟΣ")}
     ${sel("e_paid","Πληρωμένο",[["1","Ναι"],["0","Όχι"]],e.paid?"1":"0")}</div>
-  <div class="row" id="e_seasonRow" style="display:${femaleEntry(e)?"flex":"none"}">
+  <div class="row" id="e_seasonRow" style="display:${femaleEntry({dogId:did})?"flex":"none"}">
     ${sel("e_season","Σε οίστρο (Άρθρο 9)",[["0","Όχι"],["1","Ναι"]],e.season?"1":"0")}</div>
-  <div class="row"><button class="b-pri grow" data-act="saveEntry" data-id="${e.id||""}">Αποθήκευση</button>
+  <div class="row" style="margin-top:14px">
+    <button class="b-pri grow" data-act="saveEntry" data-id="${e.id||""}">Αποθήκευση</button>
     <button class="grow" data-act="close">Άκυρο</button>
     ${e.id?`<button class="b-warn" data-act="delEntry" data-id="${e.id}">Διαγραφή</button>`:""}</div>`);
 }
@@ -2759,6 +2811,22 @@ document.addEventListener("change", ev=>{
   const p = ev.target.dataset.pt;
   if(p && p.includes("|") && window._note){ const [i,f] = p.split("|");
     window._note.points[+i][f] = ev.target.value; return; }
+  if(ev.target.id==="e_handler"){                   // the handler narrows the dogs
+    const t2 = trialById(S.trialId);
+    const hid = ev.target.value;
+    const wrap = el("e_dogWrap");
+    if(wrap && t2){
+      const keep = (el("e_dog")||{}).value || "";
+      wrap.innerHTML = dogSelect(hid, suggestDog(t2, hid, keep));
+      const hint = el("e_dogHint");
+      if(hint) hint.textContent = hid && !dogsForHandler(hid).own.length
+        ? "Ο κυναγωγός δεν έχει σκύλους στο μητρώο. Επιλέξτε από όλους ή προσθέστε νέο."
+        : "Πρώτοι στη λίστα οι σκύλοι που έχει ή έχει τρέξει.";
+      const dg = dogById((el("e_dog")||{}).value) || {};
+      const rowEl = el("e_seasonRow");
+      if(rowEl) rowEl.style.display = dg.sex==="Θ" ? "flex" : "none";
+    }
+    return; }
   if(ev.target.id==="e_dog"){                       // οίστρος applies to bitches only
     const dg = dogById(ev.target.value) || {};
     const rowEl = el("e_seasonRow"); if(rowEl) rowEl.style.display = dg.sex==="Θ" ? "flex" : "none";
@@ -2932,8 +3000,19 @@ const ACT = {
   addTerrain: (e,t)=>dlgTerrain(t),
   /* An empty registry used to be a dead end with a toast pointing elsewhere.
      Now it opens the dog form, and saving comes straight back here. */
-  addEntry: (e,t)=>{ if(!DB.dogs.length){ window._afterDog = "entry"; return dlgDog(); } dlgEntry(t); },
-  newDogForEntry: ()=>{ window._afterDog = "entry"; dlgDog(); },
+  addEntry: (e,t)=>{
+    if(!DB.people.length && !DB.dogs.length){ window._afterDog = "entry"; return dlgDog(); }
+    dlgEntry(t);
+  },
+  /* A new dog opened from here comes back with the handler still chosen, and
+     the handler is offered as the owner so nobody types a name twice. */
+  newDogForEntry: ()=>{
+    const hid = (el("e_handler")||{}).value || "";
+    window._entryDraft = { handlerId: hid };
+    window._afterDog = "entry";
+    dlgDog(hid ? { ownerId: hid } : null);
+  },
+  newPersonForEntry: ()=>{ window._afterPerson = "entry"; dlgPerson(); },
   addPoint: ()=>{ (window._note.points = window._note.points||[]).push({}); redrawPoints(); autosaveNote(); },
 
   saveTrial: (btn)=>{
@@ -2978,7 +3057,9 @@ const ACT = {
     if(ownerId){ const p = perById(ownerId); if(p){ if(on) p.name = on; if(op) p.phone = op; } }
     else if(on){ ownerId = ensurePerson(on, op); }
     o.ownerId = ownerId || "";
-    if(id) Object.assign(dogById(id), o); else DB.dogs.push({id:uid(), ...o});
+    if(id) Object.assign(dogById(id), o);
+    else { const nid = uid(); DB.dogs.push({id:nid, ...o});
+           if(window._entryDraft) window._entryDraft.dogId = nid; }
     save(); closeDlg(); render();
     if(window._afterDog === "entry"){
       window._afterDog = null;
@@ -2993,8 +3074,16 @@ const ACT = {
     const id = btn.dataset.id;
     const o = {name:el("p_name").value.trim(), phone:el("p_phone").value.trim(), member:el("p_member").value.trim()};
     if(!o.name) return toast("Το ονοματεπώνυμο είναι υποχρεωτικό");
-    if(id) Object.assign(perById(id), o); else DB.people.push({id:uid(), ...o});
+    let nid = id;
+    if(id) Object.assign(perById(id), o);
+    else { nid = uid(); DB.people.push({id:nid, ...o}); }
     save(); closeDlg(); render();
+    if(window._afterPerson === "entry"){
+      window._afterPerson = null;
+      window._entryDraft = { handlerId: nid };
+      const t = trialById(S.trialId);
+      if(t) setTimeout(()=>dlgEntry(t), 60);
+    }
   },
   saveJudge: (btn)=>{
     const id = btn.dataset.id;
@@ -3033,6 +3122,10 @@ const ACT = {
 
   saveEntry: (btn, t)=>{
     const id = btn.dataset.id;
+    if(!el("e_handler").value) return toast("Επιλέξτε πρώτα κυναγωγό");
+    if(!el("e_dog").value) return toast("Επιλέξτε σκύλο");
+    const dupe = t.entries.find(x=>x.dogId === el("e_dog").value && x.id !== id);
+    if(dupe) return toast("Ο σκύλος έχει ήδη δηλωθεί σε αυτόν τον αγώνα");
     const dg = dogById(el("e_dog").value) || {};
     const o = {dogId:el("e_dog").value, handlerId:el("e_handler").value, status:el("e_status").value,
                paid:el("e_paid").value==="1",

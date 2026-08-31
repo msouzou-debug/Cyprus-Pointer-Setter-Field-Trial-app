@@ -111,6 +111,12 @@ Reported after the first trial run, plus the intuitiveness pass.
   alert after it.
 - **Sign-off** locks a terrain's scores and notes; the sheet still opens, read-only. Unlocking
   needs a reason, which is kept and printed. Spec §7 asked for this and it had never been built.
+- **The entry screen asks for the handler first, then the dog.** Handlers stay with the club for
+  years; dogs compete for a few. Choosing the handler groups his dogs to the top of the list —
+  the ones he owns *and* any he has run in a previous trial, since a handler often brings someone
+  else's dog. If exactly one of his dogs is not yet entered, it is offered. Adding a person or a
+  dog mid-flow comes back with what was already chosen, and the new dog's owner is prefilled with
+  the handler so no name is typed twice. Entering the same dog twice is refused.
 - **Smaller:** a search box on Συμμετοχές; a dog can be created without leaving the entries screen
   (an empty registry used to be a dead end with a toast pointing elsewhere); the trial's tabs are
   one scrolling row instead of wrapping to three, which gives the field screens back their
