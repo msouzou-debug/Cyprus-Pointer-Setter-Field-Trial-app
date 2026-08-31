@@ -117,6 +117,9 @@ Reported after the first trial run, plus the intuitiveness pass.
   else's dog. If exactly one of his dogs is not yet entered, it is offered. Adding a person or a
   dog mid-flow comes back with what was already chosen, and the new dog's owner is prefilled with
   the handler so no name is typed twice. Entering the same dog twice is refused.
+  **Συμμετοχές is grouped the same way** — a card per handler with his dogs under it, his phone
+  number under his name, and a count. One man arrives with three dogs and the head judge deals
+  with him once. The search filters the dogs and drops a handler whose dogs all fall out.
 - **Smaller:** a search box on Συμμετοχές; a dog can be created without leaving the entries screen
   (an empty registry used to be a dead end with a toast pointing elsewhere); the trial's tabs are
   one scrolling row instead of wrapping to three, which gives the field screens back their

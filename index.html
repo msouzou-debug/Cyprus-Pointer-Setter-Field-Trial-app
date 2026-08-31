@@ -283,6 +283,17 @@ hr{border:0;border-top:1px solid var(--line);margin:var(--s4) 0}
 .tog.opt{min-height:44px;font-size:15px;padding:0 12px}
 .tog.opt.on{background:var(--navy-l);color:var(--navy);border-color:var(--navy)}
 .tog.opt.on::before{content:"✓ ";font-weight:700}
+/* one dog inside a handler's card: the name takes the width it needs and the
+   marks drop to their own line rather than landing on top of it */
+.entry-row{display:flex;align-items:center;gap:6px 10px;flex-wrap:wrap;
+  padding:10px 0;border-top:1px solid var(--line-f)}
+.entry-row:first-child{border-top:0}
+.entry-row .who{flex:1 1 190px;min-width:0}
+.entry-row b{display:block;font:600 17px/1.25 var(--f-b);overflow-wrap:anywhere}
+.entry-row .tiny{display:block;margin-top:2px}
+.entry-row .acts{display:flex;align-items:center;gap:6px;flex:0 0 auto;margin-left:auto;flex-wrap:wrap;
+  justify-content:flex-end}
+.card.handler{break-inside:avoid}
 .tog.assign{border-color:var(--line-s);background:#fff;color:var(--ink);font-weight:400}
 .tog.assign.on{background:var(--navy-l);border-color:var(--navy);color:var(--ink)}
 .tog.assign.on::before{content:"✓";font-weight:700;color:var(--navy);margin-right:10px;flex:none}
@@ -1015,20 +1026,57 @@ function progressStrip(t){
 
 /* --- 8a. entries --- */
 function tEntries(t){
-  const rows = t.entries.map(e=>{
-    const d = dogById(e.dogId)||{};
-    return `<tr data-find="${esc(((d.name||"") + " " + (d.reg||"") + " " + perName(e.handlerId)).toLowerCase())}">
-      <td>${esc(d.name||"—")}<div class="tiny">${esc(d.breed||"")} ${d.sex?("· "+d.sex):""} ${d.reg?("· "+esc(d.reg)):""}</div></td>
-      <td>${esc(perName(e.handlerId))}</td>
-      <td class="n">${e.season?'<span class="chip y">οίστρος</span>':""} ${e.paid?'<span class="chip g">πληρ.</span>':'<span class="chip r">απλήρωτο</span>'}</td>
-      <td><span class="chip">${esc(e.status)}</span></td>
-      <td class="noprint"><button class="b-sm" data-editentry="${e.id}">Επεξ.</button></td>
-    </tr>`;}).join("");
+  /* Grouped by handler, because that is who turns up: one man arrives with
+     three dogs and the head judge deals with him once, not three times. */
+  const groups = new Map();
+  t.entries.forEach(e=>{
+    const key = e.handlerId || "";
+    if(!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(e);
+  });
+  const ordered = [...groups.entries()].sort((x, y)=>{
+    if(!x[0]) return 1;                                   /* unassigned last */
+    if(!y[0]) return -1;
+    return perName(x[0]).localeCompare(perName(y[0]), "el");
+  });
+
+  const cards = ordered.map(([hid, list])=>{
+    const who = hid ? perName(hid) : "— χωρίς κυναγωγό —";
+    const phone = hid ? (perById(hid)||{}).phone : "";
+    const running = list.filter(e=>e.status==="ΔΗΛΩΜΕΝΟΣ").length;
+    const dogs = list.slice().sort((p,q)=>dogName(p.dogId).localeCompare(dogName(q.dogId),"el"))
+      .map(e=>{
+        const d = dogById(e.dogId) || {};
+        const find = ((d.name||"") + " " + (d.reg||"") + " " + (d.breed||"") + " " + who).toLowerCase();
+        return `<div class="entry-row" data-find="${esc(find)}">
+          <div class="who">
+            <b>${esc(d.name||"—")}</b>
+            <span class="tiny">${esc(d.breed||"")}${d.sex?" · "+d.sex:""}${d.reg?" · "+esc(d.reg):""}</span>
+          </div>
+          <div class="acts">
+            ${e.season?`<span class="chip y">οίστρος</span>`:""}
+            ${e.paid?`<span class="chip g">πληρ.</span>`:`<span class="chip r">απλήρωτο</span>`}
+            ${e.status!=="ΔΗΛΩΜΕΝΟΣ"?`<span class="chip">${esc(e.status)}</span>`:""}
+            <button class="b-sm noprint" data-editentry="${e.id}">Επεξ.</button>
+          </div></div>`;
+      }).join("");
+    return `<div class="card handler" data-group>
+      <div class="row" style="align-items:baseline;gap:10px">
+        <h3 class="grow" style="margin:0">${esc(who)}</h3>
+        <span class="muted num">${running} ${running===1?"σκύλος":"σκύλοι"}</span>
+      </div>
+      ${phone?`<div class="fingerprint">${esc(phone)}</div>`:""}
+      <div style="margin-top:10px">${dogs}</div>
+    </div>`;
+  }).join("");
+
   const active = t.entries.filter(e=>e.status==="ΔΗΛΩΜΕΝΟΣ").length;
   const braces = Math.ceil(active/(t.format==="ΖΕΥΓΗ"?2:1));
   const min = active>=6 && braces>=3;
+  const handlers = ordered.filter(([hid, l])=>l.some(e=>e.status==="ΔΗΛΩΜΕΝΟΣ")).length;
   return `
-  <div class="${min?"note":"err"}">${active} ${active===1?"σκύλος":"σκύλοι"} · ${braces} ${t.format==="ΖΕΥΓΗ"?"ζεύγη":"διαδρομές"}.
+  <div class="${min?"note":"err"}">${active} ${active===1?"σκύλος":"σκύλοι"} από ${handlers}
+   ${handlers===1?"κυναγωγό":"κυναγωγούς"} · ${braces} ${t.format==="ΖΕΥΓΗ"?"ζεύγη":"διαδρομές"}.
    ${min ? "Πληρούνται τα ελάχιστα: 6 σκύλοι και 3 ζεύγη."
      : `<b>Δεν πληρούνται τα ελάχιστα.</b> Χρειάζονται τουλάχιστον 6 σκύλοι και 3 ζεύγη
         (ΕΚ Άρθρο 5, Άρθρο 40). Προσθέστε συμμετοχές ή συγχωνεύστε τερέν.`}</div>
@@ -1038,10 +1086,9 @@ function tEntries(t){
         value="${esc(S.entryQ||"")}" oninput="filterEntries(this.value)"></div>
     <button class="b-act" data-act="addEntry">+ Συμμετοχή</button>
     <button data-act="importEntries">Εισαγωγή αρχείου</button></div>
-  ${rows ? `<div class="card" style="padding:0"><div class="scroll"><table>
-    <thead><tr><th>Σκύλος</th><th>Κυναγωγός</th><th>Σημάνσεις</th><th>Κατάσταση</th><th class="noprint"></th></tr></thead>
-    <tbody>${rows}</tbody></table></div></div>`
-  : `<div class="empty">Καμία συμμετοχή ακόμη. Εισαγάγετε αρχείο Excel ή προσθέστε σκύλο.</div>`}`;
+  <div id="entryNone" class="empty" style="display:none">Καμία συμμετοχή δεν ταιριάζει.</div>
+  ${cards ? `<div class="split">${cards}</div>`
+    : `<div class="empty">Καμία συμμετοχή ακόμη. Εισαγάγετε αρχείο Excel ή προσθέστε σκύλο.</div>`}`;
 }
 
 /* --- 8b. terrains --- */
@@ -1811,13 +1858,22 @@ function vRegistry(){
   </div>`;
   return `<div class="reg">${side}<div class="main">${phoneTabs}${body}</div></div>`;
 }
-/* the entries table filters in place; re-rendering would drop the keyboard */
+/* Filters in place — re-rendering would drop the keyboard mid-word. A handler
+   whose dogs all fall out of the search disappears with them. */
 function filterEntries(v){
   S.entryQ = v || "";
-  const q = S.entryQ.toLowerCase();
-  document.querySelectorAll("[data-find]").forEach(tr=>{
-    tr.style.display = !q || (tr.dataset.find||"").includes(q) ? "" : "none";
+  const q = S.entryQ.trim().toLowerCase();
+  document.querySelectorAll("[data-find]").forEach(row=>{
+    row.style.display = !q || (row.dataset.find||"").includes(q) ? "" : "none";
   });
+  let shown = 0;
+  document.querySelectorAll("[data-group]").forEach(g=>{
+    const any = [...g.querySelectorAll("[data-find]")].some(r=>r.style.display !== "none");
+    g.style.display = any ? "" : "none";
+    if(any) shown++;
+  });
+  const none = el("entryNone");
+  if(none) none.style.display = (q && !shown) ? "" : "none";
 }
 function filterDogs(v){
   v = (v||"").toLowerCase();
