@@ -65,6 +65,11 @@ Opened from a web address the app knows its own. Opened from a file there is
 nothing to share, so the club's address is typed once and kept in settings,
 which also means it travels with a backup.
 
+The same screen carries the GitHub repository: a direct ZIP of the four files
+and a link to the source. A build with no server should not depend on whoever
+set it up — the club can take the files and host them somewhere else. `REPO`
+is a constant at the top of that section; change it if the repository moves.
+
 ## Three fixes to the existing build
 
 - **The debounced write had no flush.** `save()` waits 250ms before serialising, so a burst of
