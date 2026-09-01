@@ -170,6 +170,37 @@ Question marks stay as U+003B. That is what a Greek keyboard produces and what U
 recommends; U+037E normalises back to it under NFC, so switching would be a change that undoes
 itself. No `?` appears in Greek prose anywhere.
 
+## Fourth round — one navigation row, and the day set up in the order it happens
+
+Reported from a phone at the trial.
+
+- **The trial screen carried the same six words twice.** A progress strip
+  (Συμμετοχές → Τερέν → Κλήρωση → SMS → Βαθμολογία) sat directly above a tab strip with the same
+  labels. On a desk they read as two registers; on a phone they read as duplicate buttons, which
+  is what they were. There is now one row. It is the progress strip, extended to carry Ζεύγη as
+  the step it always was, and it is the navigation: each step shows its number or its tick, its
+  count, and whether it is the one open. Εξαγωγές trails as a plain button — a destination, not
+  a step, and it never completes.
+- **Συμμετοχές are entered by the man, not the dog.** «+ Συμμετοχές» opens one screen: choose the
+  κυναγωγός, see only his dogs, tick the ones running today. He brings three and enters two in one
+  pass. Re-opening him shows what is already ticked, and un-ticking withdraws the entry. A dog
+  already drawn or scored cannot be un-ticked there — that is a withdrawal and it belongs in the
+  entry's own form, where the status is recorded. A dog entered under another κυναγωγός shows his
+  name and stays locked. Each card on Συμμετοχές has «Αλλαγή σκύλων» straight back into it.
+  The one-dog form stays for editing a single entry: status, πληρωμή, οίστρος.
+- **Τερέν asks how many first.** 1 / 2 / 3 / 4, named Τερέν Α, Β, Γ, Δ. Adding is free; removing
+  refuses to swallow a terrain that has braces drawn, and asks before dropping manual assignments.
+- **Judges are chosen on the terrain card.** An **Αρχικριτής** dropdown (he joins the panel
+  automatically — he judges it too) and the other judges added from a second dropdown, each
+  appearing as a chip that comes off with a tap. Judges already seated are not offered again.
+  Άρθρο 48 and Άρθρο 49 are still stated on the card, per terrain, as they were.
+  `terrain.headJudgeId` is new; `judgeIds` stays the panel the regulation checks run against.
+- **The two ways the club works are on the screen.** Once the field is in and every terrain has
+  its judges, a panel offers both: **Κλήρωση τώρα** for the draw on the hillside in front of
+  everyone, or **Αποστολή στο κινητό** to carry the setup over and draw there. Do it at home
+  instead and the SMS step sends the order — still indicative, Άρθρο 16. The transfer and the SMS
+  both existed; nothing pointed at them from where the decision is made.
+
 ## Deliberate departures from the canvas
 
 - **Offline chip.** The canvas shows «Εκτός σύνδεσης – 6 αλλαγές σε αναμονή». There is no server

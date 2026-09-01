@@ -331,6 +331,11 @@ button[disabled]{opacity:.4}
 .step-i.done .mark{background:var(--ok);color:#fff}
 .step-i.now{border-color:var(--setter);box-shadow:inset 0 0 0 1px var(--setter)}
 .step-i.now .mark{background:var(--setter);color:#fff}
+/* which step is open now that the strip is also the navigation */
+.step-i.here{background:var(--navy);border-color:var(--navy)}
+.step-i.here .lbl,.step-i.here .lbl span{color:#fff}
+.step-i.here .mark{background:rgba(255,255,255,.22);color:#fff}
+.step-i.plain{align-self:stretch}
 @media (min-width:900px){ .steps{margin-left:0;margin-right:0;padding-left:0;padding-right:0} }
 @media (min-width:900px){ .tabstrip{margin-left:0;margin-right:0;padding-left:0;padding-right:0;flex-wrap:wrap} }
 .step{display:flex;align-items:center;gap:10px}
@@ -984,8 +989,6 @@ function nextPending(t){
 /* ---------- 8. Views: trial detail --------------------------------------- */
 function vTrial(){
   const t = trialById(S.trialId); if(!t){ S.view="trials"; return vTrials(); }
-  const tabs=[["entries","Συμμετοχές"],["terrains","Τερέν & Κριτές"],["draw","Κλήρωση"],
-              ["braces","Ζεύγη"],["sms","SMS"],["results","Βαθμολογία"],["export","Εξαγωγές"]];
   const body = {entries:tEntries,terrains:tTerrains,draw:tDraw,braces:tBraces,
                 sms:tSms,results:tResults,export:tExport}[S.tab](t);
   return `
@@ -999,9 +1002,6 @@ function vTrial(){
    · ${esc(t.game||"—")}${t.wild?" (άγριο θήραμα)":""} · ${fmtDate(t.dateStart)} · ${esc(t.place||"")}
    · Συντελεστής ×${coefficient(t)}</div>
   ${progressStrip(t)}
-  <div class="tabstrip noprint">
-    ${tabs.map(([k,l])=>`<button class="tog ${S.tab===k?"on":""}" data-tab="${k}">${l}</button>`).join("")}
-  </div>
   ${t.days.length>1?`<div class="row tight noprint" style="margin-bottom:14px">
     ${t.days.map((d,i)=>`<button class="tog ${S.day===i?"on":""}" data-day="${i}">Ημέρα ${i+1} · ${fmtDate(d.date)}</button>`).join("")}
   </div>`:""}
@@ -1009,8 +1009,11 @@ function vTrial(){
 }
 
 /* The app has an order of operations — entries, terrains, the draw, the SMS,
-   the scoring — and nothing on screen said so. This says it, and each step is
-   a way in. */
+   the running, the scoring — and nothing on screen said so. This says it, and
+   each step is the way in. It is also the only navigation: a strip of steps
+   above a strip of tabs carrying the same six words read as the same buttons
+   twice on a phone, which is what it was. Εξαγωγές trails as a plain button —
+   it is a destination, not a step, and it never completes. */
 function progressStrip(t){
   const day = t.days[S.day];
   const active = t.entries.filter(e=>e.status==="ΔΗΛΩΜΕΝΟΣ").length;
@@ -1018,6 +1021,9 @@ function progressStrip(t){
   const q = day.draw ? smsQueue(t) : [];
   const sent = q.filter(x=>t.sms[x.entry.id]==="ΕΣΤΑΛΗ").length;
   const scored = t.entries.filter(e=>{ const r = t.results[e.id]; return r && r.qual && r.qual!=="-"; }).length;
+  const braces = [];
+  day.terrains.forEach(tr=>(tr.braces||[]).forEach(b=>braces.push(b)));
+  const ran = braces.filter(b=>b.status==="ΟΛΟΚΛΗΡΩΘΗΚΕ").length;
   const steps = [
     ["entries",  "Συμμετοχές", active >= 6,        active ? active + " σκύλοι" : "καμία"],
     ["terrains", "Τερέν",      day.terrains.length && judged,
@@ -1025,15 +1031,19 @@ function progressStrip(t){
     ["draw",     "Κλήρωση",    !!day.draw,         day.draw ? "έγινε" : "εκκρεμεί"],
     ["sms",      "SMS",        q.length > 0 && sent === q.length,
                                                    q.length ? sent + "/" + q.length : "—"],
+    ["braces",   "Ζεύγη",      braces.length > 0 && ran === braces.length,
+                                                   braces.length ? ran + "/" + braces.length : "—"],
     ["results",  "Βαθμολογία", active > 0 && scored === active,
                                                    scored ? scored + "/" + active : "—"]
   ];
   const firstOpen = steps.findIndex(x=>!x[2]);
   return `<div class="steps noprint">${steps.map(([k,label,done,note],i)=>
-    `<button class="step-i ${done?"done":""} ${i===firstOpen?"now":""}" data-tab="${k}">
+    `<button class="step-i ${done?"done":""} ${i===firstOpen?"now":""} ${S.tab===k?"here":""}" data-tab="${k}">
       <span class="mark">${done?"✓":i+1}</span>
       <span class="lbl">${label}<span>${esc(note)}</span></span>
-    </button>`).join("")}</div>`;
+    </button>`).join("")}
+    <button class="step-i plain ${S.tab==="export"?"here":""}" data-tab="export">
+      <span class="lbl">Εξαγωγές<span>αρχεία και εκτυπώσεις</span></span></button></div>`;
 }
 
 /* --- 8a. entries --- */
@@ -1080,6 +1090,8 @@ function tEntries(t){
       </div>
       ${phone?`<div class="fingerprint">${esc(phone)}</div>`:""}
       <div style="margin-top:10px">${dogs}</div>
+      ${hid?`<div class="row tight noprint" style="margin-top:12px">
+        <button class="b-sm" data-batch="${hid}">Αλλαγή σκύλων</button></div>`:""}
     </div>`;
   }).join("");
 
@@ -1097,30 +1109,69 @@ function tEntries(t){
     <div class="grow" style="max-width:340px">
       <input id="entryQ" placeholder="Αναζήτηση σκύλου ή κυναγωγού"
         value="${esc(S.entryQ||"")}" oninput="filterEntries(this.value)"></div>
-    <button class="b-act" data-act="addEntry">+ Συμμετοχή</button>
+    <button class="b-act" data-act="addEntry">+ Συμμετοχές</button>
     <button data-act="importEntries">Εισαγωγή αρχείου</button></div>
   <div id="entryNone" class="empty" style="display:none">Καμία συμμετοχή δεν ταιριάζει.</div>
   ${cards ? `<div class="split top">${cards}</div>`
     : `<div class="empty">Καμία συμμετοχή ακόμη. Εισαγάγετε αρχείο Excel ή προσθέστε σκύλο.</div>`}`;
 }
 
-/* --- 8b. terrains --- */
+/* --- 8b. terrains ---
+   How many terrains, then who judges each one. Both are decisions the Πρόεδρος
+   Κριτών makes in that order, so the screen asks in that order: a count first,
+   then a card per terrain with the judges chosen from the register by name. */
 function tTerrains(t){
   const day = t.days[S.day];
+  const need = t.format==="ΖΕΥΓΗ"?2:1;
+  const cacit = t.award==="CACIT";
+  const want = cacit ? 3 : need;
+
+  const count = `<div class="card noprint">
+    <div class="eyebrow">Πόσα τερέν</div>
+    <div class="row tight" style="margin-top:10px">${[1,2,3,4].map(n=>
+      `<button class="tog ${day.terrains.length===n?"on":""}" data-nterrain="${n}"
+        style="min-width:56px;justify-content:center">${n}</button>`).join("")}</div>
+    <div class="tiny" style="margin-top:10px">Τα τερέν παίρνουν όνομα Α, Β, Γ, Δ. Μπορείτε να
+      το αλλάξετε από την Επεξεργασία. Η κατανομή των σκύλων γίνεται στην κλήρωση.</div>
+  </div>`;
+
   const cards = day.terrains.map(tr=>{
-    const judges = tr.judgeIds.map(j=>esc((judById(j)||{}).name||"?")).join(", ");
-    const need = t.format==="ΖΕΥΓΗ"?2:1;
-    const cacit = t.award==="CACIT";
-    const bad = tr.judgeIds.length < (cacit?3:need);
+    const head = tr.headJudgeId && judById(tr.headJudgeId) ? tr.headJudgeId : "";
+    const others = (tr.judgeIds||[]).filter(j=>j !== head);
+    const free = DB.judges.filter(j=>!(tr.judgeIds||[]).includes(j.id));
+    const bad = tr.judgeIds.length < want;
     const conflicts = t.entries.filter(e=>e.status==="ΔΗΛΩΜΕΝΟΣ" && (tr.entryIds||[]).includes(e.id)
                        && judgeConflict(tr,e,t)).map(e=>dogName(e.dogId));
     /* conflicts surface immediately and specifically, with the article and a
        one-tap way to fix them */
     return `<div class="card">
-      <div class="row"><h3 class="grow" style="margin:0">${esc(tr.name)}</h3>
-        <button class="b-sm" data-editterrain="${tr.id}">Επεξεργασία</button></div>
-      <div class="muted" style="margin-top:8px">Κριτές: ${judges||"— κανένας —"}${tr.breedGroup?` · Φυλή: ${tr.breedGroup==="POINTER"?"Pointer":"Setter"}`:""}</div>
-      <div class="muted num">${(tr.entryIds||[]).length} σκύλοι · ${(tr.braces||[]).length} ζεύγη
+      <h3 style="margin:0">${esc(tr.name)}</h3>
+      ${tr.breedGroup?`<div class="muted" style="margin-top:6px">Φυλή: ${
+        tr.breedGroup==="POINTER"?"Pointer":"Setter"}</div>`:""}
+
+      <div class="row noprint" style="margin-top:12px">
+        <div class="grow" style="max-width:420px"><label>Αρχικριτής</label>
+          <select data-headjudge="${tr.id}">
+            <option value="">— επιλέξτε —</option>
+            ${DB.judges.slice().sort((a,b)=>a.name.localeCompare(b.name,"el"))
+              .map(j=>`<option value="${j.id}" ${head===j.id?"selected":""}>${esc(j.name)}${
+                j.me?" · Μ.Ε.":""}</option>`).join("")}
+          </select></div></div>
+
+      <label class="noprint" style="margin-top:12px">Άλλοι κριτές</label>
+      <div class="badge-list noprint">${others.map(j=>
+        `<button class="tog on" data-dropjudge="${tr.id}|${j}">${esc((judById(j)||{}).name||"?")} ✕</button>`).join("")
+        || `<span class="muted">— κανένας —</span>`}</div>
+      ${free.length?`<div class="row noprint" style="margin-top:8px"><div class="grow" style="max-width:420px">
+        <select data-addjudge="${tr.id}">
+          <option value="">+ Προσθήκη κριτή…</option>
+          ${free.slice().sort((a,b)=>a.name.localeCompare(b.name,"el"))
+            .map(j=>`<option value="${j.id}">${esc(j.name)}${j.me?" · Μ.Ε.":""}</option>`).join("")}
+        </select></div></div>`:""}
+      <div class="print-only muted" style="margin-top:8px">Κριτές: ${
+        (tr.judgeIds||[]).map(j=>esc((judById(j)||{}).name||"?")).join(", ")||"— κανένας —"}</div>
+
+      <div class="muted num" style="margin-top:12px">${(tr.entryIds||[]).length} σκύλοι · ${(tr.braces||[]).length} ζεύγη
         ${tr.assigned?`<span class="chip n" style="margin-right:6px">ΧΕΙΡΟΚΙΝΗΤΗ ΑΝΑΘΕΣΗ</span>`:""}</div>
       ${(tr.entryIds||[]).length ? `<div class="tiny" style="margin-top:6px">${
         (tr.entryIds||[]).map(id=>{
@@ -1130,19 +1181,68 @@ function tTerrains(t){
       <div class="row tight noprint" style="margin-top:12px">
         <button class="b-sm" data-assign="${tr.id}">Ανάθεση σκύλων</button>
         ${tr.assigned?`<button class="b-sm" data-autoassign="${tr.id}">Αυτόματη κατανομή</button>`:""}
+        <button class="b-sm" data-editterrain="${tr.id}">Όνομα και φυλή</button>
       </div>
       ${bad?`<div class="err" style="margin-top:12px;margin-bottom:0">
         <b>Το ${esc(tr.name)} έχει ${tr.judgeIds.length} ${tr.judgeIds.length===1?"κριτή":"κριτές"}.</b>
-        Χρειάζονται τουλάχιστον ${cacit?3:need} (Άρθρο 48${cacit?" — για CACIT τρεις, ο ένας Μεγάλης Έρευνας":""}).
-        Προσθέστε κριτή από την Επεξεργασία.</div>`:""}
+        Χρειάζονται τουλάχιστον ${want} (Άρθρο 48${cacit?" — για CACIT τρεις, ο ένας Μεγάλης Έρευνας":""}).</div>`:""}
       ${conflicts.length?`<div class="err" style="margin-top:12px;margin-bottom:0">
         <b>Κριτής με δικό του σκύλο σε αυτό το τερέν (Άρθρο 49):</b> ${esc(conflicts.join(", "))}.
         Αφαιρέστε τον κριτή ή μεταφέρετε τον σκύλο σε άλλο τερέν.</div>`:""}
     </div>`;}).join("");
-  return `<div class="note">Ο Πρόεδρος Κριτών ορίζει πόσα τερέν χρειάζονται και ποιοι κριτές κρίνουν
-    σε καθένα. Η κατανομή των σκύλων γίνεται στην κλήρωση.</div>
-    ${cards||`<div class="empty">Δεν έχουν οριστεί τερέν. Προσθέστε τουλάχιστον ένα πριν την κλήρωση.</div>`}
-    <button class="b-act noprint" data-act="addTerrain">+ Προσθήκη τερέν</button>`;
+
+  return count
+    + (cards||`<div class="empty">Δεν έχουν οριστεί τερέν. Επιλέξτε πόσα χρειάζονται.</div>`)
+    + `<button class="b-sm noprint" data-act="addTerrain" style="margin-bottom:16px">+ Προσθήκη τερέν</button>`
+    + handoff(t);
+}
+/* Adding terrains is free. Removing one is not: a terrain with braces drawn
+   carries the day's work, so the count refuses to swallow it and says which
+   one to clear first. */
+function setTerrainCount(t, n){
+  const day = t.days[S.day];
+  const have = day.terrains.length;
+  if(n === have) return;
+  if(n > have){
+    while(day.terrains.length < n)
+      day.terrains.push({ id: uid(),
+        name: "Τερέν " + String.fromCharCode(913 + day.terrains.length),
+        breedGroup: "", judgeIds: [], headJudgeId: "", entryIds: [], braces: [] });
+    save(); render(); return;
+  }
+  const going = day.terrains.slice(n);
+  const busy = going.filter(tr=>(tr.braces||[]).length);
+  if(busy.length)
+    return alert("Το " + busy.map(tr=>tr.name).join(", ") + " έχει κληρωμένα ζεύγη. "
+      + "Κάντε νέα κλήρωση ή διαγράψτε το τερέν από την Επεξεργασία του.");
+  const pinned = going.filter(tr=>(tr.entryIds||[]).length).map(tr=>tr.name);
+  if(pinned.length && !confirmAct("Θα αφαιρεθεί το " + pinned.join(", ")
+      + " μαζί με τις χειροκίνητες αναθέσεις του. Συνέχεια;")) return;
+  day.terrains.length = n;
+  save(); render();
+}
+/* The setup is done on a laptop and the draw happens on a hillside. Two routes
+   out, said here rather than left to be found: carry the day to the phone, or
+   draw now and send the order. */
+function handoff(t){
+  const day = t.days[S.day];
+  const active = t.entries.filter(e=>e.status==="ΔΗΛΩΜΕΝΟΣ").length;
+  const want = t.award==="CACIT" ? 3 : (t.format==="ΖΕΥΓΗ"?2:1);
+  const ready = active >= 6 && day.terrains.length
+    && day.terrains.every(tr=>(tr.judgeIds||[]).length >= want);
+  if(!ready) return "";
+  return `<div class="card noprint">
+    <div class="eyebrow">Το στήσιμο είναι έτοιμο</div>
+    <p class="tiny">${active} σκύλοι σε ${day.terrains.length}
+      ${day.terrains.length===1?"τερέν":"τερέν"}. Δύο τρόποι να συνεχίσετε:</p>
+    <div class="row tight" style="margin-top:12px">
+      <button class="b-pri" data-tab="draw">Κλήρωση τώρα</button>
+      <button data-act="shareTrial">Αποστολή στο κινητό</button>
+    </div>
+    <div class="tiny" style="margin-top:12px">Στο τερέν: στείλτε το στήσιμο στο κινητό και κάντε
+      την κλήρωση εκεί, μπροστά σε όλους. Από το σπίτι: κληρώστε τώρα και στείλτε τη σειρά με SMS
+      στους κυναγωγούς· η σειρά παραμένει ενδεικτική (Άρθρο 16).</div>
+  </div>`;
 }
 
 /* --- 8c. draw ---
@@ -2307,6 +2407,59 @@ function dogHint(hid){
     return "Ο κυναγωγός δεν έχει σκύλο στο μητρώο. Επιλέξτε από τους υπόλοιπους ή προσθέστε νέο.";
   return "Πρώτοι στη λίστα οι σκύλοι που έχει ή έχει τρέξει.";
 }
+/* A κυναγωγός turns up with three dogs and says which two are running today.
+   That is one conversation, so it is one screen: pick the man, tick the dogs.
+   The one-at-a-time form stays for editing a single entry — status, πληρωμή,
+   οίστρος — which is a different job. */
+function dlgHandlerEntries(t, hid){
+  hid = hid || window._batchH || "";
+  window._batchH = hid;
+  dlg(`<h2>Συμμετοχές κυναγωγού</h2>
+  <p class="muted">Επιλέξτε τον κυναγωγό και σημειώστε ποιοι σκύλοι του τρέχουν σήμερα.</p>
+  <div class="row" style="margin-top:14px">
+    <div class="grow"><label>Κυναγωγός</label>
+      <select id="b_handler">
+        <option value="">— επιλέξτε κυναγωγό —</option>
+        ${DB.people.slice().sort((a,b)=>a.name.localeCompare(b.name,"el"))
+          .map(p=>`<option value="${p.id}" ${hid===p.id?"selected":""}>${esc(p.name)}</option>`).join("")}
+      </select></div>
+    <button class="b-sm" style="align-self:flex-end" data-act="newHandlerForBatch">+ Νέος</button></div>
+  <div id="b_list" style="margin-top:14px">${batchList(t, hid)}</div>
+  <div class="row" style="margin-top:16px">
+    <button class="b-pri grow" data-act="saveBatch">Αποθήκευση</button>
+    <button class="grow" data-act="close">Άκυρο</button></div>`);
+}
+/* His own dogs, plus any he has run before. A dog already drawn or scored
+   cannot be un-ticked here — that is a withdrawal, and it belongs in the
+   entry's own form where the status is recorded. */
+function batchList(t, hid){
+  if(!hid) return `<div class="empty">Επιλέξτε κυναγωγό για να δείτε τους σκύλους του.</div>`;
+  const { own } = dogsForHandler(hid);
+  const drawn = new Set();
+  t.days.forEach(day=>(day.terrains||[]).forEach(tr=>(tr.braces||[]).forEach(b=>{
+    if(b.a) drawn.add(b.a); if(b.b) drawn.add(b.b); })));
+  const rows = own.map(d=>{
+    const en = t.entries.find(x=>x.dogId === d.id);
+    const other = en && en.handlerId !== hid;              /* entered under someone else */
+    const res = en && t.results[en.id];
+    const locked = en && (drawn.has(en.id) || (res && res.qual && res.qual !== "-"));
+    const on = !!en && !other;
+    return `<button class="tog assign ${on?"on":""}" ${locked||other?"disabled":""}
+      data-btick="${d.id}" style="width:100%;justify-content:flex-start;text-align:left;
+      min-height:52px;margin-bottom:6px${locked||other?";opacity:.55":""}">
+      <span style="flex:1;min-width:0">
+        <b style="display:block;font:600 17px/1.2 var(--f-b)">${esc(d.name)}</b>
+        <span class="tiny" style="color:inherit;opacity:.75">${esc(d.breed||"")}${
+          d.sex?" · "+(d.sex==="Θ"?"θηλυκός":"αρσενικός"):""}${d.reg?" · "+esc(d.reg):""}</span>
+      </span>
+      ${other?`<span class="chip" style="flex:none">${esc(perName(en.handlerId))}</span>`
+        :locked?`<span class="chip n" style="flex:none">ΚΛΗΡΩΜΕΝΟΣ</span>`:""}
+    </button>`;
+  }).join("");
+  return (rows ? `<div style="max-height:46vh;overflow:auto">${rows}</div>`
+    : `<div class="empty">Ο κυναγωγός δεν έχει σκύλο στο μητρώο.</div>`)
+    + `<button class="b-sm noprint" style="margin-top:8px" data-act="newDogForBatch">+ Σκύλος</button>`;
+}
 function suggestDog(t, hid, current){
   if(current) return current;
   const { own } = dogsForHandler(hid);
@@ -2784,7 +2937,7 @@ function exportTrialDoc(t){
 
 /* ---------- 15. Actions -------------------------------------------------- */
 document.addEventListener("click", ev=>{
-  const el2 = ev.target.closest("[data-nav],[data-tab],[data-day],[data-act],[data-open],[data-dog],[data-editdog],[data-edithandler],[data-newdogfor],[data-editjudge],[data-editterrain],[data-editentry],[data-note],[data-res],[data-bstat],[data-trailer],[data-untrailer],[data-recall],[data-sms],[data-copy],[data-wa],[data-smsdone],[data-set],[data-tj],[data-nstep],[data-nwidth],[data-nfault],[data-delpt],[data-nset],[data-ptset],[data-openbrace],[data-swap],[data-swapwith],[data-regtab],[data-assign],[data-autoassign],[data-pick],[data-bmove],[data-signoff],[data-unlock]");
+  const el2 = ev.target.closest("[data-nav],[data-tab],[data-day],[data-act],[data-open],[data-dog],[data-editdog],[data-edithandler],[data-newdogfor],[data-btick],[data-batch],[data-nterrain],[data-dropjudge],[data-editjudge],[data-editterrain],[data-editentry],[data-note],[data-res],[data-bstat],[data-trailer],[data-untrailer],[data-recall],[data-sms],[data-copy],[data-wa],[data-smsdone],[data-set],[data-tj],[data-nstep],[data-nwidth],[data-nfault],[data-delpt],[data-nset],[data-ptset],[data-openbrace],[data-swap],[data-swapwith],[data-regtab],[data-assign],[data-autoassign],[data-pick],[data-bmove],[data-signoff],[data-unlock]");
   if(!el2) return;
   const d = el2.dataset;
   const t = trialById(S.trialId);
@@ -2797,6 +2950,15 @@ document.addEventListener("click", ev=>{
   if(d.editdog){ dlgDog(dogById(d.editdog)); return; }
   if(d.edithandler){ dlgHandler(perById(d.edithandler)); return; }
   if(d.newdogfor){ dlgDog({ ownerId: d.newdogfor }); return; }
+  if(d.btick){ el2.classList.toggle("on"); return; }
+  if(d.batch){ dlgHandlerEntries(t, d.batch); return; }
+  if(d.nterrain){ setTerrainCount(t, +d.nterrain); return; }
+  if(d.dropjudge){
+    const [trid, jid] = d.dropjudge.split("|");
+    const tr = t.days[S.day].terrains.find(x=>x.id===trid); if(!tr) return;
+    tr.judgeIds = (tr.judgeIds||[]).filter(x=>x!==jid);
+    if(tr.headJudgeId === jid) tr.headJudgeId = "";
+    save(); render(); return; }
   if(d.editjudge){ dlgJudge(judById(d.editjudge)); return; }
   if(d.editterrain){ dlgTerrain(t, t.days[S.day].terrains.find(x=>x.id===d.editterrain)); return; }
   if(d.editentry){ dlgEntry(t, t.entries.find(x=>x.id===d.editentry)); return; }
@@ -2956,6 +3118,28 @@ document.addEventListener("change", ev=>{
       const rowEl = el("e_seasonRow");
       if(rowEl) rowEl.style.display = dg.sex==="Θ" ? "flex" : "none";
     }
+    return; }
+  if(ev.target.dataset.headjudge){                  // the terrain's αρχικριτής
+    const t2 = trialById(S.trialId);
+    const tr = t2 && t2.days[S.day].terrains.find(x=>x.id===ev.target.dataset.headjudge);
+    if(!tr) return;
+    const jid = ev.target.value;
+    tr.headJudgeId = jid;
+    /* he judges the terrain too, so he joins its panel */
+    if(jid && !(tr.judgeIds||[]).includes(jid)) (tr.judgeIds = tr.judgeIds||[]).push(jid);
+    save(); render(); return; }
+  if(ev.target.dataset.addjudge){                   // one more judge on this terrain
+    const t2 = trialById(S.trialId);
+    const tr = t2 && t2.days[S.day].terrains.find(x=>x.id===ev.target.dataset.addjudge);
+    const jid = ev.target.value;
+    if(!tr || !jid) return;
+    if(!(tr.judgeIds||[]).includes(jid)) (tr.judgeIds = tr.judgeIds||[]).push(jid);
+    save(); render(); return; }
+  if(ev.target.id==="b_handler"){                   // narrow the tick list to his dogs
+    const t2 = trialById(S.trialId);
+    window._batchH = ev.target.value;
+    const wrap = el("b_list");
+    if(wrap && t2) wrap.innerHTML = batchList(t2, ev.target.value);
     return; }
   if(ev.target.id==="e_dog"){                       // οίστρος applies to bitches only
     const dg = dogById(ev.target.value) || {};
@@ -3134,8 +3318,40 @@ const ACT = {
     /* No κυναγωγός in the register means there is nothing to choose from. Ask
        for the man first — the order the entry form itself asks in — and come
        straight back with him already selected. */
-    if(!DB.people.length){ window._afterHandler = "entry"; return dlgHandler(); }
-    dlgEntry(t);
+    if(!DB.people.length){ window._afterHandler = "batch"; return dlgHandler(); }
+    dlgHandlerEntries(t);
+  },
+  /* the batch screen: one κυναγωγός, his dogs ticked */
+  newHandlerForBatch: ()=>{ window._afterHandler = "batch"; dlgHandler(); },
+  newDogForBatch: ()=>{
+    const hid = (el("b_handler")||{}).value || "";
+    window._batchH = hid;
+    window._afterDog = "batch";
+    dlgDog(hid ? { ownerId: hid } : null);
+  },
+  saveBatch: (btn,t)=>{
+    const hid = (el("b_handler")||{}).value || "";
+    if(!hid) return toast("Επιλέξτε πρώτα κυναγωγό");
+    const wanted = new Set([...document.querySelectorAll("[data-btick].on")]
+      .map(b=>b.dataset.btick));
+    const { own } = dogsForHandler(hid);
+    let added = 0, removed = 0;
+    own.forEach(d=>{
+      const en = t.entries.find(x=>x.dogId === d.id);
+      if(wanted.has(d.id)){
+        if(!en){ t.entries.push({id:uid(), dogId:d.id, handlerId:hid, status:"ΔΗΛΩΜΕΝΟΣ",
+                                 paid:false, season:false}); added++; }
+      } else if(en && en.handlerId === hid){
+        t.entries = t.entries.filter(x=>x.id !== en.id);
+        delete t.results[en.id]; delete t.sms[en.id];
+        removed++;
+      }
+    });
+    save(); closeDlg(); render();
+    if(added || removed)
+      toast((added?added + (added===1?" συμμετοχή":" συμμετοχές"):"")
+        + (added && removed ? " · " : "")
+        + (removed?removed + (removed===1?" αφαιρέθηκε":" αφαιρέθηκαν"):""));
   },
   /* A new dog opened from here comes back with the handler still chosen, and
      the handler is offered as the owner so nobody types a name twice. */
@@ -3194,10 +3410,12 @@ const ACT = {
     else { const nid = uid(); DB.dogs.push({id:nid, ...o});
            if(window._entryDraft) window._entryDraft.dogId = nid; }
     save(); closeDlg(); render();
-    if(window._afterDog === "entry"){
+    const back = window._afterDog;
+    if(back){
       window._afterDog = null;
       const t = trialById(S.trialId);
-      if(t) setTimeout(()=>dlgEntry(t), 60);
+      if(t && back === "batch") setTimeout(()=>dlgHandlerEntries(t, window._batchH), 60);
+      else if(t) setTimeout(()=>dlgEntry(t), 60);
     }
   },
   delDog: (btn)=>{ if(!confirmAct("Διαγραφή σκύλου από το μητρώο;")) return;
@@ -3211,11 +3429,12 @@ const ACT = {
     if(id) Object.assign(perById(id), o);
     else { nid = uid(); DB.people.push({id:nid, ...o}); }
     save(); closeDlg(); render();
-    if(window._afterHandler === "entry"){
+    const back = window._afterHandler;
+    if(back){
       window._afterHandler = null;
-      window._entryDraft = { handlerId: nid };
       const t = trialById(S.trialId);
-      if(t) setTimeout(()=>dlgEntry(t), 60);
+      if(t && back === "batch"){ window._batchH = nid; setTimeout(()=>dlgHandlerEntries(t, nid), 60); }
+      else if(t){ window._entryDraft = { handlerId: nid }; setTimeout(()=>dlgEntry(t), 60); }
     }
   },
   saveJudge: (btn)=>{
