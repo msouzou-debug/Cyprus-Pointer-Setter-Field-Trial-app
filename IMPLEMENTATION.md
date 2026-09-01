@@ -203,6 +203,44 @@ Reported from a phone at the trial.
   instead and the SMS step sends the order — still indicative, Άρθρο 16. The transfer and the SMS
   both existed; nothing pointed at them from where the decision is made.
 
+## Fifth round — the laptop, the judges, and the record
+
+Seven reports from the field.
+
+- **A laptop cannot send an SMS.** An `sms:` link does nothing there, and the app was marking the
+  message sent anyway. The SMS screen now says so, and on a laptop the primary button is WhatsApp
+  Web with the text also copied to the clipboard. Nothing is marked sent unless something actually
+  opened. On a phone it is unchanged: the messaging app, with the number and body filled in.
+- **Getting the day onto the phone is said where the decision is made.** After the draw, the
+  Κλήρωση screen carries three buttons — send the order by SMS, send the trial (with its braces) to
+  the phone, print the list — and names the load route on the other device. Both directions the
+  club works in are now reachable without hunting: draw on the laptop and SMS from it, or carry the
+  setup over and draw on the hillside.
+- **Judges have phone numbers and get their own message.** A judge stands in the field with this
+  app open and scores from it, so his message names his terrain, his seat (κεντρικός κριτής /
+  κριτής 1 / κριτής 2), who he sits with, and the braces he will judge — not the whole day's list.
+  The queue is keyed `j:<id>` so a judge never collides with an entry in `t.sms`.
+- **Ticks on the SMS screen.** Everyone starts ticked, because the usual job is "send it to the
+  lot". «Επιλογή όλων», «Κανένας», «Μόνο κυναγωγοί», «Μόνο κριτές», then one button that opens the
+  next one waiting and counts down. A phone sends one message at a time and there is no bulk API to
+  hand it, so the app does not pretend otherwise. «Αντιγραφή επιλεγμένων» puts them all on the
+  clipboard at once, and «Σήμανση ως εσταλμένα» marks without sending.
+- **The register deletes.** A κυναγωγός and a judge can now be removed — neither form had a delete
+  at all. History is protected rather than the button: a κυναγωγός with entries in a trial is
+  refused and told which trial holds him; a judge with notes likewise. One with no history goes,
+  his dogs stay in the register under «χωρίς κυναγωγό», and a deleted judge comes off every terrain
+  he was seated on.
+- **A trial can be finished.** «Ολοκλήρωση αγώνα» on Εξαγωγές moves it into the record: the Αγώνες
+  list splits into Σε εξέλιξη and Ιστορικό by season, and Στατιστικά says how many are closed. The
+  points always counted; nothing said a trial was over, so every season stayed open. Closing warns
+  about unscored dogs and unsigned terrains, deletes nothing, and can be undone.
+- **The printed judge sheet carries what was written.** It was a blank form and only ever a blank
+  form, which is worthless in the club's file after the run. It is now both: the scales the judge
+  gave are filled black, his points fill the table, λευκές φέρμες, the Άρθρο 33 fault and the free
+  comment all print, and anything he did not record stays an empty line to write on. One sheet per
+  judge who scored the run, so each opinion is filed separately; a run nobody scored still prints
+  one blank sheet.
+
 ## Deliberate departures from the canvas
 
 - **Offline chip.** The canvas shows «Εκτός σύνδεσης – 6 αλλαγές σε αναμονή». There is no server

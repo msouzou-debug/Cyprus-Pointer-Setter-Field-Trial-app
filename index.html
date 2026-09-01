@@ -300,6 +300,11 @@ hr{border:0;border-top:1px solid var(--line);margin:var(--s4) 0}
 .entry-row .acts{display:flex;align-items:center;gap:6px;flex:0 0 auto;margin-left:auto;flex-wrap:wrap;
   justify-content:flex-end}
 .card.handler{break-inside:avoid}
+/* the tick that says who this message goes to */
+.tick{flex:none;width:30px;height:30px;min-height:30px;padding:0;border-radius:8px;
+  border:2px solid var(--line-s);background:#fff;color:#fff;cursor:pointer;
+  font:700 16px/26px var(--f-b);text-align:center;margin-right:10px}
+.tick.on{background:var(--navy);border-color:var(--navy)}
 /* the dog's name is how you open him — a button that reads as the heading it is */
 .entry-row .open{display:block;width:100%;min-height:0;text-align:left;background:none;border:0;
   padding:0;color:var(--ink);cursor:pointer;font:600 17px/1.25 var(--f-b);overflow-wrap:anywhere;
@@ -516,6 +521,8 @@ dialog::backdrop{background:#000000a6}
 .sheet .rate{display:flex;gap:5px}
 .sheet .rate i{width:20px;height:20px;border:1px solid #000;font:400 8.5pt/19px var(--f-b);
   text-align:center;font-style:normal}
+/* the mark the judge gave, filled black so it reads across a photocopy */
+.sheet .rate i.on{background:#000;color:#fff;font-weight:700}
 .sheet h4{font:600 9.5pt/1 var(--f-b);margin:12px 0 4px;border-top:1px solid #000;padding-top:8px}
 @media print{
   body.sheets-only main,body.sheets-only .fab{display:none!important}
@@ -549,6 +556,7 @@ dialog::backdrop{background:#000000a6}
    ========================================================================== */
 
 /* ---------- 1. Reference data ------------------------------------------- */
+const CLOSED = "ΟΛΟΚΛΗΡΩΘΗΚΕ";
 const BREEDS = ["Pointer","Αγγλικό Σέττερ","Ιρλανδικό Σέττερ","Σκωτικό Σέττερ"];
 const BREED_GROUP = b => b === "Pointer" ? "POINTER" : "SETTER";
 const TYPES = ["Πρακτικού Κυνηγίου","Έρευνας Κυνηγίου","Μεγάλης Έρευνας","Κλασικός","Derby","Ε.Κ.Ι.","Ε.ΦΥ.Π."];
@@ -662,6 +670,11 @@ function download(name, mime, content){
   setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
 }
 function phoneClean(p){ return String(p||"").replace(/[^\d+]/g,""); }
+/* A laptop has no messaging app, so an sms: link does nothing and silently
+   marks the message sent. The screen offers WhatsApp Web and the clipboard
+   there instead, and says why. */
+function onPhone(){ return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+  || (navigator.maxTouchPoints > 1 && /Mac/.test(navigator.platform)); }
 
 /* seeded PRNG — the draw must be reproducible from its seed */
 function hashStr(s){ let h=2166136261; for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);} return h>>>0; }
@@ -923,22 +936,33 @@ function vTrials(){
   if(!DB.trials.length) return head + `<div class="empty"><h2>Κανένας αγώνας ακόμη</h2>
     Δημιουργήστε τον πρώτο αγώνα για να ξεκινήσετε την κλήρωση. Το μητρώο σκύλων
     μπορεί να γεμίσει πρώτο, από το Μητρώο ή με εισαγωγή αρχείου Excel.</div>`;
+  const card = t=>{
+    const n = t.entries.filter(e=>e.status==="ΔΗΛΩΜΕΝΟΣ").length;
+    const drawn = t.days.some(d=>d.draw);
+    const done = t.status === CLOSED;
+    return `<div class="card" data-open="${t.id}" style="cursor:pointer">
+      <div class="row" style="align-items:flex-start">
+        <h3 class="grow" style="margin:0">${esc(t.title)}</h3>
+        <span class="chip ${done?"g":drawn?"n":""}">${esc(t.status)}</span></div>
+      <div class="muted" style="margin-top:6px">${esc(t.type)} · ${t.format==="ΖΕΥΓΗ"?"ζεύγη":"ατομικός"} · ${esc(t.game||"—")}${t.award!=="-"?" · "+esc(t.award):""}</div>
+      <div class="muted num">${fmtDate(t.dateStart)} · ${esc(t.place||"—")} · ${n} ${n===1?"σκύλος":"σκύλοι"}${
+        t.days.length>1?" · "+t.days.length+" ημέρες":""}</div>
+    </div>`;
+  };
+  const sorted = DB.trials.slice().sort((a,b)=>(b.dateStart||"").localeCompare(a.dateStart||""));
+  const open = sorted.filter(t=>t.status !== CLOSED);
+  const past = sorted.filter(t=>t.status === CLOSED);
+  /* Two lists, not one: what is still being run, and the record. A closed trial
+     is the club's history and it belongs under its season. */
   const byYear = {};
-  DB.trials.slice().sort((a,b)=>(b.dateStart||"").localeCompare(a.dateStart||""))
-    .forEach(t=>{ const y=(t.dateStart||"----").slice(0,4); (byYear[y]=byYear[y]||[]).push(t); });
-  return head + Object.entries(byYear).map(([y,list])=>`
-    <div class="eyebrow" style="margin-top:24px">Σεζόν ${y}</div>
-    ${list.map(t=>{
-      const n = t.entries.filter(e=>e.status==="ΔΗΛΩΜΕΝΟΣ").length;
-      const drawn = t.days.some(d=>d.draw);
-      return `<div class="card" data-open="${t.id}" style="cursor:pointer">
-        <div class="row" style="align-items:flex-start">
-          <h3 class="grow" style="margin:0">${esc(t.title)}</h3>
-          <span class="chip ${drawn?"n":""}">${esc(t.status)}</span></div>
-        <div class="muted" style="margin-top:6px">${esc(t.type)} · ${t.format==="ΖΕΥΓΗ"?"ζεύγη":"ατομικός"} · ${esc(t.game||"—")}${t.award!=="-"?" · "+esc(t.award):""}</div>
-        <div class="muted num">${fmtDate(t.dateStart)} · ${esc(t.place||"—")} · ${n} ${n===1?"σκύλος":"σκύλοι"}${
-          t.days.length>1?" · "+t.days.length+" ημέρες":""}</div>
-      </div>`;}).join("")}`).join("");
+  past.forEach(t=>{ const y=(t.dateStart||"----").slice(0,4); (byYear[y]=byYear[y]||[]).push(t); });
+  return head
+    + (open.length ? `<div class="eyebrow">Σε εξέλιξη</div>${open.map(card).join("")}` : "")
+    + (past.length ? Object.entries(byYear).map(([y,list])=>`
+        <div class="eyebrow" style="margin-top:24px">Ιστορικό · σεζόν ${y}</div>
+        ${list.map(card).join("")}`).join("") : "")
+    + (past.length ? `<p class="tiny" style="margin-top:18px">Οι ολοκληρωμένοι αγώνες μένουν στο
+        μητρώο και μετρούν στα Στατιστικά. Ανοίγουν κανονικά για ανάγνωση και εκτύπωση.</p>` : "");
 }
 
 /* The bottom action bar is field chrome. On Κλήρωση, Τερέν and SMS the primary
@@ -965,7 +989,10 @@ function fabFor(){
       const next = nextPending(t);
       return next ? `<button class="b-act" data-act="nextBrace">Έναρξη ζεύγους ${next.b.no}</button>` : "";
     }
-    if(S.tab==="sms")   return `<button class="b-act" data-act="smsAll">Άνοιγμα επόμενου SMS</button>`;
+    /* the SMS screen carries its own send button in the selection card, and on a
+       phone the bar is worth having as well; on a desk it is the same button twice */
+    if(S.tab==="sms" && onPhone())
+      return `<button class="b-act" data-act="smsNext">Άνοιγμα επόμενου μηνύματος</button>`;
     return "";
   }
   return "";
@@ -1019,7 +1046,7 @@ function progressStrip(t){
   const active = t.entries.filter(e=>e.status==="ΔΗΛΩΜΕΝΟΣ").length;
   const judged = day.terrains.length && day.terrains.every(tr=>tr.judgeIds.length);
   const q = day.draw ? smsQueue(t) : [];
-  const sent = q.filter(x=>t.sms[x.entry.id]==="ΕΣΤΑΛΗ").length;
+  const sent = q.filter(x=>t.sms[x.key]==="ΕΣΤΑΛΗ").length;
   const scored = t.entries.filter(e=>{ const r = t.results[e.id]; return r && r.qual && r.qual!=="-"; }).length;
   const braces = [];
   day.terrains.forEach(tr=>(tr.braces||[]).forEach(b=>braces.push(b)));
@@ -1322,7 +1349,28 @@ function tDraw(t){
       <div class="fingerprint">σπόρος ${esc(d.seed)}<br>${new Date(d.at).toLocaleString("el-GR")} · ${esc(d.mode)}<br>αποτύπωμα ${esc(d.hash)}</div>
       <p style="margin-top:8px">Η σειρά είναι ενδεικτική — Άρθρο 16.</p>
       <button class="b-redraw noprint" data-act="doDraw">Νέα κλήρωση — ακυρώνει την τρέχουσα</button>
-    </div>`}`;
+    </div>
+    ${afterDraw(t)}`}`;
+}
+/* The draw is done. Whoever did it is either standing in the field with a phone
+   or sitting at a laptop the night before, and the next move is different for
+   each. Both are named here rather than left to be hunted for in Εξαγωγές. */
+function afterDraw(t){
+  const day = t.days[S.day];
+  const q = smsQueue(t);
+  const sent = q.filter(x=>t.sms[x.key]==="ΕΣΤΑΛΗ").length;
+  return `<div class="card noprint" style="margin-top:18px">
+    <div class="eyebrow">Η κλήρωση έγινε</div>
+    <div class="row tight" style="margin-top:12px">
+      <button class="b-pri" data-tab="sms">Αποστολή σειράς${
+        q.length ? " · " + sent + "/" + q.length : ""}</button>
+      <button data-act="shareTrial">Αποστολή στο κινητό</button>
+      <button data-act="printDraw">Εκτύπωση λίστας</button>
+    </div>
+    <div class="tiny" style="margin-top:12px">Η «Αποστολή στο κινητό» στέλνει τον αγώνα μαζί με τα
+      κληρωμένα ζεύγη — φορτώστε τον στο κινητό (Ρυθμίσεις → Φόρτωση αρχείου → Συγχώνευση) και
+      συνεχίστε από εκεί στο τερέν. Τα SMS φεύγουν από όποια συσκευή κρατά τη σειρά.</div>
+  </div>`;
 }
 
 /* --- 8d. braces ---
@@ -1639,11 +1687,28 @@ function drawSheet(t, day, tr){
 /* The blank judge note sheet, A4 portrait. The fields follow §7 exactly, in the
    same order as the screen, so a judge who filled one in on paper can type it
    in afterwards without hunting. */
-function noteSheet(t, day, tr, b, e, d){
-  const rate = ()=>`<span class="rate">${[1,2,3,4,5].map(n=>`<i>${n}</i>`).join("")}</span>`;
-  const scales = ["Πάθος","Μεθοδικότητα","Καλπασμός και στυλ φυλής","Επαφή με κυναγωγό"];
+/* One A4 sheet per dog. Blank before the run, so the judge can write on it; the
+   same sheet after, carrying whatever he entered on the phone, because the club
+   files these and a blank form is worth nothing in the file. A judge who is
+   given the sheet with `note` filled sees his own marks; anything he did not
+   record stays an empty line. */
+function noteSheet(t, day, tr, b, e, d, note, judgeName){
+  const n = note || {};
+  const rate = v=>`<span class="rate">${[1,2,3,4,5]
+    .map(x=>`<i class="${v===x?"on":""}">${x}</i>`).join("")}</span>`;
+  const scales = [["passion","Πάθος"],["method","Μεθοδικότητα"],
+                  ["style","Καλπασμός και στυλ φυλής"],["contact","Επαφή με κυναγωγό"]];
+  const widths = ["Στενή","Κανονική","Ανοικτή","Πολύ ανοικτή"];
   const fld = (label,val)=>`<div class="fld"><span>${label}</span>
     <div class="line">${val?esc(val):""}</div></div>`;
+  const pts = (n.points||[]);
+  const ptRows = [];
+  for(let i=0;i<Math.max(4, pts.length);i++){
+    const p = pts[i] || {};
+    ptRows.push(`<tr><td>${i+1}</td><td style="height:26px">${esc(p.game||"")}</td>
+      <td>${esc(p.quality||"")}</td><td>${esc([p.ferma,p.pontar].filter(Boolean).join(" / "))}</td>
+      <td>${esc(p.akinF||"")}</td><td>${esc(p.syn||"")}</td></tr>`);
+  }
   return `<div class="sheet">
     <div class="print-hd" style="display:flex">
       <img src="${BADGE}" alt="">
@@ -1658,27 +1723,34 @@ function noteSheet(t, day, tr, b, e, d){
       ${fld("Κυναγωγός", perName(e.handlerId))}
       ${fld("Κ.Ο.Κ.", d.reg)}
       ${fld("Φυλή / φύλο", (d.breed||"") + (d.sex?" · "+d.sex:""))}
-      ${fld("Κριτής", "")}
+      ${fld("Κριτής", judgeName || "")}
     </div>
     <h4>ΕΡΕΥΝΑ</h4>
-    ${scales.map(s=>`<div style="display:flex;align-items:center;gap:10px;padding:5px 0">
-      <span style="flex:1;font:400 9.5pt/1.2 var(--f-b)">${s}</span>${rate()}</div>`).join("")}
+    ${scales.map(([k,label])=>`<div style="display:flex;align-items:center;gap:10px;padding:5px 0">
+      <span style="flex:1;font:400 9.5pt/1.2 var(--f-b)">${label}</span>${rate(n[k])}</div>`).join("")}
     <div style="display:flex;align-items:center;gap:10px;padding:5px 0">
       <span style="flex:1;font:400 9.5pt/1.2 var(--f-b)">Πλάτος έρευνας</span>
-      <span style="font:400 9pt/1 var(--f-b)">Στενή · Κανονική · Ανοικτή · Πολύ ανοικτή</span></div>
+      <span style="font:400 9pt/1 var(--f-b)">${widths.map(w=>
+        n.width===w?`<b style="text-decoration:underline">${w}</b>`:w).join(" · ")}</span></div>
     <h4>ΠΟΝΤΟΙ</h4>
     <table><tr><th style="width:22px">#</th><th>Θήραμα</th><th>Ποιότητα</th>
       <th>Φέρμα / ποντάρισμα</th><th>Ακινησία</th><th>Συναίνεση</th></tr>
-      ${[1,2,3,4].map(n=>`<tr><td>${n}</td><td style="height:26px"></td><td></td><td></td><td></td><td></td></tr>`).join("")}
+      ${ptRows.join("")}
     </table>
     <h4>ΣΦΑΛΜΑΤΑ ΑΠΟΚΛΕΙΣΜΟΥ · ΑΡΘΡΟ 33</h4>
-    <div style="font:400 8.5pt/1.5 var(--f-b)">${FAULTS.join(" · ")}</div>
+    <div style="font:400 8.5pt/1.5 var(--f-b)">${FAULTS.map(f=>
+      (n.faults||[]).includes(f) ? `<b style="text-decoration:underline">${f}</b>` : f).join(" · ")}</div>
     <div style="display:flex;gap:12px;margin-top:12px">
-      <div style="flex:1"><span style="font:400 9pt/1 var(--f-b)">Λευκές φέρμες</span><div class="box"></div></div>
-      <div style="flex:2"><span style="font:400 9pt/1 var(--f-b)">Προτεινόμενη βαθμολογία</span><div class="box"></div></div>
+      <div style="flex:1"><span style="font:400 9pt/1 var(--f-b)">Λευκές φέρμες</span>
+        <div class="box">${n.whites?esc(String(n.whites)):""}</div></div>
+      <div style="flex:2"><span style="font:400 9pt/1 var(--f-b)">Προτεινόμενη βαθμολογία</span>
+        <div class="box">${esc((t.results[e.id]||{}).qual&&(t.results[e.id]||{}).qual!=="-"
+          ? t.results[e.id].qual + ((t.results[e.id].award&&t.results[e.id].award!=="-")
+            ? " · " + t.results[e.id].award : "") : "")}</div></div>
     </div>
     <h4>ΕΛΕΥΘΕΡΟ ΣΧΟΛΙΟ</h4>
-    <div style="border:1px solid #000;height:34mm"></div>
+    <div style="border:1px solid #000;height:34mm;padding:4px;font:400 9.5pt/1.45 var(--f-b);
+      white-space:pre-wrap;overflow:hidden">${esc(n.text||"")}</div>
     <div style="margin-top:12px"><span style="font:400 9pt/1 var(--f-b)">Υπογραφή κριτή</span>
       <div style="border-bottom:1px solid #000;height:30px"></div></div>
   </div>`;
@@ -1745,14 +1817,68 @@ function smsSegments(text){
   const one = greek ? 70 : 160, more = greek ? 67 : 153;
   return n <= one ? 1 : Math.ceil(n / more);
 }
+/* The judges get the order too. They stand in the field with the same app open
+   and score from it, so the message names their terrain, their committee and
+   the braces they will judge — not the whole day's list. */
+function judgeSmsBody(t, judge){
+  const day = t.days[S.day], st = DB.settings;
+  const head = (st.sms||DEFAULT_SMS)
+    .replace(/\{ΑΓΩΝΑΣ\}/g, t.title)
+    .replace(/\{ΗΜΕΡΟΜΗΝΙΑ\}/g, fmtDate(day.date));
+  const L = [head, ""];
+  (day.terrains||[]).forEach(tr=>{
+    if(!(tr.judgeIds||[]).includes(judge.id)) return;
+    const seat = tr.headJudgeId === judge.id ? "κεντρικός κριτής"
+      : "κριτής " + Math.max(1, (tr.slots||tr.judgeIds||[]).indexOf(judge.id));
+    L.push("▸ " + tr.name + " — " + seat);
+    const with_ = (tr.judgeIds||[]).filter(j=>j!==judge.id)
+      .map(j=>(judById(j)||{}).name).filter(Boolean);
+    if(with_.length) L.push("Μαζί: " + with_.join(", "));
+    (tr.braces||[]).forEach(b=>{
+      const a = t.entries.find(e=>e.id===b.a), c = t.entries.find(e=>e.id===b.b);
+      L.push(b.no + ". " + (a?dogName(a.dogId):"—") + " / " + (c?dogName(c.dogId):"ΜΟΝΟΣ")
+        + (b.recall ? " (επανάκληση)" : "") + (b.trailer ? " (trailer)" : ""));
+    });
+    L.push("");
+  });
+  L.push(st.smsFoot || DEFAULT_SMS_FOOT);
+  return L.join("\n").replace(/\n{3,}/g, "\n\n");
+}
+/* On a phone this opens the messaging app with the number and the text in it;
+   on a laptop there is nothing to open, so it goes to WhatsApp Web and copies
+   the text as well. Either way the message is only marked sent once something
+   was actually opened. */
+function sendOne(t, x){
+  if(!x.phone) return toast("Δεν υπάρχει τηλέφωνο για " + x.name);
+  if(onPhone()){
+    location.href = "sms:" + x.phone + "?&body=" + encodeURIComponent(x.body);
+  } else {
+    const w = window.open("https://wa.me/" + x.phone.replace(/\D/g,"")
+      + "?text=" + encodeURIComponent(x.body), "_blank");
+    try{ navigator.clipboard.writeText(x.body); }catch(e){}
+    if(!w) return toast("Ο περιηγητής μπλόκαρε το παράθυρο. Το κείμενο αντιγράφηκε.");
+  }
+  t.sms[x.key] = "ΕΣΤΑΛΗ"; save(); setTimeout(render, 600);
+}
+/* One message per κυναγωγός, then one per judge who has a terrain today. The
+   key is what `t.sms` is filed under, so a judge does not collide with an entry. */
 function smsQueue(t){
   const day = t.days[S.day], out = [], seen = new Set();
   (day.terrains||[]).forEach(tr=>(tr.braces||[]).forEach(b=>{
     [b.a,b.b].forEach(id=>{
       const e = t.entries.find(x=>x.id===id); if(!e) return;
       const key = e.handlerId || e.id; if(seen.has(key)) return; seen.add(key);
-      out.push({entry:e, phone:phoneClean((perById(e.handlerId)||{}).phone), body:smsBody(t,e)});
+      out.push({kind:"handler", key:e.id, name:perName(e.handlerId), entry:e,
+                phone:phoneClean((perById(e.handlerId)||{}).phone), body:smsBody(t,e)});
     });
+  }));
+  const judged = new Set();
+  (day.terrains||[]).forEach(tr=>(tr.judgeIds||[]).forEach(j=>{
+    if(!(tr.braces||[]).length || judged.has(j)) return;
+    judged.add(j);
+    const jg = judById(j); if(!jg) return;
+    out.push({kind:"judge", key:"j:"+j, name:jg.name, judge:jg,
+              phone:phoneClean(jg.phone), body:judgeSmsBody(t, jg)});
   }));
   return out;
 }
@@ -1764,51 +1890,92 @@ function tSms(t){
   if(!day.draw) return `<div class="empty">Κάντε πρώτα την κλήρωση. Τα μηνύματα συντίθενται
     από τη σειρά της ημέρας.</div>`;
   const q = smsQueue(t);
-  const sent = q.filter(x=>t.sms[x.entry.id]==="ΕΣΤΑΛΗ").length;
+  const sent = q.filter(x=>t.sms[x.key]==="ΕΣΤΑΛΗ").length;
   const segs = q.reduce((a,x)=>a+smsSegments(x.body),0);
   const st = DB.settings;
-  return `
-  <div class="card">
-    <label>Περιεχόμενο μηνύματος</label>
-    <div class="row tight noprint">
-      <button class="tog ${st.smsMode!=="own"?"on":""}" data-set="smsModeFull">Πλήρης σειρά ημέρας</button>
-      <button class="tog ${st.smsMode==="own"?"on":""}" data-set="smsModeOwn">Μόνο τα δικά του ζεύγη</button>
-    </div>
-    <div class="row" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line-f)">
-      <span class="grow">Εκτίμηση συνόλου</span>
-      <span class="total">${segs} τμήματα</span>
-    </div>
-    <div class="tiny">${q.length} μηνύματα, ελληνικά (UCS-2). Πληρώνονται από το δικό σας τηλέφωνο.</div>
-    <div class="row tight noprint" style="margin-top:12px">
-      <button class="tog ${st.smsJudges?"on":""}" data-set="smsJudges">Ονόματα κριτών στο μήνυμα</button>
-    </div>
-    <div class="row" style="margin-top:14px">
-      <b class="grow">${sent} από ${q.length} στάλθηκαν</b></div>
-    <div class="bar"><i style="width:${q.length?Math.round(sent/q.length*100):0}%"></i></div>
-  </div>
-  ${q.map((x,i)=>{
-    const stt = t.sms[x.entry.id]==="ΕΣΤΑΛΗ", sg = smsSegments(x.body);
-    return `<div class="sms-row ${stt?"sent":""}">
+  const sel = S.smsPick instanceof Set ? S.smsPick : (S.smsPick = new Set(q.map(x=>x.key)));
+  const picked = q.filter(x=>sel.has(x.key));
+  const toSend = picked.filter(x=>x.phone && t.sms[x.key]!=="ΕΣΤΑΛΗ");
+  const handlers = q.filter(x=>x.kind==="handler").length;
+  const judges = q.filter(x=>x.kind==="judge").length;
+
+  const row = (x,i)=>{
+    const done = t.sms[x.key]==="ΕΣΤΑΛΗ", sg = smsSegments(x.body), on = sel.has(x.key);
+    return `<div class="sms-row ${done?"sent":""}">
       <div class="row" style="align-items:flex-start">
+        <button class="tick ${on?"on":""}" data-smspick="${x.key}"
+          aria-label="Επιλογή">${on?"✓":""}</button>
         <div class="grow">
-          <b style="font:600 19px/1.2 var(--f-d)">${esc(perName(x.entry.handlerId))}</b>
+          <b style="font:600 19px/1.2 var(--f-d)">${esc(x.name)}</b>
+          ${x.kind==="judge"?`<span class="chip n" style="margin-left:8px">ΚΡΙΤΗΣ</span>`:""}
           <div class="fingerprint">${esc(x.phone||"— χωρίς τηλέφωνο —")}</div>
         </div>
         <span class="seg ${sg>6?"hot":""}">${sg} τμ.</span>
       </div>
       <div class="preview">${esc(x.body)}</div>
       <div class="row tight noprint">
-        <button class="${stt?"":"b-act"} grow" data-sms="${i}" ${x.phone?"":"disabled"}
-          ${stt?'style="background:var(--ok-bg);border-color:var(--ok);color:var(--ok-ink)"':""}>${stt?"Στάλθηκε":"Αποστολή"}</button>
-        <button class="b-sm" data-copy="${i}">Αντ.</button>
-        <button class="b-sm" data-wa="${i}" ${x.phone?"":"disabled"}>WhatsApp</button>
-        <button class="b-sm" data-smsdone="${x.entry.id}">${stt?"Αναίρεση":"Σήμανση"}</button>
-      </div></div>`;}).join("")}
+        ${onPhone()
+          ? `<button class="${done?"":"b-act"} grow" data-sms="${i}" ${x.phone?"":"disabled"}
+              ${done?'style="background:var(--ok-bg);border-color:var(--ok);color:var(--ok-ink)"':""}
+              >${done?"Στάλθηκε":"Αποστολή SMS"}</button>`
+          : `<button class="${done?"":"b-act"} grow" data-wa="${i}" ${x.phone?"":"disabled"}
+              >WhatsApp</button>`}
+        <button class="b-sm" data-copy="${i}">Αντιγραφή</button>
+        <button class="b-sm" data-smsdone="${x.key}">${done?"Αναίρεση":"Σήμανση"}</button>
+      </div></div>`;
+  };
+
+  return `
+  ${onPhone() ? "" : `<div class="note noprint"><b>Από υπολογιστή δεν στέλνονται SMS.</b>
+    Ο υπολογιστής δεν έχει εφαρμογή μηνυμάτων· τα κουμπιά εδώ ανοίγουν το WhatsApp Web ή
+    αντιγράφουν το κείμενο για να το επικολλήσετε όπου θέλετε. Για κανονικά SMS στείλτε τον
+    αγώνα στο κινητό σας (Εξαγωγές → Αποστολή στο κινητό) και στείλτε τα από εκεί.</div>`}
+
+  <div class="card">
+    <label>Περιεχόμενο μηνύματος</label>
+    <div class="row tight noprint">
+      <button class="tog ${st.smsMode!=="own"?"on":""}" data-set="smsModeFull">Πλήρης σειρά ημέρας</button>
+      <button class="tog ${st.smsMode==="own"?"on":""}" data-set="smsModeOwn">Μόνο τα δικά του ζεύγη</button>
+    </div>
+    <div class="row tight noprint" style="margin-top:10px">
+      <button class="tog ${st.smsJudges?"on":""}" data-set="smsJudges">Ονόματα κριτών στο μήνυμα</button>
+    </div>
+    <div class="row" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line-f)">
+      <span class="grow">${handlers} ${handlers===1?"κυναγωγός":"κυναγωγοί"}${
+        judges?` · ${judges} ${judges===1?"κριτής":"κριτές"}`:""}</span>
+      <span class="total">${segs} τμήματα</span>
+    </div>
+    <div class="tiny">Ελληνικά (UCS-2), 70 χαρακτήρες στο πρώτο τμήμα και 67 σε κάθε επόμενο.
+      Πληρώνονται από το δικό σας τηλέφωνο.</div>
+    <div class="row" style="margin-top:14px">
+      <b class="grow">${sent} από ${q.length} στάλθηκαν</b></div>
+    <div class="bar"><i style="width:${q.length?Math.round(sent/q.length*100):0}%"></i></div>
+  </div>
+
+  <div class="card noprint">
+    <div class="row tight">
+      <button class="tog ${picked.length===q.length?"on":""}" data-act="smsAll">Επιλογή όλων</button>
+      <button class="tog ${picked.length?"":"on"}" data-act="smsNone">Κανένας</button>
+      <button class="tog" data-act="smsHandlers">Μόνο κυναγωγοί</button>
+      ${judges?`<button class="tog" data-act="smsJudgesOnly">Μόνο κριτές</button>`:""}
+    </div>
+    <div class="row tight" style="margin-top:12px">
+      <button class="b-pri grow" data-act="smsNext" ${toSend.length?"":"disabled"}>${
+        toSend.length ? "Αποστολή στους επιλεγμένους · " + toSend.length + " να φύγουν"
+                      : "Τίποτα σε αναμονή"}</button>
+    </div>
+    <div class="row tight" style="margin-top:8px">
+      <button class="b-sm" data-act="smsCopyAll" ${picked.length?"":"disabled"}>Αντιγραφή επιλεγμένων</button>
+      <button class="b-sm" data-act="smsMarkAll" ${picked.length?"":"disabled"}>Σήμανση ως εσταλμένα</button>
+    </div>
+    <div class="tiny" style="margin-top:10px">${picked.length} επιλεγμένοι. Το τηλέφωνο στέλνει
+      ένα μήνυμα τη φορά· η «Αποστολή» ανοίγει τον επόμενο και προχωρά μόνη της.</div>
+  </div>
+
+  ${q.map(row).join("")}
   <p class="tiny">Η σειρά είναι ενδεικτική — Άρθρο 16. Το μήνυμα ανοίγει στην εφαρμογή μηνυμάτων
     του τηλεφώνου· η αποστολή γίνεται από εκεί.</p>`;
 }
-
-/* --- 8f. results --- */
 function tResults(t){
   const day = t.days[S.day];
   const rows = [];
@@ -1898,6 +2065,33 @@ function tExport(t){
       <button class="b-pri" data-act="shareTrial">Αποστολή αγώνα</button>
       <button data-act="backup">Λήψη πλήρους αντιγράφου</button>
       <button data-act="restore">Φόρτωση αρχείου</button>
+    </div></div>
+
+  ${closeCard(t)}`;
+}
+/* The trial ends. Closing it is what moves it from the working list into the
+   club's record — the points were always counted in Στατιστικά, but nothing
+   said a trial was finished, so every season stayed open for ever. */
+function closeCard(t){
+  const done = t.status === CLOSED;
+  const scored = t.entries.filter(e=>{ const r = t.results[e.id]; return r && r.qual && r.qual!=="-"; }).length;
+  const active = t.entries.filter(e=>e.status==="ΔΗΛΩΜΕΝΟΣ").length;
+  const pts = t.entries.reduce((a,e)=>a + (t.results[e.id] ? pointsFor(t, t.results[e.id]) : 0), 0);
+  if(done) return `<div class="card">
+    <div class="eyebrow">Ολοκληρωμένος</div>
+    <p class="tiny">Κλείστηκε ${esc(t.closedAt||"")}. Ο αγώνας είναι στο ιστορικό και μετρά στα
+      Στατιστικά: ${scored} βαθμολογημένοι σκύλοι, ${pts} πόντοι. Ανοίγει κανονικά για ανάγνωση,
+      εκτύπωση και εξαγωγή.</p>
+    <div class="row tight" style="margin-top:12px">
+      <button data-act="statsFromTrial">Στατιστικά</button>
+      <button class="b-warn" data-act="reopenTrial">Επαναφορά σε εξέλιξη</button>
+    </div></div>`;
+  return `<div class="card">
+    <div class="eyebrow">Ολοκλήρωση</div>
+    <p class="tiny">Όταν τελειώσει ο αγώνας, κλείστε τον: περνά στο ιστορικό και τα αποτελέσματά
+      του μένουν στα Στατιστικά. ${scored} από ${active} σκύλοι έχουν βαθμολογία.</p>
+    <div class="row tight" style="margin-top:12px">
+      <button class="b-pri" data-act="closeTrial">Ολοκλήρωση αγώνα</button>
     </div></div>`;
 }
 </script>
@@ -1931,9 +2125,10 @@ function vRegistry(){
     body = heading("Μητρώο","Κριτές",
       `<button class="b-act" data-act="newJudge">Νέος κριτής</button>`)
       + (DB.judges.length ? `<div class="card" style="padding:0"><table>
-        <thead><tr><th>Ονοματεπώνυμο</th><th>Ιδιότητα</th><th>Μεγάλη Έρευνα</th><th>Κυναγωγός</th><th class="noprint"></th></tr></thead>
+        <thead><tr><th>Ονοματεπώνυμο</th><th>Κινητό</th><th>Ιδιότητα</th><th>Μεγάλη Έρευνα</th><th>Κυναγωγός</th><th class="noprint"></th></tr></thead>
         <tbody>${DB.judges.map(j=>`<tr>
           <td><b>${esc(j.name)}</b></td>
+          <td class="num">${esc(j.phone||"—")}</td>
           <td>${esc(j.licence||"—")}</td>
           <td>${j.me?"Ναι":"—"}</td>
           <td>${esc(perName(j.personId))}</td>
@@ -2169,6 +2364,11 @@ function vStats(){
     <div class="tiny" style="text-align:right;max-width:340px">Πόντοι κατά Αξιολόγηση. Ζεύγη ×2,
       άγριο θήραμα ×2. Ο πίνακας πόντων είναι δεδομένα και αλλάζει από τον όμιλο (Ρυθμίσεις).</div>
   </div>
+  ${(()=>{ const c = trials.filter(x=>x.status===CLOSED).length, o = trials.length - c;
+    return `<div class="tiny" style="margin:-8px 0 16px">${trials.length}
+      ${trials.length===1?"αγώνας":"αγώνες"} στον πίνακα · ${c} στο ιστορικό${
+      o?` · ${o} ${o===1?"σε εξέλιξη":"σε εξέλιξη"}`:""}. Ένας αγώνας μπαίνει στο ιστορικό από
+      Εξαγωγές → Ολοκλήρωση αγώνα· οι πόντοι μετρούν έτσι κι αλλιώς.</div>`; })()}
   <div class="card" style="padding:0"><div class="scroll"><table class="matrix">
     <thead><tr><th class="first">Σκύλος</th>
       ${trials.map(t=>`<th class="v"><span>${esc(t.title)} ${fmtDate(t.dateStart).slice(0,5)}</span></th>`).join("")}
@@ -2303,13 +2503,15 @@ function dlgHandler(p){
   <div class="row">${fld("p_phone","Κινητό (μορφή +357…)",p.phone,"tel")}${fld("p_member","Αρ. μέλους",p.member)}</div>
   <div class="tiny">Το τηλέφωνο χρησιμοποιείται μόνο για την ενημέρωση σειράς στους αγώνες.</div>
   <div class="row"><button class="b-pri grow" data-act="saveHandler" data-id="${p.id||""}">Αποθήκευση</button>
-    <button class="grow" data-act="close">Άκυρο</button></div>`);
+    <button class="grow" data-act="close">Άκυρο</button>
+    ${p.id?`<button class="b-warn" data-act="delHandler" data-id="${p.id}">Διαγραφή</button>`:""}</div>`);
 }
 
 function dlgJudge(j){
   j = j || {};
   dlg(`<h2>${j.id?"Επεξεργασία κριτή":"Νέος κριτής"}</h2>
-  <div class="row">${fld("j_name","Ονοματεπώνυμο",j.name)}</div>
+  <div class="row">${fld("j_name","Ονοματεπώνυμο",j.name)}
+    ${fld("j_phone","Κινητό (+357…)",j.phone,"tel")}</div>
   <div class="row">${sel("j_lic","Ιδιότητα",["ΕΠΙΣΗΜΟΣ","ΔΟΚΙΜΟΣ"],j.licence||"ΕΠΙΣΗΜΟΣ")}
     ${sel("j_me","Κριτής Μεγάλης Έρευνας",[["1","Ναι"],["0","Όχι"]],j.me?"1":"0")}</div>
   <div class="row">${sel("j_person","Ο ίδιος στο μητρώο κυναγωγών (Άρθρο 49)",
@@ -2318,7 +2520,8 @@ function dlgJudge(j){
   <div class="tiny">Με τη σύνδεση, η κλήρωση δεν τοποθετεί τον σκύλο του κριτή στο τερέν που
     κρίνει (Άρθρο 49).</div>
   <div class="row"><button class="b-pri grow" data-act="saveJudge" data-id="${j.id||""}">Αποθήκευση</button>
-    <button class="grow" data-act="close">Άκυρο</button></div>`);
+    <button class="grow" data-act="close">Άκυρο</button>
+    ${j.id?`<button class="b-warn" data-act="delJudge" data-id="${j.id}">Διαγραφή</button>`:""}</div>`);
 }
 
 function dlgTerrain(t, tr){
@@ -2953,7 +3156,7 @@ function exportTrialDoc(t){
 
 /* ---------- 15. Actions -------------------------------------------------- */
 document.addEventListener("click", ev=>{
-  const el2 = ev.target.closest("[data-nav],[data-tab],[data-day],[data-act],[data-open],[data-dog],[data-editdog],[data-edithandler],[data-newdogfor],[data-btick],[data-batch],[data-nterrain],[data-editjudge],[data-editterrain],[data-editentry],[data-note],[data-res],[data-bstat],[data-trailer],[data-untrailer],[data-recall],[data-sms],[data-copy],[data-wa],[data-smsdone],[data-set],[data-nstep],[data-nwidth],[data-nfault],[data-delpt],[data-nset],[data-ptset],[data-openbrace],[data-swap],[data-swapwith],[data-regtab],[data-assign],[data-autoassign],[data-pick],[data-bmove],[data-signoff],[data-unlock]");
+  const el2 = ev.target.closest("[data-nav],[data-tab],[data-day],[data-act],[data-open],[data-dog],[data-editdog],[data-edithandler],[data-newdogfor],[data-btick],[data-batch],[data-nterrain],[data-smspick],[data-editjudge],[data-editterrain],[data-editentry],[data-note],[data-res],[data-bstat],[data-trailer],[data-untrailer],[data-recall],[data-sms],[data-copy],[data-wa],[data-smsdone],[data-set],[data-nstep],[data-nwidth],[data-nfault],[data-delpt],[data-nset],[data-ptset],[data-openbrace],[data-swap],[data-swapwith],[data-regtab],[data-assign],[data-autoassign],[data-pick],[data-bmove],[data-signoff],[data-unlock]");
   if(!el2) return;
   const d = el2.dataset;
   const t = trialById(S.trialId);
@@ -3091,15 +3294,18 @@ document.addEventListener("click", ev=>{
     return; }
 
   if(d.sms!==undefined && el2.hasAttribute("data-sms")){
-    const x = smsQueue(t)[+d.sms];
-    location.href = `sms:${x.phone}?&body=${encodeURIComponent(x.body)}`;
-    t.sms[x.entry.id] = "ΕΣΤΑΛΗ"; save(); setTimeout(render,600); return; }
+    const x = smsQueue(t)[+d.sms]; if(!x) return;
+    sendOne(t, x); return; }
   if(d.copy!==undefined && el2.hasAttribute("data-copy")){
     const x = smsQueue(t)[+d.copy];
     navigator.clipboard.writeText(x.body).then(()=>toast("Αντιγράφηκε")); return; }
   if(d.wa!==undefined && el2.hasAttribute("data-wa")){
-    const x = smsQueue(t)[+d.wa];
-    window.open(`https://wa.me/${x.phone.replace(/\D/g,"")}?text=${encodeURIComponent(x.body)}`,"_blank"); return; }
+    const x = smsQueue(t)[+d.wa]; if(!x) return;
+    sendOne(t, x); return; }
+  if(d.smspick){
+    const sel = S.smsPick instanceof Set ? S.smsPick : (S.smsPick = new Set());
+    sel.has(d.smspick) ? sel.delete(d.smspick) : sel.add(d.smspick);
+    render(); return; }
   if(d.smsdone){ t.sms[d.smsdone] = t.sms[d.smsdone]==="ΕΣΤΑΛΗ" ? "" : "ΕΣΤΑΛΗ"; save(); render(); return; }
 
   ACT[d.act] && ACT[d.act](el2, t);
@@ -3246,6 +3452,11 @@ const ACT = {
     if(!day.draw || !terrains.length) return window.print();
     printSheets(terrains.map(tr=>drawSheet(t, day, tr)).join(""));
   },
+  printDraw: (btn, t)=>{
+    const day = t.days[S.day];
+    if(!day.draw) return toast("Δεν έχει γίνει κλήρωση");
+    printSheets(day.terrains.map(tr=>drawSheet(t, day, tr)).join(""));
+  },
   newTrial: ()=>dlgTrial(),
   editTrial: (b,t)=>dlgTrial(t),
 
@@ -3388,6 +3599,31 @@ const ACT = {
     t.days.length = nDays;
     save(); closeDlg(); S.view="trial"; S.trialId=t.id; S.day=0; render();
   },
+  /* Closing is the record being made, so it is worth a question when the day is
+     not actually finished — and it never destroys anything. */
+  closeTrial: (btn, t)=>{
+    const active = t.entries.filter(e=>e.status==="ΔΗΛΩΜΕΝΟΣ").length;
+    const scored = t.entries.filter(e=>{ const r = t.results[e.id]; return r && r.qual && r.qual!=="-"; }).length;
+    const open = [];
+    t.days.forEach((day,i)=>(day.terrains||[]).forEach(tr=>{
+      if((tr.braces||[]).length && !(t.signoff||{})[tr.id]) open.push(tr.name
+        + (t.days.length>1 ? " (ημέρα " + (i+1) + ")" : "")); }));
+    let msg = "Ολοκλήρωση του αγώνα «" + t.title + "»;";
+    if(scored < active) msg += "\n\n" + (active - scored) + " σκύλοι δεν έχουν βαθμολογία.";
+    if(open.length) msg += "\n\nΔεν έχουν υπογραφεί: " + [...new Set(open)].join(", ") + ".";
+    msg += "\n\nΟ αγώνας περνά στο ιστορικό. Τίποτα δεν διαγράφεται και μπορεί να επαναφερθεί.";
+    if(!confirmAct(msg)) return;
+    t.status = CLOSED;
+    t.closedAt = new Date().toLocaleString("el-GR");
+    save(); render(); toast("Ο αγώνας πέρασε στο ιστορικό");
+  },
+  reopenTrial: (btn, t)=>{
+    if(!confirmAct("Επαναφορά του αγώνα σε εξέλιξη;")) return;
+    t.status = t.days.some(d=>d.draw) ? "ΚΛΗΡΩΜΕΝΟΣ" : "ΔΗΛΩΣΕΙΣ";
+    t.closedAt = "";
+    save(); render();
+  },
+  statsFromTrial: ()=>{ S.view = "stats"; S.trialId = null; render(); },
   delTrial: (btn)=>{ if(!confirmAct("Οριστική διαγραφή του αγώνα και των αποτελεσμάτων του;")) return;
     DB.trials = DB.trials.filter(x=>x.id!==btn.dataset.id); save(); closeDlg(); S.view="trials"; render(); },
 
@@ -3435,9 +3671,53 @@ const ACT = {
       else if(t){ window._entryDraft = { handlerId: nid }; setTimeout(()=>dlgEntry(t), 60); }
     }
   },
+  /* Deleting is allowed; erasing the record is not. A κυναγωγός who has run in
+     a trial is part of that trial's history, so he stays and the app says which
+     trial holds him. One who only owns dogs goes, and his dogs fall to
+     «χωρίς κυναγωγό» rather than disappearing with him. */
+  delHandler: (btn)=>{
+    const id = btn.dataset.id;
+    const inTrials = DB.trials.filter(t=>t.entries.some(e=>e.handlerId===id)).map(t=>t.title);
+    if(inTrials.length)
+      return alert("Ο κυναγωγός έχει συμμετοχές στους αγώνες: " + [...new Set(inTrials)].join(", ")
+        + ".\n\nΔεν διαγράφεται όσο κρατά ιστορικό. Αφαιρέστε πρώτα τις συμμετοχές του.");
+    const linked = DB.judges.filter(j=>j.personId===id).map(j=>j.name);
+    const dogs = DB.dogs.filter(d=>d.ownerId===id).map(d=>d.name);
+    let msg = "Διαγραφή του κυναγωγού;";
+    if(dogs.length) msg += "\n\nΟι σκύλοι " + dogs.join(", ")
+      + " θα μείνουν στο μητρώο χωρίς κυναγωγό.";
+    if(linked.length) msg += "\n\nΘα λυθεί η σύνδεση με τον κριτή " + linked.join(", ")
+      + " (Άρθρο 49).";
+    if(!confirmAct(msg)) return;
+    DB.dogs.forEach(d=>{ if(d.ownerId===id) d.ownerId = ""; });
+    DB.judges.forEach(j=>{ if(j.personId===id) j.personId = ""; });
+    DB.people = DB.people.filter(x=>x.id!==id);
+    save(); closeDlg(); render();
+  },
+  delJudge: (btn)=>{
+    const id = btn.dataset.id;
+    const scored = DB.trials.filter(t=>Object.values(t.notes||{})
+      .some(byJudge=>byJudge && byJudge[id])).map(t=>t.title);
+    if(scored.length)
+      return alert("Ο κριτής έχει σημειώσεις στους αγώνες: " + [...new Set(scored)].join(", ")
+        + ".\n\nΔεν διαγράφεται όσο κρατά ιστορικό.");
+    const on = [];
+    DB.trials.forEach(t=>(t.days||[]).forEach(day=>(day.terrains||[]).forEach(tr=>{
+      if((tr.judgeIds||[]).includes(id)) on.push(t.title + " · " + tr.name); })));
+    if(!confirmAct("Διαγραφή του κριτή;" + (on.length
+      ? "\n\nΘα αφαιρεθεί από: " + on.join(", ") + "." : ""))) return;
+    DB.trials.forEach(t=>(t.days||[]).forEach(day=>(day.terrains||[]).forEach(tr=>{
+      tr.judgeIds = (tr.judgeIds||[]).filter(x=>x!==id);
+      tr.slots = (tr.slots||[]).map(x=>x===id ? "" : x);
+      if(tr.headJudgeId===id) tr.headJudgeId = "";
+    })));
+    DB.judges = DB.judges.filter(x=>x.id!==id);
+    save(); closeDlg(); render();
+  },
   saveJudge: (btn)=>{
     const id = btn.dataset.id;
-    const o = {name:el("j_name").value.trim(), licence:el("j_lic").value,
+    const o = {name:el("j_name").value.trim(), phone:el("j_phone").value.trim(),
+               licence:el("j_lic").value,
                me:el("j_me").value==="1", personId:el("j_person").value};
     if(!o.name) return toast("Το ονοματεπώνυμο είναι υποχρεωτικό");
     if(id) Object.assign(judById(id), o); else DB.judges.push({id:uid(), ...o});
@@ -3503,14 +3783,6 @@ const ACT = {
     if(r.warn && r.warn.length) setTimeout(()=>alert("Προσοχή:\n\n"+r.warn.join("\n")), 400);
   },
 
-  smsAll: (btn, t)=>{
-    const q = smsQueue(t).filter(x=>t.sms[x.entry.id]!=="ΕΣΤΑΛΗ" && x.phone);
-    if(!q.length) return toast("Δεν εκκρεμούν μηνύματα");
-    const x = q[0];
-    location.href = `sms:${x.phone}?&body=${encodeURIComponent(x.body)}`;
-    t.sms[x.entry.id] = "ΕΣΤΑΛΗ"; save(); setTimeout(render,600);
-  },
-
   saveTrailer: (btn, t)=>{
     const [tid, bid] = btn.dataset.id.split("|");
     const dogId = el("tl_dog").value;
@@ -3532,7 +3804,16 @@ const ACT = {
     (day.terrains||[]).forEach(tr=>(tr.braces||[]).forEach(b=>[b.a,b.b].forEach(id=>{
       const e = t.entries.find(x=>x.id===id); if(!e) return;
       const d = dogById(e.dogId) || {};
-      sheets.push(noteSheet(t, day, tr, b, e, d));
+      const written = t.notes[e.id + "::" + b.id] || {};
+      /* one sheet per judge who wrote something, so the file holds each opinion
+         separately; a run nobody scored yet gets one blank sheet to write on */
+      const jids = (tr.judgeIds||[]).filter(j=>written[j] && Object.keys(written[j]).length > 2);
+      if(jids.length)
+        jids.forEach(j=>sheets.push(noteSheet(t, day, tr, b, e, d, written[j],
+          (judById(j)||{}).name)));
+      else
+        sheets.push(noteSheet(t, day, tr, b, e, d, null,
+          (judById(tr.headJudgeId)||{}).name || ""));
     })));
     if(!sheets.length) return toast("Κάντε πρώτα την κλήρωση");
     printSheets(sheets.join(""));
@@ -3541,6 +3822,39 @@ const ACT = {
   csvTrial: (b,t)=>exportTrialCsv(t),
   docTrial: (b,t)=>exportTrialDoc(t),
   xlsStats: ()=>exportStatsXls(),
+
+  /* Selection. Everyone is picked to begin with, because the usual job is
+     "send it to the lot". */
+  smsAll: (b2,t)=>{ S.smsPick = new Set(smsQueue(t).map(x=>x.key)); render(); },
+  smsNone: ()=>{ S.smsPick = new Set(); render(); },
+  smsHandlers: (b2,t)=>{ S.smsPick = new Set(smsQueue(t).filter(x=>x.kind==="handler").map(x=>x.key)); render(); },
+  smsJudgesOnly: (b2,t)=>{ S.smsPick = new Set(smsQueue(t).filter(x=>x.kind==="judge").map(x=>x.key)); render(); },
+  /* The phone sends one message at a time — there is no bulk send to hand it.
+     So this opens the next one that is picked, unsent and has a number, marks
+     it, and the button comes back saying how many are left. */
+  smsNext: (b2,t)=>{
+    const sel = S.smsPick instanceof Set ? S.smsPick : new Set();
+    const next = smsQueue(t).find(x=>sel.has(x.key) && x.phone && t.sms[x.key]!=="ΕΣΤΑΛΗ");
+    if(!next) return toast("Δεν έμεινε κανένας σε αναμονή");
+    sendOne(t, next);
+  },
+  smsCopyAll: (b2,t)=>{
+    const sel = S.smsPick instanceof Set ? S.smsPick : new Set();
+    const picked = smsQueue(t).filter(x=>sel.has(x.key));
+    if(!picked.length) return;
+    const text = picked.map(x=>"— " + x.name + (x.phone?" ("+x.phone+")":"") + " —\n" + x.body).join("\n\n\n");
+    navigator.clipboard.writeText(text)
+      .then(()=>toast(picked.length + " μηνύματα αντιγράφηκαν"))
+      .catch(()=>toast("Η αντιγραφή δεν επιτράπηκε"));
+  },
+  smsMarkAll: (b2,t)=>{
+    const sel = S.smsPick instanceof Set ? S.smsPick : new Set();
+    const picked = smsQueue(t).filter(x=>sel.has(x.key));
+    if(!picked.length) return;
+    if(!confirmAct(picked.length + " μηνύματα θα σημανθούν ως εσταλμένα, χωρίς να σταλούν. Συνέχεια;")) return;
+    picked.forEach(x=>{ t.sms[x.key] = "ΕΣΤΑΛΗ"; });
+    save(); render();
+  },
 
   saveSms: ()=>{ DB.settings.sms = el("smsTpl").value;
     DB.settings.smsFoot = el("smsFoot").value; save(); toast("Αποθηκεύτηκε"); },
