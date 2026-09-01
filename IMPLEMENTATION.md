@@ -190,11 +190,13 @@ Reported from a phone at the trial.
   The one-dog form stays for editing a single entry: status, πληρωμή, οίστρος.
 - **Τερέν asks how many first.** 1 / 2 / 3 / 4, named Τερέν Α, Β, Γ, Δ. Adding is free; removing
   refuses to swallow a terrain that has braces drawn, and asks before dropping manual assignments.
-- **Judges are chosen on the terrain card.** An **Αρχικριτής** dropdown (he joins the panel
-  automatically — he judges it too) and the other judges added from a second dropdown, each
-  appearing as a chip that comes off with a tap. Judges already seated are not offered again.
-  Άρθρο 48 and Άρθρο 49 are still stated on the card, per terrain, as they were.
-  `terrain.headJudgeId` is new; `judgeIds` stays the panel the regulation checks run against.
+- **Judges are chosen on the terrain card, by seat.** Three named dropdowns — **Κεντρικός
+  κριτής**, **Κριτής 1**, **Κριτής 2** — because that is how the committee on a terrain is named.
+  One man cannot hold two seats: putting him in one clears the other. Clearing the κεντρικός does
+  not promote whoever sits below him into the chair, so `terrain.slots` remembers the seats as
+  chosen while `judgeIds` stays the compacted panel Άρθρο 48 and Άρθρο 49 are checked against, and
+  `headJudgeId` is seat 0. Both articles are still stated on the card, per terrain, as they were.
+  The terrain dialog now covers only the name and the breed group; judges live on the card.
 - **The two ways the club works are on the screen.** Once the field is in and every terrain has
   its judges, a panel offers both: **Κλήρωση τώρα** for the draw on the hillside in front of
   everyone, or **Αποστολή στο κινητό** to carry the setup over and draw there. Do it at home

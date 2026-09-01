@@ -1136,12 +1136,21 @@ function tTerrains(t){
   </div>`;
 
   const cards = day.terrains.map(tr=>{
-    const head = tr.headJudgeId && judById(tr.headJudgeId) ? tr.headJudgeId : "";
-    const others = (tr.judgeIds||[]).filter(j=>j !== head);
-    const free = DB.judges.filter(j=>!(tr.judgeIds||[]).includes(j.id));
+    const slots = judgeSlots(tr, want);
     const bad = tr.judgeIds.length < want;
     const conflicts = t.entries.filter(e=>e.status==="ΔΗΛΩΜΕΝΟΣ" && (tr.entryIds||[]).includes(e.id)
                        && judgeConflict(tr,e,t)).map(e=>dogName(e.dogId));
+    const byName = DB.judges.slice().sort((a,b)=>a.name.localeCompare(b.name,"el"));
+    /* One seat per row, named the way the committee is named: the κεντρικός and
+       then Κριτής 1, Κριτής 2. A man cannot hold two seats on the same terrain,
+       so choosing him for one clears the other. */
+    const seat = (jid, i)=>`<div>
+      <label>${i===0?"Κεντρικός κριτής":"Κριτής "+i}</label>
+      <select data-judgeslot="${tr.id}|${i}">
+        <option value="">— κανένας —</option>
+        ${byName.map(j=>`<option value="${j.id}" ${jid===j.id?"selected":""}>${esc(j.name)}${
+          j.me?" · Μ.Ε.":""}</option>`).join("")}
+      </select></div>`;
     /* conflicts surface immediately and specifically, with the article and a
        one-tap way to fix them */
     return `<div class="card">
@@ -1149,27 +1158,13 @@ function tTerrains(t){
       ${tr.breedGroup?`<div class="muted" style="margin-top:6px">Φυλή: ${
         tr.breedGroup==="POINTER"?"Pointer":"Setter"}</div>`:""}
 
-      <div class="row noprint" style="margin-top:12px">
-        <div class="grow" style="max-width:420px"><label>Αρχικριτής</label>
-          <select data-headjudge="${tr.id}">
-            <option value="">— επιλέξτε —</option>
-            ${DB.judges.slice().sort((a,b)=>a.name.localeCompare(b.name,"el"))
-              .map(j=>`<option value="${j.id}" ${head===j.id?"selected":""}>${esc(j.name)}${
-                j.me?" · Μ.Ε.":""}</option>`).join("")}
-          </select></div></div>
+      <div class="noprint" style="margin-top:12px;display:grid;gap:12px;max-width:420px">
+        ${slots.map(seat).join("")}</div>
 
-      <label class="noprint" style="margin-top:12px">Άλλοι κριτές</label>
-      <div class="badge-list noprint">${others.map(j=>
-        `<button class="tog on" data-dropjudge="${tr.id}|${j}">${esc((judById(j)||{}).name||"?")} ✕</button>`).join("")
-        || `<span class="muted">— κανένας —</span>`}</div>
-      ${free.length?`<div class="row noprint" style="margin-top:8px"><div class="grow" style="max-width:420px">
-        <select data-addjudge="${tr.id}">
-          <option value="">+ Προσθήκη κριτή…</option>
-          ${free.slice().sort((a,b)=>a.name.localeCompare(b.name,"el"))
-            .map(j=>`<option value="${j.id}">${esc(j.name)}${j.me?" · Μ.Ε.":""}</option>`).join("")}
-        </select></div></div>`:""}
-      <div class="print-only muted" style="margin-top:8px">Κριτές: ${
-        (tr.judgeIds||[]).map(j=>esc((judById(j)||{}).name||"?")).join(", ")||"— κανένας —"}</div>
+      <div class="print-only muted" style="margin-top:8px">Κεντρικός κριτής: ${
+        esc((judById(slots[0])||{}).name||"—")}${slots.filter((j,i)=>i>0 && j).length
+        ? " · Κριτές: " + slots.filter((j,i)=>i>0 && j)
+            .map(j=>esc((judById(j)||{}).name||"?")).join(", ") : ""}</div>
 
       <div class="muted num" style="margin-top:12px">${(tr.entryIds||[]).length} σκύλοι · ${(tr.braces||[]).length} ζεύγη
         ${tr.assigned?`<span class="chip n" style="margin-right:6px">ΧΕΙΡΟΚΙΝΗΤΗ ΑΝΑΘΕΣΗ</span>`:""}</div>
@@ -1196,6 +1191,30 @@ function tTerrains(t){
     + `<button class="b-sm noprint" data-act="addTerrain" style="margin-bottom:16px">+ Προσθήκη τερέν</button>`
     + handoff(t);
 }
+/* The committee on a terrain is an ordered list: seat 0 is the κεντρικός κριτής
+   and the rest are Κριτής 1, Κριτής 2. `judgeIds` stays the compacted panel that
+   Άρθρο 48 and Άρθρο 49 are checked against; `slots` only remembers which seat a
+   man was put in, so clearing the κεντρικός does not silently promote the next
+   one into his chair. */
+function judgeSlots(tr, want){
+  const src = (tr.slots && tr.slots.length) ? tr.slots : (tr.judgeIds||[]);
+  const out = src.map(j=>judById(j) ? j : "");
+  const n = Math.max(want || 2, 3, out.length);
+  while(out.length < n) out.push("");
+  return out;
+}
+function setJudgeSlot(t, trId, idx, jid){
+  const day = t.days[S.day];
+  const tr = day.terrains.find(x=>x.id===trId); if(!tr) return;
+  const slots = judgeSlots(tr, t.award==="CACIT" ? 3 : (t.format==="ΖΕΥΓΗ"?2:1));
+  if(jid) slots.forEach((v,i)=>{ if(i !== idx && v === jid) slots[i] = ""; });
+  slots[idx] = jid;
+  tr.slots = slots;
+  tr.judgeIds = slots.filter(Boolean);
+  tr.headJudgeId = slots[0] || "";
+  save(); render();
+}
+
 /* Adding terrains is free. Removing one is not: a terrain with braces drawn
    carries the day's work, so the count refuses to swallow it and says which
    one to clear first. */
@@ -1207,7 +1226,7 @@ function setTerrainCount(t, n){
     while(day.terrains.length < n)
       day.terrains.push({ id: uid(),
         name: "Τερέν " + String.fromCharCode(913 + day.terrains.length),
-        breedGroup: "", judgeIds: [], headJudgeId: "", entryIds: [], braces: [] });
+        breedGroup: "", judgeIds: [], slots: [], headJudgeId: "", entryIds: [], braces: [] });
     save(); render(); return;
   }
   const going = day.terrains.slice(n);
@@ -2307,10 +2326,7 @@ function dlgTerrain(t, tr){
   dlg(`<h2>${tr.id?"Επεξεργασία τερέν":"Νέο τερέν"}</h2>
   <div class="row">${fld("tr_name","Όνομα τερέν",tr.name||("Τερέν "+String.fromCharCode(913+t.days[S.day].terrains.length)))}</div>
   <div class="row">${sel("tr_bg","Φυλή (μόνο για Derby)",[["","Όλες"],["POINTER","Pointer"],["SETTER","Setter"]],tr.breedGroup||"")}</div>
-  <label>Κριτές</label>
-  <div class="badge-list">${DB.judges.map(j=>
-    `<button class="tog ${(tr.judgeIds||[]).includes(j.id)?"on":""}" data-tj="${j.id}">${esc(j.name)}</button>`).join("")
-    ||`<span class="muted">Προσθέστε πρώτα κριτές στο Μητρώο.</span>`}</div>
+  <div class="tiny">Ο κεντρικός κριτής και οι κριτές 1 και 2 ορίζονται στην κάρτα του τερέν.</div>
   <div class="row" style="margin-top:12px">
     <button class="b-pri grow" data-act="saveTerrain" data-id="${tr.id||""}">Αποθήκευση</button>
     <button class="grow" data-act="close">Άκυρο</button>
@@ -2937,7 +2953,7 @@ function exportTrialDoc(t){
 
 /* ---------- 15. Actions -------------------------------------------------- */
 document.addEventListener("click", ev=>{
-  const el2 = ev.target.closest("[data-nav],[data-tab],[data-day],[data-act],[data-open],[data-dog],[data-editdog],[data-edithandler],[data-newdogfor],[data-btick],[data-batch],[data-nterrain],[data-dropjudge],[data-editjudge],[data-editterrain],[data-editentry],[data-note],[data-res],[data-bstat],[data-trailer],[data-untrailer],[data-recall],[data-sms],[data-copy],[data-wa],[data-smsdone],[data-set],[data-tj],[data-nstep],[data-nwidth],[data-nfault],[data-delpt],[data-nset],[data-ptset],[data-openbrace],[data-swap],[data-swapwith],[data-regtab],[data-assign],[data-autoassign],[data-pick],[data-bmove],[data-signoff],[data-unlock]");
+  const el2 = ev.target.closest("[data-nav],[data-tab],[data-day],[data-act],[data-open],[data-dog],[data-editdog],[data-edithandler],[data-newdogfor],[data-btick],[data-batch],[data-nterrain],[data-editjudge],[data-editterrain],[data-editentry],[data-note],[data-res],[data-bstat],[data-trailer],[data-untrailer],[data-recall],[data-sms],[data-copy],[data-wa],[data-smsdone],[data-set],[data-nstep],[data-nwidth],[data-nfault],[data-delpt],[data-nset],[data-ptset],[data-openbrace],[data-swap],[data-swapwith],[data-regtab],[data-assign],[data-autoassign],[data-pick],[data-bmove],[data-signoff],[data-unlock]");
   if(!el2) return;
   const d = el2.dataset;
   const t = trialById(S.trialId);
@@ -2953,12 +2969,6 @@ document.addEventListener("click", ev=>{
   if(d.btick){ el2.classList.toggle("on"); return; }
   if(d.batch){ dlgHandlerEntries(t, d.batch); return; }
   if(d.nterrain){ setTerrainCount(t, +d.nterrain); return; }
-  if(d.dropjudge){
-    const [trid, jid] = d.dropjudge.split("|");
-    const tr = t.days[S.day].terrains.find(x=>x.id===trid); if(!tr) return;
-    tr.judgeIds = (tr.judgeIds||[]).filter(x=>x!==jid);
-    if(tr.headJudgeId === jid) tr.headJudgeId = "";
-    save(); render(); return; }
   if(d.editjudge){ dlgJudge(judById(d.editjudge)); return; }
   if(d.editterrain){ dlgTerrain(t, t.days[S.day].terrains.find(x=>x.id===d.editterrain)); return; }
   if(d.editentry){ dlgEntry(t, t.entries.find(x=>x.id===d.editentry)); return; }
@@ -2967,7 +2977,6 @@ document.addEventListener("click", ev=>{
   if(d.set === "smsModeFull"){ DB.settings.smsMode = "full"; save(); render(); return; }
   if(d.set === "smsModeOwn"){  DB.settings.smsMode = "own";  save(); render(); return; }
   if(d.set){ DB.settings[d.set] = !DB.settings[d.set]; save(); render(); return; }
-  if(d.tj){ el2.classList.toggle("on"); return; }
   if(d.nwidth){ document.querySelectorAll("[data-nwidth]").forEach(b=>b.classList.remove("on"));
     el2.classList.add("on"); window._note.width = d.nwidth; autosaveNote(); return; }
   if(d.nfault){ el2.classList.toggle("on");
@@ -3119,22 +3128,11 @@ document.addEventListener("change", ev=>{
       if(rowEl) rowEl.style.display = dg.sex==="Θ" ? "flex" : "none";
     }
     return; }
-  if(ev.target.dataset.headjudge){                  // the terrain's αρχικριτής
+  if(ev.target.dataset.judgeslot){                   // κεντρικός κριτής, κριτής 1, κριτής 2
     const t2 = trialById(S.trialId);
-    const tr = t2 && t2.days[S.day].terrains.find(x=>x.id===ev.target.dataset.headjudge);
-    if(!tr) return;
-    const jid = ev.target.value;
-    tr.headJudgeId = jid;
-    /* he judges the terrain too, so he joins its panel */
-    if(jid && !(tr.judgeIds||[]).includes(jid)) (tr.judgeIds = tr.judgeIds||[]).push(jid);
-    save(); render(); return; }
-  if(ev.target.dataset.addjudge){                   // one more judge on this terrain
-    const t2 = trialById(S.trialId);
-    const tr = t2 && t2.days[S.day].terrains.find(x=>x.id===ev.target.dataset.addjudge);
-    const jid = ev.target.value;
-    if(!tr || !jid) return;
-    if(!(tr.judgeIds||[]).includes(jid)) (tr.judgeIds = tr.judgeIds||[]).push(jid);
-    save(); render(); return; }
+    const [trid, i] = ev.target.dataset.judgeslot.split("|");
+    if(t2) setJudgeSlot(t2, trid, +i, ev.target.value);
+    return; }
   if(ev.target.id==="b_handler"){                   // narrow the tick list to his dogs
     const t2 = trialById(S.trialId);
     window._batchH = ev.target.value;
@@ -3461,11 +3459,11 @@ const ACT = {
   },
   saveTerrain: (btn, t)=>{
     const id = btn.dataset.id;
-    const judgeIds = [...document.querySelectorAll("[data-tj].on")].map(b=>b.dataset.tj);
-    const o = {name:el("tr_name").value.trim(), breedGroup:el("tr_bg").value, judgeIds};
+    const o = {name:el("tr_name").value.trim(), breedGroup:el("tr_bg").value};
     const day = t.days[S.day];
     if(id) Object.assign(day.terrains.find(x=>x.id===id), o);
-    else day.terrains.push({id:uid(), entryIds:[], braces:[], ...o});
+    else day.terrains.push({id:uid(), judgeIds:[], slots:[], headJudgeId:"",
+                            entryIds:[], braces:[], ...o});
     save(); closeDlg(); render();
   },
   delTerrain: (btn, t)=>{ if(!confirmAct("Διαγραφή τερέν;")) return;
