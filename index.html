@@ -311,6 +311,11 @@ hr{border:0;border-top:1px solid var(--line);margin:var(--s4) 0}
   text-decoration:underline;text-decoration-color:var(--stubble);text-decoration-thickness:1px;
   text-underline-offset:3px}
 .entry-row .open:hover{color:var(--setter);text-decoration-color:currentColor}
+/* the trial's name is the obvious place to rename it, so it is the control */
+.h-edit{background:none;border:0;padding:0;min-height:0;font:inherit;color:inherit;
+  cursor:pointer;text-align:left;text-decoration:underline;
+  text-decoration-color:var(--stubble);text-decoration-thickness:2px;text-underline-offset:5px}
+.h-edit:hover{color:var(--setter);text-decoration-color:currentColor}
 .tog.assign{border-color:var(--line-s);background:#fff;color:var(--ink);font-weight:400}
 .tog.assign.on{background:var(--navy-l);border-color:var(--navy);color:var(--ink)}
 .tog.assign.on::before{content:"✓";font-weight:700;color:var(--navy);margin-right:10px;flex:none}
@@ -577,7 +582,7 @@ const DEFAULT_SMS = `Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}`;
 const DEFAULT_SMS_FOOT = `Η σειρά είναι ενδεικτική (Άρθρο 16). Να είστε στη διάθεση των κριτών.`;
 const DEFAULT_SETTINGS = { sms:DEFAULT_SMS, smsFoot:DEFAULT_SMS_FOOT, smsMode:"full", appUrl:"",
   smsJudges:true, points:{...DEFAULT_POINTS},
-  avoidOwner:true, avoidKennel:true, seasonLast:true };
+  avoidOwner:true, avoidKennel:true, seasonLast:true, channel:"sms" };
 
 /* ---------- 2. Storage --------------------------------------------------- */
 /* Safari refuses localStorage on file:// URLs. If the head judge emails himself
@@ -1024,7 +1029,8 @@ function vTrial(){
     <span class="chip n">${esc(t.status)}</span>
     <button class="b-sm" data-act="editTrial" style="margin-left:auto">Επεξεργασία</button>
   </div>
-  <h1 style="margin-bottom:6px">${esc(t.title)}</h1>
+  <h1 style="margin-bottom:6px"><button class="h-edit" data-act="editTrial"
+    title="Επεξεργασία αγώνα">${esc(t.title)}</button></h1>
   <div class="muted" style="margin-bottom:14px">${esc(t.type)} · ${t.format==="ΖΕΥΓΗ"?"Ζεύγη":"Ατομικός"}
    · ${esc(t.game||"—")}${t.wild?" (άγριο θήραμα)":""} · ${fmtDate(t.dateStart)} · ${esc(t.place||"")}
    · Συντελεστής ×${coefficient(t)}</div>
@@ -1173,12 +1179,19 @@ function tTerrains(t){
     /* One seat per row, named the way the committee is named: the κεντρικός and
        then Κριτής 1, Κριτής 2. A man cannot hold two seats on the same terrain,
        so choosing him for one clears the other. */
+    /* A judge stands on one terrain at a time, so anyone already seated on
+       another one today is not offered here — except the man in this very seat,
+       who must stay visible or the select would show nothing. */
+    const elsewhere = new Map();
+    day.terrains.forEach(o=>{ if(o.id === tr.id) return;
+      (o.judgeIds||[]).forEach(j=>elsewhere.set(j, o.name)); });
     const seat = (jid, i)=>`<div>
       <label>${i===0?"Κεντρικός κριτής":"Κριτής "+i}</label>
       <select data-judgeslot="${tr.id}|${i}">
         <option value="">— κανένας —</option>
-        ${byName.map(j=>`<option value="${j.id}" ${jid===j.id?"selected":""}>${esc(j.name)}${
-          j.me?" · Μ.Ε.":""}</option>`).join("")}
+        ${byName.filter(j=>!elsewhere.has(j.id) || jid===j.id)
+          .map(j=>`<option value="${j.id}" ${jid===j.id?"selected":""}>${esc(j.name)}${
+            j.me?" · Μ.Ε.":""}</option>`).join("")}
       </select></div>`;
     /* conflicts surface immediately and specifically, with the article and a
        one-tap way to fix them */
@@ -1235,6 +1248,10 @@ function judgeSlots(tr, want){
 function setJudgeSlot(t, trId, idx, jid){
   const day = t.days[S.day];
   const tr = day.terrains.find(x=>x.id===trId); if(!tr) return;
+  if(jid){
+    const other = day.terrains.find(o=>o.id !== trId && (o.judgeIds||[]).includes(jid));
+    if(other){ toast((judById(jid)||{}).name + " κρίνει ήδη στο " + other.name); render(); return; }
+  }
   const slots = judgeSlots(tr, t.award==="CACIT" ? 3 : (t.format==="ΖΕΥΓΗ"?2:1));
   if(jid) slots.forEach((v,i)=>{ if(i !== idx && v === jid) slots[i] = ""; });
   slots[idx] = jid;
@@ -1247,14 +1264,24 @@ function setJudgeSlot(t, trId, idx, jid){
 /* Adding terrains is free. Removing one is not: a terrain with braces drawn
    carries the day's work, so the count refuses to swallow it and says which
    one to clear first. */
+/* Α, Β, Γ, Δ — the first letter not already taken, rather than one counted off
+   the current length. Position-based naming repeats itself the moment a terrain
+   is renamed or removed out of order. */
+function terrainLetter(day){
+  const taken = new Set((day.terrains||[]).map(tr=>(tr.name||"").trim()));
+  for(let i = 0; i < 24; i++){
+    const nm = "Τερέν " + String.fromCharCode(913 + i);
+    if(!taken.has(nm)) return nm;
+  }
+  return "Τερέν " + ((day.terrains||[]).length + 1);
+}
 function setTerrainCount(t, n){
   const day = t.days[S.day];
   const have = day.terrains.length;
   if(n === have) return;
   if(n > have){
     while(day.terrains.length < n)
-      day.terrains.push({ id: uid(),
-        name: "Τερέν " + String.fromCharCode(913 + day.terrains.length),
+      day.terrains.push({ id: uid(), name: terrainLetter(day),
         breedGroup: "", judgeIds: [], slots: [], headJudgeId: "", entryIds: [], braces: [] });
     save(); render(); return;
   }
@@ -1298,6 +1325,20 @@ function handoff(t){
    braces appear one at a time, in order — it mirrors a public draw where names
    are read out one by one and it gives the crowd something to watch. Below,
    small and permanent: seed, time, fingerprint and Άρθρο 16. */
+/* The code the draw is run from. The club writes it on the board as the type,
+   the trial and the date, so the field starts with exactly that and the head
+   judge changes it if he wants. Same code + same entries = same order, always. */
+const TYPE_CODE = { "Πρακτικού Κυνηγίου":"ΠΚ", "Έρευνας Κυνηγίου":"ΕΚ",
+  "Μεγάλης Έρευνας":"ΜΕ", "Κλασικός":"ΚΛ", "Derby":"DB", "Ε.Κ.Ι.":"ΕΚΙ", "Ε.ΦΥ.Π.":"ΕΦΠ" };
+function drawCode(t){
+  const day = t.days[S.day];
+  const code = TYPE_CODE[t.type] || (t.type||"").slice(0,2).toUpperCase();
+  /* Greek capitals carry no accents — ΝΈΟ is wrong, ΝΕΟ is right */
+  const name = (t.title||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .toUpperCase().replace(/\s+/g,"").replace(/[^\p{L}\p{N}]/gu,"");
+  const d = (day.date||t.dateStart||"").split("-").reverse().join("");
+  return [code, name, d].filter(Boolean).join("-");
+}
 function tDraw(t){
   const day = t.days[S.day], d = day.draw;
   const active = t.entries.filter(e=>e.status==="ΔΗΛΩΜΕΝΟΣ").length;
@@ -1316,8 +1357,9 @@ function tDraw(t){
 
   <div class="card">
     <div class="row">
-      <div class="grow"><label>Σπόρος κλήρωσης — αφήστε κενό για τυχαίο</label>
-        <input id="seedIn" class="seed" placeholder="π.χ. ΚΑΤΩΜΟΝΗ-2026-02-14"></div>
+      <div class="grow"><label>Κωδικός κλήρωσης</label>
+        <input id="seedIn" class="seed" value="${esc(day.draw ? day.draw.seed : drawCode(t))}"
+          placeholder="${esc(drawCode(t))}"></div>
       ${S.day>0?`<div class="grow"><label>Τρόπος</label><select id="drawMode">
         <option value="ΠΕΡΙΣΤΡΟΦΗ" selected>Περιστροφή τερέν (ιταλικό σύστημα)</option>
         <option value="ΚΛΗΡΩΣΗ">Νέα κλήρωση</option></select></div>`:""}
@@ -1331,7 +1373,8 @@ function tDraw(t){
     <div class="tiny" style="margin-top:12px">Πάντα ισχύουν: ποτέ δύο σκύλοι του ίδιου κυναγωγού
       στο ίδιο ζεύγος · κανένας κριτής δεν κρίνει τερέν με δικό του σκύλο (Άρθρο 49).
       Ο «ίδιος ιδιοκτήτης» πιάνει τους σκύλους που ανήκουν στον ίδιο αλλά τους τρέχουν
-      διαφορετικοί κυναγωγοί. Ο ίδιος σπόρος με τις ίδιες συμμετοχές δίνει πάντα την ίδια σειρά.</div>
+      διαφορετικοί κυναγωγοί. Ο ίδιος κωδικός με τις ίδιες συμμετοχές δίνει πάντα την ίδια σειρά, οπότε
+      η κλήρωση μπορεί να επαναληφθεί και να ελεγχθεί. Αλλάξτε τον ελεύθερα.</div>
   </div>
 
   ${drawCheck(t)}
@@ -1348,7 +1391,7 @@ function tDraw(t){
         </span></div>`).join("")}
     </div>
     <div style="border-top:1px solid var(--line);margin-top:18px;padding-top:14px">
-      <div class="fingerprint">σπόρος ${esc(d.seed)}<br>${new Date(d.at).toLocaleString("el-GR")} · ${esc(d.mode)}<br>αποτύπωμα ${esc(d.hash)}</div>
+      <div class="fingerprint">κωδικός ${esc(d.seed)}<br>${new Date(d.at).toLocaleString("el-GR")} · ${esc(d.mode)}<br>αποτύπωμα ${esc(d.hash)}</div>
       <p style="margin-top:8px">Η σειρά είναι ενδεικτική — Άρθρο 16.</p>
       <button class="b-redraw noprint" data-act="doDraw">Νέα κλήρωση — ακυρώνει την τρέχουσα</button>
     </div>
@@ -1454,8 +1497,10 @@ function braceCard(t, tr, b, opts){
       <div class="nm">${esc(d.name||"—")}</div>
       <div class="mt">${esc(d.breed||"")}${d.sex?" · "+d.sex:""}${e.season?" · οίστρος":""}</div>
       <div class="mt">${esc(perName(e.handlerId))}</div>
-      ${opts.actions?`<button class="b-full noprint" style="margin-top:12px;min-height:48px"
-        data-note="${e.id}::${b.id}">Σημειώσεις</button>`:""}
+      ${opts.actions ? (isTrailer
+        ? `<div class="tiny" style="margin-top:12px">Δεν βαθμολογείται.</div>`
+        : `<button class="b-full noprint" style="margin-top:12px;min-height:48px"
+            data-note="${e.id}::${b.id}">Σημειώσεις</button>`) : ""}
     </div>`;
   };
 
@@ -1465,6 +1510,7 @@ function braceCard(t, tr, b, opts){
   const extra = [];
   if(opts.actions && !opts.big) [ea, eb].forEach(e=>{
     if(!e) return;
+    if(b.trailer && e.id === b.b) return;      /* he is running, not competing */
     const nm = dogName(e.dogId);
     extra.push(`<button class="b-sm" data-recall="${tr.id}|${e.id}">Επανάκληση ${esc(nm)}</button>`);
     extra.push(`<button class="b-sm" data-swap="${tr.id}|${b.id}|${e.id}">Ανταλλαγή ${esc(nm)}</button>`);
@@ -1846,18 +1892,55 @@ function judgeSmsBody(t, judge){
   L.push(st.smsFoot || DEFAULT_SMS_FOOT);
   return L.join("\n").replace(/\n{3,}/g, "\n\n");
 }
+/* What each channel can actually do, checked rather than assumed:
+
+   SMS       phone only — a laptop has no messaging app. Several recipients in
+             one sms: link works on Android; iOS commonly takes only the first,
+             so the app says so instead of pretending.
+   WhatsApp  wa.me works on both (Web on a laptop), but only one number at a
+             time — there is no documented way to address several.
+   Viber     viber://forward?text=… opens Viber with the message ready and lets
+             the sender pick the recipients himself, which is a real send-to-all.
+             viber://chat?number=… reaches one person.
+   Messenger not possible. m.me needs a Facebook user or page id; a phone number
+             cannot address a Messenger thread, so there is no button for it.  */
+const CHANNELS = [
+  { id:"sms",  name:"SMS",      phoneOnly:true,  bulk:"maybe" },
+  { id:"wa",   name:"WhatsApp", phoneOnly:false, bulk:"no"    },
+  { id:"viber",name:"Viber",    phoneOnly:false, bulk:"yes"   }
+];
+function channel(){
+  const c = CHANNELS.find(x=>x.id === (DB.settings.channel || "sms"));
+  if(c && c.phoneOnly && !onPhone()) return CHANNELS.find(x=>x.id === "wa");
+  return c || CHANNELS[0];
+}
+function channelLink(ch, phone, body){
+  const n = String(phone||"").replace(/\D/g,"");
+  if(ch.id === "wa")    return "https://wa.me/" + n + "?text=" + encodeURIComponent(body);
+  if(ch.id === "viber") return "viber://chat?number=%2B" + n + "&text=" + encodeURIComponent(body);
+  return "sms:" + phone + "?&body=" + encodeURIComponent(body);
+}
+/* One message for everyone: the day's order with nobody's own braces marked,
+   because a group message has no "you". */
+function commonBody(t){
+  const st = DB.settings, day = t.days[S.day];
+  const head = (st.sms||DEFAULT_SMS)
+    .replace(/\{ΑΓΩΝΑΣ\}/g, t.title).replace(/\{ΗΜΕΡΟΜΗΝΙΑ\}/g, fmtDate(day.date));
+  return [head, "", "ΣΕΙΡΑ ΤΗΣ ΗΜΕΡΑΣ", orderText(t, "", st.smsJudges), "",
+          st.smsFoot || DEFAULT_SMS_FOOT].join("\n");
+}
 /* On a phone this opens the messaging app with the number and the text in it;
    on a laptop there is nothing to open, so it goes to WhatsApp Web and copies
    the text as well. Either way the message is only marked sent once something
    was actually opened. */
 function sendOne(t, x){
   if(!x.phone) return toast("Δεν υπάρχει τηλέφωνο για " + x.name);
-  if(onPhone()){
-    location.href = "sms:" + x.phone + "?&body=" + encodeURIComponent(x.body);
-  } else {
-    const w = window.open("https://wa.me/" + x.phone.replace(/\D/g,"")
-      + "?text=" + encodeURIComponent(x.body), "_blank");
-    try{ navigator.clipboard.writeText(x.body); }catch(e){}
+  const ch = channel();
+  const url = channelLink(ch, x.phone, x.body);
+  try{ navigator.clipboard.writeText(x.body); }catch(e){}
+  if(ch.id === "sms" || ch.id === "viber"){ location.href = url; }
+  else {
+    const w = window.open(url, "_blank");
     if(!w) return toast("Ο περιηγητής μπλόκαρε το παράθυρο. Το κείμενο αντιγράφηκε.");
   }
   t.sms[x.key] = "ΕΣΤΑΛΗ"; save(); setTimeout(render, 600);
@@ -1896,6 +1979,7 @@ function tSms(t){
   const segs = q.reduce((a,x)=>a+smsSegments(x.body),0);
   const st = DB.settings;
   const sel = S.smsPick instanceof Set ? S.smsPick : (S.smsPick = new Set(q.map(x=>x.key)));
+  const ch = channel();
   const picked = q.filter(x=>sel.has(x.key));
   const toSend = picked.filter(x=>x.phone && t.sms[x.key]!=="ΕΣΤΑΛΗ");
   const handlers = q.filter(x=>x.kind==="handler").length;
@@ -1916,12 +2000,9 @@ function tSms(t){
       </div>
       <div class="preview">${esc(x.body)}</div>
       <div class="row tight noprint">
-        ${onPhone()
-          ? `<button class="${done?"":"b-act"} grow" data-sms="${i}" ${x.phone?"":"disabled"}
-              ${done?'style="background:var(--ok-bg);border-color:var(--ok);color:var(--ok-ink)"':""}
-              >${done?"Στάλθηκε":"Αποστολή SMS"}</button>`
-          : `<button class="${done?"":"b-act"} grow" data-wa="${i}" ${x.phone?"":"disabled"}
-              >WhatsApp</button>`}
+        <button class="${done?"":"b-act"} grow" data-sms="${i}" ${x.phone?"":"disabled"}
+          ${done?'style="background:var(--ok-bg);border-color:var(--ok);color:var(--ok-ink)"':""}
+          >${done?"Στάλθηκε":ch.name}</button>
         <button class="b-sm" data-copy="${i}">Αντιγραφή</button>
         <button class="b-sm" data-smsdone="${x.key}">${done?"Αναίρεση":"Σήμανση"}</button>
       </div></div>`;
@@ -1955,23 +2036,39 @@ function tSms(t){
   </div>
 
   <div class="card noprint">
-    <div class="row tight">
+    <label>Πώς φεύγει</label>
+    <div class="row tight">${CHANNELS.map(c=>{
+      const off = c.phoneOnly && !onPhone();
+      return `<button class="tog ${ch.id===c.id?"on":""}" data-chan="${c.id}" ${off?"disabled":""}
+        ${off?'style="opacity:.5"':""}>${c.name}</button>`;}).join("")}
+    </div>
+    <div class="tiny" style="margin-top:8px">${
+      !onPhone() && DB.settings.channel === "sms"
+        ? "Το SMS θέλει τηλέφωνο· από υπολογιστή φεύγει WhatsApp."
+        : ch.bulk === "yes" ? "Το Viber ανοίγει με το μήνυμα έτοιμο και διαλέγετε εσείς παραλήπτες — έτσι φεύγει σε όλους με μία κίνηση."
+        : ch.bulk === "no"  ? "Το WhatsApp δέχεται έναν αριθμό τη φορά· η αποστολή σε όλους προχωρά έναν-έναν."
+        : "Πολλοί παραλήπτες σε ένα SMS δουλεύουν σε Android. Σε iPhone συνήθως περνά μόνο ο πρώτος, οπότε προτιμήστε το Viber ή έναν-έναν."}
+      Το Messenger δεν μπορεί να δεχτεί μήνυμα από αριθμό τηλεφώνου, γι' αυτό δεν υπάρχει εδώ.</div>
+
+    <div class="row tight" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line-f)">
       <button class="tog ${picked.length===q.length?"on":""}" data-act="smsAll">Επιλογή όλων</button>
       <button class="tog ${picked.length?"":"on"}" data-act="smsNone">Κανένας</button>
       <button class="tog" data-act="smsHandlers">Μόνο κυναγωγοί</button>
       ${judges?`<button class="tog" data-act="smsJudgesOnly">Μόνο κριτές</button>`:""}
     </div>
     <div class="row tight" style="margin-top:12px">
-      <button class="b-pri grow" data-act="smsNext" ${toSend.length?"":"disabled"}>${
-        toSend.length ? "Αποστολή στους επιλεγμένους · " + toSend.length + " να φύγουν"
-                      : "Τίποτα σε αναμονή"}</button>
+      <button class="b-pri grow" data-act="smsBlast" ${picked.filter(x=>x.phone).length?"":"disabled"}
+        >Αποστολή σε όλους · ${picked.filter(x=>x.phone).length}</button>
     </div>
     <div class="row tight" style="margin-top:8px">
-      <button class="b-sm" data-act="smsCopyAll" ${picked.length?"":"disabled"}>Αντιγραφή επιλεγμένων</button>
-      <button class="b-sm" data-act="smsMarkAll" ${picked.length?"":"disabled"}>Σήμανση ως εσταλμένα</button>
+      <button class="grow" data-act="smsNext" ${toSend.length?"":"disabled"}>${
+        toSend.length ? "Έναν-έναν · " + toSend.length + " να φύγουν" : "Τίποτα σε αναμονή"}</button>
+      <button class="b-sm" data-act="smsCopyAll" ${picked.length?"":"disabled"}>Αντιγραφή</button>
+      <button class="b-sm" data-act="smsMarkAll" ${picked.length?"":"disabled"}>Σήμανση</button>
     </div>
-    <div class="tiny" style="margin-top:10px">${picked.length} επιλεγμένοι. Το τηλέφωνο στέλνει
-      ένα μήνυμα τη φορά· η «Αποστολή» ανοίγει τον επόμενο και προχωρά μόνη της.</div>
+    <div class="tiny" style="margin-top:10px"><b>Αποστολή σε όλους</b> στέλνει ένα κοινό μήνυμα —
+      τη σειρά της ημέρας χωρίς σημάδι για τον καθένα. Το «Έναν-έναν» στέλνει σε κάθε άνθρωπο
+      τις δικές του διαδρομές. ${picked.length} επιλεγμένοι.</div>
   </div>
 
   ${q.map(row).join("")}
@@ -1983,6 +2080,10 @@ function tResults(t){
   const rows = [];
   day.terrains.forEach(tr=>(tr.braces||[]).forEach(b=>[b.a,b.b].forEach(id=>{
     const e = t.entries.find(x=>x.id===id); if(!e) return;
+    /* Άρθρο 40: the συμπληρωματικός runs to complete the brace. He is not in the
+       draw, he takes no place and no judge scores him — so he is not on this
+       screen, gets no sheet, and never reaches the standings. */
+    if(isTrailerEntry(t, e.id)) return;
     const r = t.results[e.id] || {};
     /* The app's arithmetic is advice and clearly subordinate: Άρθρο 27 caps are
        shown as a hint, never as a block. The judge always overrides. */
@@ -2209,7 +2310,8 @@ function vRegistry(){
         <tbody>${dogs.map(d=>{
           const n = DB.trials.filter(t=>t.entries.some(e=>e.dogId===d.id)).length;
           return `<tr data-name="${esc((d.name+" "+(d.reg||"")+" "+(d.kennel||"")).toLowerCase())}">
-          <td><b>${esc(d.name)}</b>${d.kennel?`<div class="tiny">${esc(d.kennel)}</div>`:""}</td>
+          <td><b>${esc(d.name)}</b>${d.guest?`<span class="chip" style="margin-left:6px">ΕΠΙΣΚΕΠΤΗΣ</span>`:""}${
+            d.kennel?`<div class="tiny">${esc(d.kennel)}</div>`:""}</td>
           <td class="num">${esc(d.reg||"—")}</td>
           <td>${esc(d.sex||"—")}</td>
           <td class="num">${d.dob?d.dob.slice(0,4):"—"}</td>
@@ -2529,7 +2631,7 @@ function dlgJudge(j){
 function dlgTerrain(t, tr){
   tr = tr || {};
   dlg(`<h2>${tr.id?"Επεξεργασία τερέν":"Νέο τερέν"}</h2>
-  <div class="row">${fld("tr_name","Όνομα τερέν",tr.name||("Τερέν "+String.fromCharCode(913+t.days[S.day].terrains.length)))}</div>
+  <div class="row">${fld("tr_name","Όνομα τερέν",tr.name||terrainLetter(t.days[S.day]))}</div>
   <div class="row">${sel("tr_bg","Φυλή (μόνο για Derby)",[["","Όλες"],["POINTER","Pointer"],["SETTER","Setter"]],tr.breedGroup||"")}</div>
   <div class="tiny">Ο κεντρικός κριτής και οι κριτές 1 και 2 ορίζονται στην κάρτα του τερέν.</div>
   <div class="row" style="margin-top:12px">
@@ -2592,6 +2694,12 @@ function assignWarn(t){
     Η κλήρωση θα τους μετακινήσει αλλού.`;
 }
 
+/* True for the dog filling out a brace as a συμπληρωματικός. Checked by entry
+   id across every day, because the same dog may be a real entry elsewhere. */
+function isTrailerEntry(t, entryId){
+  return (t.days||[]).some(day=>(day.terrains||[]).some(tr=>(tr.braces||[])
+    .some(b=>b.trailer && b.b === entryId)));
+}
 function femaleEntry(e){
   const d = dogById(e && e.dogId ? e.dogId : (DB.dogs[0]||{}).id);
   return d && d.sex === "Θ";
@@ -2603,12 +2711,12 @@ function femaleEntry(e){
    judge find a dog among a hundred and hope the owner comes out right. */
 function dogsForHandler(hid){
   const byName = (a,b)=>a.name.localeCompare(b.name,"el");
-  if(!hid) return { own: [], rest: DB.dogs.slice().sort(byName) };
+  if(!hid) return { own: [], rest: DB.dogs.filter(d=>!d.guest).sort(byName) };
   const handled = new Set();
   DB.trials.forEach(t=>t.entries.forEach(en=>{ if(en.handlerId === hid) handled.add(en.dogId); }));
-  const own = DB.dogs.filter(d=>d.ownerId === hid || handled.has(d.id)).sort(byName);
+  const own = DB.dogs.filter(d=>!d.guest && (d.ownerId === hid || handled.has(d.id))).sort(byName);
   const ownIds = new Set(own.map(d=>d.id));
-  return { own, rest: DB.dogs.filter(d=>!ownIds.has(d.id)).sort(byName) };
+  return { own, rest: DB.dogs.filter(d=>!d.guest && !ownIds.has(d.id)).sort(byName) };
 }
 function dogSelect(hid, selId){
   const { own, rest } = dogsForHandler(hid);
@@ -2666,7 +2774,9 @@ function fieldList(t){
 
   const byName = (a,b)=>a.name.localeCompare(b.name,"el");
   const dogsOf = new Map();
-  DB.dogs.forEach(d=>{ const k = d.ownerId||""; if(!dogsOf.has(k)) dogsOf.set(k,[]); dogsOf.get(k).push(d); });
+  /* a guest came in only to fill somebody's brace, so he is not on offer here */
+  DB.dogs.filter(d=>!d.guest).forEach(d=>{ const k = d.ownerId||"";
+    if(!dogsOf.has(k)) dogsOf.set(k,[]); dogsOf.get(k).push(d); });
   const groups = DB.people.slice().sort(byName)
     .map(p=>({ id:p.id, name:p.name, dogs:(dogsOf.get(p.id)||[]).slice().sort(byName) }))
     .filter(g=>g.dogs.length);
@@ -2821,12 +2931,19 @@ function dlgTrailer(t, terrainId, braceId){
     .map(d=>{ const e = t.entries.find(x=>x.dogId===d.id);
       const used = e && drawn.has(e.id);
       return [d.id, d.name + " (" + d.breed + ")" + (used ? " — τρέχει ήδη" : e ? " — δηλωμένος" : "")]; });
-  dlg(`<h2>Προσθήκη trailer</h2>
+  dlg(`<h2>Προσθήκη συμπληρωματικού</h2>
   <p class="muted">Ο αριθμός σκύλων είναι μονός. Επιλέξτε σκύλο για να συμπληρωθεί το τελευταίο ζεύγος.
-    Ο trailer τρέχει για να ολοκληρωθεί η διαδρομή· δεν προστίθεται στην κλήρωση και δεν προσμετρά
-    στα ελάχιστα ζεύγη.</p>
-  <div class="row">${sel("tl_dog","Σκύλος",opts)}</div>
-  <div class="row">${sel("tl_handler","Κυναγωγός",[["","—"]].concat(DB.people.map(p=>[p.id,p.name])))}</div>
+    Ο συμπληρωματικός τρέχει για να ολοκληρωθεί η διαδρομή· δεν μπαίνει στην κλήρωση, δεν προσμετρά
+    στα ελάχιστα ζεύγη και δεν βαθμολογείται.</p>
+  <div class="row">${sel("tl_dog","Σκύλος από το μητρώο",
+    [["","— εκτός μητρώου —"]].concat(opts))}</div>
+  <div class="row">${sel("tl_handler","Κυναγωγός",
+    [["","—"]].concat(DB.people.slice().sort((a,b)=>a.name.localeCompare(b.name,"el"))
+      .map(p=>[p.id,p.name])))}</div>
+  <hr><div class="tiny">Ένας σκύλος που δεν είναι στο μητρώο ούτε δηλωμένος σήμερα μπορεί να
+    τρέξει ως συμπληρωματικός. Γράψτε το όνομά του εδώ και αφήστε το πεδίο πιο πάνω κενό.</div>
+  <div class="row" style="margin-top:10px">${fld("tl_name","Όνομα σκύλου εκτός μητρώου")}
+    ${fld("tl_hname","Κυναγωγός (αν δεν είναι στη λίστα)")}</div>
   <div class="row" style="margin-top:12px">
     <button class="b-pri grow" data-act="saveTrailer" data-id="${terrainId}|${braceId}">Προσθήκη</button>
     <button class="grow" data-act="close">Άκυρο</button></div>`);
@@ -2844,6 +2961,9 @@ const WHITE_HINTS = [
 ];
 function dlgNote(t, runKey){
   const entryId = runKey.split("::")[0];
+  if(isTrailerEntry(t, entryId))
+    return alert("Ο συμπληρωματικός τρέχει για να ολοκληρωθεί το ζεύγος. "
+      + "Δεν βαθμολογείται και δεν κρατούνται σημειώσεις γι' αυτόν (Άρθρο 40).");
   const jid = S.judgeFilter || (DB.judges[0]||{}).id || "head";
   const n = ((t.notes[runKey]||{})[jid]) || {points:[],faults:[]};
   const entry = t.entries.find(e=>e.id===entryId) || {};
@@ -3255,7 +3375,7 @@ function exportTrialDoc(t){
 
 /* ---------- 15. Actions -------------------------------------------------- */
 document.addEventListener("click", ev=>{
-  const el2 = ev.target.closest("[data-nav],[data-tab],[data-day],[data-act],[data-open],[data-dog],[data-editdog],[data-edithandler],[data-newdogfor],[data-btick],[data-batch],[data-ftick],[data-fall],[data-nterrain],[data-smspick],[data-editjudge],[data-editterrain],[data-editentry],[data-note],[data-res],[data-bstat],[data-trailer],[data-untrailer],[data-recall],[data-sms],[data-copy],[data-wa],[data-smsdone],[data-set],[data-nstep],[data-nwidth],[data-nfault],[data-delpt],[data-nset],[data-ptset],[data-openbrace],[data-swap],[data-swapwith],[data-regtab],[data-assign],[data-autoassign],[data-pick],[data-bmove],[data-signoff],[data-unlock]");
+  const el2 = ev.target.closest("[data-nav],[data-tab],[data-day],[data-act],[data-open],[data-dog],[data-editdog],[data-edithandler],[data-newdogfor],[data-btick],[data-batch],[data-ftick],[data-fall],[data-nterrain],[data-smspick],[data-chan],[data-editjudge],[data-editterrain],[data-editentry],[data-note],[data-res],[data-bstat],[data-trailer],[data-untrailer],[data-recall],[data-sms],[data-copy],[data-wa],[data-smsdone],[data-set],[data-nstep],[data-nwidth],[data-nfault],[data-delpt],[data-nset],[data-ptset],[data-openbrace],[data-swap],[data-swapwith],[data-regtab],[data-assign],[data-autoassign],[data-pick],[data-bmove],[data-signoff],[data-unlock]");
   if(!el2) return;
   const d = el2.dataset;
   const t = trialById(S.trialId);
@@ -3411,6 +3531,7 @@ document.addEventListener("click", ev=>{
   if(d.wa!==undefined && el2.hasAttribute("data-wa")){
     const x = smsQueue(t)[+d.wa]; if(!x) return;
     sendOne(t, x); return; }
+  if(d.chan){ DB.settings.channel = d.chan; save(); render(); return; }
   if(d.smspick){
     const sel = S.smsPick instanceof Set ? S.smsPick : (S.smsPick = new Set());
     sel.has(d.smspick) ? sel.delete(d.smspick) : sel.add(d.smspick);
@@ -3447,6 +3568,16 @@ document.addEventListener("change", ev=>{
     const t2 = trialById(S.trialId);
     const [trid, i] = ev.target.dataset.judgeslot.split("|");
     if(t2) setJudgeSlot(t2, trid, +i, ev.target.value);
+    return; }
+  if(ev.target.id==="tl_dog"){                      // the dog brings his κυναγωγός
+    const t2 = trialById(S.trialId);
+    const dg = dogById(ev.target.value);
+    const h = el("tl_handler"); if(!h) return;
+    if(!dg){ return; }
+    /* whoever ran him last, otherwise the man he is registered to */
+    let hid = dg.ownerId || "";
+    if(t2) (t2.entries||[]).forEach(en=>{ if(en.dogId === dg.id && en.handlerId) hid = en.handlerId; });
+    if(hid && [...h.options].some(o=>o.value === hid)) h.value = hid;
     return; }
   if(ev.target.id==="b_handler"){                   // narrow the tick list to his dogs
     const t2 = trialById(S.trialId);
@@ -3660,7 +3791,7 @@ const ACT = {
     t.days.forEach(day=>(day.terrains||[]).forEach(tr=>(tr.braces||[]).forEach(b=>{
       if(b.a) drawn.add(b.a); if(b.b) drawn.add(b.b); })));
     let added = 0, removed = 0;
-    DB.dogs.forEach(d=>{
+    DB.dogs.filter(d=>!d.guest).forEach(d=>{
       const en = t.entries.find(x=>x.dogId === d.id);
       if(F.has(d.id)){
         if(!en){ t.entries.push({id:uid(), dogId:d.id, handlerId:d.ownerId||"",
@@ -3928,16 +4059,29 @@ const ACT = {
 
   saveTrailer: (btn, t)=>{
     const [tid, bid] = btn.dataset.id.split("|");
-    const dogId = el("tl_dog").value;
     const tr = t.days[S.day].terrains.find(x=>x.id===tid);
-    const b = (tr.braces||[]).find(x=>x.id===bid);
+    const b = tr && (tr.braces||[]).find(x=>x.id===bid);
     if(!tr || !b) return;
+    let dogId = el("tl_dog").value;
+    let handlerId = el("tl_handler").value || "";
+    const freeDog = el("tl_name").value.trim();
+    const freeMan = el("tl_hname").value.trim();
+    /* A dog nobody has registered can still run to fill a brace. He is kept as
+       a guest so the brace has something to name, and marked as one so he is
+       never mistaken for a club dog — he scores nothing either way. */
+    if(!dogId){
+      if(!freeDog) return toast("Επιλέξτε σκύλο ή γράψτε όνομα");
+      if(!handlerId && freeMan) handlerId = ensurePerson(freeMan, "");
+      dogId = uid();
+      DB.dogs.push({id:dogId, name:freeDog, breed:BREEDS[0], sex:"Α", reg:"", chip:"", book:"",
+                    dob:"", kennel:"", ownerId:handlerId, cy:false, guest:true});
+    } else if(!handlerId && freeMan){ handlerId = ensurePerson(freeMan, ""); }
     let e = t.entries.find(x=>x.dogId===dogId);
-    if(!e){ e = {id:uid(), dogId, handlerId:el("tl_handler").value||"", status:"ΣΥΜΠΛΗΡΩΜΑΤΙΚΟΣ",
+    if(!e){ e = {id:uid(), dogId, handlerId, status:"ΣΥΜΠΛΗΡΩΜΑΤΙΚΟΣ",
                  paid:false, season:false}; t.entries.push(e); }
-    else if(el("tl_handler").value) e.handlerId = el("tl_handler").value;
+    else if(handlerId) e.handlerId = handlerId;
     b.b = e.id; b.solo = false; b.trailer = true;
-    save(); closeDlg(); render(); toast("Ο trailer προστέθηκε");
+    save(); closeDlg(); render(); toast("Ο συμπληρωματικός προστέθηκε");
   },
   /* One A4 sheet per dog of the day, identifying fields filled and everything
      the judge writes left blank. */
@@ -3946,6 +4090,7 @@ const ACT = {
     const sheets = [];
     (day.terrains||[]).forEach(tr=>(tr.braces||[]).forEach(b=>[b.a,b.b].forEach(id=>{
       const e = t.entries.find(x=>x.id===id); if(!e) return;
+      if(b.trailer && b.b === e.id) return;             /* not judged, no sheet */
       const d = dogById(e.dogId) || {};
       const written = t.notes[e.id + "::" + b.id] || {};
       /* one sheet per judge who wrote something, so the file holds each opinion
@@ -3975,6 +4120,27 @@ const ACT = {
   /* The phone sends one message at a time — there is no bulk send to hand it.
      So this opens the next one that is picked, unsent and has a number, marks
      it, and the button comes back saying how many are left. */
+  /* One common message to everyone picked. Viber takes the whole room in one
+     go; SMS can on Android; WhatsApp cannot, so it steps through instead of
+     claiming to have sent something it did not. */
+  smsBlast: (b2,t)=>{
+    const sel = S.smsPick instanceof Set ? S.smsPick : new Set();
+    const picked = smsQueue(t).filter(x=>sel.has(x.key) && x.phone);
+    if(!picked.length) return toast("Κανένας επιλεγμένος με τηλέφωνο");
+    const ch = channel(), body = commonBody(t);
+    try{ navigator.clipboard.writeText(body); }catch(e){}
+    if(ch.id === "viber"){
+      location.href = "viber://forward?text=" + encodeURIComponent(body);
+    } else if(ch.id === "sms"){
+      location.href = "sms:" + picked.map(x=>x.phone).join(",") + "?&body=" + encodeURIComponent(body);
+    } else {
+      return alert("Το WhatsApp δέχεται έναν αριθμό τη φορά.\n\n"
+        + "Το κοινό μήνυμα αντιγράφηκε — επικολλήστε το σε ομάδα, ή στείλτε έναν-έναν.");
+    }
+    if(!confirmAct("Να σημανθούν και οι " + picked.length + " ως εσταλμένοι;")) return;
+    picked.forEach(x=>{ t.sms[x.key] = "ΕΣΤΑΛΗ"; });
+    save(); setTimeout(render, 600);
+  },
   smsNext: (b2,t)=>{
     const sel = S.smsPick instanceof Set ? S.smsPick : new Set();
     const next = smsQueue(t).find(x=>sel.has(x.key) && x.phone && t.sms[x.key]!=="ΕΣΤΑΛΗ");

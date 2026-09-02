@@ -261,6 +261,42 @@ Seven reports from the field.
   every import that had such a column. The longest matching keyword now wins. Twelve real headers
   are checked in the harness.
 
+## Seventh round
+
+- **Terrain letters** are now the first letter not already in use, rather than one counted off the
+  current list length. *I could not reproduce the reported repeat* — a fresh count of 1, 2, 3, 4
+  gives Τερέν Α, Β, Γ, Δ (U+0391…U+0394), one at a time or all at once, and the harness checks the
+  code points. Position-based naming does repeat itself once a terrain is renamed, so that path is
+  closed either way.
+- **A judge stands on one terrain.** Anyone seated elsewhere that day is no longer offered in the
+  other terrains' dropdowns, and writing him in anyway is refused with the terrain that holds him.
+  The man in the seat you are looking at stays visible, or the select would show nothing.
+- **«Σπόρος κλήρωσης» is «Κωδικός κλήρωσης»**, prefilled with the type's initials, the trial and the
+  date — `ΠΚ-ΚΑΤΩΜΟΝΗ-14022026` — and fully editable. Greek capitals carry no accents, so the name
+  is stripped before uppercasing. Reopening a drawn day shows the code that was actually used, and
+  the fingerprint line under the result says «κωδικός» too.
+- **The trial name is a button.** It always edited from Επεξεργασία and still does — again, *not
+  reproducible* — but the heading is now the control, which is where anyone would look for it.
+- **One «Αποστολή σε όλους»**, sending a common message: the day's order with nobody's own braces
+  marked, because a group message has no "you". «Έναν-έναν» keeps the personalised route.
+- **Channels: SMS, WhatsApp, Viber — and Messenger cannot work.** Checked rather than assumed.
+  Viber's `viber://forward?text=` opens with the message ready and lets the sender pick everyone,
+  which is a real send-to-all. SMS can take several recipients on Android; iPhone usually takes only
+  the first, and the screen says so. WhatsApp takes one number at a time, so it refuses the group
+  send and puts the text on the clipboard instead of claiming to have sent it. **Messenger has no
+  button**: `m.me` needs a Facebook user or page id and a phone number cannot address a Messenger
+  thread. A dead button would be worse than its absence.
+- **A συμπληρωματικός is not judged** (Άρθρο 40). No Σημειώσεις button on his half of the card, no
+  row in Βαθμολογία, no printed sheet, no επανάκληση, and opening his notes directly is refused
+  with the article. He runs so the brace is complete; he takes no place.
+- **Picking his dog picks his κυναγωγός** — whoever ran him last, otherwise his registered man.
+- **A dog in no register and no entry can fill a brace.** Type his name, and his handler's if that
+  man is new. He is kept as a guest so the brace has something to name and the club can see what
+  ran, marked ΕΠΙΣΚΕΠΤΗΣ in the register, and offered to nobody as an entry.
+
+**Not built: item 3.** «there is a selection choice for digs under» — I could not tell what this
+asks for and would rather ask than guess at it.
+
 ## Deliberate departures from the canvas
 
 - **Offline chip.** The canvas shows «Εκτός σύνδεσης – 6 αλλαγές σε αναμονή». There is no server
