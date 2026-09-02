@@ -241,6 +241,26 @@ Seven reports from the field.
   judge who scored the run, so each opinion is filed separately; a run nobody scored still prints
   one blank sheet.
 
+## Sixth round — the whole field at once, and judges from the sheet
+
+- **«Δηλώσεις ημέρας» is one table for the whole register.** Every κυναγωγός with his dogs under
+  him, a tick against each, and a tick on his name that takes all of them. The head judge works
+  down the entry list in one pass and saves once, instead of opening a dialog per man. The count,
+  the number of κυναγωγοί and the braces update as he ticks, with the 6-dog / 3-brace minimum
+  (ΕΚ Άρθρο 5, Άρθρο 40) stated on the same line. Search filters in place and keeps the ticks. A
+  dog already drawn or scored is locked — the group tick cannot drop him either, because that is a
+  withdrawal and belongs in the entry's own form. Dogs with no κυναγωγός are in the table too, so
+  nothing is invisible. «+ Ένας κυναγωγός» keeps the per-man screen for whoever turns up late.
+- **The importer takes judges.** `Κριτής` and `Τηλέφωνο κριτή` are mappable columns. A row carrying
+  a judge is read whether or not it also names a dog, so the same importer swallows a dog list, a
+  judge roster, or a sheet holding both; judges are matched by name, and an existing one only gains
+  a phone he did not have. Judge-only rows are no longer counted as skipped.
+- ***This found a real bug in header guessing.*** `guessField` returned the first field whose
+  keyword appeared in the header, and the name keywords are substrings of the phone headers —
+  «Τηλέφωνο ιδιοκτήτη» contains «ιδιοκτ», so it was read as the owner's **name**, silently, on
+  every import that had such a column. The longest matching keyword now wins. Twelve real headers
+  are checked in the harness.
+
 ## Deliberate departures from the canvas
 
 - **Offline chip.** The canvas shows «Εκτός σύνδεσης – 6 αλλαγές σε αναμονή». There is no server

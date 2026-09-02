@@ -1136,11 +1136,13 @@ function tEntries(t){
     <div class="grow" style="max-width:340px">
       <input id="entryQ" placeholder="Αναζήτηση σκύλου ή κυναγωγού"
         value="${esc(S.entryQ||"")}" oninput="filterEntries(this.value)"></div>
-    <button class="b-act" data-act="addEntry">+ Συμμετοχές</button>
+    <button class="b-act" data-act="addEntry">Δηλώσεις ημέρας</button>
+    <button data-act="addOneHandler">+ Ένας κυναγωγός</button>
     <button data-act="importEntries">Εισαγωγή αρχείου</button></div>
   <div id="entryNone" class="empty" style="display:none">Καμία συμμετοχή δεν ταιριάζει.</div>
   ${cards ? `<div class="split top">${cards}</div>`
-    : `<div class="empty">Καμία συμμετοχή ακόμη. Εισαγάγετε αρχείο Excel ή προσθέστε σκύλο.</div>`}`;
+    : `<div class="empty">Καμία συμμετοχή ακόμη. Ανοίξτε τις «Δηλώσεις ημέρας» και σημειώστε
+        ποιοι τρέχουν, ή εισαγάγετε αρχείο Excel.</div>`}`;
 }
 
 /* --- 8b. terrains ---
@@ -2626,6 +2628,94 @@ function dogHint(hid){
     return "Ο κυναγωγός δεν έχει σκύλο στο μητρώο. Επιλέξτε από τους υπόλοιπους ή προσθέστε νέο.";
   return "Πρώτοι στη λίστα οι σκύλοι που έχει ή έχει τρέξει.";
 }
+/* The whole field in one table. The head judge has the entry list in front of
+   him — a sheet, a WhatsApp thread, a queue of men at a table — and works down
+   it, so the screen is the same shape: every κυναγωγός in the club with his dogs
+   under him, a tick against each. One pass, one save, and the draw can run.
+   The per-κυναγωγός screen stays for the man who turns up late. */
+function dlgField(t){
+  window._field = new Set(t.entries.filter(e=>e.status==="ΔΗΛΩΜΕΝΟΣ").map(e=>e.dogId));
+  window._fieldHandler = {};
+  t.entries.forEach(e=>{ window._fieldHandler[e.dogId] = e.handlerId || ""; });
+  dlg(`<h2>Δηλώσεις ημέρας</h2>
+  <p class="muted">Σημειώστε ποιοι σκύλοι τρέχουν σήμερα. Κάθε σκύλος μπαίνει με τον κυναγωγό
+    κάτω από τον οποίο βρίσκεται.</p>
+  <div class="row noprint" style="margin-top:14px">
+    <div class="grow"><input id="fieldQ" placeholder="Αναζήτηση κυναγωγού ή σκύλου"
+      oninput="filterCards(this.value, 'fieldNone')"></div></div>
+  <div id="fieldNone" class="empty" style="display:none;margin-top:8px">Κανείς δεν ταιριάζει.</div>
+  <div id="fieldList" style="max-height:52vh;overflow:auto;margin-top:10px">${fieldList(t)}</div>
+  <div id="fieldSum" class="note" style="margin-top:12px">${fieldSummary(t)}</div>
+  <div class="row" style="margin-top:14px">
+    <button class="b-pri grow" data-act="saveField">Αποθήκευση</button>
+    <button class="grow" data-act="close">Άκυρο</button></div>`);
+}
+/* Every κυναγωγός with dogs, plus any dog with none, in one list. A dog already
+   drawn or scored is locked — taking him out is a withdrawal and belongs in the
+   entry's own form, where the status is recorded. */
+function fieldList(t){
+  const picked = window._field;
+  const drawn = new Set();
+  t.days.forEach(day=>(day.terrains||[]).forEach(tr=>(tr.braces||[]).forEach(b=>{
+    if(b.a) drawn.add(b.a); if(b.b) drawn.add(b.b); })));
+  const locked = new Set();
+  t.entries.forEach(e=>{
+    const r = t.results[e.id];
+    if(drawn.has(e.id) || (r && r.qual && r.qual !== "-")) locked.add(e.dogId);
+  });
+
+  const byName = (a,b)=>a.name.localeCompare(b.name,"el");
+  const dogsOf = new Map();
+  DB.dogs.forEach(d=>{ const k = d.ownerId||""; if(!dogsOf.has(k)) dogsOf.set(k,[]); dogsOf.get(k).push(d); });
+  const groups = DB.people.slice().sort(byName)
+    .map(p=>({ id:p.id, name:p.name, dogs:(dogsOf.get(p.id)||[]).slice().sort(byName) }))
+    .filter(g=>g.dogs.length);
+  if((dogsOf.get("")||[]).length)
+    groups.push({ id:"", name:"— χωρίς κυναγωγό —", dogs:(dogsOf.get("")||[]).slice().sort(byName) });
+  if(!groups.length) return `<div class="empty">Το μητρώο είναι άδειο. Καταχωρήστε πρώτα
+    κυναγωγούς και σκύλους, ή εισαγάγετε αρχείο.</div>`;
+
+  return groups.map(g=>{
+    const on = g.dogs.filter(d=>picked.has(d.id)).length;
+    const all = g.dogs.every(d=>picked.has(d.id));
+    const rows = g.dogs.map(d=>{
+      const yes = picked.has(d.id), lock = locked.has(d.id);
+      const find = ((d.name||"") + " " + (d.reg||"") + " " + (d.breed||"") + " " + g.name).toLowerCase();
+      return `<div class="entry-row" data-find="${esc(find)}">
+        <button class="tick ${yes?"on":""}" ${lock?"disabled":""}
+          data-ftick="${d.id}" aria-label="Επιλογή">${yes?"✓":""}</button>
+        <div class="who">
+          <b>${esc(d.name)}</b>
+          <span class="tiny">${esc(d.breed||"")}${d.sex?" · "+(d.sex==="Θ"?"θηλυκός":"αρσενικός"):""}${
+            d.reg?" · "+esc(d.reg):""}</span>
+        </div>
+        ${lock?`<div class="acts"><span class="chip n">ΚΛΗΡΩΜΕΝΟΣ</span></div>`:""}
+      </div>`;
+    }).join("");
+    return `<div class="card handler" data-group="${esc(g.name.toLowerCase())}" style="margin-bottom:10px">
+      <div class="row" style="align-items:center;gap:10px">
+        <button class="tick ${all?"on":""}" data-fall="${g.id}"
+          aria-label="Όλοι του">${all?"✓":""}</button>
+        <h3 class="grow" style="margin:0">${esc(g.name)}</h3>
+        <span class="muted num">${on}/${g.dogs.length}</span>
+      </div>
+      <div style="margin-top:8px">${rows}</div>
+    </div>`;
+  }).join("");
+}
+/* The two minimums are the reason this screen exists, so they are on it. */
+function fieldSummary(t){
+  const n = window._field.size;
+  const braces = Math.ceil(n/(t.format==="ΖΕΥΓΗ"?2:1));
+  const men = new Set([...window._field]
+    .map(id=>window._fieldHandler[id] || (dogById(id)||{}).ownerId || "")).size;
+  const ok = n >= 6 && braces >= 3;
+  return `<b>${n} ${n===1?"σκύλος":"σκύλοι"} από ${men} ${men===1?"κυναγωγό":"κυναγωγούς"}</b>
+    · ${braces} ${t.format==="ΖΕΥΓΗ"?"ζεύγη":"διαδρομές"}.
+    ${ok ? "Πληρούνται τα ελάχιστα: 6 σκύλοι και 3 ζεύγη."
+         : "Χρειάζονται τουλάχιστον 6 σκύλοι και 3 ζεύγη (ΕΚ Άρθρο 5, Άρθρο 40)."}`;
+}
+
 /* A κυναγωγός turns up with three dogs and says which two are running today.
    That is one conversation, so it is one screen: pick the man, tick the dogs.
    The one-at-a-time form stays for editing a single entry — status, πληρωμή,
@@ -2678,6 +2768,15 @@ function batchList(t, hid){
   return (rows ? `<div style="max-height:46vh;overflow:auto">${rows}</div>`
     : `<div class="empty">Ο κυναγωγός δεν έχει σκύλο στο μητρώο.</div>`)
     + `<button class="b-sm noprint" style="margin-top:8px" data-act="newDogForBatch">+ Σκύλος</button>`;
+}
+/* Redrawn in place: a render() would close the dialog, and the head judge is
+   halfway down a list of eighty dogs with a search term typed. */
+function redrawField(t){
+  const list = el("fieldList"), sum = el("fieldSum"), q = el("fieldQ");
+  if(!list) return;
+  list.innerHTML = fieldList(t);
+  if(sum) sum.innerHTML = fieldSummary(t);
+  if(q && q.value) filterCards(q.value, "fieldNone");
 }
 function suggestDog(t, hid, current){
   if(current) return current;
@@ -3156,7 +3255,7 @@ function exportTrialDoc(t){
 
 /* ---------- 15. Actions -------------------------------------------------- */
 document.addEventListener("click", ev=>{
-  const el2 = ev.target.closest("[data-nav],[data-tab],[data-day],[data-act],[data-open],[data-dog],[data-editdog],[data-edithandler],[data-newdogfor],[data-btick],[data-batch],[data-nterrain],[data-smspick],[data-editjudge],[data-editterrain],[data-editentry],[data-note],[data-res],[data-bstat],[data-trailer],[data-untrailer],[data-recall],[data-sms],[data-copy],[data-wa],[data-smsdone],[data-set],[data-nstep],[data-nwidth],[data-nfault],[data-delpt],[data-nset],[data-ptset],[data-openbrace],[data-swap],[data-swapwith],[data-regtab],[data-assign],[data-autoassign],[data-pick],[data-bmove],[data-signoff],[data-unlock]");
+  const el2 = ev.target.closest("[data-nav],[data-tab],[data-day],[data-act],[data-open],[data-dog],[data-editdog],[data-edithandler],[data-newdogfor],[data-btick],[data-batch],[data-ftick],[data-fall],[data-nterrain],[data-smspick],[data-editjudge],[data-editterrain],[data-editentry],[data-note],[data-res],[data-bstat],[data-trailer],[data-untrailer],[data-recall],[data-sms],[data-copy],[data-wa],[data-smsdone],[data-set],[data-nstep],[data-nwidth],[data-nfault],[data-delpt],[data-nset],[data-ptset],[data-openbrace],[data-swap],[data-swapwith],[data-regtab],[data-assign],[data-autoassign],[data-pick],[data-bmove],[data-signoff],[data-unlock]");
   if(!el2) return;
   const d = el2.dataset;
   const t = trialById(S.trialId);
@@ -3170,6 +3269,16 @@ document.addEventListener("click", ev=>{
   if(d.edithandler){ dlgHandler(perById(d.edithandler)); return; }
   if(d.newdogfor){ dlgDog({ ownerId: d.newdogfor }); return; }
   if(d.btick){ el2.classList.toggle("on"); return; }
+  if(d.ftick !== undefined && el2.hasAttribute("data-ftick")){
+    const F = window._field;
+    F.has(d.ftick) ? F.delete(d.ftick) : F.add(d.ftick);
+    redrawField(t); return; }
+  if(d.fall !== undefined && el2.hasAttribute("data-fall")){
+    const F = window._field;
+    const mine = DB.dogs.filter(x=>(x.ownerId||"") === d.fall);
+    const all = mine.length && mine.every(x=>F.has(x.id));
+    mine.forEach(x=>all ? F.delete(x.id) : F.add(x.id));
+    redrawField(t); return; }
   if(d.batch){ dlgHandlerEntries(t, d.batch); return; }
   if(d.nterrain){ setTerrainCount(t, +d.nterrain); return; }
   if(d.editjudge){ dlgJudge(judById(d.editjudge)); return; }
@@ -3523,10 +3632,14 @@ const ACT = {
   addTerrain: (e,t)=>dlgTerrain(t),
   /* An empty registry used to be a dead end with a toast pointing elsewhere.
      Now it opens the dog form, and saving comes straight back here. */
+  /* The whole field at once — the usual job at the entry table. */
   addEntry: (e,t)=>{
-    /* No κυναγωγός in the register means there is nothing to choose from. Ask
-       for the man first — the order the entry form itself asks in — and come
-       straight back with him already selected. */
+    if(!DB.people.length){ window._afterHandler = "batch"; return dlgHandler(); }
+    if(!DB.dogs.length){ window._afterDog = "field"; return dlgDog(); }
+    dlgField(t);
+  },
+  /* One man at a time — the one who turns up late, or changes his mind. */
+  addOneHandler: (e,t)=>{
     if(!DB.people.length){ window._afterHandler = "batch"; return dlgHandler(); }
     dlgHandlerEntries(t);
   },
@@ -3537,6 +3650,35 @@ const ACT = {
     window._batchH = hid;
     window._afterDog = "batch";
     dlgDog(hid ? { ownerId: hid } : null);
+  },
+  /* One diff over the whole field: what was ticked becomes an entry, what was
+     un-ticked stops being one. A dog that is drawn or scored was locked in the
+     list, so he cannot be lost here. */
+  saveField: (btn,t)=>{
+    const F = window._field; if(!F) return;
+    const drawn = new Set();
+    t.days.forEach(day=>(day.terrains||[]).forEach(tr=>(tr.braces||[]).forEach(b=>{
+      if(b.a) drawn.add(b.a); if(b.b) drawn.add(b.b); })));
+    let added = 0, removed = 0;
+    DB.dogs.forEach(d=>{
+      const en = t.entries.find(x=>x.dogId === d.id);
+      if(F.has(d.id)){
+        if(!en){ t.entries.push({id:uid(), dogId:d.id, handlerId:d.ownerId||"",
+                                 status:"ΔΗΛΩΜΕΝΟΣ", paid:false, season:false}); added++; }
+        else if(en.status !== "ΔΗΛΩΜΕΝΟΣ"){ en.status = "ΔΗΛΩΜΕΝΟΣ"; added++; }
+      } else if(en){
+        const r = t.results[en.id];
+        if(drawn.has(en.id) || (r && r.qual && r.qual !== "-")) return;   /* locked */
+        t.entries = t.entries.filter(x=>x.id !== en.id);
+        delete t.results[en.id]; delete t.sms[en.id];
+        removed++;
+      }
+    });
+    save(); closeDlg(); render();
+    if(added || removed)
+      toast((added?added + (added===1?" συμμετοχή":" συμμετοχές"):"")
+        + (added && removed ? " · " : "")
+        + (removed?removed + (removed===1?" αφαιρέθηκε":" αφαιρέθηκαν"):""));
   },
   saveBatch: (btn,t)=>{
     const hid = (el("b_handler")||{}).value || "";
@@ -3648,7 +3790,8 @@ const ACT = {
     if(back){
       window._afterDog = null;
       const t = trialById(S.trialId);
-      if(t && back === "batch") setTimeout(()=>dlgHandlerEntries(t, window._batchH), 60);
+      if(t && back === "field") setTimeout(()=>dlgField(t), 60);
+      else if(t && back === "batch") setTimeout(()=>dlgHandlerEntries(t, window._batchH), 60);
       else if(t) setTimeout(()=>dlgEntry(t), 60);
     }
   },
@@ -3908,6 +4051,16 @@ function ensurePerson(name, phone){
 /* Merge an incoming backup into the local one: for anything with the same id the
    file wins; anything the file does not mention is left alone. This is what makes
    laptop -> phone -> laptop round trips safe. */
+/* A club list often carries the judges in the same sheet, or in one of their own.
+   Matched by name, like people are; an existing judge only gains a phone. */
+function ensureJudge(name, phone){
+  if(!name) return "";
+  let j = DB.judges.find(x=>x.name.toLowerCase()===name.toLowerCase());
+  if(!j){ j = {id:uid(), name, phone:phone||"", licence:"ΕΠΙΣΗΜΟΣ", me:false, personId:""};
+          DB.judges.push(j); return j.id; }
+  if(phone && !j.phone) j.phone = phone;
+  return j.id;
+}
 function mergeDB(inc){
   ["people","judges","dogs","trials"].forEach(k=>{
     DB[k] = DB[k] || [];
@@ -4092,7 +4245,8 @@ async function readAnyFile(file){
 const IMPORT_FIELDS = [["","— παράλειψη —"],["name","Όνομα σκύλου"],["breed","Φυλή"],["sex","Φύλο"],
   ["reg","Αρ. Κ.Ο.Κ."],["chip","Τσιπ / δερματοστιξία"],["book","Βιβλιάριο εργασίας"],
   ["dob","Ημ. γέννησης"],["kennel","Εκτροφείο"],["owner","Κυναγωγός (ιδιοκτήτης)"],["ownerPhone","Τηλέφωνο ιδιοκτήτη"],
-  ["handler","Κυναγωγός (στον αγώνα)"],["handlerPhone","Τηλέφωνο κυναγωγού"]];
+  ["handler","Κυναγωγός (στον αγώνα)"],["handlerPhone","Τηλέφωνο κυναγωγού"],
+  ["judge","Κριτής"],["judgePhone","Τηλέφωνο κριτή"]];
 
 const GUESS = {
   name:["όνομα σκύλου","ονομα σκυλου","σκύλος","σκυλος","dog","name","όνομα","ονομα"],
@@ -4105,15 +4259,22 @@ const GUESS = {
   kennel:["εκτροφ","kennel","affix"],
   owner:["ιδιοκτ","owner"],
   ownerPhone:["τηλ. ιδιοκτ","τηλέφωνο ιδιοκτ","owner phone"],
+  judge:["κριτ","judge"],
+  judgePhone:["τηλ. κριτ","τηλέφωνο κριτ","τηλεφωνο κριτ","κινητό κριτ","κινητο κριτ","judge phone"],
   handler:["κυναγωγ","χειριστ","handler","conductor"],
-  handlerPhone:["τηλ","τηλέφωνο","τηλεφωνο","phone","mobile","κινητό","κινητο"]
+  handlerPhone:["τηλ","τηλέφωνο","τηλεφωνο","phone","mobile","κινητό","κινητο",
+                "τηλ. κυναγωγ","τηλέφωνο κυναγωγ","τηλεφωνο κυναγωγ","κινητό κυναγωγ"]
 };
+/* The longest matching key wins, not the first one found. On first-match, every
+   phone column landed on a name field — «Τηλέφωνο ιδιοκτήτη» contains «ιδιοκτ»
+   and so was read as the owner's name, silently, on every import that had one. */
 function guessField(header){
   const h = String(header||"").toLowerCase().trim();
   if(!h) return "";
+  let best = "", len = 0;
   for(const [f,keys] of Object.entries(GUESS))
-    if(keys.some(k=>h.includes(k))) return f;
-  return "";
+    for(const k of keys) if(h.includes(k) && k.length > len){ best = f; len = k.length; }
+  return best;
 }
 function normBreed(v){
   const s = String(v||"").toLowerCase();
@@ -4272,11 +4433,18 @@ function doImport(){
   const I = window._imp, rows = impRows();
   const get = (r, f) => { const i = Object.keys(I.map).find(k=>I.map[k]===f);
                           return i===undefined ? "" : String(r[i]??"").trim(); };
-  let added=0, updated=0, entries=0, skipped=0, breedGuessed=0;
+  let added=0, updated=0, entries=0, skipped=0, breedGuessed=0, judges=0;
   for(let n = I.header+1; n < rows.length; n++){
     const r = rows[n];
+    /* a judge column is read whether or not the row also names a dog, so the
+       same importer takes a dog list, a judge list, or a sheet holding both */
+    if(get(r,"judge")){
+      const before = DB.judges.length;
+      ensureJudge(get(r,"judge"), get(r,"judgePhone"));
+      if(DB.judges.length > before) judges++;
+    }
     const name = get(r,"name");
-    if(!name){ skipped++; continue; }
+    if(!name){ if(!get(r,"judge")) skipped++; continue; }
     const reg = get(r,"reg");
     let dog = (reg && DB.dogs.find(d=>d.reg && d.reg.toLowerCase()===reg.toLowerCase()))
            || DB.dogs.find(d=>d.name.toLowerCase()===name.toLowerCase());
@@ -4304,6 +4472,7 @@ function doImport(){
   save(); closeDlg(); render();
   alert(`Εισαγωγή ολοκληρώθηκε.\n\n`
     + `Νέοι σκύλοι: ${added}\nΕνημερώθηκαν: ${updated}\n`
+    + (judges ? `Νέοι κριτές: ${judges}\n` : "")
     + (I.trial ? `Νέες συμμετοχές: ${entries}\n` : "")
     + (skipped ? `Γραμμές χωρίς όνομα (αγνοήθηκαν): ${skipped}\n` : "")
     + (breedGuessed ? `\nΠροσοχή: ${breedGuessed} σκύλοι δεν είχαν φυλή και καταχωρήθηκαν ως «${BREEDS[0]}». Διορθώστε τους από το Μητρώο.` : ""));
