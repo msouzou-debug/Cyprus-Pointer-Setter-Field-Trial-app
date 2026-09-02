@@ -297,6 +297,26 @@ Seven reports from the field.
 **Not built: item 3.** «there is a selection choice for digs under» — I could not tell what this
 asks for and would rather ask than guess at it.
 
+## Eighth round
+
+- **A dog runs on one terrain.** Assigning used to let Τερέν Β take a dog who was already on
+  Τερέν Α and quietly pull him off it. Now he is shown but locked, with the terrain that holds him
+  named on the row, and the screen says to free him there first. Nothing is moved behind the head
+  judge's back.
+- **Day two reverses the terrains.** The dogs who ran Τερέν Α go to Τερέν Β and the other way
+  round, so nobody meets the same committee on the same ground twice. The engine always did this —
+  draw mode `ΠΕΡΙΣΤΡΟΦΗ` rotates each terrain's dogs one place on — but it sat in a dropdown that
+  only appeared on day two and nobody opened. There is now a card that names the swap in full
+  (Τερέν Α → Τερέν Β · Τερέν Β → Τερέν Α) and one button that does it and re-draws. With two
+  terrains a rotation *is* a reversal, so that is what the button is called; with three or more it
+  says περιστροφή. An existing day-two draw is not thrown away without asking.
+- **Braces drag.** A κυναγωγός is late, so his brace goes down the order: drag the row and drop it
+  where you want. Built on pointer events, so a thumb and a mouse take the same path, the rows
+  slide out of the way as you go, and a tap is still a tap — a drag only starts after a few pixels,
+  so the arrows inside the row keep working. The ↑ ↓ buttons stay for a cold morning with gloves
+  on. Numbering is positional either way, so brace 1 dropped three places down becomes brace 4, the
+  move is stamped as a χειροκίνητη αλλαγή and printed on the draw list (Άρθρο 16).
+
 ## Deliberate departures from the canvas
 
 - **Offline chip.** The canvas shows «Εκτός σύνδεσης – 6 αλλαγές σε αναμονή». There is no server

@@ -300,6 +300,12 @@ hr{border:0;border-top:1px solid var(--line);margin:var(--s4) 0}
 .entry-row .acts{display:flex;align-items:center;gap:6px;flex:0 0 auto;margin-left:auto;flex-wrap:wrap;
   justify-content:flex-end}
 .card.handler{break-inside:avoid}
+/* reordering: the row is the handle, so it says so and it moves */
+.brief.drag{touch-action:none;transition:transform .12s ease}
+.brief.drag .grip{flex:none;color:var(--slate-2);font-size:19px;line-height:1;
+  letter-spacing:-2px;margin-right:2px}
+.brief.drag.dragging{transition:none;position:relative;z-index:5;cursor:grabbing;
+  box-shadow:0 10px 24px rgba(20,30,54,.22);background:#fff;border-radius:var(--r)}
 /* the tick that says who this message goes to */
 .tick{flex:none;width:30px;height:30px;min-height:30px;padding:0;border-radius:8px;
   border:2px solid var(--line-s);background:#fff;color:#fff;cursor:pointer;
@@ -1325,6 +1331,33 @@ function handoff(t){
    braces appear one at a time, in order — it mirrors a public draw where names
    are read out one by one and it gives the crowd something to watch. Below,
    small and permanent: seed, time, fingerprint and Άρθρο 16. */
+/* Day two: the dogs that ran Τερέν Α go to Τερέν Β and the other way round, so
+   nobody is judged twice by the same committee on the same ground. The draw
+   engine has always done this — mode ΠΕΡΙΣΤΡΟΦΗ rotates each terrain's dogs one
+   place on — but it lived in a dropdown nobody opened. With two terrains a
+   rotation is exactly a swap, which is what the club calls it. */
+function rotateCard(t){
+  if(S.day === 0) return "";
+  const prev = t.days[S.day-1];
+  const day = t.days[S.day];
+  if(!prev || !prev.draw) return `<div class="note" style="margin-top:14px">Η ημέρα
+    ${S.day} δεν έχει κληρωθεί, οπότε δεν υπάρχει σειρά για να αντιστραφεί.</div>`;
+  const n = day.terrains.length;
+  if(n < 2) return "";
+  const moves = prev.terrains.map((pt,i)=>{
+    const to = day.terrains[(i+1)%n];
+    return esc(pt.name) + " → " + esc(to ? to.name : "—");
+  }).join(" · ");
+  return `<div class="card noprint" style="margin-top:14px">
+    <div class="eyebrow">${n===2?"Αντιστροφή τερέν":"Περιστροφή τερέν"}</div>
+    <p class="tiny">Οι σκύλοι της χθεσινής ημέρας αλλάζουν τερέν: ${moves}. Τα ζεύγη
+      κληρώνονται από την αρχή μέσα σε κάθε τερέν.</p>
+    <div class="row tight" style="margin-top:12px">
+      <button class="b-pri" data-act="rotateDraw">${n===2?"Αντιστροφή τερέν και κλήρωση"
+        :"Περιστροφή τερέν και κλήρωση"}</button>
+    </div>
+  </div>`;
+}
 /* The code the draw is run from. The club writes it on the board as the type,
    the trial and the date, so the field starts with exactly that and the head
    judge changes it if he wants. Same code + same entries = same order, always. */
@@ -1364,6 +1397,7 @@ function tDraw(t){
         <option value="ΠΕΡΙΣΤΡΟΦΗ" selected>Περιστροφή τερέν (ιταλικό σύστημα)</option>
         <option value="ΚΛΗΡΩΣΗ">Νέα κλήρωση</option></select></div>`:""}
     </div>
+    ${rotateCard(t)}
     <label style="margin-top:16px">Προτιμήσεις — τηρούνται όπου γίνεται</label>
     <div class="row tight">
       <button class="tog opt ${DB.settings.avoidOwner?"on":""}" data-set="avoidOwner">Ίδιος ιδιοκτήτης</button>
@@ -1555,10 +1589,14 @@ function braceCard(t, tr, b, opts){
 
 /* reorder mode: the same row with a handle at each end. Deliberately not
    drag-and-drop — a gloved thumb on a hillside wants a target it can hit. */
+/* Reordering: drag the whole row, or step it with the arrows. A handler turns
+   up late and his brace goes down the list — dragging says that in one gesture,
+   and the arrows are there for a cold morning with gloves on. */
 function braceMove(t, tr, b, i, n){
   const ea = t.entries.find(e=>e.id===b.a), eb = t.entries.find(e=>e.id===b.b);
   const names = (ea?dogName(ea.dogId):"—") + " / " + (eb?dogName(eb.dogId):"ΜΟΝΟΣ");
-  return `<div class="brief" style="cursor:default">
+  return `<div class="brief drag" data-drag="${tr.id}|${b.id}" style="cursor:grab">
+    <span class="grip" aria-hidden="true">⠿</span>
     <span class="n">${b.no}</span>
     <span class="who"><b>${esc(names)}</b>
       ${b.manual?`<span class="tiny">χειροκίνητη αλλαγή</span>`:""}</span>
@@ -1569,6 +1607,65 @@ function braceMove(t, tr, b, i, n){
         aria-label="Κάτω" style="width:52px;padding:0">↓</button>
     </span>
   </div>`;
+}
+/* Pointer events, so one path covers a mouse and a thumb. The row follows the
+   finger, the others slide out of the way, and the drop lands where the gap is.
+   Buttons inside the row keep working — a drag only starts past a few pixels. */
+function dragReorder(ev){
+  const row = ev.target.closest("[data-drag]");
+  if(!row || ev.target.closest("button")) return;
+  const list = row.parentElement;
+  const rows = [...list.querySelectorAll("[data-drag]")];
+  const from = rows.indexOf(row);
+  const [tid, bid] = row.dataset.drag.split("|");
+  const startY = ev.clientY;
+  const h = row.getBoundingClientRect().height;
+  let moved = false, to = from;
+
+  const onMove = e=>{
+    const dy = e.clientY - startY;
+    if(!moved && Math.abs(dy) < 6) return;
+    if(!moved){ moved = true; row.classList.add("dragging");
+                row.setPointerCapture && row.setPointerCapture(e.pointerId);
+                document.body.style.userSelect = "none"; }
+    e.preventDefault();
+    to = Math.max(0, Math.min(rows.length - 1, from + Math.round(dy / h)));
+    row.style.transform = "translateY(" + dy + "px)";
+    rows.forEach((r, i)=>{
+      if(r === row) return;
+      let shift = 0;
+      if(from < to && i > from && i <= to) shift = -h;
+      if(from > to && i >= to && i < from) shift = h;
+      r.style.transform = shift ? "translateY(" + shift + "px)" : "";
+    });
+  };
+  const onUp = ()=>{
+    document.removeEventListener("pointermove", onMove);
+    document.removeEventListener("pointerup", onUp);
+    document.removeEventListener("pointercancel", onUp);
+    document.body.style.userSelect = "";
+    rows.forEach(r=>{ r.style.transform = ""; r.classList.remove("dragging"); });
+    if(!moved || to === from) return;
+    const t = trialById(S.trialId); if(!t) return;
+    const terr = t.days[S.day].terrains.find(x=>x.id === tid); if(!terr) return;
+    const bs = terr.braces || [];
+    const idx = bs.findIndex(x=>x.id === bid); if(idx < 0) return;
+    const [b] = bs.splice(idx, 1);
+    bs.splice(to, 0, b);
+    renumberAndMark(t, terr, bs, b);
+  };
+  document.addEventListener("pointermove", onMove, {passive:false});
+  document.addEventListener("pointerup", onUp);
+  document.addEventListener("pointercancel", onUp);
+}
+/* Άρθρο 16: the order may be changed, never silently. Numbering is positional,
+   so brace 1 dropped three places down becomes brace 4, and the move is stamped
+   on the braces it touched and printed on the draw list. */
+function renumberAndMark(t, tr, bs, moved){
+  const stamp = {by:"Πρόεδρος Κριτών", at:new Date().toLocaleString("el-GR")};
+  bs.forEach((x, k)=>{ x.no = k + 1; });
+  moved.manual = stamp;
+  save(); render();
 }
 
 /* collapsed: a number and two names, which is all you need to know where you are */
@@ -1609,9 +1706,9 @@ function tBraces(t){
     <button class="b-sm ${S.reorder?"tog on":""}" data-act="toggleReorder"
       style="align-self:flex-end">Αναδιάταξη</button>
   </div>
-  ${S.reorder?`<div class="note">Μετακινήστε ένα ζεύγος πάνω ή κάτω. Η αρίθμηση ακολουθεί τη θέση:
-    το ζεύγος 1 που κατεβαίνει τρεις θέσεις γίνεται ζεύγος 4. Κάθε μετακίνηση σημειώνεται ως
-    χειροκίνητη αλλαγή και τυπώνεται στη λίστα.</div>`:""}
+  ${S.reorder?`<div class="note">Σύρετε ένα ζεύγος στη θέση του, ή μετακινήστε το με τα βελάκια.
+    Η αρίθμηση ακολουθεί τη θέση: το ζεύγος 1 που κατεβαίνει τρεις θέσεις γίνεται ζεύγος 4.
+    Κάθε μετακίνηση σημειώνεται ως χειροκίνητη αλλαγή και τυπώνεται στη λίστα (Άρθρο 16).</div>`:""}
   ${printHd}
   ${terrains.map(tr=>{
     const braces = tr.braces||[];
@@ -2652,25 +2749,34 @@ function dlgAssign(t, terrainId){
   day.terrains.forEach(o=>{ if(o.id!==tr.id) (o.entryIds||[]).forEach(id=>{ whereElse[id] = o.name; }); });
   const active = t.entries.filter(e=>e.status==="ΔΗΛΩΜΕΝΟΣ");
 
+  /* A dog runs on one terrain. One already on another is shown but cannot be
+     taken from here — the head judge frees him there first, so a dog is never
+     quietly pulled out of a terrain he was put in on purpose. */
   const rows = active.map(e=>{
     const d = dogById(e.dogId) || {};
     const conflict = judgeConflict(tr, e, t);
     const taken = whereElse[e.id];
     return `<button class="tog assign ${here.has(e.id)?"on":""}" data-pick="${e.id}"
-      style="width:100%;justify-content:flex-start;text-align:left;min-height:52px;margin-bottom:6px">
+      ${taken?"disabled":""}
+      style="width:100%;justify-content:flex-start;text-align:left;min-height:52px;margin-bottom:6px${
+        taken?";opacity:.5":""}">
       <span style="flex:1;min-width:0">
         <b style="display:block;font:600 17px/1.2 var(--f-b)">${esc(d.name||"—")}</b>
-        <span class="tiny" style="color:inherit;opacity:.75">${esc(d.breed||"")}${d.sex?" · "+d.sex:""} · ${esc(perName(e.handlerId))}${
-          taken?` · τώρα στο ${esc(taken)}`:""}</span>
+        <span class="tiny" style="color:inherit;opacity:.75">${esc(d.breed||"")}${d.sex?" · "+d.sex:""} · ${esc(perName(e.handlerId))}</span>
       </span>
+      ${taken?`<span class="chip n" style="flex:none">${esc(taken)}</span>`:""}
       ${conflict?`<span class="chip r" style="flex:none">ΑΡΘΡΟ 49</span>`:""}
     </button>`;
   }).join("");
+  const elsewhereN = active.filter(e=>whereElse[e.id]).length;
 
   dlg(`<div class="eyebrow">${esc(tr.name)}</div>
   <h2>Ανάθεση σκύλων</h2>
   <p class="muted">Επιλέξτε ποιοι σκύλοι τρέχουν σε αυτό το τερέν. Όσοι δεν ανατεθούν πουθενά
-    κατανέμονται από την κλήρωση. Ένας σκύλος ανήκει σε ένα μόνο τερέν.</p>
+    κατανέμονται από την κλήρωση.</p>
+  ${elsewhereN?`<div class="note" style="margin-top:12px">Ένας σκύλος τρέχει σε ένα μόνο τερέν.
+    ${elsewhereN} ${elsewhereN===1?"σκύλος είναι":"σκύλοι είναι"} ήδη σε άλλο τερέν και
+    ${elsewhereN===1?"εμφανίζεται":"εμφανίζονται"} κλειδωμένοι· βγάλτε τους από εκεί πρώτα.</div>`:""}
   ${active.length ? `<div style="max-height:52vh;overflow:auto;margin-top:14px">${rows}</div>`
     : `<div class="empty">Καμία δηλωμένη συμμετοχή. Προσθέστε συμμετοχές πρώτα.</div>`}
   <div class="err" id="assignWarn" style="display:none;margin-top:12px"></div>
@@ -3471,10 +3577,8 @@ document.addEventListener("click", ev=>{
     const i = bs.findIndex(b=>b.id===bid), j = i + (+dir);
     if(i < 0 || j < 0 || j >= bs.length) return;
     [bs[i], bs[j]] = [bs[j], bs[i]];
-    const stamp = {by:"Πρόεδρος Κριτών", at:new Date().toLocaleString("el-GR")};
-    bs[i].manual = stamp; bs[j].manual = stamp;
-    bs.forEach((b,k)=>{ b.no = k + 1; });
-    save(); render();
+    bs[j].manual = {by:"Πρόεδρος Κριτών", at:new Date().toLocaleString("el-GR")};
+    renumberAndMark(t, tr, bs, bs[i]);
     return; }
 
   if(d.swap){ dlgSwap(t, d.swap); return; }
@@ -3539,6 +3643,11 @@ document.addEventListener("click", ev=>{
   if(d.smsdone){ t.sms[d.smsdone] = t.sms[d.smsdone]==="ΕΣΤΑΛΗ" ? "" : "ΕΣΤΑΛΗ"; save(); render(); return; }
 
   ACT[d.act] && ACT[d.act](el2, t);
+});
+
+document.addEventListener("pointerdown", ev=>{
+  if(ev.button !== undefined && ev.button !== 0) return;
+  if(ev.target.closest("[data-drag]")) dragReorder(ev);
 });
 
 document.addEventListener("change", ev=>{
@@ -3691,6 +3800,19 @@ const ACT = {
     const terrains = day.terrains.filter(tr=>!S.judgeFilter || tr.judgeIds.includes(S.judgeFilter));
     if(!day.draw || !terrains.length) return window.print();
     printSheets(terrains.map(tr=>drawSheet(t, day, tr)).join(""));
+  },
+  rotateDraw: (btn, t)=>{
+    const day = t.days[S.day], prev = t.days[S.day-1];
+    if(!prev || !prev.draw) return toast("Η προηγούμενη ημέρα δεν έχει κληρωθεί");
+    const two = day.terrains.length === 2;
+    if(day.draw && !confirmAct("Υπάρχει ήδη κλήρωση για την ημέρα αυτή. "
+      + "Θα ακυρωθεί και θα γίνει νέα με "
+      + (two ? "αντεστραμμένα" : "περιστραμμένα") + " τερέν. Συνέχεια;")) return;
+    const seed = (el("seedIn") && el("seedIn").value.trim()) || drawCode(t);
+    const r = runDraw(t, S.day, seed, "ΠΕΡΙΣΤΡΟΦΗ");
+    if(r.error){ alert(r.error); return; }
+    save(); S.reveal = 0; render(); revealBraces(t);
+    if(r.warn && r.warn.length) setTimeout(()=>alert("Προσοχή:\n\n"+r.warn.join("\n")), 400);
   },
   printDraw: (btn, t)=>{
     const day = t.days[S.day];
@@ -4001,7 +4123,8 @@ const ACT = {
     const A = window._assign; if(!A) return;
     const day = t.days[S.day];
     const tr = day.terrains.find(x=>x.id===btn.dataset.id); if(!tr) return;
-    /* a dog belongs to one terrain, so taking him here takes him from there */
+    /* belt and braces: the picker will not offer a dog who is on another terrain,
+       but if one ever slips through he still leaves only one place */
     day.terrains.forEach(o=>{ if(o.id !== tr.id)
       o.entryIds = (o.entryIds||[]).filter(id=>!A.picked.has(id)); });
     tr.entryIds = [...A.picked];
