@@ -317,6 +317,30 @@ asks for and would rather ask than guess at it.
   on. Numbering is positional either way, so brace 1 dropped three places down becomes brace 4, the
   move is stamped as a χειροκίνητη αλλαγή and printed on the draw list (Άρθρο 16).
 
+## Ninth round
+
+- **Wild game is the default.** The club's trials are run on wild birds; a released bird is the
+  exception. A new trial now opens with «Άγριο θήραμα · Ναι», which also means the coefficient is
+  right (ζεύγη ×2 · άγριο ×2 = ×4) without anyone remembering to set it. A saved trial keeps
+  whatever it was saved with.
+- **The import was there and nobody could find it.** «Φόρτωση αρχείου» lived in Ρυθμίσεις and on a
+  trial's Εξαγωγές — never on the screen a second device actually opens on. It is now on **Αγώνες**,
+  in the header and in the empty state, because the first move on a phone that was just sent a
+  trial is not "make a new one".
+- ***And the picker was filtering itself shut.*** The file input carried
+  `accept=".json,application/json"`. A `.json` that arrives through WhatsApp or Viber often reaches
+  the phone with no type iOS recognises, and an accept filter greys those files out — so the button
+  opened a picker in which the very file you wanted could not be chosen. The filter is gone;
+  anything can be picked and the content is validated on read, with a message naming the file it
+  expects.
+- **Three ways in.** The picker; **dropping the file on the window** on a laptop, with the page
+  saying so as you drag; and **«Επικόλληση»** for the phone that will not hand a file over at all —
+  open it in the messaging app, copy the text, paste it. All three go through one loader, so the
+  merge-or-replace question and the content count are identical.
+- **Εγκατάσταση now says how**, per device: on iPhone save the file to Αρχεία from the share sheet
+  first; on Android it is in Λήψεις; on a laptop drag it onto the page. And which answer to give the
+  merge question — in the field it is almost always συγχώνευση.
+
 ## Deliberate departures from the canvas
 
 - **Offline chip.** The canvas shows «Εκτός σύνδεσης – 6 αλλαγές σε αναμονή». There is no server

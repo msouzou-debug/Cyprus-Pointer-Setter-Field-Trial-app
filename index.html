@@ -300,6 +300,11 @@ hr{border:0;border-top:1px solid var(--line);margin:var(--s4) 0}
 .entry-row .acts{display:flex;align-items:center;gap:6px;flex:0 0 auto;margin-left:auto;flex-wrap:wrap;
   justify-content:flex-end}
 .card.handler{break-inside:avoid}
+/* a file dragged over the window is about to be loaded, so say so */
+body.dropping::after{content:"Αφήστε το αρχείο για φόρτωση";position:fixed;inset:0;
+  z-index:60;display:flex;align-items:center;justify-content:center;pointer-events:none;
+  background:rgba(30,43,77,.86);color:#fff;font:600 22px/1.3 var(--f-d);text-align:center;
+  padding:40px}
 /* reordering: the row is the handle, so it says so and it moves */
 .brief.drag{touch-action:none;transition:transform .12s ease}
 .brief.drag .grip{flex:none;color:var(--slate-2);font-size:19px;line-height:1;
@@ -943,10 +948,20 @@ function render(){
 function vTrials(){
   const head = `<div class="row" style="align-items:flex-end;gap:16px;margin-bottom:18px">
     <div class="grow"><div class="eyebrow">Κ.Ο.Α.Δ.</div><h1 style="margin:0">Αγώνες</h1></div>
+    <button data-act="restore">Φόρτωση αρχείου</button>
     <button class="b-act" data-act="newTrial">Νέος αγώνας</button></div>`;
+  /* The commonest first move on a second device is not "make a trial" — it is
+     "take the one that was sent to me", so that button is on the screen the app
+     opens on, not three taps inside Ρυθμίσεις. */
   if(!DB.trials.length) return head + `<div class="empty"><h2>Κανένας αγώνας ακόμη</h2>
-    Δημιουργήστε τον πρώτο αγώνα για να ξεκινήσετε την κλήρωση. Το μητρώο σκύλων
-    μπορεί να γεμίσει πρώτο, από το Μητρώο ή με εισαγωγή αρχείου Excel.</div>`;
+    <p class="muted">Δημιουργήστε τον πρώτο αγώνα, ή φορτώστε ένα αρχείο που σας έστειλαν
+      από άλλη συσκευή.</p>
+    <div class="row tight" style="justify-content:center;margin-top:16px">
+      <button class="b-pri" data-act="newTrial">Νέος αγώνας</button>
+      <button data-act="restore">Φόρτωση αρχείου</button>
+      <button class="b-sm" data-act="restorePaste">Επικόλληση</button></div>
+    <p class="tiny" style="margin-top:16px">Το μητρώο σκύλων μπορεί να γεμίσει πρώτο, από το
+      Μητρώο ή με εισαγωγή αρχείου Excel.</p></div>`;
   const card = t=>{
     const n = t.entries.filter(e=>e.status==="ΔΗΛΩΜΕΝΟΣ").length;
     const drawn = t.days.some(d=>d.draw);
@@ -2265,6 +2280,7 @@ function tExport(t){
       <button class="b-pri" data-act="shareTrial">Αποστολή αγώνα</button>
       <button data-act="backup">Λήψη πλήρους αντιγράφου</button>
       <button data-act="restore">Φόρτωση αρχείου</button>
+      <button class="b-sm" data-act="restorePaste">Επικόλληση</button>
     </div></div>
 
   ${closeCard(t)}`;
@@ -2658,7 +2674,9 @@ function dlgTrial(t){
   <div class="row">${sel("t_type","Είδος",TYPES,t.type||"Έρευνας Κυνηγίου")}
     ${sel("t_format","Μορφή",[["ΖΕΥΓΗ","Ζεύγη"],["ΑΤΟΜΙΚΟΣ","Ατομικός"]],t.format||"ΖΕΥΓΗ")}</div>
   <div class="row">${fld("t_game","Θήραμα",t.game||"Πέρδικα")}
-    ${sel("t_wild","Άγριο θήραμα",[["1","Ναι"],["0","Όχι"]],t.wild?"1":"0")}</div>
+    ${sel("t_wild","Άγριο θήραμα",[["1","Ναι"],["0","Όχι"]],
+      /* the club's trials are on wild game; a released bird is the exception */
+      (t.id ? t.wild : true) ? "1" : "0")}</div>
   <div class="row">${sel("t_award","Αθλοθέτηση",["-","CACT","CACIT"],t.award||"-")}
     ${fld("t_place","Τοποθεσία",t.place)}</div>
   <div class="row">${fld("t_d1","Ημερομηνία έναρξης",t.dateStart||today(),"date")}
@@ -4299,26 +4317,31 @@ const ACT = {
   backupReg: ()=>download(`KOAD_mitroo_${today()}.json`,"application/json",
     JSON.stringify({v:1, people:DB.people, judges:DB.judges, dogs:DB.dogs, trials:[], settings:DB.settings},null,1)),
   restore: ()=>{
-    const i = document.createElement("input"); i.type="file"; i.accept=".json,application/json";
-    i.onchange = () => { const f=i.files[0]; if(!f) return;
-      const r = new FileReader();
-      r.onload = () => {
-        let inc; try{ inc = JSON.parse(r.result); }catch(e){ return alert("Μη έγκυρο αρχείο."); }
-        if(!inc || !Array.isArray(inc.dogs)) return alert("Το αρχείο δεν είναι αντίγραφο της εφαρμογής.");
-        const counts = `${(inc.dogs||[]).length} σκύλοι, ${(inc.people||[]).length} κυναγωγοί, `
-                     + `${(inc.judges||[]).length} κριτές, ${(inc.trials||[]).length} αγώνες`;
-        const merge = window.confirm(
-          "Το αρχείο περιέχει: " + counts + "\n\n"
-          + "ΟΚ = Συγχώνευση (κρατά τα υπάρχοντα, προσθέτει και ενημερώνει)\n"
-          + "Άκυρο = Αντικατάσταση όλων (σβήνει ό,τι υπάρχει στη συσκευή)");
-        if(!merge && !window.confirm("Σίγουρα αντικατάσταση; Ό,τι υπάρχει σε αυτή τη συσκευή θα χαθεί.")) return;
-        if(merge) mergeDB(inc); else DB = inc;
-        DB.settings = Object.assign({}, DEFAULT_SETTINGS, DB.settings||{});
-        migrate(); save(); S={view:"trials",tab:"entries",day:0,judgeFilter:""};
-        render(); toast(merge ? "Τα δεδομένα συγχωνεύτηκαν" : "Τα δεδομένα αντικαταστάθηκαν");
-      };
-      r.readAsText(f); };
+    /* No accept filter. A .json that arrived through WhatsApp or Viber often
+       carries no type iOS recognises, and the picker greys it out — better to
+       let anything be chosen and say clearly when it is the wrong file. */
+    const i = document.createElement("input"); i.type = "file";
+    i.onchange = () => { const f = i.files[0]; if(f) readBackup(f); };
     i.click();
+  },
+  /* The same thing from text, for the phone that will not hand the file over:
+     open it in the messaging app, select all, copy, paste here. */
+  restorePaste: ()=>{
+    dlg(`<h2>Επικόλληση αντιγράφου</h2>
+    <p class="muted">Αν το τηλέφωνο δεν σας αφήνει να διαλέξετε το αρχείο, ανοίξτε το στην
+      εφαρμογή μηνυμάτων, αντιγράψτε όλο το κείμενο και επικολλήστε το εδώ.</p>
+    <div class="row" style="margin-top:12px"><div class="grow"><label>Περιεχόμενο αρχείου</label>
+      <textarea id="pasteIn" style="min-height:160px;font:400 13px/1.4 var(--f-m)"
+        placeholder='{"v":1,"people":[…'></textarea></div></div>
+    <div class="row" style="margin-top:12px">
+      <button class="b-pri grow" data-act="doPaste">Φόρτωση</button>
+      <button class="grow" data-act="close">Άκυρο</button></div>`);
+  },
+  doPaste: ()=>{
+    const txt = (el("pasteIn")||{}).value || "";
+    if(!txt.trim()) return toast("Επικολλήστε πρώτα το περιεχόμενο");
+    closeDlg();
+    loadBackup(txt);
   },
   wipe: ()=>{ if(!confirmAct("Διαγραφή ΟΛΩΝ των δεδομένων; Δεν αναιρείται.")) return;
     DB = blank(); save(); S={view:"trials",tab:"entries",day:0,judgeFilter:""}; render(); },
@@ -4350,6 +4373,41 @@ function ensureJudge(name, phone){
   if(phone && !j.phone) j.phone = phone;
   return j.id;
 }
+/* One route in, whether the backup arrived as a file, a drop or a paste. */
+function readBackup(file){
+  const r = new FileReader();
+  r.onload = () => loadBackup(r.result);
+  r.onerror = () => alert("Το αρχείο δεν διαβάστηκε.");
+  r.readAsText(file);
+}
+function loadBackup(text){
+  let inc;
+  try{ inc = JSON.parse(text); }
+  catch(e){ return alert("Το αρχείο δεν είναι αντίγραφο της εφαρμογής.\n\n"
+    + "Περιμένει ένα αρχείο .json από «Λήψη πλήρους αντιγράφου» ή «Αποστολή αγώνα»."); }
+  if(!inc || !Array.isArray(inc.dogs))
+    return alert("Το αρχείο δεν είναι αντίγραφο της εφαρμογής.");
+  const counts = `${(inc.dogs||[]).length} σκύλοι, ${(inc.people||[]).length} κυναγωγοί, `
+               + `${(inc.judges||[]).length} κριτές, ${(inc.trials||[]).length} αγώνες`;
+  const merge = window.confirm(
+    "Το αρχείο περιέχει: " + counts + "\n\n"
+    + "ΟΚ = Συγχώνευση (κρατά τα υπάρχοντα, προσθέτει και ενημερώνει)\n"
+    + "Άκυρο = Αντικατάσταση όλων (σβήνει ό,τι υπάρχει στη συσκευή)");
+  if(!merge && !window.confirm("Σίγουρα αντικατάσταση; Ό,τι υπάρχει σε αυτή τη συσκευή θα χαθεί.")) return;
+  if(merge) mergeDB(inc); else DB = inc;
+  DB.settings = Object.assign({}, DEFAULT_SETTINGS, DB.settings||{});
+  migrate(); save(); S = {view:"trials", tab:"entries", day:0, judgeFilter:""};
+  render(); toast(merge ? "Τα δεδομένα συγχωνεύτηκαν" : "Τα δεδομένα αντικαταστάθηκαν");
+}
+/* Dropping the file on the window works too, which is what a laptop invites. */
+addEventListener("dragover", e=>{ e.preventDefault(); document.body.classList.add("dropping"); });
+addEventListener("dragleave", e=>{ if(e.relatedTarget) return; document.body.classList.remove("dropping"); });
+addEventListener("drop", e=>{
+  e.preventDefault(); document.body.classList.remove("dropping");
+  const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+  if(f) readBackup(f);
+});
+
 function mergeDB(inc){
   ["people","judges","dogs","trials"].forEach(k=>{
     DB[k] = DB[k] || [];
@@ -5175,6 +5233,26 @@ function vInstall(){
     <p class="tiny" style="margin-top:10px">${hosted
       ? "Η εφαρμογή τρέχει ήδη σε διεύθυνση και τη χρησιμοποιεί. Το πεδίο χρησιμεύει μόνο αν θέλετε να μοιράζεστε άλλη."
       : "Χωρίς αυτή, η εφαρμογή δεν ξέρει πού βρίσκεται."}</p>
+  </div>
+
+  <div class="card">
+    <div class="eyebrow">Φόρτωση αρχείου από άλλη συσκευή</div>
+    <p class="tiny">Ο αγώνας ταξιδεύει ως αρχείο <code>.json</code>. Όποιος τον έστειλε πάτησε
+      «Αποστολή αγώνα» ή «Λήψη πλήρους αντιγράφου»· εσείς τον φορτώνετε εδώ.</p>
+    <div class="row tight" style="margin-top:12px">
+      <button class="b-pri" data-act="restore">Φόρτωση αρχείου</button>
+      <button data-act="restorePaste">Επικόλληση κειμένου</button>
+    </div>
+    <div class="tiny" style="margin-top:14px;line-height:1.9">
+      <b>iPhone:</b> στο WhatsApp ή στο Viber πατήστε το αρχείο → Κοινή χρήση → Αποθήκευση στα
+      Αρχεία. Μετά εδώ: Φόρτωση αρχείου → Αναζήτηση → βρείτε το.<br>
+      <b>Android:</b> το αρχείο κατεβαίνει στις Λήψεις. Φόρτωση αρχείου → Λήψεις.<br>
+      <b>Υπολογιστής:</b> Φόρτωση αρχείου, ή σύρετε το αρχείο πάνω στη σελίδα.<br>
+      Αν το τηλέφωνο δεν σας αφήνει να το διαλέξετε, ανοίξτε το αρχείο, αντιγράψτε όλο το
+      κείμενο και χρησιμοποιήστε την «Επικόλληση κειμένου».</div>
+    <div class="tiny" style="margin-top:10px"><b>Συγχώνευση ή αντικατάσταση;</b> Η συγχώνευση
+      κρατά ό,τι υπάρχει και προσθέτει· η αντικατάσταση σβήνει τη συσκευή. Στο τερέν θέλετε
+      σχεδόν πάντα συγχώνευση.</div>
   </div>
 
   <div class="split">
