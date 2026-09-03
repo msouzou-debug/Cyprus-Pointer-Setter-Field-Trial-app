@@ -341,6 +341,35 @@ asks for and would rather ask than guess at it.
   first; on Android it is in Λήψεις; on a laptop drag it onto the page. And which answer to give the
   merge question — in the field it is almost always συγχώνευση.
 
+## Tenth round
+
+- **Λήψη and Φόρτωση moved into the bar.** They now sit at the right of the navigation, next to
+  Στατιστικά, on every screen, and nowhere else. The tabs scroll sideways on a phone; the two
+  transfer buttons never do. Ρυθμίσεις keeps only the two odd ones — «Λήψη μόνο μητρώου» and the
+  paste fallback — and says where the others went. The open tab is scrolled into view on every
+  render, so the bar's right-hand buttons never cover it.
+- **The statistics table filters.** Five dropdowns — έτος, μήνας, είδος αγώνα, κυναγωγός, σκύλος —
+  offering only what is actually in the record, so no choice leads to an empty table by accident.
+  A trial that ends up with nothing in it drops its column rather than standing there empty, and a
+  filter that matches nothing says so instead of showing a bare grid.
+- **The Excel follows the filter.** One slice feeds both the screen and the workbook, and when a
+  filter is on the file gains a «Φίλτρο» sheet naming it and a filename carrying it — a month of a
+  season cannot be mistaken for the season.
+- **Πληρωμές per trial.** Εξαγωγές now carries an Excel of who paid and who did not, ανά κυναγωγό,
+  with phone numbers to ring them on, and a second sheet holding only the απλήρωτοι. The totals are
+  `COUNTIF` formulas, not numbers the app baked in.
+- **Ώρα προσέλευσης.** A trial carries a time as well as a date. It shows on the trial card, on the
+  trial screen, on the printed order and — with the τοποθεσία — in every SMS.
+- **The SMS header takes {ΤΟΠΟΘΕΣΙΑ} and {ΩΡΑ}.** A club that has not put them in its template gets
+  them on their own line anyway: no message goes out without πού and πότε. A field that is empty
+  takes its whole segment with it, so «{ΤΟΠΟΘΕΣΙΑ} · ώρα {ΩΡΑ}» with no time set does not go out
+  reading «Κάτω Μονή · ώρα». Ρυθμίσεις shows the composed header for the latest trial.
+- ***One Greek letter was losing every downloaded file.*** Chromium throws away the whole `download`
+  filename if it holds a single non-ASCII character: the file lands as `download`, with no
+  extension, and Excel then refuses to open it. Every αγώνας has a Greek name, so every workbook
+  and CSV the app has ever produced for a real trial was arriving nameless. Filenames are now
+  transliterated — ΚΑΤΩ ΜΟΝΗ becomes `KATO_MONI` — and the extension survives.
+
 ## Deliberate departures from the canvas
 
 - **Offline chip.** The canvas shows «Εκτός σύνδεσης – 6 αλλαγές σε αναμονή». There is no server

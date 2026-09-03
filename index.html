@@ -114,13 +114,21 @@ header img{width:40px;height:40px;border-radius:50%;flex:0 0 auto;background:#ff
 .offline.warn{background:var(--bad);border-color:var(--bad);color:#fff}
 
 /* ---------- nav ---------- */
-nav{display:flex;overflow-x:auto;background:var(--navy-d);
-  position:sticky;top:calc(60px + env(safe-area-inset-top));z-index:39;scrollbar-width:none}
-nav::-webkit-scrollbar{display:none}
+/* Two parts: the tabs scroll sideways on a phone, the transfer buttons never do.
+   Λήψη and Φόρτωση are the two things a head judge hunts for on the morning of
+   an αγώνας, so they sit in the bar and stay put. */
+nav{display:flex;background:var(--navy-d);
+  position:sticky;top:calc(60px + env(safe-area-inset-top));z-index:39}
+nav .tabs{display:flex;overflow-x:auto;flex:1 1 auto;min-width:0;scrollbar-width:none}
+nav .tabs::-webkit-scrollbar{display:none}
+nav .tools{display:flex;flex:0 0 auto;border-left:1px solid #ffffff26;background:var(--navy-d)}
 nav button{background:none;border:0;color:#ffffff8c;font:400 16px/1 var(--f-b);
   padding:14px 16px;min-height:var(--tap);white-space:nowrap;
   border-bottom:3px solid transparent;cursor:pointer}
 nav button.on{color:#fff;font-weight:600;border-bottom-color:var(--setter)}
+nav .tools button{color:#fff;font-size:14px;padding:14px 12px;display:flex;align-items:center;gap:6px}
+nav .tools button b{font:700 15px/1 var(--f-b)}
+@media(max-width:520px){ nav .tools button{padding:14px 10px;font-size:13px} }
 
 main{padding:var(--s4);max-width:1240px;margin:0 auto}
 
@@ -589,7 +597,8 @@ const FAULTS = ["Συνειδητό ξεσήκωμα","Κουτούλημα","Π
   "Τρεις λευκές σε διαφορετική κατεύθυνση","Άρνηση συναίνεσης","Κροτοφοβία","Θηραματοφοβία",
   "Κλαφούνισμα","Ανεπαρκής έρευνα","Παρενόχληση συνδιαγωνιζόμενου","Καταδίωξη επί μακρόν",
   "Άρνηση πονταρίσματος","Πτώση ρυθμού"];
-const DEFAULT_SMS = `Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}`;
+const DEFAULT_SMS = `Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}
+{ΤΟΠΟΘΕΣΙΑ} · ώρα {ΩΡΑ}`;
 const DEFAULT_SMS_FOOT = `Η σειρά είναι ενδεικτική (Άρθρο 16). Να είστε στη διάθεση των κριτών.`;
 const DEFAULT_SETTINGS = { sms:DEFAULT_SMS, smsFoot:DEFAULT_SMS_FOOT, smsMode:"full", appUrl:"",
   smsJudges:true, points:{...DEFAULT_POINTS},
@@ -677,12 +686,27 @@ function toast(msg){
 /* the badge, once, so the dog page and the printed sheets can carry it too */
 const BADGE = document.querySelector("header img").getAttribute("src");
 function confirmAct(msg){ return window.confirm(msg); }
+/* One Greek letter in the filename and Chromium throws the whole name away: the
+   file lands as «download», with no extension, and then Excel refuses to open it.
+   Every αγώνας has a Greek name, so the name is transliterated before it is
+   offered — ΚΑΤΩ ΜΟΝΗ becomes KATO_MONI and the file opens. */
+const GR_LAT = {α:"a",β:"v",γ:"g",δ:"d",ε:"e",ζ:"z",η:"i",θ:"th",ι:"i",κ:"k",λ:"l",μ:"m",
+  ν:"n",ξ:"x",ο:"o",π:"p",ρ:"r",σ:"s",ς:"s",τ:"t",υ:"y",φ:"f",χ:"ch",ψ:"ps",ω:"o"};
+function safeName(name){
+  const out = String(name||"").normalize("NFD").replace(/[̀-ͯ]/g,"")
+    .split("").map(ch=>{
+      const low = ch.toLowerCase(), lat = GR_LAT[low];
+      if(lat) return ch === low ? lat : lat.toUpperCase();
+      return /[A-Za-z0-9._-]/.test(ch) ? ch : "_";
+    }).join("").replace(/_{2,}/g,"_").replace(/^_+/,"");
+  return out && out !== "." ? out : "KOAD";
+}
 function download(name, mime, content){
   /* text gets a charset; a workbook is bytes and must not be labelled as text */
   const binary = content instanceof Uint8Array;
   const b = new Blob([content], {type: binary ? mime : mime + ";charset=utf-8"});
   const a = document.createElement("a");
-  a.href = URL.createObjectURL(b); a.download = name; a.click();
+  a.href = URL.createObjectURL(b); a.download = safeName(name); a.click();
   setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
 }
 function phoneClean(p){ return String(p||"").replace(/[^\d+]/g,""); }
@@ -911,8 +935,19 @@ let S = {view:"trials", trialId:null, tab:"entries", day:0, judgeFilter:"", dogI
 function nav(){
   const tabs = [["trials","Αγώνες"],["registry","Μητρώο"],["stats","Στατιστικά"],
                 ["install","Εγκατάσταση"],["settings","Ρυθμίσεις"]];
-  el("nav").innerHTML = tabs.map(([k,l])=>
-    `<button data-nav="${k}" class="${S.view===k||(S.view==="trial"&&k==="trials")?"on":""}">${l}</button>`).join("");
+  /* The two transfer buttons live in the bar itself, next to Στατιστικά, and are
+     on every screen. They were buried three taps inside Ρυθμίσεις, which is the
+     last place anyone looks while the κυναγωγοί are waiting. */
+  el("nav").innerHTML = `<div class="tabs">${tabs.map(([k,l])=>
+    `<button data-nav="${k}" class="${S.view===k||(S.view==="trial"&&k==="trials")?"on":""}">${l}</button>`).join("")}</div>
+    <div class="tools noprint">
+      <button data-act="backup" title="Λήψη πλήρους αντιγράφου"><b>↓</b><span>Λήψη</span></button>
+      <button data-act="restore" title="Φόρτωση αρχείου από άλλη συσκευή"><b>↑</b><span>Φόρτωση</span></button>
+    </div>`;
+  /* the strip of tabs is narrower than the words on a phone, so bring the open
+     one into view instead of leaving it half under the transfer buttons */
+  const strip = el("nav").querySelector(".tabs"), on = strip.querySelector("button.on");
+  if(on) strip.scrollLeft = Math.max(0, on.offsetLeft - (strip.clientWidth - on.offsetWidth) / 2);
 }
 
 /* The storage bar. It sits under the navigation, it does not scroll away and it
@@ -948,18 +983,16 @@ function render(){
 function vTrials(){
   const head = `<div class="row" style="align-items:flex-end;gap:16px;margin-bottom:18px">
     <div class="grow"><div class="eyebrow">Κ.Ο.Α.Δ.</div><h1 style="margin:0">Αγώνες</h1></div>
-    <button data-act="restore">Φόρτωση αρχείου</button>
     <button class="b-act" data-act="newTrial">Νέος αγώνας</button></div>`;
   /* The commonest first move on a second device is not "make a trial" — it is
-     "take the one that was sent to me", so that button is on the screen the app
-     opens on, not three taps inside Ρυθμίσεις. */
+     "take the one that was sent to me". That button is now in the bar at the top
+     of every screen, so here it is only named, not repeated. */
   if(!DB.trials.length) return head + `<div class="empty"><h2>Κανένας αγώνας ακόμη</h2>
-    <p class="muted">Δημιουργήστε τον πρώτο αγώνα, ή φορτώστε ένα αρχείο που σας έστειλαν
-      από άλλη συσκευή.</p>
+    <p class="muted">Δημιουργήστε τον πρώτο αγώνα, ή πατήστε <b>↑ Φόρτωση</b> πάνω δεξιά για
+      αρχείο που σας έστειλαν από άλλη συσκευή.</p>
     <div class="row tight" style="justify-content:center;margin-top:16px">
       <button class="b-pri" data-act="newTrial">Νέος αγώνας</button>
-      <button data-act="restore">Φόρτωση αρχείου</button>
-      <button class="b-sm" data-act="restorePaste">Επικόλληση</button></div>
+      <button class="b-sm" data-act="restorePaste">Επικόλληση κειμένου</button></div>
     <p class="tiny" style="margin-top:16px">Το μητρώο σκύλων μπορεί να γεμίσει πρώτο, από το
       Μητρώο ή με εισαγωγή αρχείου Excel.</p></div>`;
   const card = t=>{
@@ -971,7 +1004,7 @@ function vTrials(){
         <h3 class="grow" style="margin:0">${esc(t.title)}</h3>
         <span class="chip ${done?"g":drawn?"n":""}">${esc(t.status)}</span></div>
       <div class="muted" style="margin-top:6px">${esc(t.type)} · ${t.format==="ΖΕΥΓΗ"?"ζεύγη":"ατομικός"} · ${esc(t.game||"—")}${t.award!=="-"?" · "+esc(t.award):""}</div>
-      <div class="muted num">${fmtDate(t.dateStart)} · ${esc(t.place||"—")} · ${n} ${n===1?"σκύλος":"σκύλοι"}${
+      <div class="muted num">${fmtDate(t.dateStart)}${t.time?" · "+esc(t.time):""} · ${esc(t.place||"—")} · ${n} ${n===1?"σκύλος":"σκύλοι"}${
         t.days.length>1?" · "+t.days.length+" ημέρες":""}</div>
     </div>`;
   };
@@ -1053,7 +1086,8 @@ function vTrial(){
   <h1 style="margin-bottom:6px"><button class="h-edit" data-act="editTrial"
     title="Επεξεργασία αγώνα">${esc(t.title)}</button></h1>
   <div class="muted" style="margin-bottom:14px">${esc(t.type)} · ${t.format==="ΖΕΥΓΗ"?"Ζεύγη":"Ατομικός"}
-   · ${esc(t.game||"—")}${t.wild?" (άγριο θήραμα)":""} · ${fmtDate(t.dateStart)} · ${esc(t.place||"")}
+   · ${esc(t.game||"—")}${t.wild?" (άγριο θήραμα)":""} · ${fmtDate(t.dateStart)}${
+     t.time?" · ώρα "+esc(t.time):""} · ${esc(t.place||"")}
    · Συντελεστής ×${coefficient(t)}</div>
   ${progressStrip(t)}
   ${t.days.length>1?`<div class="row tight noprint" style="margin-bottom:14px">
@@ -1921,7 +1955,8 @@ function printHead(t, day, terrain){
   return `<div class="print-hd">
     <img src="${BADGE}" alt="">
     <div class="t"><b>ΚΥΠΡΙΑΚΟΣ ΟΜΙΛΟΣ ΑΓΓΛΙΚΩΝ ΔΕΙΚΤΩΝ</b>
-      <span>${esc(t.title)} · ${esc(t.type)} · ${esc(t.place||"")} · ${fmtDate(day.date)}</span>
+      <span>${esc(t.title)} · ${esc(t.type)} · ${esc(t.place||"")} · ${fmtDate(day.date)}${
+        t.time?" · ώρα "+esc(t.time):""}</span>
       <span>Η σειρά είναι ενδεικτική — Άρθρο 16.</span></div>
     ${terrain?`<div class="pg">${esc(terrain)}</div>`:""}
   </div>`;
@@ -1953,11 +1988,37 @@ function myRuns(t, handlerId){
   }));
   return out;
 }
+/* The header of every message. Πού and πότε are the two things a κυναγωγός needs
+   at six in the morning, so if the club's template does not name them the app
+   adds the line itself instead of sending a message that leaves them out. */
+function smsHead(t, day){
+  const tpl = DB.settings.sms || DEFAULT_SMS;
+  const val = { "{ΑΓΩΝΑΣ}": t.title || "",
+                "{ΗΜΕΡΟΜΗΝΙΑ}": fmtDate((day||{}).date || t.dateStart),
+                "{ΤΟΠΟΘΕΣΙΑ}": t.place || "",
+                "{ΩΡΑ}": t.time || "" };
+  /* A segment goes away whole when its field is empty: «{ΤΟΠΟΘΕΣΙΑ} · ώρα {ΩΡΑ}»
+     with no ώρα set must not go out reading «Κάτω Μονή · ώρα». */
+  const seg = s => {
+    const holes = s.match(/\{[^}]+\}/g) || [];
+    if(holes.some(h => val[h] !== undefined && !val[h])) return "";
+    return s.replace(/\{[^}]+\}/g, m => val[m] !== undefined ? val[m] : m)
+            .replace(/\s{2,}/g," ").trim();
+  };
+  const lines = tpl.split("\n")
+    .map(l => l.split("·").map(seg).filter(Boolean).join(" · ").trim())
+    .filter(Boolean);
+  if(!/\{ΤΟΠΟΘΕΣΙΑ\}|\{ΩΡΑ\}/.test(tpl)){
+    const bits = [];
+    if(t.place) bits.push(t.place);
+    if(t.time)  bits.push("ώρα " + t.time);
+    if(bits.length) lines.push(bits.join(" · "));
+  }
+  return lines.join("\n");
+}
 function smsBody(t, entry){
   const st = DB.settings;
-  const head = (st.sms||DEFAULT_SMS)
-    .replace(/\{ΑΓΩΝΑΣ\}/g, t.title)
-    .replace(/\{ΗΜΕΡΟΜΗΝΙΑ\}/g, fmtDate(t.days[S.day].date));
+  const head = smsHead(t, t.days[S.day]);
   const mine = myRuns(t, entry.handlerId);
   const L = [head, ""];
   L.push(mine.length===1 ? "Η διαδρομή σας:" : "Οι διαδρομές σας:");
@@ -1982,9 +2043,7 @@ function smsSegments(text){
    the braces they will judge — not the whole day's list. */
 function judgeSmsBody(t, judge){
   const day = t.days[S.day], st = DB.settings;
-  const head = (st.sms||DEFAULT_SMS)
-    .replace(/\{ΑΓΩΝΑΣ\}/g, t.title)
-    .replace(/\{ΗΜΕΡΟΜΗΝΙΑ\}/g, fmtDate(day.date));
+  const head = smsHead(t, day);
   const L = [head, ""];
   (day.terrains||[]).forEach(tr=>{
     if(!(tr.judgeIds||[]).includes(judge.id)) return;
@@ -2036,8 +2095,7 @@ function channelLink(ch, phone, body){
    because a group message has no "you". */
 function commonBody(t){
   const st = DB.settings, day = t.days[S.day];
-  const head = (st.sms||DEFAULT_SMS)
-    .replace(/\{ΑΓΩΝΑΣ\}/g, t.title).replace(/\{ΗΜΕΡΟΜΗΝΙΑ\}/g, fmtDate(day.date));
+  const head = smsHead(t, day);
   return [head, "", "ΣΕΙΡΑ ΤΗΣ ΗΜΕΡΑΣ", orderText(t, "", st.smsJudges), "",
           st.smsFoot || DEFAULT_SMS_FOOT].join("\n");
 }
@@ -2258,6 +2316,18 @@ function tExport(t){
       <button data-act="printNotes">Φύλλα σημειώσεων κριτή</button>
     </div></div>
 
+  ${(()=>{ const paid = t.entries.filter(e=>e.paid).length, n = t.entries.length;
+    return `<div class="card">
+    <div class="eyebrow">Πληρωμές</div>
+    <p class="tiny">Ποιος πλήρωσε και ποιος όχι, ανά κυναγωγό, με τηλέφωνα για να τους πάρετε.
+      Δεύτερο φύλλο μόνο με τους απλήρωτους, για τον ταμία. Η ένδειξη αλλάζει από
+      Συμμετοχές → κάθε σκύλος → Πληρωμένο.</p>
+    <p class="tiny"><b>${paid}</b> από ${n} ${n===1?"συμμετοχή":"συμμετοχές"} πληρωμένες${
+      n-paid ? ` · <b style="color:var(--bad)">${n-paid} απλήρωτες</b>` : ""}.</p>
+    <div class="row tight" style="margin-top:12px">
+      <button class="b-pri" data-act="xlsPaid">Excel πληρωμών</button>
+    </div></div>`; })()}
+
   <div class="card">
     <div class="eyebrow">Αποστολή σειράς ως κείμενο</div>
     <p class="tiny">Για ομάδες WhatsApp ή Viber, την επιτροπή ή τον πίνακα ανακοινώσεων.
@@ -2273,14 +2343,12 @@ function tExport(t){
   <div class="card">
     <div class="eyebrow">Μεταφορά σε άλλη συσκευή</div>
     <p class="tiny">Στέλνει μόνο αυτόν τον αγώνα, με τους σκύλους και τους κυναγωγούς του — μικρό αρχείο
-      που περνά από κάθε εφαρμογή μηνυμάτων. Στην άλλη συσκευή: Ρυθμίσεις → Φόρτωση αρχείου →
-      Συγχώνευση. Κινηθείτε προς μία κατεύθυνση κάθε φορά: αν ο ίδιος αγώνας αλλάξει και στις δύο
-      συσκευές, υπερισχύει το αρχείο που φορτώθηκε τελευταίο.</p>
+      που περνά από κάθε εφαρμογή μηνυμάτων. Στην άλλη συσκευή: <b>↑ Φόρτωση</b> στη μπάρα
+      πάνω → Συγχώνευση. Κινηθείτε προς μία κατεύθυνση κάθε φορά: αν ο ίδιος αγώνας αλλάξει
+      και στις δύο συσκευές, υπερισχύει το αρχείο που φορτώθηκε τελευταίο.</p>
     <div class="row tight" style="margin-top:12px">
       <button class="b-pri" data-act="shareTrial">Αποστολή αγώνα</button>
-      <button data-act="backup">Λήψη πλήρους αντιγράφου</button>
-      <button data-act="restore">Φόρτωση αρχείου</button>
-      <button class="b-sm" data-act="restorePaste">Επικόλληση</button>
+      <button class="b-sm" data-act="restorePaste">Επικόλληση κειμένου</button>
     </div></div>
 
   ${closeCard(t)}`;
@@ -2548,16 +2616,84 @@ function noteSummary(n){
 }
 
 /* ---------- 11. Stats matrix -------------------------------------------- */
-function vStats(){
-  const trials = DB.trials.slice().sort((a,b)=>(a.dateStart||"").localeCompare(b.dateStart||""));
+const MONTHS = ["Ιανουάριος","Φεβρουάριος","Μάρτιος","Απρίλιος","Μάιος","Ιούνιος",
+                "Ιούλιος","Αύγουστος","Σεπτέμβριος","Οκτώβριος","Νοέμβριος","Δεκέμβριος"];
+
+function statFilter(){ return (S.stat = S.stat || {year:"",month:"",type:"",handler:"",dog:""}); }
+function statFilterOn(){ const f = statFilter();
+  return !!(f.year || f.month || f.type || f.handler || f.dog); }
+
+/* One slice of the record, cut by the filters and used by both the table and the
+   Excel file — what you export is what you are looking at. A trial that ends up
+   with nothing in it drops its column instead of standing there empty. */
+function statsSlice(){
+  const f = statFilter();
+  const inScope = DB.trials.slice()
+    .filter(t => !f.year  || (t.dateStart||"").slice(0,4) === f.year)
+    .filter(t => !f.month || (t.dateStart||"").slice(5,7) === f.month)
+    .filter(t => !f.type  || t.type === f.type)
+    .sort((a,b)=>(a.dateStart||"").localeCompare(b.dateStart||""));
+  const keep = (t,e) => (!f.handler || e.handlerId === f.handler)
+                     && (!f.dog     || e.dogId === f.dog);
   const map = {};                       // dogId -> trialId -> points
-  trials.forEach(t=>t.entries.forEach(e=>{
-    const r = t.results[e.id]; if(!r) return;
+  inScope.forEach(t=>t.entries.forEach(e=>{
+    const r = t.results[e.id]; if(!r || !keep(t,e)) return;
     (map[e.dogId] = map[e.dogId]||{})[t.id] = pointsFor(t,r);
   }));
   const dogIds = Object.keys(map).sort((a,b)=>dogName(a).localeCompare(dogName(b),"el"));
-  if(!dogIds.length) return `<div class="empty"><h2>Χωρίς αποτελέσματα ακόμη</h2>
-    <p class="muted">Ο πίνακας γεμίζει μόλις βαθμολογηθεί ο πρώτος αγώνας.</p></div>`;
+  const trials = inScope.filter(t => dogIds.some(id => map[id][t.id] !== undefined));
+  return {trials, map, dogIds, keep, f};
+}
+
+/* The dropdowns only offer what is actually in the record — a month with no
+   αγώνας in it is not a choice, it is a dead end. */
+function statsOptions(){
+  const years = [], months = [], types = [], dogs = [], handlers = [];
+  DB.trials.forEach(t=>{
+    const y = (t.dateStart||"").slice(0,4), m = (t.dateStart||"").slice(5,7);
+    if(y && !years.includes(y)) years.push(y);
+    if(m && !months.includes(m)) months.push(m);
+    if(t.type && !types.includes(t.type)) types.push(t.type);
+    t.entries.forEach(e=>{
+      if(!t.results[e.id]) return;
+      if(e.dogId && !dogs.includes(e.dogId)) dogs.push(e.dogId);
+      if(e.handlerId && !handlers.includes(e.handlerId)) handlers.push(e.handlerId);
+    });
+  });
+  years.sort().reverse(); months.sort();
+  dogs.sort((a,b)=>dogName(a).localeCompare(dogName(b),"el"));
+  handlers.sort((a,b)=>perName(a).localeCompare(perName(b),"el"));
+  return {years, months, types, dogs, handlers};
+}
+
+function statsFilterBar(){
+  const f = statFilter(), o = statsOptions();
+  const pick = (key, label, opts) => `<div style="flex:1 1 160px;min-width:150px">
+    <label>${label}</label><select data-statf="${key}">${opts.map(([v,txt])=>
+      `<option value="${esc(v)}" ${f[key]===v?"selected":""}>${esc(txt)}</option>`).join("")}</select></div>`;
+  return `<div class="card noprint">
+    <div class="row" style="align-items:flex-end">
+      ${pick("year","Έτος",[["","Όλα"]].concat(o.years.map(y=>[y,y])))}
+      ${pick("month","Μήνας",[["","Όλοι"]].concat(o.months.map(m=>[m,MONTHS[+m-1]||m])))}
+      ${pick("type","Είδος αγώνα",[["","Όλα"]].concat(o.types.map(x=>[x,x])))}
+      ${pick("handler","Κυναγωγός",[["","Όλοι"]].concat(o.handlers.map(h=>[h,perName(h)])))}
+      ${pick("dog","Σκύλος",[["","Όλοι"]].concat(o.dogs.map(d=>[d,dogName(d)])))}
+      ${statFilterOn()?`<button class="b-sm" data-act="statsClear">Καθαρισμός</button>`:""}
+    </div></div>`;
+}
+
+function vStats(){
+  const {trials, map, dogIds} = statsSlice();
+  if(!DB.trials.some(t=>Object.keys(t.results||{}).length))
+    return `<div class="empty"><h2>Χωρίς αποτελέσματα ακόμη</h2>
+      <p class="muted">Ο πίνακας γεμίζει μόλις βαθμολογηθεί ο πρώτος αγώνας.</p></div>`;
+  if(!dogIds.length) return `
+    <div class="row" style="align-items:flex-end;gap:16px;margin-bottom:20px">
+      <div class="grow"><div class="eyebrow">Πίνακας σεζόν</div>
+        <h1 style="margin:0">Στατιστικά</h1></div></div>
+    ${statsFilterBar()}
+    <div class="empty"><h2>Κανένα αποτέλεσμα με αυτά τα φίλτρα</h2>
+      <p class="muted">Αλλάξτε ή καθαρίστε τα φίλτρα.</p></div>`;
   /* dogs as rows, trials as columns, totals both ways. This is the season at a
      glance and it should look like a record, not a report. */
   const rows = dogIds.map(id=>{
@@ -2584,16 +2720,29 @@ function vStats(){
   ${(()=>{ const c = trials.filter(x=>x.status===CLOSED).length, o = trials.length - c;
     return `<div class="tiny" style="margin:-8px 0 16px">${trials.length}
       ${trials.length===1?"αγώνας":"αγώνες"} στον πίνακα · ${c} στο ιστορικό${
-      o?` · ${o} ${o===1?"σε εξέλιξη":"σε εξέλιξη"}`:""}. Ένας αγώνας μπαίνει στο ιστορικό από
+      o?` · ${o} ${o===1?"σε εξέλιξη":"σε εξέλιξη"}`:""}${
+      statFilterOn()?" · με φίλτρο: "+esc(statsFilterText()):""}. Ένας αγώνας μπαίνει στο ιστορικό από
       Εξαγωγές → Ολοκλήρωση αγώνα· οι πόντοι μετρούν έτσι κι αλλιώς.</div>`; })()}
+  ${statsFilterBar()}
   <div class="card" style="padding:0"><div class="scroll"><table class="matrix">
     <thead><tr><th class="first">Σκύλος</th>
       ${trials.map(t=>`<th class="v"><span>${esc(t.title)} ${fmtDate(t.dateStart).slice(0,5)}</span></th>`).join("")}
       <th class="v"><span>ΣΥΝΟΛΟ</span></th><th class="v tail"></th></tr></thead>
     <tbody>${rows}${totRow}</tbody></table></div></div>
   <div class="row tight noprint" style="margin-top:18px">
-    <button data-act="xlsStats">Excel με ζωντανούς τύπους</button>
+    <button class="b-pri" data-act="xlsStats">Excel${statFilterOn()?" (με το φίλτρο)":""}</button>
     <button data-act="print">Εκτύπωση</button></div>`;
+}
+/* The filter written out, for the screen and for the Excel sheet that records
+   which slice produced the file. */
+function statsFilterText(){
+  const f = statFilter(), b = [];
+  if(f.year)    b.push("έτος " + f.year);
+  if(f.month)   b.push(MONTHS[+f.month-1] || f.month);
+  if(f.type)    b.push(f.type);
+  if(f.handler) b.push("κυναγωγός " + perName(f.handler));
+  if(f.dog)     b.push("σκύλος " + dogName(f.dog));
+  return b.join(" · ") || "χωρίς φίλτρο";
 }
 
 /* ---------- 12. Settings ------------------------------------------------- */
@@ -2603,8 +2752,17 @@ function vSettings(){
   <div class="card"><h3>Μήνυμα SMS</h3>
     <p class="tiny">Το μήνυμα συντίθεται αυτόματα: επικεφαλίδα, οι διαδρομές του κυναγωγού,
       ολόκληρη η σειρά της ημέρας με τα δικά του ζεύγη σημειωμένα, και κατακλείδα.</p>
-    <label>Επικεφαλίδα — πεδία {ΑΓΩΝΑΣ} {ΗΜΕΡΟΜΗΝΙΑ}</label>
-    <textarea id="smsTpl" style="min-height:60px">${esc(DB.settings.sms)}</textarea>
+    <label>Επικεφαλίδα — πεδία {ΑΓΩΝΑΣ} {ΗΜΕΡΟΜΗΝΙΑ} {ΤΟΠΟΘΕΣΙΑ} {ΩΡΑ}</label>
+    <textarea id="smsTpl" style="min-height:74px">${esc(DB.settings.sms)}</textarea>
+    <p class="tiny" style="margin-top:6px">Η τοποθεσία και η ώρα προσέλευσης έρχονται από τον αγώνα
+      (Επεξεργασία αγώνα). Αν δεν τις βάλετε στην επικεφαλίδα, μπαίνουν μόνες τους σε δική τους
+      γραμμή — κανένα μήνυμα δεν φεύγει χωρίς πού και πότε.</p>
+    ${(()=>{ const t = DB.trials.slice().sort((a,b)=>
+        (b.dateStart||"").localeCompare(a.dateStart||""))[0];
+      if(!t) return "";
+      return `<div class="note" style="margin-top:8px;white-space:pre-wrap">${
+        esc(smsHead(t, t.days[0]))}</div>
+        <p class="tiny">Έτσι βγαίνει η επικεφαλίδα για «${esc(t.title)}».</p>`; })()}
     <label style="margin-top:8px">Κατακλείδα</label>
     <textarea id="smsFoot" style="min-height:60px">${esc(DB.settings.smsFoot||DEFAULT_SMS_FOOT)}</textarea>
     <div class="row tight" style="margin-top:10px">
@@ -2632,15 +2790,16 @@ function vSettings(){
       τρία βήματα:</p>
     <ol class="tiny" style="padding-left:20px;line-height:1.8">
       <li>Στον υπολογιστή, πριν τον αγώνα: μητρώο, συμμετοχές, τερέν και κριτές.
-        Μετά πατήστε «Λήψη πλήρους αντιγράφου» και στείλτε το αρχείο στο κινητό.</li>
-      <li>Στο κινητό: «Φόρτωση αρχείου» → <b>Συγχώνευση</b>. Εκεί γίνεται η κλήρωση,
+        Μετά πατήστε <b>↓ Λήψη</b> και στείλτε το αρχείο στο κινητό.</li>
+      <li>Στο κινητό: <b>↑ Φόρτωση</b> → <b>Συγχώνευση</b>. Εκεί γίνεται η κλήρωση,
         τα SMS, οι σημειώσεις και η βαθμολογία.</li>
       <li>Μετά τον αγώνα: το ίδιο αντίστροφα, ώστε να έχει και ο υπολογιστής τα αποτελέσματα.</li>
     </ol>
+    <p class="tiny"><b>↓ Λήψη</b> και <b>↑ Φόρτωση</b> είναι στη μπάρα πάνω δεξιά, δίπλα στα
+      Στατιστικά, και φαίνονται σε κάθε οθόνη. Εδώ μένουν μόνο τα δύο ειδικά.</p>
     <div class="row tight" style="margin-top:12px">
-      <button class="b-pri" data-act="backup">Λήψη πλήρους αντιγράφου</button>
       <button data-act="backupReg">Λήψη μόνο μητρώου</button>
-      <button data-act="restore">Φόρτωση αρχείου</button>
+      <button data-act="restorePaste">Επικόλληση κειμένου</button>
     </div>
     <p class="tiny" style="margin-top:12px"><b>Συγχώνευση</b> κρατά ό,τι υπάρχει ήδη και προσθέτει
       ή ενημερώνει· <b>αντικατάσταση</b> σβήνει τα πάντα. Κινηθείτε προς μία κατεύθυνση κάθε φορά:
@@ -2681,7 +2840,9 @@ function dlgTrial(t){
     ${fld("t_place","Τοποθεσία",t.place)}</div>
   <div class="row">${fld("t_d1","Ημερομηνία έναρξης",t.dateStart||today(),"date")}
     ${fld("t_days","Ημέρες",t.days?t.days.length:1,"number")}</div>
-  <div class="row">${fld("t_run","Διάρκεια διαδρομής (λεπτά)",t.runMins||15,"number")}</div>
+  <div class="row">${fld("t_time","Ώρα προσέλευσης",t.time||"07:00","time")}
+    ${fld("t_run","Διάρκεια διαδρομής (λεπτά)",t.runMins||15,"number")}</div>
+  <div class="note">Η τοποθεσία και η ώρα μπαίνουν στο SMS των κυναγωγών και των κριτών.</div>
   <div class="note" style="margin-top:10px">Η Μεγάλη Έρευνα γίνεται πάντα σε ζεύγη (Άρ. 4).
     Για CACIT χρειάζονται 3 κριτές ανά τερέν (Άρ. 48).</div>
   <div class="row"><button class="b-pri grow" data-act="saveTrial" data-id="${t.id||""}">Αποθήκευση</button>
@@ -3364,11 +3525,11 @@ function parSheet(){
   return { name: SH_PAR, rows: [[txt("Κλειδί"), txt("Βασικοί πόντοι")]]
     .concat(keys.map(k=>[txt(k), num(DB.settings.points[k])])) };
 }
-function dataSheet(trials){
+function dataSheet(trials, keep){
   const rows = [[txt("Σκύλος"),txt("Φυλή"),txt("Αγώνας"),txt("Ημερομηνία"),txt("Είδος"),
                  txt("Βαθμολογία"),txt("Τίτλος"),txt("Κλειδί"),txt("Συντελεστής"),txt("Πόντοι")]];
   trials.forEach(t=>t.entries.forEach(e=>{
-    const r = t.results[e.id]; if(!r) return;
+    const r = t.results[e.id]; if(!r || (keep && !keep(t,e))) return;
     const d = dogById(e.dogId) || {};
     const n = rows.length + 1;
     rows.push([txt(d.name||""), txt(d.breed||""), txt(t.title), txt(fmtDate(t.dateStart)), txt(t.type),
@@ -3379,10 +3540,10 @@ function dataSheet(trials){
   }));
   return { name: SH_DATA, rows };
 }
-function statsSheet(trials){
+function statsSheet(trials, keep){
   const dogIds = [];
   trials.forEach(t=>t.entries.forEach(e=>{
-    if(t.results[e.id] && !dogIds.includes(e.dogId)) dogIds.push(e.dogId); }));
+    if(t.results[e.id] && (!keep || keep(t,e)) && !dogIds.includes(e.dogId)) dogIds.push(e.dogId); }));
   const rows = [[txt("Σκύλος")].concat(trials.map(t=>txt(t.title))).concat([txt("ΣΥΝΟΛΟ")])];
   dogIds.forEach(id=>{
     const n = rows.length + 1;
@@ -3422,12 +3583,56 @@ function exportTrialXls(t){
     xlsx([bracesSheet(t), dataSheet([t]), parSheet(), statsSheet([t])]));
   toast("Το αρχείο Excel κατέβηκε");
 }
+/* The workbook follows the filters on the screen. A sheet records which slice it
+   came from, so a file that reaches the committee cannot be mistaken for the
+   whole season when it is one month of it. */
 function exportStatsXls(){
-  const trials = DB.trials.slice().sort((a,b)=>(a.dateStart||"").localeCompare(b.dateStart||""));
-  download("KOAD_Statistika.xlsx",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    xlsx([dataSheet(trials), parSheet(), statsSheet(trials)]));
+  const {trials, keep, f} = statsSlice();
+  const sheets = [dataSheet(trials, keep), parSheet(), statsSheet(trials, keep)];
+  if(statFilterOn()) sheets.push({ name:"Φίλτρο", rows:[
+    [txt("Πεδίο"), txt("Τιμή")],
+    [txt("Έτος"), txt(f.year || "όλα")],
+    [txt("Μήνας"), txt(f.month ? (MONTHS[+f.month-1]||f.month) : "όλοι")],
+    [txt("Είδος αγώνα"), txt(f.type || "όλα")],
+    [txt("Κυναγωγός"), txt(f.handler ? perName(f.handler) : "όλοι")],
+    [txt("Σκύλος"), txt(f.dog ? dogName(f.dog) : "όλοι")],
+    [txt("Αγώνες στον πίνακα"), num(trials.length)]
+  ]});
+  const tag = [f.year, f.month, f.type && f.type.replace(/\s+/g,"_"),
+               f.handler && perName(f.handler).replace(/\s+/g,"_"),
+               f.dog && dogName(f.dog).replace(/\s+/g,"_")].filter(Boolean).join("_");
+  download("KOAD_Statistika" + (tag ? "_" + tag : "") + ".xlsx",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", xlsx(sheets));
   toast("Το αρχείο Excel κατέβηκε");
+}
+
+/* Who has paid and who has not. The treasurer asks for this list on the morning
+   of the αγώνας and it was nowhere — only a chip next to each name. */
+function exportPaidXls(t){
+  const rows = [[txt("Κυναγωγός"),txt("Τηλέφωνο"),txt("Σκύλος"),txt("Φυλή"),txt("Αρ. Κ.Ο.Κ."),
+                 txt("Κατάσταση"),txt("Πληρωμή")]];
+  const sorted = t.entries.slice().sort((a,b)=>
+    perName(a.handlerId).localeCompare(perName(b.handlerId),"el")
+    || dogName(a.dogId).localeCompare(dogName(b.dogId),"el"));
+  sorted.forEach(e=>{
+    const d = dogById(e.dogId) || {}, p = perById(e.handlerId) || {};
+    rows.push([txt(p.name||"—"), txt(p.phone||""), txt(d.name||""), txt(d.breed||""), txt(d.reg||""),
+      txt(e.status||""), txt(e.paid ? "ΠΛΗΡΩΜΕΝΟ" : "ΑΠΛΗΡΩΤΟ")]);
+  });
+  const last = rows.length;
+  rows.push([]);
+  rows.push([txt("Πληρωμένοι"), fml(`COUNTIF(G2:G${last},"ΠΛΗΡΩΜΕΝΟ")`)]);
+  rows.push([txt("Απλήρωτοι"),  fml(`COUNTIF(G2:G${last},"ΑΠΛΗΡΩΤΟ")`)]);
+  rows.push([txt("Σύνολο"),     num(sorted.length)]);
+  const unpaid = [[txt("Κυναγωγός"),txt("Τηλέφωνο"),txt("Σκύλος"),txt("Κατάσταση")]];
+  sorted.filter(e=>!e.paid).forEach(e=>{
+    const p = perById(e.handlerId) || {};
+    unpaid.push([txt(p.name||"—"), txt(p.phone||""), txt(dogName(e.dogId)), txt(e.status||"")]);
+  });
+  download(`KOAD_Pliromes_${t.title.replace(/\s+/g,"_")}.xlsx`,
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    xlsx([{name:"Πληρωμές", rows}, {name:"Απλήρωτοι", rows:unpaid}]));
+  toast("Το αρχείο πληρωμών κατέβηκε");
 }
 function exportTrialCsv(t){
   const lines = [["Τερέν","Ζεύγος","Δεξιά","Αριστερά","Κυναγωγός Δ","Κυναγωγός Α"].join(";")];
@@ -3669,6 +3874,8 @@ document.addEventListener("pointerdown", ev=>{
 });
 
 document.addEventListener("change", ev=>{
+  const sf = ev.target.dataset.statf;
+  if(sf){ statFilter()[sf] = ev.target.value; render(); return; }
   const t = trialById(S.trialId);
   const r = ev.target.dataset.res;
   if(r && t){ const [eid,f] = r.split("|");
@@ -3999,6 +4206,7 @@ const ACT = {
       award: el("t_award").value,
       place: el("t_place").value.trim(),
       dateStart: el("t_d1").value,
+      time: el("t_time").value,
       runMins: Math.max(1, +el("t_run").value || 15)
     };
     if(!t){
@@ -4250,7 +4458,9 @@ const ACT = {
   xlsTrial: (b,t)=>exportTrialXls(t),
   csvTrial: (b,t)=>exportTrialCsv(t),
   docTrial: (b,t)=>exportTrialDoc(t),
+  xlsPaid: (b,t)=>exportPaidXls(t),
   xlsStats: ()=>exportStatsXls(),
+  statsClear: ()=>{ S.stat = {year:"",month:"",type:"",handler:"",dog:""}; render(); },
 
   /* Selection. Everyone is picked to begin with, because the usual job is
      "send it to the lot". */
@@ -4905,9 +5115,11 @@ function trialPacket(t){
 /* the running order as plain text — short enough for WhatsApp, Viber or SMS */
 function drawText(t){
   const day = t.days[S.day];
-  return [`Κ.Ο.Α.Δ. – ${t.title}`, fmtDate(day.date), "", "ΣΕΙΡΑ ΖΕΥΓΩΝ", "",
-          orderText(t, null, DB.settings.smsJudges), "",
-          DB.settings.smsFoot || DEFAULT_SMS_FOOT].join("\n");
+  const where = [t.place, t.time && "ώρα " + t.time].filter(Boolean).join(" · ");
+  return [`Κ.Ο.Α.Δ. – ${t.title}`, fmtDate(day.date)]
+    .concat(where ? [where] : [])
+    .concat(["", "ΣΕΙΡΑ ΖΕΥΓΩΝ", "", orderText(t, null, DB.settings.smsJudges), "",
+             DB.settings.smsFoot || DEFAULT_SMS_FOOT]).join("\n");
 }
 
 function mailWith(subject, body){
@@ -5238,16 +5450,16 @@ function vInstall(){
   <div class="card">
     <div class="eyebrow">Φόρτωση αρχείου από άλλη συσκευή</div>
     <p class="tiny">Ο αγώνας ταξιδεύει ως αρχείο <code>.json</code>. Όποιος τον έστειλε πάτησε
-      «Αποστολή αγώνα» ή «Λήψη πλήρους αντιγράφου»· εσείς τον φορτώνετε εδώ.</p>
+      «Αποστολή αγώνα» ή <b>↓ Λήψη</b>· εσείς τον φορτώνετε με το <b>↑ Φόρτωση</b> στη μπάρα
+      πάνω δεξιά. Τα δύο κουμπιά είναι σε κάθε οθόνη.</p>
     <div class="row tight" style="margin-top:12px">
-      <button class="b-pri" data-act="restore">Φόρτωση αρχείου</button>
       <button data-act="restorePaste">Επικόλληση κειμένου</button>
     </div>
     <div class="tiny" style="margin-top:14px;line-height:1.9">
       <b>iPhone:</b> στο WhatsApp ή στο Viber πατήστε το αρχείο → Κοινή χρήση → Αποθήκευση στα
-      Αρχεία. Μετά εδώ: Φόρτωση αρχείου → Αναζήτηση → βρείτε το.<br>
-      <b>Android:</b> το αρχείο κατεβαίνει στις Λήψεις. Φόρτωση αρχείου → Λήψεις.<br>
-      <b>Υπολογιστής:</b> Φόρτωση αρχείου, ή σύρετε το αρχείο πάνω στη σελίδα.<br>
+      Αρχεία. Μετά εδώ: ↑ Φόρτωση → Αναζήτηση → βρείτε το.<br>
+      <b>Android:</b> το αρχείο κατεβαίνει στις Λήψεις. ↑ Φόρτωση → Λήψεις.<br>
+      <b>Υπολογιστής:</b> ↑ Φόρτωση, ή σύρετε το αρχείο πάνω στη σελίδα.<br>
       Αν το τηλέφωνο δεν σας αφήνει να το διαλέξετε, ανοίξτε το αρχείο, αντιγράψτε όλο το
       κείμενο και χρησιμοποιήστε την «Επικόλληση κειμένου».</div>
     <div class="tiny" style="margin-top:10px"><b>Συγχώνευση ή αντικατάσταση;</b> Η συγχώνευση
