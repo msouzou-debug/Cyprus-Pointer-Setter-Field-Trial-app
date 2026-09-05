@@ -546,6 +546,24 @@ The check listens for `updatefound` rather than guessing from a timer, offers a 
 worker starts installing, and names the build when there is nothing newer. Opened from a file
 there is no worker, and it says that instead of failing.
 
+## Both moves, on both stages
+
+Two different corrections to a drawn order, and they answer different questions: moving a **ζεύγος**
+up or down changes *when* it runs; moving a **σκύλος** across changes *who runs with whom*. Both
+existed, but split — Ζεύγη had the reorder behind «Αναδιάταξη» and the swap behind tapping a brace
+open, and Κλήρωση had neither, so the order could only be corrected after leaving the screen where
+it was made.
+
+Now **Κλήρωση and Ζεύγη carry the same editing mode**, and it carries both moves. Each row has the
+drag handle and the ↑ ↓ arrows for the pair, and beneath them one **⇄ ΟΝΟΜΑ** button per dog. On
+Κλήρωση the braces are grouped by τερέν when editing, because reordering happens inside a τερέν —
+the flat drawn-order list has no list for a drag to reorder within.
+
+- The **συμπληρωματικός** gets no ⇄ button. He is completing a brace, not competing (Άρθρο 40).
+- Turning the mode on clears the staged reveal, or the rows being moved could be hidden by it.
+- Every move is stamped as a χειροκίνητη αλλαγή on both braces it touched and prints on the draw
+  list, which is Άρθρο 16 either way: the order may be changed, never silently.
+
 ## Deliberate departures from the canvas
 
 - **Offline chip.** The canvas shows «Εκτός σύνδεσης – 6 αλλαγές σε αναμονή». There is no server

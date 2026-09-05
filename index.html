@@ -1639,6 +1639,21 @@ function tDraw(t){
 
   ${!d ? `<div class="empty">Καμία κλήρωση ακόμη για την ημέρα ${S.day+1}. Πατήστε «Κλήρωση» για
       να κατανεμηθούν οι σκύλοι στα τερέν και να σχηματιστούν τα ζεύγη.</div>`
+    : `<div class="row noprint" style="margin:0 0 12px">
+      <button class="b-sm ${S.reorder?"tog on":""}" data-act="toggleReorder">Αναδιάταξη</button>
+      ${S.reorder?`<span class="tiny" style="align-self:center">Άρθρο 16 — κάθε αλλαγή καταγράφεται</span>`:""}
+    </div>
+    ${S.reorder?`<div class="note">Σύρετε ένα ζεύγος στη θέση του, ή μετακινήστε το με τα βελάκια.
+      Με το <b>⇄</b> δίπλα σε κάθε σκύλο τον στέλνετε σε άλλο ζεύγος και παίρνει τη θέση του
+      εκείνος. Η αρίθμηση ακολουθεί τη θέση: το ζεύγος 1 που κατεβαίνει τρεις θέσεις γίνεται
+      ζεύγος 4. Κάθε μετακίνηση σημειώνεται ως χειροκίνητη αλλαγή και τυπώνεται στη λίστα.</div>
+      ${day.terrains.map(tr=>{ const bs = tr.braces||[];
+        return `<div class="row" style="margin:18px 0 8px;align-items:baseline">
+            <h3 class="grow" style="margin:0">${esc(tr.name)}</h3>
+            <span class="muted">${bs.length} ${bs.length===1?"ζεύγος":"ζεύγη"}</span></div>
+          ${bs.length ? bs.map((b,i)=>braceMove(t,tr,b,i,bs.length)).join("")
+                      : `<div class="empty">Χωρίς ζεύγη σε αυτό το τερέν.</div>`}`;
+      }).join("")}`
     : `<div style="display:flex;flex-direction:column;gap:10px">
       ${rows.map((r,i)=>`<div class="card" data-brace-row style="display:flex;align-items:center;gap:14px;margin:0" ${i<shown?"":"hidden"}>
         <span class="bno" style="font-size:34px;min-width:34px">${r.no}</span>
@@ -1647,7 +1662,7 @@ function tDraw(t){
           <b style="display:block;font:600 19px/1.25 var(--f-d);margin-top:5px">${esc(r.pair)}</b>
           <span class="muted">${esc(r.handlers)}</span>
         </span></div>`).join("")}
-    </div>
+    </div>`}
     <div style="border-top:1px solid var(--line);margin-top:18px;padding-top:14px">
       <div class="fingerprint">κωδικός ${esc(d.seed)}<br>${new Date(d.at).toLocaleString("el-GR")} · ${esc(d.mode)}<br>αποτύπωμα ${esc(d.hash)}</div>
       <p style="margin-top:8px">Η σειρά είναι ενδεικτική — Άρθρο 16.</p>
@@ -1819,7 +1834,15 @@ function braceCard(t, tr, b, opts){
 function braceMove(t, tr, b, i, n){
   const ea = t.entries.find(e=>e.id===b.a), eb = t.entries.find(e=>e.id===b.b);
   const names = (ea?dogName(ea.dogId):"—") + " / " + (eb?dogName(eb.dogId):"ΜΟΝΟΣ");
-  return `<div class="brief drag" data-drag="${tr.id}|${b.id}" style="cursor:grab">
+  /* Two different moves belong on this row, and the head judge needs both when a
+     κυναγωγός is late: the ζεύγος up or down, which changes *when* it runs, and a
+     σκύλος across to another ζεύγος, which changes *who runs with whom*. The
+     second line carries one button per dog so it is clear which one is moving. */
+  const swap = e => (e && !(b.trailer && e.id === b.b))
+    ? `<button class="b-sm" data-swap="${tr.id}|${b.id}|${e.id}"
+        >⇄ ${esc(dogName(e.dogId))}</button>` : "";
+  const across = [swap(ea), swap(eb)].filter(Boolean).join("");
+  return `<div class="brief drag" data-drag="${tr.id}|${b.id}" style="cursor:grab;flex-wrap:wrap">
     <span class="grip" aria-hidden="true">⠿</span>
     <span class="n">${b.no}</span>
     <span class="who"><b>${esc(names)}</b>
@@ -1830,6 +1853,7 @@ function braceMove(t, tr, b, i, n){
       <button class="b-sm" data-bmove="${tr.id}|${b.id}|1" ${i===n-1?"disabled":""}
         aria-label="Κάτω" style="width:52px;padding:0">↓</button>
     </span>
+    ${across?`<span class="row tight" style="flex-basis:100%;margin:6px 0 0 34px">${across}</span>`:""}
   </div>`;
 }
 /* Pointer events, so one path covers a mouse and a thumb. The row follows the
@@ -1931,6 +1955,7 @@ function tBraces(t){
       style="align-self:flex-end">Αναδιάταξη</button>
   </div>
   ${S.reorder?`<div class="note">Σύρετε ένα ζεύγος στη θέση του, ή μετακινήστε το με τα βελάκια.
+    Με το <b>⇄</b> δίπλα σε κάθε σκύλο τον στέλνετε σε άλλο ζεύγος και παίρνει τη θέση του εκείνος.
     Η αρίθμηση ακολουθεί τη θέση: το ζεύγος 1 που κατεβαίνει τρεις θέσεις γίνεται ζεύγος 4.
     Κάθε μετακίνηση σημειώνεται ως χειροκίνητη αλλαγή και τυπώνεται στη λίστα (Άρθρο 16).</div>`:""}
   ${printHd}
@@ -4299,7 +4324,9 @@ const ACT = {
   editTrial: (b,t)=>dlgTrial(t),
 
   /* the bottom bar of the live terrain */
-  toggleReorder: ()=>{ S.reorder = !S.reorder; S.openBrace = null; render(); },
+  /* Reordering shows every ζεύγος: the staged reveal of the draw would otherwise
+     hide the rows the head judge is trying to move. */
+  toggleReorder: ()=>{ S.reorder = !S.reorder; S.openBrace = null; S.reveal = null; render(); },
   nextBrace: (btn, t)=>{
     const live = liveBrace(t);
     if(live) setBraceStatus(live.b, "ΟΛΟΚΛΗΡΩΘΗΚΕ");
