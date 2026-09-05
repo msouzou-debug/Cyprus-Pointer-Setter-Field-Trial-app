@@ -112,6 +112,11 @@ header img{width:40px;height:40px;border-radius:50%;flex:0 0 auto;background:#ff
 .offline{margin-left:auto;font:600 12px/1 var(--f-b);letter-spacing:.06em;
   border:1px solid #ffffff59;border-radius:var(--r-chip);padding:6px 8px;white-space:nowrap}
 .offline.warn{background:var(--bad);border-color:var(--bad);color:#fff}
+/* the language toggle: two letters, next to the connection chip, on every screen */
+.lang{margin-left:auto;background:none;color:#fff;font:700 12px/1 var(--f-b);letter-spacing:.06em;
+  border:1px solid #ffffff59;border-radius:var(--r-chip);padding:7px 9px;cursor:pointer}
+.lang:hover{background:#ffffff1a}
+.lang + .offline{margin-left:8px}
 
 /* ---------- nav ---------- */
 /* Two parts: the tabs scroll sideways on a phone, the transfer buttons never do.
@@ -563,6 +568,7 @@ dialog::backdrop{background:#000000a6}
     <b>Κ.Ο.Α.Δ.</b>
     <span>Κυπριακός Όμιλος Αγγλικών Δεικτών · 1992</span>
   </div>
+  <button class="lang" id="langBtn" data-act="lang">EN</button>
   <div class="offline" id="net">—</div>
 </header>
 <nav id="nav"></nav>
@@ -661,8 +667,81 @@ const DEFAULT_SMS = `Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}
 {ΤΟΠΟΘΕΣΙΑ} · ώρα {ΩΡΑ}`;
 const DEFAULT_SMS_FOOT = `Η σειρά είναι ενδεικτική (Άρθρο 16). Να είστε στη διάθεση των κριτών.`;
 const DEFAULT_SETTINGS = { sms:DEFAULT_SMS, smsFoot:DEFAULT_SMS_FOOT, smsMode:"full", appUrl:"",
-  smsJudges:true, points:{...DEFAULT_POINTS},
+  smsJudges:true, points:{...DEFAULT_POINTS}, lang:"el",
   avoidOwner:true, avoidKennel:true, seasonLast:true, channel:"sms" };
+
+/* ---------- 1b. Γλώσσα ---------------------------------------------------
+   Τα ελληνικά είναι η πηγή: το ίδιο το ελληνικό κείμενο είναι το κλειδί. Ό,τι
+   δεν έχει μετάφραση βγαίνει στα ελληνικά — φαίνεται, δεν σπάει.
+
+   Ο κανόνας που δεν παραβιάζεται: **στη βάση αποθηκεύονται ελληνικά**. Η
+   κατάσταση ενός σκύλου είναι «ΔΗΛΩΜΕΝΟΣ», η βαθμολογία «ΕΞΑΙΡΕΤΟΣ», και αυτό
+   το κείμενο είναι το κλειδί στον πίνακα πόντων του ομίλου. Αν άλλαζε με τη
+   γλώσσα, ένα αντίγραφο από αγγλικό κινητό δεν θα συγχωνευόταν με ελληνικό
+   υπολογιστή και οι πόντοι θα σταματούσαν να βγαίνουν. Μεταφράζεται μόνο ό,τι
+   πάει στην οθόνη. */
+const LANGS = [["el","Ελληνικά","ΕΛ"],["en","English","EN"]];
+const STR = { en: {
+  /* πλοήγηση */
+  "Αγώνες":"Trials", "Μητρώο":"Register", "Στατιστικά":"Statistics",
+  "Εγκατάσταση":"Install", "Ρυθμίσεις":"Settings", "Λήψη":"Download", "Φόρτωση":"Load",
+  "Συνδεδεμένο":"Online", "Εκτός σύνδεσης":"Offline", "Χωρίς αποθήκευση":"Not saved",
+  /* τα έξι βήματα */
+  "Συμμετοχές":"Entries", "Τερέν":"Terrains", "Κλήρωση":"Draw", "Ζεύγη":"Braces",
+  "Βαθμολογία":"Scoring", "Εξαγωγές":"Exports", "αρχεία και εκτυπώσεις":"files and printouts",
+  "έγινε":"done", "εκκρεμεί":"pending", "κανένα":"none", "καμία":"none",
+  "σκύλοι":"dogs", "σκύλος":"dog", "τερέν":"terrains", "ημέρες":"days", "Ημέρα":"Day",
+  /* αγώνες */
+  "Νέος αγώνας":"New trial", "Σε εξέλιξη":"In progress", "Ιστορικό · σεζόν":"History · season",
+  "Κανένας αγώνας ακόμη":"No trials yet", "Επεξεργασία":"Edit", "Επεξ.":"Edit",
+  "Επεξεργασία αγώνα":"Edit trial", "Ιστορικό":"Record",
+  /* μητρώο */
+  "Κυναγωγοί":"Handlers", "Σκύλοι":"Dogs", "Κριτές":"Judges",
+  "Νέος σκύλος":"New dog", "Νέος κυναγωγός":"New handler", "Νέος κριτής":"New judge",
+  "Επεξεργασία σκύλου":"Edit dog", "Αγγλικές φυλές":"British breeds",
+  "Ηπειρωτικές φυλές":"Continental breeds", "Φυλή":"Breed", "Όλες οι φυλές":"All breeds",
+  "Όλες":"All", "Όλα":"All", "Όλοι":"All", "Καθαρισμός":"Clear",
+  "Όνομα":"Name", "Φύλο":"Sex", "Αρσενικός":"Male", "Θηλυκός":"Female",
+  "Ημ. γέννησης":"Date of birth", "Εκτροφείο":"Kennel", "Κυναγωγός":"Handler",
+  "Τσιπ / δερματοστιξία":"Chip / tattoo", "Αρ. βιβλιαρίου εργασίας":"Working book no.",
+  "Ονοματεπώνυμο":"Full name", "Κινητό":"Mobile",
+  /* κοινά κουμπιά */
+  "Αποθήκευση":"Save", "Άκυρο":"Cancel", "Διαγραφή":"Delete", "Εκτύπωση":"Print",
+  "Επικόλληση":"Paste", "Επικόλληση κειμένου":"Paste text", "Αναζήτηση":"Search",
+  /* στατιστικά */
+  "Έτος":"Year", "Μήνας":"Month", "Είδος αγώνα":"Trial type", "Σκύλος":"Dog",
+  "ΣΥΝΟΛΟ":"TOTAL", "ΣΥΝΟΛΟ ΑΓΩΝΑ":"TRIAL TOTAL",
+  /* τιμές που μένουν ελληνικές στη βάση και μεταφράζονται μόνο στην οθόνη.
+     EXCELLENT / VERY GOOD / GOOD και CQN είναι η ορολογία της F.C.I. */
+  "ΔΗΛΩΜΕΝΟΣ":"ENTERED", "ΚΛΗΡΩΜΕΝΟΣ":"DRAWN", "ΟΛΟΚΛΗΡΩΘΗΚΕ":"COMPLETED",
+  "ΔΗΛΩΣΕΙΣ":"ENTRIES OPEN", "ΕΚΚΡΕΜΕΙ":"PENDING", "ΤΡΕΧΕΙ":"RUNNING", "ΕΣΤΑΛΗ":"SENT",
+  "ΖΕΥΓΗ":"BRACES", "ΑΤΟΜΙΚΟΣ":"SOLO", "Ζεύγη":"Braces", "Ατομικός":"Solo",
+  "ΕΞΑΙΡΕΤΟΣ":"EXCELLENT", "1ος ΕΞΑΙΡΕΤΟΣ":"1st EXCELLENT", "2ος ΕΞΑΙΡΕΤΟΣ":"2nd EXCELLENT",
+  "ΠΟΛΥ ΚΑΛΟΣ":"VERY GOOD", "1ος ΠΟΛΥ ΚΑΛΟΣ":"1st VERY GOOD", "ΚΑΛΟΣ":"GOOD",
+  "Π.Φ.Π. (CQN)":"CQN", "ΑΝΕΠΑΡΚΗΣ":"INSUFFICIENT", "ΑΠΟΚΛΕΙΣΜΟΣ":"ELIMINATED",
+  "Γλώσσα":
+    "Language",
+  "Η γλώσσα αλλάζει μόνο ό,τι βλέπετε. Στη βάση όλα μένουν ελληνικά — η κατάσταση, η βαθμολογία, η μορφή του αγώνα — ώστε ένα αντίγραφο από αγγλικό κινητό να συγχωνεύεται κανονικά σε ελληνικό υπολογιστή και ο πίνακας πόντων να βρίσκει το κλειδί του.":
+    "The language changes what you see and nothing else. Everything is stored in Greek — status, grading, trial format — so that a backup made on an English phone merges into a Greek laptop and the points table still finds its key.",
+  "Μεταφρασμένα: η πλοήγηση, τα έξι βήματα, το μητρώο, τα στατιστικά, οι καταστάσεις και οι βαθμολογίες. Τα μεγάλα επεξηγηματικά κείμενα και τα είδη αγώνα μένουν προς το παρόν ελληνικά — η ορολογία των κριτών θα μπει από τους κανονισμούς της F.C.I. και όχι από δική μας μετάφραση.":
+    "Translated so far: the navigation, the six steps, the register, the statistics, the statuses and the gradings. The long explanatory passages and the trial types are still Greek — the judging vocabulary will come from the F.C.I. regulations rather than from a translation of ours.",
+  "σκύλος":
+    "dog"
+} };
+/* Η μετάφραση της οθόνης. Το κλειδί είναι το ελληνικό κείμενο.
+   Λέγεται tx() και όχι t(): το `t` είναι ο αγώνας σε όλο το υπόλοιπο αρχείο,
+   και μια συνάρτηση που κρύβεται πίσω από μια μεταβλητή είναι σφάλμα που δεν
+   φαίνεται μέχρι να ανοίξει η λάθος οθόνη. */
+function tx(s){
+  const L = (DB && DB.settings && DB.settings.lang) || "el";
+  if(L === "el") return s;
+  const d = STR[L];
+  return d && d[s] !== undefined ? d[s] : s;
+}
+function langNext(){
+  const i = LANGS.findIndex(l => l[0] === ((DB.settings||{}).lang || "el"));
+  return LANGS[(i + 1) % LANGS.length];
+}
 
 /* ---------- 2. Storage --------------------------------------------------- */
 /* Safari refuses localStorage on file:// URLs. If the head judge emails himself
@@ -994,15 +1073,16 @@ let S = {view:"trials", trialId:null, tab:"entries", day:0, judgeFilter:"", dogI
 
 function nav(){
   const tabs = [["trials","Αγώνες"],["registry","Μητρώο"],["stats","Στατιστικά"],
-                ["install","Εγκατάσταση"],["settings","Ρυθμίσεις"]];
+                ["install","Εγκατάσταση"],["settings","Ρυθμίσεις"]]
+                .map(([k,l]) => [k, tx(l)]);
   /* The two transfer buttons live in the bar itself, next to Στατιστικά, and are
      on every screen. They were buried three taps inside Ρυθμίσεις, which is the
      last place anyone looks while the κυναγωγοί are waiting. */
   el("nav").innerHTML = `<div class="tabs">${tabs.map(([k,l])=>
     `<button data-nav="${k}" class="${S.view===k||(S.view==="trial"&&k==="trials")?"on":""}">${l}</button>`).join("")}</div>
     <div class="tools noprint">
-      <button data-act="backup" title="Λήψη πλήρους αντιγράφου"><b>↓</b><span>Λήψη</span></button>
-      <button data-act="restore" title="Φόρτωση αρχείου από άλλη συσκευή"><b>↑</b><span>Φόρτωση</span></button>
+      <button data-act="backup" title="Λήψη πλήρους αντιγράφου"><b>↓</b><span>${tx("Λήψη")}</span></button>
+      <button data-act="restore" title="Φόρτωση αρχείου από άλλη συσκευή"><b>↑</b><span>${tx("Φόρτωση")}</span></button>
     </div>`;
   /* the strip of tabs is narrower than the words on a phone, so bring the open
      one into view instead of leaving it half under the transfer buttons */
@@ -1031,8 +1111,10 @@ function render(){
   /* the header chip: no storage outranks the connection, because it is the one
      that loses a season */
   const net = el("net");
-  net.textContent = storageMode === "memory" ? "Χωρίς αποθήκευση"
-    : (navigator.onLine ? "Συνδεδεμένο" : "Εκτός σύνδεσης");
+  net.textContent = tx(storageMode === "memory" ? "Χωρίς αποθήκευση"
+    : (navigator.onLine ? "Συνδεδεμένο" : "Εκτός σύνδεσης"));
+  el("langBtn").textContent = langNext()[2];
+  el("langBtn").title = langNext()[1];
   net.className = "offline" + (storageMode === "memory" ? " warn" : "");
   startClocks();
   window.scrollTo({top:0});
@@ -1042,17 +1124,17 @@ function render(){
 /* Cards by season, with the status chip the club uses. */
 function vTrials(){
   const head = `<div class="row" style="align-items:flex-end;gap:16px;margin-bottom:18px">
-    <div class="grow"><div class="eyebrow">Κ.Ο.Α.Δ.</div><h1 style="margin:0">Αγώνες</h1></div>
-    <button class="b-act" data-act="newTrial">Νέος αγώνας</button></div>`;
+    <div class="grow"><div class="eyebrow">Κ.Ο.Α.Δ.</div><h1 style="margin:0">${tx("Αγώνες")}</h1></div>
+    <button class="b-act" data-act="newTrial">${tx("Νέος αγώνας")}</button></div>`;
   /* The commonest first move on a second device is not "make a trial" — it is
      "take the one that was sent to me". That button is now in the bar at the top
      of every screen, so here it is only named, not repeated. */
-  if(!DB.trials.length) return head + `<div class="empty"><h2>Κανένας αγώνας ακόμη</h2>
+  if(!DB.trials.length) return head + `<div class="empty"><h2>${tx("Κανένας αγώνας ακόμη")}</h2>
     <p class="muted">Δημιουργήστε τον πρώτο αγώνα, ή πατήστε <b>↑ Φόρτωση</b> πάνω δεξιά για
       αρχείο που σας έστειλαν από άλλη συσκευή.</p>
     <div class="row tight" style="justify-content:center;margin-top:16px">
-      <button class="b-pri" data-act="newTrial">Νέος αγώνας</button>
-      <button class="b-sm" data-act="restorePaste">Επικόλληση κειμένου</button></div>
+      <button class="b-pri" data-act="newTrial">${tx("Νέος αγώνας")}</button>
+      <button class="b-sm" data-act="restorePaste">${tx("Επικόλληση κειμένου")}</button></div>
     <p class="tiny" style="margin-top:16px">Το μητρώο σκύλων μπορεί να γεμίσει πρώτο, από το
       Μητρώο ή με εισαγωγή αρχείου Excel.</p></div>`;
   const card = t=>{
@@ -1062,9 +1144,9 @@ function vTrials(){
     return `<div class="card" data-open="${t.id}" style="cursor:pointer">
       <div class="row" style="align-items:flex-start">
         <h3 class="grow" style="margin:0">${esc(t.title)}</h3>
-        <span class="chip ${done?"g":drawn?"n":""}">${esc(t.status)}</span></div>
-      <div class="muted" style="margin-top:6px">${esc(t.type)} · ${t.format==="ΖΕΥΓΗ"?"ζεύγη":"ατομικός"} · ${esc(t.game||"—")}${t.award!=="-"?" · "+esc(t.award):""}</div>
-      <div class="muted num">${fmtDate(t.dateStart)}${t.time?" · "+esc(t.time):""} · ${esc(t.place||"—")} · ${n} ${n===1?"σκύλος":"σκύλοι"}${
+        <span class="chip ${done?"g":drawn?"n":""}">${esc(tx(t.status))}</span></div>
+      <div class="muted" style="margin-top:6px">${esc(t.type)} · ${tx(t.format==="ΖΕΥΓΗ"?"Ζεύγη":"Ατομικός").toLowerCase()} · ${esc(t.game||"—")}${t.award!=="-"?" · "+esc(t.award):""}</div>
+      <div class="muted num">${fmtDate(t.dateStart)}${t.time?" · "+esc(t.time):""} · ${esc(t.place||"—")} · ${n} ${tx(n===1?"σκύλος":"σκύλοι")}${
         t.days.length>1?" · "+t.days.length+" ημέρες":""}</div>
     </div>`;
   };
@@ -1076,9 +1158,9 @@ function vTrials(){
   const byYear = {};
   past.forEach(t=>{ const y=(t.dateStart||"----").slice(0,4); (byYear[y]=byYear[y]||[]).push(t); });
   return head
-    + (open.length ? `<div class="eyebrow">Σε εξέλιξη</div>${open.map(card).join("")}` : "")
+    + (open.length ? `<div class="eyebrow">${tx("Σε εξέλιξη")}</div>${open.map(card).join("")}` : "")
     + (past.length ? Object.entries(byYear).map(([y,list])=>`
-        <div class="eyebrow" style="margin-top:24px">Ιστορικό · σεζόν ${y}</div>
+        <div class="eyebrow" style="margin-top:24px">${tx("Ιστορικό · σεζόν")} ${y}</div>
         ${list.map(card).join("")}`).join("") : "")
     + (past.length ? `<p class="tiny" style="margin-top:18px">Οι ολοκληρωμένοι αγώνες μένουν στο
         μητρώο και μετρούν στα Στατιστικά. Ανοίγουν κανονικά για ανάγνωση και εκτύπωση.</p>` : "");
@@ -1139,9 +1221,9 @@ function vTrial(){
                 sms:tSms,results:tResults,export:tExport}[S.tab](t);
   return `
   <div class="row noprint" style="margin-bottom:10px">
-    <button class="b-sm" data-nav="trials">‹ Αγώνες</button>
-    <span class="chip n">${esc(t.status)}</span>
-    <button class="b-sm" data-act="editTrial" style="margin-left:auto">Επεξεργασία</button>
+    <button class="b-sm" data-nav="trials">‹ ${tx("Αγώνες")}</button>
+    <span class="chip n">${esc(tx(t.status))}</span>
+    <button class="b-sm" data-act="editTrial" style="margin-left:auto">${tx("Επεξεργασία")}</button>
   </div>
   <h1 style="margin-bottom:6px"><button class="h-edit" data-act="editTrial"
     title="Επεξεργασία αγώνα">${esc(t.title)}</button></h1>
@@ -1151,7 +1233,7 @@ function vTrial(){
    · Συντελεστής ×${coefficient(t)}</div>
   ${progressStrip(t)}
   ${t.days.length>1?`<div class="row tight noprint" style="margin-bottom:14px">
-    ${t.days.map((d,i)=>`<button class="tog ${S.day===i?"on":""}" data-day="${i}">Ημέρα ${i+1} · ${fmtDate(d.date)}</button>`).join("")}
+    ${t.days.map((d,i)=>`<button class="tog ${S.day===i?"on":""}" data-day="${i}">${tx("Ημέρα")} ${i+1} · ${fmtDate(d.date)}</button>`).join("")}
   </div>`:""}
   ${body}`;
 }
@@ -1173,10 +1255,10 @@ function progressStrip(t){
   day.terrains.forEach(tr=>(tr.braces||[]).forEach(b=>braces.push(b)));
   const ran = braces.filter(b=>b.status==="ΟΛΟΚΛΗΡΩΘΗΚΕ").length;
   const steps = [
-    ["entries",  "Συμμετοχές", active >= 6,        active ? active + " σκύλοι" : "καμία"],
+    ["entries",  "Συμμετοχές", active >= 6,        active ? active + " " + tx("σκύλοι") : tx("καμία")],
     ["terrains", "Τερέν",      day.terrains.length && judged,
-                                                   day.terrains.length ? day.terrains.length + " τερέν" : "κανένα"],
-    ["draw",     "Κλήρωση",    !!day.draw,         day.draw ? "έγινε" : "εκκρεμεί"],
+                                                   day.terrains.length ? day.terrains.length + " " + tx("τερέν") : tx("κανένα")],
+    ["draw",     "Κλήρωση",    !!day.draw,         tx(day.draw ? "έγινε" : "εκκρεμεί")],
     ["sms",      "SMS",        q.length > 0 && sent === q.length,
                                                    q.length ? sent + "/" + q.length : "—"],
     ["braces",   "Ζεύγη",      braces.length > 0 && ran === braces.length,
@@ -1188,10 +1270,10 @@ function progressStrip(t){
   return `<div class="steps noprint">${steps.map(([k,label,done,note],i)=>
     `<button class="step-i ${done?"done":""} ${i===firstOpen?"now":""} ${S.tab===k?"here":""}" data-tab="${k}">
       <span class="mark">${done?"✓":i+1}</span>
-      <span class="lbl">${label}<span>${esc(note)}</span></span>
+      <span class="lbl">${tx(label)}<span>${esc(note)}</span></span>
     </button>`).join("")}
     <button class="step-i plain ${S.tab==="export"?"here":""}" data-tab="export">
-      <span class="lbl">Εξαγωγές<span>αρχεία και εκτυπώσεις</span></span></button></div>`;
+      <span class="lbl">${tx("Εξαγωγές")}<span>${tx("αρχεία και εκτυπώσεις")}</span></span></button></div>`;
 }
 
 /* --- 8a. entries --- */
@@ -2452,9 +2534,9 @@ function vRegistry(){
   DB.dogs.forEach(d=>{ byBreed[d.breed||"—"] = (byBreed[d.breed||"—"]||0)+1; });
 
   const side = `<div class="side noprint">
-    <button class="item ${tab==="handlers"?"on":""}" data-regtab="handlers">Κυναγωγοί · ${DB.people.length}</button>
-    <button class="item ${tab==="dogs"?"on":""}" data-regtab="dogs">Σκύλοι · ${DB.dogs.length}</button>
-    <button class="item ${tab==="judges"?"on":""}" data-regtab="judges">Κριτές · ${DB.judges.length}</button>
+    <button class="item ${tab==="handlers"?"on":""}" data-regtab="handlers">${tx("Κυναγωγοί")} · ${DB.people.length}</button>
+    <button class="item ${tab==="dogs"?"on":""}" data-regtab="dogs">${tx("Σκύλοι")} · ${DB.dogs.length}</button>
+    <button class="item ${tab==="judges"?"on":""}" data-regtab="judges">${tx("Κριτές")} · ${DB.judges.length}</button>
     <hr style="margin:16px 20px">
     ${BREED_SECTIONS.map(([k,l])=>{
       /* only the breeds the club actually owns, plus the five αγγλικές always,
@@ -2476,8 +2558,8 @@ function vRegistry(){
 
   let body;
   if(tab === "judges"){
-    body = heading("Μητρώο","Κριτές",
-      `<button class="b-act" data-act="newJudge">Νέος κριτής</button>`)
+    body = heading(tx("Μητρώο"),tx("Κριτές"),
+      `<button class="b-act" data-act="newJudge">${tx("Νέος κριτής")}</button>`)
       + (DB.judges.length ? `<div class="card" style="padding:0"><table>
         <thead><tr><th>Ονοματεπώνυμο</th><th>Κινητό</th><th>Ιδιότητα</th><th>Μεγάλη Έρευνα</th><th>Κυναγωγός</th><th class="noprint"></th></tr></thead>
         <tbody>${DB.judges.map(j=>`<tr>
@@ -2539,8 +2621,8 @@ function vRegistry(){
       <div class="tiny" style="margin-top:4px">Ανοίξτε τον καθένα με το Επεξ. και δώστε του κυναγωγό.</div>
       <div style="margin-top:10px">${orphans.map(d=>dogRow(d, "")).join("")}</div></div>` : "";
 
-    body = heading("Μητρώο","Κυναγωγοί",
-      `<button class="b-act" data-act="newHandler">Νέος κυναγωγός</button>`)
+    body = heading(tx("Μητρώο"),tx("Κυναγωγοί"),
+      `<button class="b-act" data-act="newHandler">${tx("Νέος κυναγωγός")}</button>`)
       + (DB.people.length || orphans.length ? `
         <div class="row noprint" style="margin-bottom:14px">
           <div class="grow" style="max-width:340px">
@@ -2559,18 +2641,18 @@ function vRegistry(){
       (!S.regBreed || d.breed === S.regBreed));
     const breedBar = `<div class="row noprint" style="margin:-4px 0 16px;align-items:flex-end">
       <div class="row tight">${BREED_SECTIONS.map(([k,l])=>
-        `<button class="tog ${S.regSec===k?"on":""}" data-regbsec="${k}">${l}</button>`).join("")}</div>
-      <div style="flex:1 1 240px;max-width:340px"><label>Φυλή</label>
-        <select data-regbreed>${[["","Όλες οι φυλές"]].concat(secList.map(b=>
+        `<button class="tog ${S.regSec===k?"on":""}" data-regbsec="${k}">${tx(l)}</button>`).join("")}</div>
+      <div style="flex:1 1 240px;max-width:340px"><label>${tx("Φυλή")}</label>
+        <select data-regbreed>${[["",tx("Όλες οι φυλές")]].concat(secList.map(b=>
           [b, breedLabel(b) + " · " + (byBreed[b]||0)])).map(([v,l])=>
           `<option value="${esc(v)}" ${S.regBreed===v?"selected":""}>${esc(l)}</option>`).join("")}</select></div>
-      ${(S.regSec||S.regBreed)?`<button class="b-sm" data-act="regClear">Καθαρισμός</button>
+      ${(S.regSec||S.regBreed)?`<button class="b-sm" data-act="regClear">${tx("Καθαρισμός")}</button>
         <div class="tiny">${shown.length} από ${dogs.length}</div>`:""}
     </div>`;
-    body = heading("Μητρώο","Σκύλοι",
+    body = heading(tx("Μητρώο"),tx("Σκύλοι"),
       `<div style="width:300px;max-width:100%"><input id="q" placeholder="Αναζήτηση ονόματος ή Κ.Ο.Κ."
         oninput="filterDogs(this.value)"></div>
-       <button class="b-act" data-act="newDog">Νέος σκύλος</button>`)
+       <button class="b-act" data-act="newDog">${tx("Νέος σκύλος")}</button>`)
       + breedBar
       + (shown.length ? `<div class="card" style="padding:0"><div class="scroll"><table id="dogTbl">
         <thead><tr><th>Όνομα</th><th>Κ.Ο.Κ.</th><th>Φύλο</th><th>Έτος</th><th>Φυλή</th>
@@ -2601,9 +2683,9 @@ function vRegistry(){
   }
   /* the sidebar is a desk affordance; on a phone the same three live in a row */
   const phoneTabs = `<div class="badge-list reg-tabs noprint" style="margin-bottom:16px">
-    <button class="tog ${tab==="handlers"?"on":""}" data-regtab="handlers">Κυναγωγοί · ${DB.people.length}</button>
-    <button class="tog ${tab==="dogs"?"on":""}" data-regtab="dogs">Σκύλοι · ${DB.dogs.length}</button>
-    <button class="tog ${tab==="judges"?"on":""}" data-regtab="judges">Κριτές · ${DB.judges.length}</button>
+    <button class="tog ${tab==="handlers"?"on":""}" data-regtab="handlers">${tx("Κυναγωγοί")} · ${DB.people.length}</button>
+    <button class="tog ${tab==="dogs"?"on":""}" data-regtab="dogs">${tx("Σκύλοι")} · ${DB.dogs.length}</button>
+    <button class="tog ${tab==="judges"?"on":""}" data-regtab="judges">${tx("Κριτές")} · ${DB.judges.length}</button>
   </div>`;
   return `<div class="reg">${side}<div class="main">${phoneTabs}${body}</div></div>`;
 }
@@ -2762,12 +2844,12 @@ function statsFilterBar(){
       `<option value="${esc(v)}" ${f[key]===v?"selected":""}>${esc(txt)}</option>`).join("")}</select></div>`;
   return `<div class="card noprint">
     <div class="row" style="align-items:flex-end">
-      ${pick("year","Έτος",[["","Όλα"]].concat(o.years.map(y=>[y,y])))}
-      ${pick("month","Μήνας",[["","Όλοι"]].concat(o.months.map(m=>[m,MONTHS[+m-1]||m])))}
-      ${pick("type","Είδος αγώνα",[["","Όλα"]].concat(o.types.map(x=>[x,x])))}
-      ${pick("handler","Κυναγωγός",[["","Όλοι"]].concat(o.handlers.map(h=>[h,perName(h)])))}
-      ${pick("dog","Σκύλος",[["","Όλοι"]].concat(o.dogs.map(d=>[d,dogName(d)])))}
-      ${statFilterOn()?`<button class="b-sm" data-act="statsClear">Καθαρισμός</button>`:""}
+      ${pick("year",tx("Έτος"),[["","Όλα"]].concat(o.years.map(y=>[y,y])))}
+      ${pick("month",tx("Μήνας"),[["","Όλοι"]].concat(o.months.map(m=>[m,MONTHS[+m-1]||m])))}
+      ${pick("type",tx("Είδος αγώνα"),[["","Όλα"]].concat(o.types.map(x=>[x,x])))}
+      ${pick("handler",tx("Κυναγωγός"),[["","Όλοι"]].concat(o.handlers.map(h=>[h,perName(h)])))}
+      ${pick("dog",tx("Σκύλος"),[["","Όλοι"]].concat(o.dogs.map(d=>[d,dogName(d)])))}
+      ${statFilterOn()?`<button class="b-sm" data-act="statsClear">${tx("Καθαρισμός")}</button>`:""}
     </div></div>`;
 }
 
@@ -2793,7 +2875,7 @@ function vStats(){
       <td class="tot">${tot}</td><td class="tail"></td></tr>`;
   }).join("");
   const grand = dogIds.reduce((a,id)=>a+trials.reduce((s,t)=>s+(map[id][t.id]||0),0),0);
-  const totRow = `<tr class="sum"><td class="first">ΣΥΝΟΛΟ ΑΓΩΝΑ</td>${trials.map(t=>{
+  const totRow = `<tr class="sum"><td class="first">${tx("ΣΥΝΟΛΟ ΑΓΩΝΑ")}</td>${trials.map(t=>{
       const s = dogIds.reduce((a,id)=>a+(map[id][t.id]||0),0);
       return `<td class="n">${s}</td>`;}).join("")}
       <td class="tot">${grand}</td><td class="tail"></td></tr>`;
@@ -2802,7 +2884,7 @@ function vStats(){
   return `
   <div class="row" style="align-items:flex-end;gap:16px;margin-bottom:20px">
     <div class="grow"><div class="eyebrow">Πίνακας σεζόν ${esc(season)}</div>
-      <h1 style="margin:0">Στατιστικά</h1></div>
+      <h1 style="margin:0">${tx("Στατιστικά")}</h1></div>
     <div class="tiny" style="text-align:right;max-width:340px">Πόντοι κατά Αξιολόγηση. Ζεύγη ×2,
       άγριο θήραμα ×2. Ο πίνακας πόντων είναι δεδομένα και αλλάζει από τον όμιλο (Ρυθμίσεις).</div>
   </div>
@@ -2814,13 +2896,13 @@ function vStats(){
       Εξαγωγές → Ολοκλήρωση αγώνα· οι πόντοι μετρούν έτσι κι αλλιώς.</div>`; })()}
   ${statsFilterBar()}
   <div class="card" style="padding:0"><div class="scroll"><table class="matrix">
-    <thead><tr><th class="first">Σκύλος</th>
+    <thead><tr><th class="first">${tx("Σκύλος")}</th>
       ${trials.map(t=>`<th class="v"><span>${esc(t.title)} ${fmtDate(t.dateStart).slice(0,5)}</span></th>`).join("")}
-      <th class="v"><span>ΣΥΝΟΛΟ</span></th><th class="v tail"></th></tr></thead>
+      <th class="v"><span>${tx("ΣΥΝΟΛΟ")}</span></th><th class="v tail"></th></tr></thead>
     <tbody>${rows}${totRow}</tbody></table></div></div>
   <div class="row tight noprint" style="margin-top:18px">
     <button class="b-pri" data-act="xlsStats">Excel${statFilterOn()?" (με το φίλτρο)":""}</button>
-    <button data-act="print">Εκτύπωση</button></div>`;
+    <button data-act="print">${tx("Εκτύπωση")}</button></div>`;
 }
 /* The filter written out, for the screen and for the Excel sheet that records
    which slice produced the file. */
@@ -2863,6 +2945,12 @@ function vSettings(){
       σε κάθε επόμενο. Η πλήρης σειρά με 40 σκύλους βγάζει περίπου 15–20 τμήματα ανά μήνυμα.
       Ο πραγματικός αριθμός φαίνεται στην καρτέλα SMS του αγώνα.</p>
     <button class="b-sm b-pri" style="margin-top:8px" data-act="saveSms">Αποθήκευση</button></div>
+
+  <div class="card"><h3>${tx("Γλώσσα")}</h3>
+    <p class="tiny">${tx("Η γλώσσα αλλάζει μόνο ό,τι βλέπετε. Στη βάση όλα μένουν ελληνικά — η κατάσταση, η βαθμολογία, η μορφή του αγώνα — ώστε ένα αντίγραφο από αγγλικό κινητό να συγχωνεύεται κανονικά σε ελληνικό υπολογιστή και ο πίνακας πόντων να βρίσκει το κλειδί του.")}</p>
+    <div class="row tight" style="margin-top:10px">${LANGS.map(([k,name])=>
+      `<button class="tog ${(DB.settings.lang||"el")===k?"on":""}" data-setlang="${k}">${esc(name)}</button>`).join("")}</div>
+    <p class="tiny" style="margin-top:10px">${tx("Μεταφρασμένα: η πλοήγηση, τα έξι βήματα, το μητρώο, τα στατιστικά, οι καταστάσεις και οι βαθμολογίες. Τα μεγάλα επεξηγηματικά κείμενα και τα είδη αγώνα μένουν προς το παρόν ελληνικά — η ορολογία των κριτών θα μπει από τους κανονισμούς της F.C.I. και όχι από δική μας μετάφραση.")}</p></div>
 
   <div class="card"><h3>Πίνακας βαθμών</h3>
     <p class="tiny">Βασικοί βαθμοί ανά βαθμολογία/τίτλο. Πολλαπλασιάζονται με τον συντελεστή του αγώνα
@@ -2948,10 +3036,10 @@ function breedPicker(breed){
   /* Το επίσημο αγγλικό όνομα μπαίνει από κάτω, όχι μέσα στη λίστα: «Ουγγρικό
      Βίζλα κοντότριχο (Hungarian Short-haired Pointer (Vizsla))» δεν χωρά σε
      κινητό, και η λίστα είναι που διαβάζεται με το δάχτυλο. */
-  return `<label>Φυλή</label>
+  return `<label>${tx("Φυλή")}</label>
     <div class="row tight noprint" style="margin-bottom:6px">${BREED_SECTIONS.map(([k,l])=>
       `<button type="button" class="tog b-sm ${sec===k?"on":""}" style="flex:1 1 200px"
-        data-bsec="${k}">${l}</button>`).join("")}</div>
+        data-bsec="${k}">${tx(l)}</button>`).join("")}</div>
     <select id="d_breed">${list.map(b=>
       `<option value="${esc(b)}" ${b===pick?"selected":""}>${esc(b)} · F.C.I. ${
         BREED_FCI[b].no}</option>`).join("")}</select>
@@ -2960,13 +3048,13 @@ function breedPicker(breed){
 function dlgDog(d){
   d = d || {};
   dlg(`<h2>${d.id?"Επεξεργασία σκύλου":"Νέος σκύλος"}</h2>
-  <div class="row">${fld("d_name","Όνομα",d.name)}${fld("d_reg","Αρ. Κ.Ο.Κ.",d.reg)}</div>
+  <div class="row">${fld("d_name",tx("Όνομα"),d.name)}${fld("d_reg","Αρ. Κ.Ο.Κ.",d.reg)}</div>
   <div id="d_breedWrap">${breedPicker(d.breed||BREEDS[0])}</div>
   <div class="tiny" style="margin:6px 0 10px">Ονοματολογία F.C.I. — Ομάδα 7 (Δείκτες).
     Τμήμα 2 οι αγγλικές φυλές, Τμήμα 1 οι ηπειρωτικές· η F.C.I. τις κρίνει με χωριστούς
     κανονισμούς.</div>
-  <div class="row">${sel("d_sex","Φύλο",[["Α","Αρσενικός"],["Θ","Θηλυκός"]],d.sex||"Α")}
-    ${fld("d_dob","Ημ. γέννησης",d.dob,"date")}</div>
+  <div class="row">${sel("d_sex",tx("Φύλο"),[["Α",tx("Αρσενικός")],["Θ",tx("Θηλυκός")]],d.sex||"Α")}
+    ${fld("d_dob",tx("Ημ. γέννησης"),d.dob,"date")}</div>
   <div class="row">${fld("d_chip","Τσιπ / δερματοστιξία",d.chip)}${fld("d_book","Αρ. βιβλιαρίου εργασίας",d.book)}</div>
   <div class="row">${fld("d_kennel","Εκτροφείο",d.kennel)}</div>
   <hr><h3>Κυναγωγός</h3>
@@ -3817,7 +3905,7 @@ function exportTrialDoc(t){
 
 /* ---------- 15. Actions -------------------------------------------------- */
 document.addEventListener("click", ev=>{
-  const el2 = ev.target.closest("[data-nav],[data-tab],[data-day],[data-act],[data-open],[data-dog],[data-editdog],[data-edithandler],[data-newdogfor],[data-btick],[data-batch],[data-ftick],[data-fall],[data-nterrain],[data-smspick],[data-chan],[data-editjudge],[data-editterrain],[data-editentry],[data-note],[data-res],[data-bstat],[data-trailer],[data-untrailer],[data-recall],[data-sms],[data-copy],[data-wa],[data-smsdone],[data-set],[data-nstep],[data-nwidth],[data-nfault],[data-delpt],[data-nset],[data-ptset],[data-openbrace],[data-swap],[data-swapwith],[data-regtab],[data-bsec],[data-regbsec],[data-assign],[data-autoassign],[data-pick],[data-bmove],[data-signoff],[data-unlock]");
+  const el2 = ev.target.closest("[data-nav],[data-tab],[data-day],[data-act],[data-open],[data-dog],[data-editdog],[data-edithandler],[data-newdogfor],[data-btick],[data-batch],[data-ftick],[data-fall],[data-nterrain],[data-smspick],[data-chan],[data-editjudge],[data-editterrain],[data-editentry],[data-note],[data-res],[data-bstat],[data-trailer],[data-untrailer],[data-recall],[data-sms],[data-copy],[data-wa],[data-smsdone],[data-set],[data-nstep],[data-nwidth],[data-nfault],[data-delpt],[data-nset],[data-ptset],[data-openbrace],[data-swap],[data-swapwith],[data-regtab],[data-bsec],[data-regbsec],[data-setlang],[data-assign],[data-autoassign],[data-pick],[data-bmove],[data-signoff],[data-unlock]");
   if(!el2) return;
   const d = el2.dataset;
   const t = trialById(S.trialId);
@@ -3926,6 +4014,7 @@ document.addEventListener("click", ev=>{
     const wrap = el("d_breedWrap");
     if(wrap) wrap.innerHTML = breedPicker(d.bsec === "1" ? BREEDS_CONT[0] : BREEDS_BRIT[0]);
     return; }
+  if(d.setlang){ DB.settings.lang = d.setlang; save(); render(); return; }
   if(d.regbsec){ S.regSec = S.regSec === d.regbsec ? "" : d.regbsec; S.regBreed = ""; render(); return; }
 
   /* Sign-off locks the terrain's scores and notes. Unlocking is the head
@@ -4590,6 +4679,8 @@ const ACT = {
   xlsPaid: (b,t)=>exportPaidXls(t),
   xlsStats: ()=>exportStatsXls(),
   statsClear: ()=>{ S.stat = {year:"",month:"",type:"",handler:"",dog:""}; render(); },
+  /* Η γλώσσα αλλάζει μόνο την οθόνη. Τα δεδομένα μένουν όπως γράφτηκαν. */
+  lang: ()=>{ DB.settings.lang = langNext()[0]; save(); render(); },
   regClear: ()=>{ S.regSec = ""; S.regBreed = ""; render(); },
 
   /* Selection. Everyone is picked to begin with, because the usual job is

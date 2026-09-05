@@ -438,6 +438,40 @@ licence field; and a six-dog floor on the Συμμετοχές step. F.C.I. regu
 national regulations may only be stricter — so the ΚΑΝΟΝΙΣΜΟΙ Α.Κ.Ι. Κ.Ο.Α.Δ. that the app
 implements remain the governing text, and nothing here replaces them.
 
+## Twelfth round — γλώσσα, φάση πρώτη
+
+An **EL / EN** button sits in the header, on every screen, and the choice is saved with everything
+else. `LANGS` is a list, so a third language is a dictionary and nothing more.
+
+**The rule that must not be broken: the database stores Greek.** A dog's status is `ΔΗΛΩΜΕΝΟΣ`, a
+result is `ΕΞΑΙΡΕΤΟΣ`, and that string is the *lookup key* into the club's points table; `ΖΕΥΓΗ`
+decides the ×2 coefficient; `Έρευνας Κυνηγίου` produces `ΕΚ` in the draw code. If a language switch
+changed what is written, a backup made on an English phone would not merge into the Greek laptop and
+the points would stop adding up. Only the way to the screen is translated, and there is a test that
+fails if a stored value ever comes back in English.
+
+- **The Greek text is the key.** `tx("Αγώνες")` — no invented key names, and a string with no
+  translation yet comes out in Greek rather than blank. It is called `tx()` and not `t()` because
+  `t` is the trial everywhere else in the file, and a function hidden behind a variable is a bug
+  that only shows up on the wrong screen.
+- **Translated in this round:** the navigation and the transfer buttons, the connection chip, the
+  six progress steps, the trials list and its status chips, the register with both breed-section
+  buttons and the breed filter, the statistics filters and matrix headings, the dog form, and the
+  qualification and status values.
+- **Left in Greek on purpose:** the long explanatory passages, and the trial types. The types are
+  national categories and the judging vocabulary is F.C.I. terminology — those come from the
+  regulations, cited, not from a translation of ours. `EXCELLENT / VERY GOOD / GOOD`, `CQN`,
+  `ELIMINATED`, `BRACES / SOLO` are in because they are the F.C.I.\'s own words.
+- Ρυθμίσεις gains a **Γλώσσα** card that picks the language and states plainly what is translated
+  and what is not.
+
+### The documents are still unreachable
+
+Every source offered — `fci.be`, `enci.it`, `centrale-canine.fr`, `jghv.de`, `vdh.de`,
+`pointer-und-setter.de`, and the `skf-specialklubb.se` / `dgsk.dk` / `byakkokitsune.pl` mirrors —
+fails identically at the proxy, while GitHub answers. The policy is an allowlist, so no mirror will
+help. **The route in is the repo:** upload the PDFs to `fci/` and they can be read at full text.
+
 ## Deliberate departures from the canvas
 
 - **Offline chip.** The canvas shows «Εκτός σύνδεσης – 6 αλλαγές σε αναμονή». There is no server
