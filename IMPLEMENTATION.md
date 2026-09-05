@@ -594,6 +594,35 @@ Two facts about the data itself, for the head judge rather than for the code: **
 κυναγωγοί have no mobile**, so στάδιο 4 reaches 13 of the 26 δηλώσεις; and **0 of 26 are marked
 πληρωμένες**, which is what the Πληρωμές export will report.
 
+## Χώρα, and a σκύλος that cannot be left loose
+
+Two things the F.C.I. calendar makes ordinary and the app did not allow for: an entry from abroad,
+and a number written the way it is written at home.
+
+**Χώρα is now on the κυναγωγός, the σκύλος and the κριτής.** 66 countries, Κύπρος and Ελλάδα first
+and the rest alphabetically in Greek, each with its dialling code. On a person it is what supplies
+the code nobody puts on their own number: *347 1234567* under Ιταλία leaves as **+39 347 1234567**,
+*6912345678* under Ελλάδα as **+30 6912345678**. On a σκύλος it is the χώρα εκτροφής, and it
+**replaces the old yes/no «Κυπριακής εκτροφής»** — the same fact at one bit of resolution. Migration
+reads the old flag: `true` becomes CY, `false` becomes blank, because *not Cyprus* does not say
+where. Everyone already on file becomes CY, which is what they were.
+
+- **The stored number never changes.** The μητρώο keeps *00 357 99 677210* exactly as typed —
+  that is the number someone reads off the screen and dials by hand. E.164 happens on the way out.
+- **A leading 0 is dropped, except in Ιταλία.** Most of Europe's trunk prefix disappears when the
+  number is dialled from abroad; *+39 06 4788 1* keeps it. Ιταλία is the one exception in the table.
+- **Under each phone box the app says where the message will actually go**, and it follows the
+  country picker as it changes. A wrong country is visible before it is a failed send, not after.
+- **An entry list from abroad writes «ITA», not «Ιταλία».** The importer's new Χώρα column reads
+  ISO codes, the three-letter F.C.I. and I.O.C. codes, English and Greek names, in any case and
+  with or without tones — and one χώρα column covers the row, dog and man alike.
+
+**Κάθε σκύλος θέλει κυναγωγό.** The dog form used to save with the owner left empty, which is how
+a register ends up with dogs under «— χωρίς κυναγωγό —» that cannot be entered, drawn or sent an
+SMS. It now refuses, and says so on the screen where it is fixed rather than three screens later.
+The existing orphan card in the μητρώο stays — it is the repair path for records already made that
+way — and the σκύλοι table marks each one instead of showing an empty cell.
+
 ## Deliberate departures from the canvas
 
 - **Offline chip.** The canvas shows «Εκτός σύνδεσης – 6 αλλαγές σε αναμονή». There is no server

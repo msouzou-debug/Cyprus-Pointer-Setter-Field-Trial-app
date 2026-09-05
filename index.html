@@ -143,6 +143,9 @@ main{padding:var(--s4);max-width:1240px;margin:0 auto}
 .card.quiet{background:var(--sand)}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .row.tight{gap:6px}
+/* a phone field is taller than its neighbour by the line that says where the
+   message will go, so the pair lines up at the top instead of at the middle */
+.row.top{align-items:flex-start}
 .grow{flex:1 1 200px;min-width:0}
 label{display:block;font:400 15px/1.3 var(--f-b);color:var(--slate);margin:0 0 5px}
 input,select,textarea{width:100%;font:400 17px/1.3 var(--f-b);color:var(--ink);background:#fff;
@@ -704,7 +707,10 @@ const STR = { en: {
   "Όνομα":"Name", "Φύλο":"Sex", "Αρσενικός":"Male", "Θηλυκός":"Female",
   "Ημ. γέννησης":"Date of birth", "Εκτροφείο":"Kennel", "Κυναγωγός":"Handler",
   "Τσιπ / δερματοστιξία":"Chip / tattoo", "Αρ. βιβλιαρίου εργασίας":"Working book no.",
-  "Ονοματεπώνυμο":"Full name", "Κινητό":"Mobile",
+  "Ονοματεπώνυμο":"Full name", "Κινητό":"Mobile", "Χώρα":"Country",
+  "Χώρα εκτροφής":"Country of breeding",
+  "Αποστολή προς":"Will be sent to", "Τοπικός αριθμός· θα σταλεί ως":"Local number · sent as",
+  "Γράψτε τον αριθμό με +":"Write the number with +",
   /* κοινά κουμπιά */
   "Αποθήκευση":"Save", "Άκυρο":"Cancel", "Διαγραφή":"Delete", "Εκτύπωση":"Print",
   "Επικόλληση":"Paste", "Επικόλληση κειμένου":"Paste text", "Αναζήτηση":"Search",
@@ -881,20 +887,110 @@ function download(name, mime, content){
   setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
 }
 function phoneClean(p){ return String(p||"").replace(/[^\d+]/g,""); }
+
+/* ---------- Χώρες ---------------------------------------------------------
+   A κυναγωγός from Ρώμη writes his mobile down the way it is written in Ρώμη,
+   and nobody adds a country code to their own number. The country on the record
+   is what turns that into something a phone can dial. Ordered Κύπρος, Ελλάδα,
+   then alphabetically in Greek — the two that fill the list first, then the rest.
+   [ISO 3166-1 alpha-2, ελληνικά, κωδικός κλήσης]                              */
+const COUNTRIES = [
+  ["CY","Κύπρος","357"], ["GR","Ελλάδα","30"],
+  ["EG","Αίγυπτος","20"], ["AL","Αλβανία","355"], ["AD","Ανδόρα","376"],
+  ["AR","Αργεντινή","54"], ["AT","Αυστρία","43"], ["AU","Αυστραλία","61"],
+  ["BE","Βέλγιο","32"], ["BA","Βοσνία-Ερζεγοβίνη","387"], ["BG","Βουλγαρία","359"],
+  ["BR","Βραζιλία","55"], ["MK","Βόρεια Μακεδονία","389"], ["FR","Γαλλία","33"],
+  ["DE","Γερμανία","49"], ["GE","Γεωργία","995"], ["DK","Δανία","45"],
+  ["CH","Ελβετία","41"], ["EE","Εσθονία","372"], ["US","Η.Π.Α.","1"],
+  ["AE","Ηνωμένα Αραβικά Εμιράτα","971"], ["GB","Ηνωμένο Βασίλειο","44"],
+  ["JP","Ιαπωνία","81"], ["IN","Ινδία","91"], ["IE","Ιρλανδία","353"],
+  ["ES","Ισπανία","34"], ["IL","Ισραήλ","972"], ["IS","Ισλανδία","354"],
+  ["IT","Ιταλία","39"], ["CA","Καναδάς","1"], ["CN","Κίνα","86"],
+  ["HR","Κροατία","385"], ["BY","Λευκορωσία","375"], ["LV","Λετονία","371"],
+  ["LB","Λίβανος","961"], ["LT","Λιθουανία","370"], ["LI","Λιχτενστάιν","423"],
+  ["LU","Λουξεμβούργο","352"], ["MA","Μαρόκο","212"], ["ME","Μαυροβούνιο","382"],
+  ["MX","Μεξικό","52"], ["MD","Μολδαβία","373"], ["MC","Μονακό","377"],
+  ["MT","Μάλτα","356"], ["NZ","Νέα Ζηλανδία","64"], ["NO","Νορβηγία","47"],
+  ["ZA","Νότια Αφρική","27"], ["NL","Ολλανδία","31"], ["HU","Ουγγαρία","36"],
+  ["UA","Ουκρανία","380"], ["UY","Ουρουγουάη","598"], ["PE","Περού","51"],
+  ["PL","Πολωνία","48"], ["PT","Πορτογαλία","351"], ["RO","Ρουμανία","40"],
+  ["RU","Ρωσία","7"], ["RS","Σερβία","381"], ["SK","Σλοβακία","421"],
+  ["SI","Σλοβενία","386"], ["SE","Σουηδία","46"], ["SM","Άγιος Μαρίνος","378"],
+  ["TR","Τουρκία","90"], ["TN","Τυνησία","216"], ["CZ","Τσεχία","420"],
+  ["FI","Φινλανδία","358"], ["CL","Χιλή","56"]
+];
+/* An entry list from abroad writes «ITA» or «Italy», never «Ιταλία». The codes are
+   the three-letter ones the F.C.I. and the I.O.C. use on entry forms and catalogues. */
+const COUNTRY_ALIAS = {
+  CY:"Cyprus CYP", GR:"Greece GRE HEL Hellas", EG:"Egypt EGY", AL:"Albania ALB",
+  AD:"Andorra AND", AR:"Argentina ARG", AT:"Austria AUT", AU:"Australia AUS",
+  BE:"Belgium BEL", BA:"Bosnia and Herzegovina BIH", BG:"Bulgaria BUL BGR",
+  BR:"Brazil BRA", MK:"North Macedonia MKD", FR:"France FRA", DE:"Germany GER DEU",
+  GE:"Georgia GEO", DK:"Denmark DEN DNK", CH:"Switzerland SUI CHE", EE:"Estonia EST",
+  US:"United States USA", AE:"United Arab Emirates UAE", GB:"United Kingdom GBR UK Great Britain",
+  JP:"Japan JPN", IN:"India IND", IE:"Ireland IRL", ES:"Spain ESP", IL:"Israel ISR",
+  IS:"Iceland ISL", IT:"Italy ITA", CA:"Canada CAN", CN:"China CHN", HR:"Croatia CRO HRV",
+  BY:"Belarus BLR", LV:"Latvia LAT LVA", LB:"Lebanon LBN", LT:"Lithuania LTU",
+  LI:"Liechtenstein LIE", LU:"Luxembourg LUX", MA:"Morocco MAR", ME:"Montenegro MNE",
+  MX:"Mexico MEX", MD:"Moldova MDA", MC:"Monaco MON MCO", MT:"Malta MLT",
+  NZ:"New Zealand NZL", NO:"Norway NOR", ZA:"South Africa RSA ZAF", NL:"Netherlands NED NLD Holland",
+  HU:"Hungary HUN", UA:"Ukraine UKR", UY:"Uruguay URU", PE:"Peru PER", PL:"Poland POL",
+  PT:"Portugal POR PRT", RO:"Romania ROU", RU:"Russia RUS", RS:"Serbia SRB",
+  SK:"Slovakia SVK", SI:"Slovenia SLO SVN", SE:"Sweden SWE", SM:"San Marino SMR",
+  TR:"Turkey TUR Türkiye", TN:"Tunisia TUN", CZ:"Czech Republic CZE Czechia",
+  FI:"Finland FIN", CL:"Chile CHI CHL"
+};
+const COUNTRY = Object.fromEntries(COUNTRIES.map(c=>[c[0], {name:c[1], dial:c[2]}]));
+const HOME_COUNTRY = "CY";
+const countryName = c => (COUNTRY[c]||{}).name || "";
+const dialOf       = c => (COUNTRY[c]||{}).dial || "";
+/* Most of Europe drops a leading 0 when the number is dialled from abroad.
+   Ιταλία does not — +39 06 … keeps it — so it is the one exception here. */
+const KEEP_LEADING_0 = { IT:1 };
+
+/* Whatever the sheet wrote in its χώρα column — «Ιταλία», «Italy», «ITA», «IT» —
+   comes back as an ISO code, or as "" when it is nothing recognisable. Built once. */
+const cKey = x => String(x||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().trim();
+let COUNTRY_LOOKUP = null;
+function countryLookup(){
+  if(COUNTRY_LOOKUP) return COUNTRY_LOOKUP;
+  const m = {}, put = (k, code)=>{ const key = cKey(k); if(key && !m[key]) m[key] = code; };
+  COUNTRIES.forEach(([code, name])=>{
+    put(code, code); put(name, code);
+    (COUNTRY_ALIAS[code]||"").split(" ").forEach(w=>put(w, code));
+  });
+  return (COUNTRY_LOOKUP = m);
+}
+function normCountry(v){
+  const L = countryLookup();
+  const k = cKey(String(v||"").replace(/[().,\-–]/g," "));
+  if(!k) return "";
+  if(L[k]) return L[k];
+  /* «Italy (ITA)» and «Ιταλία - ITA» both arrive as two words; try each */
+  const hit = k.split(/\s+/).map(w=>L[w]).find(Boolean);
+  return hit || "";
+}
+
 /* The register holds numbers the way they were written down — "00 357 99 677210",
-   "99 314100", "99695551" all appear in the club's own list. sms: forgives that;
-   wa.me and viber:// do not, they want E.164 and nothing else. Normalise on the
-   way out only: what the μητρώο stores stays as the club typed it. */
-function phoneE164(p){
+   "99 314100", "99695551" all appear in the club's own list, and an Italian entry
+   writes "347 1234567". sms: forgives that; wa.me and viber:// do not, they want
+   E.164 and nothing else. The country on the record supplies the missing code.
+   Normalise on the way out only: what the μητρώο stores stays as it was typed. */
+function phoneE164(p, country){
   let n = phoneClean(p).replace(/(?!^)\+/g, "");
   if(!n) return "";
   if(n.slice(0,2) === "00") n = "+" + n.slice(2);
-  if(n.charAt(0) !== "+"){
-    if(/^357\d{8}$/.test(n))   n = "+" + n;          /* κωδικός χώρας χωρίς + */
-    else if(/^\d{8}$/.test(n)) n = "+357" + n;       /* κυπριακός, τοπικός */
-    else if(n.length >= 10)    n = "+" + n;          /* ξένος, με κωδικό χώρας */
+  if(n.charAt(0) === "+") return n;                  /* ήδη διεθνής */
+  const d = dialOf(country);
+  if(d){
+    if(n.indexOf(d) === 0 && n.length > d.length + 4) return "+" + n;  /* γραμμένος με τον κωδικό */
+    if(n.charAt(0) === "0" && !KEEP_LEADING_0[country]) n = n.slice(1);
+    return "+" + d + n;
   }
-  return n;
+  /* χωρίς χώρα στην καρτέλα: ό,τι ίσχυε πριν — οκτώ ψηφία είναι Κύπρος */
+  if(/^357\d{8}$/.test(n)) return "+" + n;
+  if(/^\d{8}$/.test(n))    return "+" + dialOf(HOME_COUNTRY) + n;
+  return n.length >= 10 ? "+" + n : n;
 }
 /* A laptop has no messaging app, so an sms: link does nothing and silently
    marks the message sent. The screen offers WhatsApp Web and the clipboard
@@ -2354,7 +2450,7 @@ function smsQueue(t){
       const e = t.entries.find(x=>x.id===id); if(!e) return;
       const key = e.handlerId || e.id; if(seen.has(key)) return; seen.add(key);
       out.push({kind:"handler", key:e.id, name:perName(e.handlerId), entry:e,
-                phone:phoneE164((perById(e.handlerId)||{}).phone), body:smsBody(t,e)});
+                phone:phoneE164((perById(e.handlerId)||{}).phone, (perById(e.handlerId)||{}).country), body:smsBody(t,e)});
     });
   }));
   const judged = new Set();
@@ -2363,7 +2459,7 @@ function smsQueue(t){
     judged.add(j);
     const jg = judById(j); if(!jg) return;
     out.push({kind:"judge", key:"j:"+j, name:jg.name, judge:jg,
-              phone:phoneE164(jg.phone), body:judgeSmsBody(t, jg)});
+              phone:phoneE164(jg.phone, jg.country), body:judgeSmsBody(t, jg)});
   }));
   return out;
 }
@@ -2648,10 +2744,11 @@ function vRegistry(){
     body = heading(tx("Μητρώο"),tx("Κριτές"),
       `<button class="b-act" data-act="newJudge">${tx("Νέος κριτής")}</button>`)
       + (DB.judges.length ? `<div class="card" style="padding:0"><table>
-        <thead><tr><th>Ονοματεπώνυμο</th><th>Κινητό</th><th>Ιδιότητα</th><th>Μεγάλη Έρευνα</th><th>Κυναγωγός</th><th class="noprint"></th></tr></thead>
+        <thead><tr><th>Ονοματεπώνυμο</th><th>Χώρα</th><th>Κινητό</th><th>Ιδιότητα</th><th>Μεγάλη Έρευνα</th><th>Κυναγωγός</th><th class="noprint"></th></tr></thead>
         <tbody>${DB.judges.map(j=>`<tr>
           <td><b>${esc(j.name)}</b></td>
-          <td class="num">${esc(j.phone||"—")}</td>
+          <td>${esc(countryName(j.country)||"—")}</td>
+          <td class="num">${esc(phoneE164(j.phone, j.country)||"—")}</td>
           <td>${esc(j.licence||"—")}</td>
           <td>${j.me?"Ναι":"—"}</td>
           <td>${esc(perName(j.personId))}</td>
@@ -2683,7 +2780,9 @@ function vRegistry(){
     const people = DB.people.slice().sort((a,b)=>a.name.localeCompare(b.name,"el"));
     const cards = people.map(p=>{
       const mine = (dogsOf.get(p.id)||[]).slice().sort((a,b)=>a.name.localeCompare(b.name,"el"));
-      const bits = [p.phone, p.member ? "μέλος "+p.member : ""].filter(Boolean).join(" · ");
+      const bits = [phoneE164(p.phone, p.country) || p.phone,
+        p.country && p.country !== HOME_COUNTRY ? countryName(p.country) : "",
+        p.member ? "μέλος "+p.member : ""].filter(Boolean).join(" · ");
       return `<div class="card handler" data-group="${esc(p.name.toLowerCase())}">
         <div class="row" style="align-items:baseline;gap:10px">
           <h3 class="grow" style="margin:0">${esc(p.name)}</h3>
@@ -2743,7 +2842,7 @@ function vRegistry(){
       + breedBar
       + (shown.length ? `<div class="card" style="padding:0"><div class="scroll"><table id="dogTbl">
         <thead><tr><th>Όνομα</th><th>Κ.Ο.Κ.</th><th>Φύλο</th><th>Έτος</th><th>Φυλή</th>
-          <th>Κυναγωγός</th><th>Αγώνες</th><th class="noprint"></th></tr></thead>
+          <th>Χώρα</th><th>Κυναγωγός</th><th>Αγώνες</th><th class="noprint"></th></tr></thead>
         <tbody>${shown.map(d=>{
           const n = DB.trials.filter(t=>t.entries.some(e=>e.dogId===d.id)).length;
           return `<tr data-name="${esc((d.name+" "+(d.reg||"")+" "+(d.kennel||"")).toLowerCase())}">
@@ -2753,7 +2852,9 @@ function vRegistry(){
           <td>${esc(d.sex||"—")}</td>
           <td class="num">${d.dob?d.dob.slice(0,4):"—"}</td>
           <td>${esc(d.breed||"—")}</td>
-          <td>${esc(perName(d.ownerId))}</td>
+          <td>${esc(countryName(d.country)||"—")}</td>
+          <td>${d.ownerId ? esc(perName(d.ownerId))
+            : `<span class="chip y">χωρίς κυναγωγό</span>`}</td>
           <td class="num">${n}</td>
           <td class="noprint"><button class="b-sm" data-dog="${d.id}">Ιστορικό</button>
             <button class="b-sm" data-editdog="${d.id}">Επεξ.</button></td></tr>`;}).join("")}
@@ -2832,7 +2933,7 @@ function vDog(){
     <div class="grow" style="min-width:200px">
       <div class="eyebrow">Ιστορικό σκύλου</div>
       <h1>${esc(d.name)}</h1>
-      <div class="meta num">${esc(d.breed||"")}${d.sex?" · "+(d.sex==="Θ"?"Θηλυκό":"Αρσενικό"):""}${d.dob?" · "+fmtDate(d.dob):""}${d.reg?" · Κ.Ο.Κ. "+esc(d.reg):""}${d.cy?" · κυπριακής εκτροφής":""}
+      <div class="meta num">${esc(d.breed||"")}${d.sex?" · "+(d.sex==="Θ"?"Θηλυκό":"Αρσενικό"):""}${d.dob?" · "+fmtDate(d.dob):""}${d.reg?" · Κ.Ο.Κ. "+esc(d.reg):""}${d.country?" · "+esc(d.country===HOME_COUNTRY?"κυπριακής εκτροφής":countryName(d.country)):""}
         <br>Κυναγωγός ${esc(perName(d.ownerId))}${d.kennel?" · εκτροφείο «"+esc(d.kennel)+"»":""}</div>
     </div>
     <div class="score"><b>${total}</b><span>πόντοι · ${hist.length} ${hist.length===1?"συμμετοχή":"συμμετοχές"}</span></div>
@@ -3081,7 +3182,8 @@ function vSettings(){
 }
 
 /* ---------- 13. Dialogs -------------------------------------------------- */
-function dlg(html){ el("dlgBody").innerHTML = html; el("dlg").showModal(); }
+function dlg(html){ el("dlgBody").innerHTML = html; el("dlg").showModal();
+  wireCountry(el("dlgBody")); }
 function closeDlg(){ el("dlg").close(); }
 
 function fld(id,label,val,type){ return `<div class="grow"><label>${label}</label>
@@ -3090,6 +3192,41 @@ function sel(id,label,opts,val){ return `<div class="grow"><label>${label}</labe
   ${opts.map(o=>{const v=Array.isArray(o)?o[0]:o,t=Array.isArray(o)?o[1]:o;
     return `<option value="${esc(v)}" ${String(val)===String(v)?"selected":""}>${esc(t)}</option>`;}).join("")}
   </select></div>`; }
+
+/* Χώρα and κινητό belong side by side: the country is what tells the app which
+   code to put in front of a number nobody writes a code on. `data-dial` lets the
+   pair below keep the hint under the phone box honest as the country changes. */
+/* The dialling code belongs beside a person, who will be sent a message; on a
+   σκύλος the same list is just a country and «Ιταλία +39» reads as noise. */
+function countryPicker(id, val, label, noDial){
+  const opts = [["","—"]].concat(COUNTRIES.map(c=>[c[0], noDial ? c[1] : c[1] + " +" + c[2]]));
+  /* undefined is a record that predates the field, or a new one — Κύπρος.
+     An empty string is a deliberate "not stated" and stays that way. */
+  return sel(id, label || tx("Χώρα"), opts, val === undefined ? HOME_COUNTRY : val)
+    .replace(`<select id="${id}">`, `<select id="${id}" data-dial="${id}">`);
+}
+function phoneField(id, val, countryId, label){
+  return `<div class="grow"><label>${label || tx("Κινητό")}</label>
+    <input id="${id}" type="tel" value="${esc(val??"")}" data-phone="${countryId}">
+    <div class="tiny" id="${id}_hint"></div></div>`;
+}
+/* Runs after the dialog is in the DOM: fills every hint, and keeps it in step. */
+function wireCountry(root){
+  (root || document).querySelectorAll("[data-phone]").forEach(inp=>{
+    const cs = el(inp.dataset.phone), hint = el(inp.id + "_hint");
+    if(!cs || !hint) return;
+    const paint = ()=>{
+      const d = dialOf(cs.value);
+      const shown = phoneE164(inp.value, cs.value);
+      hint.textContent = inp.value.trim()
+        ? tx("Αποστολή προς") + " " + (shown || "—")
+        : (d ? tx("Τοπικός αριθμός· θα σταλεί ως") + " +" + d + "…" : tx("Γράψτε τον αριθμό με +"));
+    };
+    inp.addEventListener("input", paint);
+    cs.addEventListener("change", paint);
+    paint();
+  });
+}
 
 function dlgTrial(t){
   t = t || {};
@@ -3144,17 +3281,20 @@ function dlgDog(d){
   <div class="row">${sel("d_sex",tx("Φύλο"),[["Α",tx("Αρσενικός")],["Θ",tx("Θηλυκός")]],d.sex||"Α")}
     ${fld("d_dob",tx("Ημ. γέννησης"),d.dob,"date")}</div>
   <div class="row">${fld("d_chip","Τσιπ / δερματοστιξία",d.chip)}${fld("d_book","Αρ. βιβλιαρίου εργασίας",d.book)}</div>
-  <div class="row">${fld("d_kennel","Εκτροφείο",d.kennel)}</div>
+  <div class="row">${fld("d_kennel","Εκτροφείο",d.kennel)}
+    ${countryPicker("d_country", d.country, tx("Χώρα εκτροφής"), true)}</div>
+  <div class="tiny">Η χώρα εκτροφής είναι εκείνη του εκτροφείου, όχι του κυναγωγού· από αυτήν
+    βγαίνει και το «κυπριακής εκτροφής» στο μητρώο.</div>
   <hr><h3>Κυναγωγός</h3>
   <div class="row">${sel("d_owner","Επιλογή από το μητρώο",
       [["","+ Νέος κυναγωγός"]].concat(DB.people.slice().sort((a,b)=>a.name.localeCompare(b.name,"el"))
         .map(p=>[p.id,p.name])),d.ownerId)}</div>
   <div class="row">${fld("d_ownerName","Ονοματεπώνυμο",(perById(d.ownerId)||{}).name)}
-    ${fld("d_ownerPhone","Κινητό (+357…)",(perById(d.ownerId)||{}).phone,"tel")}</div>
-  <div class="tiny">Ο κυναγωγός που δηλώνεται εδώ έρχεται πρώτος στη λίστα όταν ο σκύλος μπαίνει
-    σε αγώνα. Όνομα και τηλέφωνο ενημερώνουν και το μητρώο κυναγωγών.</div>
-  <div class="row" style="margin-top:10px">
-    ${sel("d_cy","Κυπριακής εκτροφής",[["1","Ναι"],["0","Όχι"]],d.cy?"1":"0")}</div>
+    ${countryPicker("d_ownerCountry",(perById(d.ownerId)||{}).country)}</div>
+  <div class="row">${phoneField("d_ownerPhone",(perById(d.ownerId)||{}).phone,"d_ownerCountry")}</div>
+  <div class="tiny">Κάθε σκύλος ανήκει σε έναν κυναγωγό — διαλέξτε τον από το μητρώο ή γράψτε το
+    όνομά του εδώ. Έρχεται πρώτος στη λίστα όταν ο σκύλος μπαίνει σε αγώνα, και όνομα, χώρα και
+    τηλέφωνο ενημερώνουν και το μητρώο κυναγωγών.</div>
   <div class="row"><button class="b-pri grow" data-act="saveDog" data-id="${d.id||""}">Αποθήκευση</button>
     <button class="grow" data-act="close">Άκυρο</button>
     ${d.id?`<button class="b-warn" data-act="delDog" data-id="${d.id}">Διαγραφή</button>`:""}</div>`);
@@ -3166,9 +3306,11 @@ function dlgDog(d){
 function dlgHandler(p){
   p = p || {};
   dlg(`<h2>${p.id?"Επεξεργασία κυναγωγού":"Νέος κυναγωγός"}</h2>
-  <div class="row">${fld("p_name","Ονοματεπώνυμο",p.name)}</div>
-  <div class="row">${fld("p_phone","Κινητό (μορφή +357…)",p.phone,"tel")}${fld("p_member","Αρ. μέλους",p.member)}</div>
-  <div class="tiny">Το τηλέφωνο χρησιμοποιείται μόνο για την ενημέρωση σειράς στους αγώνες.</div>
+  <div class="row">${fld("p_name","Ονοματεπώνυμο",p.name)}
+    ${countryPicker("p_country", p.country)}</div>
+  <div class="row top">${phoneField("p_phone", p.phone, "p_country")}${fld("p_member","Αρ. μέλους",p.member)}</div>
+  <div class="tiny">Γράψτε τον αριθμό όπως τον γράφετε πάντα· η χώρα βάζει τον κωδικό όταν
+    φύγει το μήνυμα. Το τηλέφωνο χρησιμοποιείται μόνο για την ενημέρωση σειράς στους αγώνες.</div>
   <div class="row"><button class="b-pri grow" data-act="saveHandler" data-id="${p.id||""}">Αποθήκευση</button>
     <button class="grow" data-act="close">Άκυρο</button>
     ${p.id?`<button class="b-warn" data-act="delHandler" data-id="${p.id}">Διαγραφή</button>`:""}</div>`);
@@ -3178,7 +3320,8 @@ function dlgJudge(j){
   j = j || {};
   dlg(`<h2>${j.id?"Επεξεργασία κριτή":"Νέος κριτής"}</h2>
   <div class="row">${fld("j_name","Ονοματεπώνυμο",j.name)}
-    ${fld("j_phone","Κινητό (+357…)",j.phone,"tel")}</div>
+    ${countryPicker("j_country", j.country)}</div>
+  <div class="row">${phoneField("j_phone", j.phone, "j_country")}</div>
   <div class="row">${sel("j_lic","Ιδιότητα",["ΕΠΙΣΗΜΟΣ","ΔΟΚΙΜΟΣ"],j.licence||"ΕΠΙΣΗΜΟΣ")}
     ${sel("j_me","Κριτής Μεγάλης Έρευνας",[["1","Ναι"],["0","Όχι"]],j.me?"1":"0")}</div>
   <div class="row">${sel("j_person","Ο ίδιος στο μητρώο κυναγωγών (Άρθρο 49)",
@@ -3898,25 +4041,28 @@ function exportStatsXls(){
 /* Who has paid and who has not. The treasurer asks for this list on the morning
    of the αγώνας and it was nowhere — only a chip next to each name. */
 function exportPaidXls(t){
-  const rows = [[txt("Κυναγωγός"),txt("Τηλέφωνο"),txt("Σκύλος"),txt("Φυλή"),txt("Αρ. Κ.Ο.Κ."),
-                 txt("Κατάσταση"),txt("Πληρωμή")]];
+  const rows = [[txt("Κυναγωγός"),txt("Χώρα"),txt("Τηλέφωνο"),txt("Σκύλος"),txt("Φυλή"),
+                 txt("Αρ. Κ.Ο.Κ."),txt("Κατάσταση"),txt("Πληρωμή")]];
   const sorted = t.entries.slice().sort((a,b)=>
     perName(a.handlerId).localeCompare(perName(b.handlerId),"el")
     || dogName(a.dogId).localeCompare(dogName(b.dogId),"el"));
   sorted.forEach(e=>{
     const d = dogById(e.dogId) || {}, p = perById(e.handlerId) || {};
-    rows.push([txt(p.name||"—"), txt(p.phone||""), txt(d.name||""), txt(d.breed||""), txt(d.reg||""),
+    rows.push([txt(p.name||"—"), txt(countryName(p.country)), txt(phoneE164(p.phone, p.country)),
+      txt(d.name||""), txt(d.breed||""), txt(d.reg||""),
       txt(e.status||""), txt(e.paid ? "ΠΛΗΡΩΜΕΝΟ" : "ΑΠΛΗΡΩΤΟ")]);
   });
   const last = rows.length;
   rows.push([]);
-  rows.push([txt("Πληρωμένοι"), fml(`COUNTIF(G2:G${last},"ΠΛΗΡΩΜΕΝΟ")`)]);
-  rows.push([txt("Απλήρωτοι"),  fml(`COUNTIF(G2:G${last},"ΑΠΛΗΡΩΤΟ")`)]);
+  rows.push([txt("Πληρωμένοι"), fml(`COUNTIF(H2:H${last},"ΠΛΗΡΩΜΕΝΟ")`)]);
+  rows.push([txt("Απλήρωτοι"),  fml(`COUNTIF(H2:H${last},"ΑΠΛΗΡΩΤΟ")`)]);
   rows.push([txt("Σύνολο"),     num(sorted.length)]);
-  const unpaid = [[txt("Κυναγωγός"),txt("Τηλέφωνο"),txt("Σκύλος"),txt("Κατάσταση")]];
+  /* Ο ταμίας τηλεφωνεί από αυτό το φύλλο, άρα ο αριθμός βγαίνει έτοιμος να κληθεί. */
+  const unpaid = [[txt("Κυναγωγός"),txt("Χώρα"),txt("Τηλέφωνο"),txt("Σκύλος"),txt("Κατάσταση")]];
   sorted.filter(e=>!e.paid).forEach(e=>{
     const p = perById(e.handlerId) || {};
-    unpaid.push([txt(p.name||"—"), txt(p.phone||""), txt(dogName(e.dogId)), txt(e.status||"")]);
+    unpaid.push([txt(p.name||"—"), txt(countryName(p.country)), txt(phoneE164(p.phone, p.country)),
+      txt(dogName(e.dogId)), txt(e.status||"")]);
   });
   download(`KOAD_Pliromes_${t.title.replace(/\s+/g,"_")}.xlsx`,
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -4561,13 +4707,18 @@ const ACT = {
     const o = {name:el("d_name").value.trim(), breed:el("d_breed").value, sex:el("d_sex").value,
       reg:el("d_reg").value.trim(), chip:el("d_chip").value.trim(), book:el("d_book").value.trim(),
       dob:el("d_dob").value, kennel:el("d_kennel").value.trim(),
-      cy:el("d_cy").value==="1"};
+      country:el("d_country").value};
     if(!o.name) return toast("Το όνομα του σκύλου είναι υποχρεωτικό");
     /* owner is created or updated from the same screen */
     let ownerId = el("d_owner").value;
-    const on = el("d_ownerName").value.trim(), op = el("d_ownerPhone").value.trim();
-    if(ownerId){ const p = perById(ownerId); if(p){ if(on) p.name = on; if(op) p.phone = op; } }
-    else if(on){ ownerId = ensurePerson(on, op); }
+    const on = el("d_ownerName").value.trim(), op = el("d_ownerPhone").value.trim(),
+          oc = el("d_ownerCountry").value;
+    /* Ένας σκύλος χωρίς κυναγωγό δεν μπορεί να δηλωθεί, να κληρωθεί ή να πάρει SMS —
+       ζητείται εδώ, όπου διορθώνεται, και όχι τρεις οθόνες παρακάτω. */
+    if(!ownerId && !on) return toast("Κάθε σκύλος θέλει κυναγωγό — επιλέξτε ή γράψτε όνομα");
+    if(ownerId){ const p = perById(ownerId);
+      if(p){ if(on) p.name = on; if(op) p.phone = op; if(oc) p.country = oc; } }
+    else { ownerId = ensurePerson(on, op, oc); }
     o.ownerId = ownerId || "";
     if(id) Object.assign(dogById(id), o);
     else { const nid = uid(); DB.dogs.push({id:nid, ...o});
@@ -4587,7 +4738,8 @@ const ACT = {
 
   saveHandler: (btn)=>{
     const id = btn.dataset.id;
-    const o = {name:el("p_name").value.trim(), phone:el("p_phone").value.trim(), member:el("p_member").value.trim()};
+    const o = {name:el("p_name").value.trim(), phone:el("p_phone").value.trim(),
+      country:el("p_country").value, member:el("p_member").value.trim()};
     if(!o.name) return toast("Το ονοματεπώνυμο είναι υποχρεωτικό");
     let nid = id;
     if(id) Object.assign(perById(id), o);
@@ -4647,7 +4799,7 @@ const ACT = {
   saveJudge: (btn)=>{
     const id = btn.dataset.id;
     const o = {name:el("j_name").value.trim(), phone:el("j_phone").value.trim(),
-               licence:el("j_lic").value,
+               country:el("j_country").value, licence:el("j_lic").value,
                me:el("j_me").value==="1", personId:el("j_person").value};
     if(!o.name) return toast("Το ονοματεπώνυμο είναι υποχρεωτικό");
     if(id) Object.assign(judById(id), o); else DB.judges.push({id:uid(), ...o});
@@ -4731,7 +4883,7 @@ const ACT = {
       if(!handlerId && freeMan) handlerId = ensurePerson(freeMan, "");
       dogId = uid();
       DB.dogs.push({id:dogId, name:freeDog, breed:BREEDS[0], sex:"Α", reg:"", chip:"", book:"",
-                    dob:"", kennel:"", ownerId:handlerId, cy:false, guest:true});
+                    dob:"", kennel:"", ownerId:handlerId, country:"", guest:true});
     } else if(!handlerId && freeMan){ handlerId = ensurePerson(freeMan, ""); }
     let e = t.entries.find(x=>x.dogId===dogId);
     if(!e){ e = {id:uid(), dogId, handlerId, status:"ΣΥΜΠΛΗΡΩΜΑΤΙΚΟΣ",
@@ -4893,11 +5045,13 @@ function parseCsv(text){
   return text.replace(/^\uFEFF/,"").split(/\r?\n/).filter(l=>l.trim())
     .map(l => l.split(/[;,\t]/).map(c=>c.trim().replace(/^"|"$/g,"")));
 }
-function ensurePerson(name, phone){
+function ensurePerson(name, phone, country){
   if(!name) return "";
   let p = DB.people.find(x=>x.name.toLowerCase()===name.toLowerCase());
-  if(!p){ p = {id:uid(), name, phone:phone||"", member:""}; DB.people.push(p); }
-  else if(phone && !p.phone) p.phone = phone;
+  if(!p){ p = {id:uid(), name, phone:phone||"", country:country||HOME_COUNTRY, member:""};
+          DB.people.push(p); }
+  else { if(phone && !p.phone) p.phone = phone;
+         if(country && !p.country) p.country = country; }
   return p.id;
 }
 /* Merge an incoming backup into the local one: for anything with the same id the
@@ -4966,6 +5120,17 @@ function migrate(){
   }
   /* the register follows the F.C.I. nomenclature now — rename, never drop */
   (DB.dogs||[]).forEach(d=>{ if(BREED_RENAMED[d.breed]) d.breed = BREED_RENAMED[d.breed]; });
+  /* Χώρα. Everyone on file until now was entered by a Cypriot club for a Cypriot
+     trial, so Κύπρος is the only defensible default for a person; the phone codes
+     that were already working keep working. A σκύλος had a yes/no «κυπριακής
+     εκτροφής» instead, which is the same fact with one bit of resolution: yes
+     becomes CY, no becomes blank, because "not Cyprus" does not say where. */
+  (DB.people||[]).forEach(p=>{ if(!p.country) p.country = HOME_COUNTRY; });
+  (DB.judges||[]).forEach(j=>{ if(!j.country) j.country = HOME_COUNTRY; });
+  (DB.dogs||[]).forEach(d=>{
+    if(d.country === undefined) d.country = d.cy === false ? "" : HOME_COUNTRY;
+    delete d.cy;
+  });
   (DB.trials||[]).forEach(t=>{
     t.notes = t.notes || {}; t.results = t.results || {}; t.sms = t.sms || {};
     (t.days||[]).forEach(d=>(d.terrains||[]).forEach(tr=>(tr.braces||[]).forEach(b=>{
@@ -5163,7 +5328,7 @@ const IMPORT_FIELDS = [["","— παράλειψη —"],["name","Όνομα σ�
   ["reg","Αρ. Κ.Ο.Κ."],["chip","Τσιπ / δερματοστιξία"],["book","Βιβλιάριο εργασίας"],
   ["dob","Ημ. γέννησης"],["kennel","Εκτροφείο"],["owner","Κυναγωγός (ιδιοκτήτης)"],["ownerPhone","Τηλέφωνο ιδιοκτήτη"],
   ["handler","Κυναγωγός (στον αγώνα)"],["handlerPhone","Τηλέφωνο κυναγωγού"],
-  ["judge","Κριτής"],["judgePhone","Τηλέφωνο κριτή"]];
+  ["judge","Κριτής"],["judgePhone","Τηλέφωνο κριτή"],["country","Χώρα"]];
 
 const GUESS = {
   name:["όνομα σκύλου","ονομα σκυλου","σκύλος","σκυλος","dog","name","όνομα","ονομα"],
@@ -5176,6 +5341,7 @@ const GUESS = {
   kennel:["εκτροφ","kennel","affix"],
   owner:["ιδιοκτ","owner"],
   ownerPhone:["τηλ. ιδιοκτ","τηλέφωνο ιδιοκτ","owner phone"],
+  country:["χώρα","χωρα","country","nation","εθνικότ","εθνικοτ","nat."],
   judge:["κριτ","judge"],
   judgePhone:["τηλ. κριτ","τηλέφωνο κριτ","τηλεφωνο κριτ","κινητό κριτ","κινητο κριτ","judge phone"],
   handler:["κυναγωγ","χειριστ","handler","conductor"],
@@ -5457,8 +5623,11 @@ function doImport(){
        columns exist, each keeps its own phone. */
     const oName = get(r,"owner"), hName = get(r,"handler");
     const oPhone = get(r,"ownerPhone"), hPhone = get(r,"handlerPhone");
-    const ownerId   = oName ? ensurePerson(oName, oPhone || (hName ? "" : hPhone)) : "";
-    const handlerId = hName ? ensurePerson(hName, hPhone || (oName ? "" : oPhone)) : ownerId;
+    /* One χώρα column covers the row: an entry list from abroad names the country
+       once, and it is the country of the dog and of the man who brought it. */
+    const ctry = normCountry(get(r,"country"));
+    const ownerId   = oName ? ensurePerson(oName, oPhone || (hName ? "" : hPhone), ctry) : "";
+    const handlerId = hName ? ensurePerson(hName, hPhone || (oName ? "" : oPhone), ctry) : ownerId;
     const fields = {
       name, breed: breed || (dog && dog.breed) || BREEDS[0],
       sex: get(r,"sex") ? normSex(get(r,"sex")) : (dog ? dog.sex : "Α"),
@@ -5470,10 +5639,11 @@ function doImport(){
          import under «— χωρίς κυναγωγό —» and every one has to be attached by
          hand. Where the sheet does name an owner, the owner keeps the dog and the
          handler stays on the entry, which is the distinction Άρθρο 5 draws. */
-      ownerId: ownerId || handlerId || (dog&&dog.ownerId) || ""
+      ownerId: ownerId || handlerId || (dog&&dog.ownerId) || "",
+      country: ctry || (dog && dog.country) || HOME_COUNTRY
     };
     if(dog){ Object.assign(dog, fields); updated++; }
-    else { dog = {id:uid(), cy:true, ...fields}; DB.dogs.push(dog); added++; }
+    else { dog = {id:uid(), ...fields}; DB.dogs.push(dog); added++; }
 
     if(I.trial && I.entries && !I.trial.entries.some(e=>e.dogId===dog.id)){
       I.trial.entries.push({id:uid(), dogId:dog.id, handlerId: handlerId || dog.ownerId || "",
