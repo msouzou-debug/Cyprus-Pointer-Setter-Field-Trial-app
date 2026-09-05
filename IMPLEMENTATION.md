@@ -516,6 +516,20 @@ Worth knowing about this shape of file: the Α/Α column is the **running order*
 number — it is the draw, not an entry number, and the importer correctly ignores it. Bringing that
 order in as ready-made ζεύγη is a separate job the importer does not do.
 
+## The upload carries the pairing into the αγώνας
+
+The file already says which κυναγωγός brings which σκύλος. Uploaded from a trial's **Συμμετοχές**
+that pairing went straight onto each συμμετοχή and always had. Uploaded from the **Μητρώο** it
+stopped at the register, and the same pairing then had to be rebuilt by hand, entry by entry.
+
+The register import now offers the open αγώνες in a dropdown — «— μόνο στο μητρώο —» by default,
+finished trials excluded, hidden entirely when there is no open trial. Pick one and every κυναγωγός
+in the file lands on his entry. Opened from a trial the dialog is unchanged: the trial is already
+known, so it keeps its single ticked checkbox rather than asking again.
+
+`_imp.locked` records which way the dialog was opened, so choosing a trial from the list does not
+turn the list into a checkbox under the user's hand.
+
 ## Deliberate departures from the canvas
 
 - **Offline chip.** The canvas shows «Εκτός σύνδεσης – 6 αλλαγές σε αναμονή». There is no server

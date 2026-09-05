@@ -726,7 +726,13 @@ const STR = { en: {
   "Μεταφρασμένα: η πλοήγηση, τα έξι βήματα, το μητρώο, τα στατιστικά, οι καταστάσεις και οι βαθμολογίες. Τα μεγάλα επεξηγηματικά κείμενα και τα είδη αγώνα μένουν προς το παρόν ελληνικά — η ορολογία των κριτών θα μπει από τους κανονισμούς της F.C.I. και όχι από δική μας μετάφραση.":
     "Translated so far: the navigation, the six steps, the register, the statistics, the statuses and the gradings. The long explanatory passages and the trial types are still Greek — the judging vocabulary will come from the F.C.I. regulations rather than from a translation of ours.",
   "σκύλος":
-    "dog"
+    "dog",
+  "Δημιουργία συμμετοχών σε αγώνα":
+    "Create entries in a trial",
+  "— μόνο στο μητρώο —":
+    "— register only —",
+  "Ο κυναγωγός του αρχείου μπαίνει στη συμμετοχή· δεν χρειάζεται να τους ξαναταιριάξετε.":
+    "The κυναγωγός named in the file goes onto the entry — no need to pair them again."
 } };
 /* Η μετάφραση της οθόνης. Το κλειδί είναι το ελληνικό κείμενο.
    Λέγεται tx() και όχι t(): το `t` είναι ο αγώνας σε όλο το υπόλοιπο αρχείο,
@@ -5184,8 +5190,11 @@ async function startImport(file, trial){
   catch(e){ alert("Το αρχείο δεν διαβάστηκε.\n\n" + e.message); return; }
   const sheet = parsed.sheets[0];
   if(!parsed.data[sheet] || !parsed.data[sheet].length){ alert("Το αρχείο δεν περιέχει δεδομένα."); return; }
+  /* `locked` means the import was opened from a trial's Συμμετοχές and belongs to
+     that αγώνας. Opened from the Μητρώο it is not locked, and the dialog offers
+     the open trials to choose from instead. */
   window._imp = {parsed, sheet, header:0, map:{}, trial: trial||null, entries: !!trial,
-                 file: file.name};
+                 locked: !!trial, trialId: trial ? trial.id : "", file: file.name};
   window._imp.header = detectHeader(parsed.data[sheet]);
   autoMap();
   renderImport();
@@ -5288,9 +5297,24 @@ function renderImport(){
     ${serials?`<br>${serials} ημερομηνίες από σειριακό αριθμό Excel.`:""}
   </div>
 
-  ${I.trial?`<label style="display:flex;gap:10px;align-items:center;font-size:17px;color:var(--ink);margin:14px 0">
+  ${I.locked?`<label style="display:flex;gap:10px;align-items:center;font-size:17px;color:var(--ink);margin:14px 0">
     <input type="checkbox" data-impentries ${I.entries?"checked":""} style="width:24px;height:24px;min-height:0;flex:none">
-    Δημιουργία συμμετοχών στον αγώνα «${esc(I.trial.title)}»</label>`:""}
+    Δημιουργία συμμετοχών στον αγώνα «${esc(I.trial.title)}»</label>`
+  /* Uploading from the Μητρώο used to end at the register: the file already says
+     which κυναγωγός brings which σκύλος, and that pairing was then rebuilt by
+     hand on the Συμμετοχές screen. The same file can now go straight into an
+     open αγώνας from here, with the handler already on each συμμετοχή. */
+  : (()=>{ const open = DB.trials.filter(t=>t.status !== CLOSED)
+        .sort((a,b)=>(b.dateStart||"").localeCompare(a.dateStart||""));
+      if(!open.length) return "";
+      return `<div style="margin:14px 0"><label>${tx("Δημιουργία συμμετοχών σε αγώνα")}</label>
+        <select data-imptrial>
+          <option value="">${tx("— μόνο στο μητρώο —")}</option>
+          ${open.map(t=>`<option value="${t.id}" ${I.trialId===t.id?"selected":""}>${
+            esc(t.title)} · ${fmtDate(t.dateStart)}</option>`).join("")}
+        </select>
+        <p class="tiny" style="margin-top:6px">${tx("Ο κυναγωγός του αρχείου μπαίνει στη συμμετοχή· δεν χρειάζεται να τους ξαναταιριάξετε.")}</p></div>`;
+    })()}
 
   <div class="row" style="margin-top:16px">
     <button data-act="close">Άκυρο</button>
@@ -5376,6 +5400,11 @@ document.addEventListener("change", ev=>{
     return;
   }
   if(ev.target.dataset.impentries!==undefined){ I.entries = ev.target.checked; return; }
+  if(ev.target.dataset.imptrial!==undefined){
+    I.trialId = ev.target.value;
+    I.trial = I.trialId ? trialById(I.trialId) : null;
+    I.entries = !!I.trial;
+    return; }
 });
 
 ACT.doImport = () => doImport();
