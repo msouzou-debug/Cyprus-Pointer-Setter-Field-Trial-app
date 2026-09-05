@@ -581,8 +581,25 @@ dialog::backdrop{background:#000000a6}
 
 /* ---------- 1. Reference data ------------------------------------------- */
 const CLOSED = "ΟΛΟΚΛΗΡΩΘΗΚΕ";
-const BREEDS = ["Pointer","Αγγλικό Σέττερ","Ιρλανδικό Σέττερ","Σκωτικό Σέττερ"];
-const BREED_GROUP = b => b === "Pointer" ? "POINTER" : "SETTER";
+/* F.C.I. Nomenclature, Ομάδα 7 (Δείκτες), Τμήμα 2 — Βρετανικοί και Ιρλανδοί
+   δείκτες και σέττερ. Τμήμα 2.1 είναι ο Pointer· 2.2 τα τέσσερα σέττερ. Ο αριθμός
+   είναι το πρότυπο F.C.I. Ο διαχωρισμός φυλής στα τερέν (Derby) είναι ακριβώς
+   αυτό το 2.1 / 2.2 — δεν είναι δικός μας κανόνας. */
+const BREEDS = ["Pointer","Αγγλικό Σέττερ","Σέττερ Γκόρντον",
+                "Ιρλανδικό Σέττερ","Ιρλανδικό Ασπροκόκκινο Σέττερ"];
+const BREED_FCI = {
+  "Pointer":                       {no:1,   en:"Pointer",                    sec:"2.1"},
+  "Αγγλικό Σέττερ":                {no:2,   en:"English Setter",             sec:"2.2"},
+  "Σέττερ Γκόρντον":               {no:6,   en:"Gordon Setter",              sec:"2.2"},
+  "Ιρλανδικό Σέττερ":              {no:120, en:"Irish Red Setter",           sec:"2.2"},
+  "Ιρλανδικό Ασπροκόκκινο Σέττερ": {no:330, en:"Irish Red and White Setter", sec:"2.2"}
+};
+/* «Σκωτικό Σέττερ» ήταν το παλιό όνομα του ομίλου για τον Γκόρντον. Μετονομάζεται
+   στη φόρτωση ώστε κανένας σκύλος να μη χάσει τη φυλή του. */
+const BREED_RENAMED = { "Σκωτικό Σέττερ": "Σέττερ Γκόρντον" };
+const breedLabel = b => (BREED_FCI[b] && BREED_FCI[b].en !== b)
+  ? b + " (" + BREED_FCI[b].en + ")" : b;
+const BREED_GROUP = b => (BREED_FCI[b]||{}).sec === "2.1" ? "POINTER" : "SETTER";
 const TYPES = ["Πρακτικού Κυνηγίου","Έρευνας Κυνηγίου","Μεγάλης Έρευνας","Κλασικός","Derby","Ε.Κ.Ι.","Ε.ΦΥ.Π."];
 const AWARDS = ["-","CACT","RCACT","CACIT","RCACIT"];
 const QUALS = ["-","1ος ΕΞΑΙΡΕΤΟΣ","2ος ΕΞΑΙΡΕΤΟΣ","ΕΞΑΙΡΕΤΟΣ","Τ.Μ.Ε.","1ος ΠΟΛΥ ΚΑΛΟΣ","ΠΟΛΥ ΚΑΛΟΣ","ΚΑΛΟΣ","Π.Φ.Π. (CQN)","ΑΝΕΠΑΡΚΗΣ","ΑΠΟΚΛΕΙΣΜΟΣ"];
@@ -1253,7 +1270,7 @@ function tTerrains(t){
     return `<div class="card">
       <h3 style="margin:0">${esc(tr.name)}</h3>
       ${tr.breedGroup?`<div class="muted" style="margin-top:6px">Φυλή: ${
-        tr.breedGroup==="POINTER"?"Pointer":"Setter"}</div>`:""}
+        tr.breedGroup==="POINTER"?"Pointer (F.C.I. 2.1)":"Σέττερ (F.C.I. 2.2)"}</div>`:""}
 
       <div class="noprint" style="margin-top:12px;display:grid;gap:12px;max-width:420px">
         ${slots.map(seat).join("")}</div>
@@ -2397,8 +2414,12 @@ function vRegistry(){
     <hr style="margin:16px 20px">
     <div class="eyebrow" style="padding:0 20px">Φυλή</div>
     <div class="tiny" style="padding:10px 20px 0;line-height:1.9">${
-      Object.entries(byBreed).sort((a,b)=>b[1]-a[1])
-        .map(([b,n])=>`${esc(b)} · ${n}`).join("<br>") || "—"}</div>
+      BREEDS.map(b=>`${esc(b)} · ${byBreed[b]||0}`)
+        .concat(Object.keys(byBreed).filter(b=>!BREED_FCI[b])
+          .map(b=>`${esc(b)} · ${byBreed[b]}`))
+        .join("<br>")}</div>
+    <div class="tiny" style="padding:10px 20px 0;color:var(--dim)">Ονοματολογία F.C.I.,
+      Ομάδα 7 · Τμήμα 2</div>
   </div>`;
 
   const heading = (eyebrow, title, right)=>`<div class="row" style="align-items:flex-end;gap:16px;margin-bottom:18px">
@@ -2853,7 +2874,10 @@ function dlgTrial(t){
 function dlgDog(d){
   d = d || {};
   dlg(`<h2>${d.id?"Επεξεργασία σκύλου":"Νέος σκύλος"}</h2>
-  <div class="row">${fld("d_name","Όνομα",d.name)}${sel("d_breed","Φυλή",BREEDS,d.breed||BREEDS[0])}</div>
+  <div class="row">${fld("d_name","Όνομα",d.name)}
+    ${sel("d_breed","Φυλή",BREEDS.map(b=>[b,breedLabel(b)]),d.breed||BREEDS[0])}</div>
+  <div class="tiny" style="margin:-4px 0 10px">Ονοματολογία F.C.I. — Ομάδα 7 (Δείκτες),
+    Τμήμα 2: βρετανικοί και ιρλανδοί δείκτες και σέττερ. Πρότυπα 1, 2, 6, 120, 330.</div>
   <div class="row">${sel("d_sex","Φύλο",[["Α","Αρσενικός"],["Θ","Θηλυκός"]],d.sex||"Α")}
     ${fld("d_reg","Αρ. Κ.Ο.Κ.",d.reg)}</div>
   <div class="row">${fld("d_chip","Τσιπ / δερματοστιξία",d.chip)}${fld("d_book","Αρ. βιβλιαρίου εργασίας",d.book)}</div>
@@ -2908,7 +2932,8 @@ function dlgTerrain(t, tr){
   tr = tr || {};
   dlg(`<h2>${tr.id?"Επεξεργασία τερέν":"Νέο τερέν"}</h2>
   <div class="row">${fld("tr_name","Όνομα τερέν",tr.name||terrainLetter(t.days[S.day]))}</div>
-  <div class="row">${sel("tr_bg","Φυλή (μόνο για Derby)",[["","Όλες"],["POINTER","Pointer"],["SETTER","Setter"]],tr.breedGroup||"")}</div>
+  <div class="row">${sel("tr_bg","Φυλή (μόνο για Derby)",
+    [["","Όλες"],["POINTER","Pointer — F.C.I. 2.1"],["SETTER","Σέττερ — F.C.I. 2.2"]],tr.breedGroup||"")}</div>
   <div class="tiny">Ο κεντρικός κριτής και οι κριτές 1 και 2 ορίζονται στην κάρτα του τερέν.</div>
   <div class="row" style="margin-top:12px">
     <button class="b-pri grow" data-act="saveTerrain" data-id="${tr.id||""}">Αποθήκευση</button>
@@ -4634,6 +4659,8 @@ function migrate(){
   if(DB.settings && /\{ΣΚΥΛΟΣ\}|\{ΖΕΥΓΟΣ\}/.test(DB.settings.sms||"")){
     DB.settings.sms = DEFAULT_SMS; DB.settings.smsFoot = DEFAULT_SMS_FOOT;
   }
+  /* the register follows the F.C.I. nomenclature now — rename, never drop */
+  (DB.dogs||[]).forEach(d=>{ if(BREED_RENAMED[d.breed]) d.breed = BREED_RENAMED[d.breed]; });
   (DB.trials||[]).forEach(t=>{
     t.notes = t.notes || {}; t.results = t.results || {}; t.sms = t.sms || {};
     (t.days||[]).forEach(d=>(d.terrains||[]).forEach(tr=>(tr.braces||[]).forEach(b=>{
@@ -4837,8 +4864,13 @@ function normBreed(v){
   const s = String(v||"").toLowerCase();
   if(!s) return null;
   if(s.includes("point") || s.includes("πόιντ") || s.includes("ποιντ")) return "Pointer";
+  /* the red and white is its own breed (F.C.I. 330), not a colour of the red,
+     so it is read before «irish» ever gets a chance to claim the row */
+  if(/red[\s-]*(and|&|\/)?[\s-]*white|r&w|ασπροκ|κοκκιν[οα]?[\s-]*ασπρ|ασπρ[οα]?[\s-]*κοκκιν/.test(s))
+    return "Ιρλανδικό Ασπροκόκκινο Σέττερ";
+  if(s.includes("gordon") || s.includes("γκόρντον") || s.includes("γκορντον")
+     || s.includes("σκωτ") || s.includes("scot")) return "Σέττερ Γκόρντον";
   if(s.includes("irish") || s.includes("ιρλαν")) return "Ιρλανδικό Σέττερ";
-  if(s.includes("gordon")|| s.includes("σκωτ") || s.includes("scot")) return "Σκωτικό Σέττερ";
   if(s.includes("sett")  || s.includes("σέττ") || s.includes("σετ"))  return "Αγγλικό Σέττερ";
   return null;
 }

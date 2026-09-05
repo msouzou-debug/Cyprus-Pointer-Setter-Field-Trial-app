@@ -370,6 +370,46 @@ asks for and would rather ask than guess at it.
   and CSV the app has ever produced for a real trial was arriving nameless. Filenames are now
   transliterated — ΚΑΤΩ ΜΟΝΗ becomes `KATO_MONI` — and the extension survives.
 
+## Eleventh round — F.C.I. nomenclature
+
+The register now carries the full **F.C.I. Group 7 (Pointing Dogs), Section 2 — British and Irish
+Pointers and Setters**, with the F.C.I. standard number against each:
+
+| Φυλή | F.C.I. | Section |
+|---|---|---|
+| Pointer | 1 | 2.1 Pointers |
+| Αγγλικό Σέττερ · English Setter | 2 | 2.2 Setters |
+| Σέττερ Γκόρντον · Gordon Setter | 6 | 2.2 Setters |
+| Ιρλανδικό Σέττερ · Irish Red Setter | 120 | 2.2 Setters |
+| Ιρλανδικό Ασπροκόκκινο Σέττερ · Irish Red and White Setter | 330 | 2.2 Setters |
+
+- **The Gordon was there under the club's own name.** «Σκωτικό Σέττερ» is renamed to «Σέττερ
+  Γκόρντον» — in `migrate()`, so it happens once on this device and again on every backup that
+  loads from an older one. No dog loses its φυλή.
+- **The Irish Red and White Setter was missing.** It is a breed of its own (F.C.I. 330), not a
+  colour of the red, and the importer now reads it before «irish» can claim the row — a sheet
+  saying "Irish Red & White" used to land as an Irish Red Setter.
+- **`BREED_GROUP` is the 2.1 / 2.2 split**, not a house rule, and it now says so on the Derby
+  terrain: «Pointer — F.C.I. 2.1» / «Σέττερ — F.C.I. 2.2».
+- The dog form offers each breed with its English F.C.I. name in brackets, and the Μητρώο sidebar
+  lists all five whether or not the club owns one yet.
+
+### What could not be checked
+
+`fci.be` is **blocked by this environment's egress proxy** (403 on CONNECT), as are the national-club
+mirrors that carry the same PDFs. So the regulations themselves — *International Field Trial
+Regulations for Individual and Paired stakes for British Pointing Dogs* (`ABR-REG-S-C`),
+*Grande Quête* (`ABR-REG-GQU`), and the CACIT guidelines — were **not read**, and no rule logic was
+changed on the strength of a search-result summary. The breed nomenclature above is corroborated by
+the F.C.I. standard numbers themselves (006, 120, 330 under Group 7 Section 2) and is safe.
+
+What the app already does that lines up with the F.C.I. regime, none of it verified against the
+primary text: qualifications ΕΞΑΙΡΕΤΟΣ / ΠΟΛΥ ΚΑΛΟΣ / ΚΑΛΟΣ with **Π.Φ.Π. (CQN)** beside them;
+CACT / RCACT / CACIT / RCACIT; συναίνεση and ποντάρισμα as scored behaviour in brace; a judges'
+licence field; and a six-dog floor on the Συμμετοχές step. F.C.I. regulations are a **minimum** —
+national regulations may only be stricter — so the ΚΑΝΟΝΙΣΜΟΙ Α.Κ.Ι. Κ.Ο.Α.Δ. that the app
+implements remain the governing text, and nothing here replaces them.
+
 ## Deliberate departures from the canvas
 
 - **Offline chip.** The canvas shows «Εκτός σύνδεσης – 6 αλλαγές σε αναμονή». There is no server
