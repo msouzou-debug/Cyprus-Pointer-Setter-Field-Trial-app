@@ -472,6 +472,26 @@ Every source offered — `fci.be`, `enci.it`, `centrale-canine.fr`, `jghv.de`, `
 fails identically at the proxy, while GitHub answers. The policy is an allowlist, so no mirror will
 help. **The route in is the repo:** upload the PDFs to `fci/` and they can be read at full text.
 
+## An imported phone number was being dropped
+
+Checking whether a Word entry list works as well as an Excel one (it does — `.docx` is read for its
+largest table, or for tab-separated paragraphs when there is no table) turned up a real fault in the
+importer, in every format.
+
+A club list usually carries **one person column and one phone column, headed inconsistently**:
+«Κυναγωγός» for the man and «Τηλέφωνο ιδιοκτήτη» for the number, because the same man is both owner
+and handler. `guessField` mapped the person to `handler` and the number to `ownerPhone`; `doImport`
+then created the handler with `handlerPhone`, which was empty, and attached `ownerPhone` to an owner
+the sheet never named. **Every number in the file was silently lost** — and it would have surfaced
+at the SMS step as a list of κυναγωγοί with nothing to send to.
+
+Now: where only one of the two person columns exists it takes whichever phone column was found,
+whatever that column is headed. Where both exist, each keeps its own phone and they do not cross.
+Both are tested against real `.docx` files.
+
+The one Word shape that cannot work is a typed list separated by **single spaces** — one column, and
+nothing can split it reliably. Tabs or a table are required, and a table is safer.
+
 ## Deliberate departures from the canvas
 
 - **Offline chip.** The canvas shows «Εκτός σύνδεσης – 6 αλλαγές σε αναμονή». There is no server

@@ -5282,8 +5282,16 @@ function doImport(){
            || DB.dogs.find(d=>d.name.toLowerCase()===name.toLowerCase());
     const breed = normBreed(get(r,"breed"));
     if(!breed && get(r,"breed")==="" ) breedGuessed++;
-    const ownerId   = get(r,"owner")   ? ensurePerson(get(r,"owner"),   get(r,"ownerPhone"))   : "";
-    const handlerId = get(r,"handler") ? ensurePerson(get(r,"handler"), get(r,"handlerPhone")) : ownerId;
+    /* A club list usually has one person column and one phone column, and the two
+       headings need not agree — «Κυναγωγός» beside «Τηλέφωνο ιδιοκτήτη» is the
+       commonest sheet there is, because the same man is both. When only one of
+       the two person columns exists it takes whichever phone column was found:
+       a number that was typed into the file is never dropped. Where both person
+       columns exist, each keeps its own phone. */
+    const oName = get(r,"owner"), hName = get(r,"handler");
+    const oPhone = get(r,"ownerPhone"), hPhone = get(r,"handlerPhone");
+    const ownerId   = oName ? ensurePerson(oName, oPhone || (hName ? "" : hPhone)) : "";
+    const handlerId = hName ? ensurePerson(hName, hPhone || (oName ? "" : oPhone)) : ownerId;
     const fields = {
       name, breed: breed || (dog && dog.breed) || BREEDS[0],
       sex: get(r,"sex") ? normSex(get(r,"sex")) : (dog ? dog.sex : "Α"),

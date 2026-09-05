@@ -1,7 +1,7 @@
 /* Κ.Ο.Α.Δ. — offline cache.
    Cache-first for the app shell so the phone works with no signal on the ground.
    Bump CACHE when index.html changes, or the phones keep the old version. */
-const CACHE = "koad-v14";
+const CACHE = "koad-v15";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon.jpg"];
 
 self.addEventListener("install", e => {
