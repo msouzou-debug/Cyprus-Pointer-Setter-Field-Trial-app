@@ -530,6 +530,22 @@ known, so it keeps its single ticked checkbox rather than asking again.
 `_imp.locked` records which way the dialog was opened, so choosing a trial from the list does not
 turn the list into a checkbox under the user's hand.
 
+## Which version am I running?
+
+Nothing in the app said. Every release ended with «reopen it once online», an instruction that
+could not be verified from inside the app — and when a fix appeared not to work, there was no way
+to tell a bug from a stale cache.
+
+Εγκατάσταση now carries a **Έκδοση** card with the build name and a **Έλεγχος ενημέρωσης** button;
+Ρυθμίσεις → Δεδομένα repeats the build beside the storage state. The name is not a constant in
+`index.html` — it is read from the service worker's own cache with `caches.keys()`, which is the
+truth of the matter, because the page is served from that cache. A constant could drift from what
+is actually installed; this cannot.
+
+The check listens for `updatefound` rather than guessing from a timer, offers a reload when a new
+worker starts installing, and names the build when there is nothing newer. Opened from a file
+there is no worker, and it says that instead of failing.
+
 ## Deliberate departures from the canvas
 
 - **Offline chip.** The canvas shows «Εκτός σύνδεσης – 6 αλλαγές σε αναμονή». There is no server

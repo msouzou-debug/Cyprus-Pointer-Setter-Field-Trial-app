@@ -732,7 +732,21 @@ const STR = { en: {
   "— μόνο στο μητρώο —":
     "— register only —",
   "Ο κυναγωγός του αρχείου μπαίνει στη συμμετοχή· δεν χρειάζεται να τους ξαναταιριάξετε.":
-    "The κυναγωγός named in the file goes onto the entry — no need to pair them again."
+    "The κυναγωγός named in the file goes onto the entry — no need to pair them again.",
+  "Έκδοση":
+    "Version",
+  "Η εφαρμογή τρέχει από την κρυφή μνήμη της συσκευής, ώστε να δουλεύει χωρίς σήμα. Αυτό σημαίνει ότι μια διόρθωση φτάνει σε εσάς την επόμενη φορά που θα την ανοίξετε με σύνδεση.":
+    "The app runs from the device\u2019s own cache so that it works with no signal. That means a fix reaches you the next time you open it with a connection.",
+  "Έλεγχος ενημέρωσης":
+    "Check for an update",
+  "Η εφαρμογή δεν άνοιξε από διεύθυνση, οπότε δεν υπάρχει ενημέρωση να ελεγχθεί.":
+    "The app was not opened from an address, so there is no update to check for.",
+  "Δεν υπάρχει εγκατεστημένος service worker σε αυτή τη συσκευή.":
+    "No service worker is installed on this device.",
+  "Υπάρχει νέα έκδοση. Επαναφόρτωση τώρα;":
+    "There is a new version. Reload now?",
+  "Έχετε την τελευταία έκδοση: ":
+    "You have the latest version: "
 } };
 /* Η μετάφραση της οθόνης. Το κλειδί είναι το ελληνικό κείμενο.
    Λέγεται tx() και όχι t(): το `t` είναι ο αγώνας σε όλο το υπόλοιπο αρχείο,
@@ -758,6 +772,18 @@ let DB = null, mem = null, storageMode = "memory";
 
 function blank(){ return {v:1, people:[], judges:[], dogs:[], trials:[],
   settings:{...DEFAULT_SETTINGS, points:{...DEFAULT_POINTS}} }; }
+
+/* Ποια έκδοση τρέχει. Το όνομα το λέει η ίδια η κρυφή μνήμη του service worker,
+   που είναι και η αλήθεια: η σελίδα σερβίρεται από εκεί. Χωρίς αυτό, «άνοιξέ την
+   μια φορά με σύνδεση» είναι οδηγία που δεν μπορεί να επαληθευτεί. */
+let BUILD = "";
+async function probeBuild(){
+  try{
+    if(!window.caches) return (BUILD = "");
+    const keys = await caches.keys();
+    BUILD = keys.filter(k=>/^koad-v/.test(k)).sort().pop() || "";
+  }catch(e){ BUILD = ""; }
+}
 
 async function probeStorage(){
   try{
@@ -2994,7 +3020,8 @@ function vSettings(){
       σε αυτή τη συσκευή και δεν συγχρονίζονται μόνα τους. Δύο κριτές σε δύο κινητά δεν βλέπουν
       ο ένας τις αλλαγές του άλλου· ανταλλάσσουν αρχείο.
       Κατάσταση αποθήκευσης: <b>${storageMode === "memory" ? "καμία — τα δεδομένα χάνονται με το κλείσιμο"
-        : storageMode === "app" ? "εφαρμογή" : "τοπική αποθήκευση"}</b>.</p>
+        : storageMode === "app" ? "εφαρμογή" : "τοπική αποθήκευση"}</b>.
+      ${tx("Έκδοση")}: <b>${esc(BUILD || "—")}</b>.</p>
     <div class="row tight" style="margin-top:12px"><button class="b-warn" data-act="wipe">Διαγραφή όλων</button></div></div>`;
 }
 
@@ -4688,6 +4715,25 @@ const ACT = {
   /* Η γλώσσα αλλάζει μόνο την οθόνη. Τα δεδομένα μένουν όπως γράφτηκαν. */
   lang: ()=>{ DB.settings.lang = langNext()[0]; save(); render(); },
   regClear: ()=>{ S.regSec = ""; S.regBreed = ""; render(); },
+  /* Ρωτά τον service worker αν υπάρχει νεότερη έκδοση. Το «updatefound» είναι το
+     σήμα που δεν λέει ψέματα: πυροδοτείται μόλις αρχίσει να εγκαθίσταται νέος. */
+  checkUpdate: async ()=>{
+    if(!navigator.serviceWorker || !location.protocol.startsWith("http"))
+      return alert(tx("Η εφαρμογή δεν άνοιξε από διεύθυνση, οπότε δεν υπάρχει ενημέρωση να ελεγχθεί."));
+    const reg = await navigator.serviceWorker.getRegistration();
+    if(!reg) return alert(tx("Δεν υπάρχει εγκατεστημένος service worker σε αυτή τη συσκευή."));
+    let found = !!(reg.waiting || reg.installing);
+    reg.addEventListener("updatefound", ()=>{ found = true; });
+    try{ await reg.update(); }catch(e){}
+    await new Promise(r=>setTimeout(r, 1500));
+    await probeBuild();
+    if(found || reg.waiting){
+      if(confirm(tx("Υπάρχει νέα έκδοση. Επαναφόρτωση τώρα;"))) return location.reload();
+      render(); return;
+    }
+    alert(tx("Έχετε την τελευταία έκδοση: ") + (BUILD || "—"));
+    render();
+  },
 
   /* Selection. Everyone is picked to begin with, because the usual job is
      "send it to the lot". */
@@ -4876,6 +4922,7 @@ window.addEventListener("online", render);
 window.addEventListener("offline", render);
 (async function(){
   await probeStorage();
+  await probeBuild();
   DB = await load();
   DB.settings = Object.assign({}, DEFAULT_SETTINGS, DB.settings||{});
   migrate();
@@ -5801,6 +5848,13 @@ function vInstall(){
     <p class="tiny" style="margin-top:10px">${hosted
       ? "Η εφαρμογή τρέχει ήδη σε διεύθυνση και τη χρησιμοποιεί. Το πεδίο χρησιμεύει μόνο αν θέλετε να μοιράζεστε άλλη."
       : "Χωρίς αυτή, η εφαρμογή δεν ξέρει πού βρίσκεται."}</p>
+  </div>
+
+  <div class="card">
+    <div class="eyebrow">${tx("Έκδοση")}</div>
+    <p class="tiny">${tx("Η εφαρμογή τρέχει από την κρυφή μνήμη της συσκευής, ώστε να δουλεύει χωρίς σήμα. Αυτό σημαίνει ότι μια διόρθωση φτάνει σε εσάς την επόμενη φορά που θα την ανοίξετε με σύνδεση.")}</p>
+    <p style="font:600 20px/1 var(--f-b);margin:10px 0">${esc(BUILD || "—")}</p>
+    <div class="row tight"><button class="b-pri" data-act="checkUpdate">${tx("Έλεγχος ενημέρωσης")}</button></div>
   </div>
 
   <div class="card">
