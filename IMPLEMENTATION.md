@@ -492,6 +492,30 @@ Both are tested against real `.docx` files.
 The one Word shape that cannot work is a typed list separated by **single spaces** — one column, and
 nothing can split it reliably. Tabs or a table are required, and a table is safer.
 
+## The club's own draw sheet
+
+Tested against a real Κ.Ο.Α.Δ. Word sheet — Χοιροκοιτία, 06/09/2026, ΑΓΩΝΑΣ ΠΡ. ΚΥΝΗΓΙΟΥ (ΒΟΥΝΟΥ).
+Four tables: a date banner and an entry table per page, one page per τερέν. Three faults, all fixed.
+
+- ***Half the field was being dropped.*** `readDocx` took the **largest** table. The sheet has one
+  table per τερέν, so ΤΕΡΡΕΝ 1 — twelve dogs — was silently discarded and only ΤΕΡΡΕΝ 2 imported.
+  It now reads **every table that has columns**, skipping the single-cell date banners, and drops
+  the repeated banner and header rows of the second table so they cannot arrive as dogs. The sheet
+  now imports whole: 26 σκύλοι, 13 ζεύγη, 16 κυναγωγοί.
+- **The breed column is a code.** «ΦΥΛΗ» holds `ES` and `EP`, which matched nothing, so all 26 dogs
+  imported as Pointer. `BREED_CODES` now maps `ES EP GS IS IRWS` (and `SI SG SIR PI`) — **matched
+  whole-cell only**, because a two-letter code as a substring would read *Cesky* Fousek as an
+  English Setter. 21 ES + 5 EP now land correctly, and the Fousek case is a test.
+- **Every dog arrived with no κυναγωγός.** The sheet names a handler and no owner, so `doImport`
+  gave the dog an empty `ownerId` and all 26 landed under «— χωρίς κυναγωγό —» while 16 handlers
+  sat in the register with no dogs. With no owner column the handler is now who the dog belongs to,
+  which is what the sheet means. Where a sheet does name both, the owner keeps the dog and the
+  handler stays on the entry — the distinction Άρθρο 5 draws.
+
+Worth knowing about this shape of file: the Α/Α column is the **running order**, two dogs to a
+number — it is the draw, not an entry number, and the importer correctly ignores it. Bringing that
+order in as ready-made ζεύγη is a separate job the importer does not do.
+
 ## Deliberate departures from the canvas
 
 - **Offline chip.** The canvas shows «Εκτός σύνδεσης – 6 αλλαγές σε αναμονή». There is no server

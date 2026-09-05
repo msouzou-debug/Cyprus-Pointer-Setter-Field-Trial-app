@@ -4995,11 +4995,38 @@ async function readDocx(buf){
   if(!xml) throw new Error("Δεν βρέθηκε περιεχόμενο εγγράφου Word.");
   const tables = (xml.match(/<w:tbl>[\s\S]*?<\/w:tbl>/g)||[]);
   if(tables.length){
-    const tbl = tables.sort((a,b)=>b.length-a.length)[0];
-    const rows = (tbl.match(/<w:tr[^>]*>[\s\S]*?<\/w:tr>/g)||[]).map(tr=>
-      (tr.match(/<w:tc>[\s\S]*?<\/w:tc>/g)||[]).map(tc=>
-        xmlTexts(tc,"w:t").map(unxml).join("").trim()));
-    return {sheets:["Πίνακας Word"], data:{"Πίνακας Word":rows}};
+    /* Every table that has columns, not just the biggest one. A club draw sheet
+       is one table per τερέν — «ΤΕΡΡΕΝ 1» and «ΤΕΡΡΕΝ 2» — with the date in a
+       single-cell table of its own at the top of each page. Taking the largest
+       imported one terrain and silently dropped the other. */
+    const grids = tables.map(tbl=>
+      (tbl.match(/<w:tr[^>]*>[\s\S]*?<\/w:tr>/g)||[]).map(tr=>
+        (tr.match(/<w:tc>[\s\S]*?<\/w:tc>/g)||[]).map(tc=>
+          xmlTexts(tc,"w:t").map(unxml).join("").trim())))
+      .filter(rows => rows.some(r => r.length > 1));   // a one-cell table is a banner
+    if(grids.length){
+      const key = r => r.join("");
+      /* Only tables of the same shape are the same list. A document can hold a
+         judges table of two columns beside an entry table of four, and merging
+         those would read a dog's name as a judge. The widest table sets the
+         shape; the rest must match it to join. */
+      const width = g => {
+        const c = {}; let best = 0, n = 0;
+        g.forEach(r => { if(r.length > 1) c[r.length] = (c[r.length]||0) + 1; });
+        for(const w in c) if(c[w] > n || (c[w] === n && +w > best)){ best = +w; n = c[w]; }
+        return best;
+      };
+      const main = grids.slice().sort((a,b)=> width(b) - width(a) || b.length - a.length)[0];
+      const keep = grids.filter(g => width(g) === width(main));
+      const hdr = key(keep[0].find(r => r.length > 1) || []);
+      const rows = [];
+      keep.forEach((g, i) => g.forEach(r => {
+        /* the second τερέν repeats its banner and its header; neither is a dog */
+        if(i > 0 && (r.length === 1 || key(r) === hdr)) return;
+        rows.push(r);
+      }));
+      return {sheets:["Πίνακας Word"], data:{"Πίνακας Word":rows}};
+    }
   }
   const paras = (xml.match(/<w:p[ >][\s\S]*?<\/w:p>/g)||[]).map(p=>
     xmlTexts(p,"w:t").map(unxml).join("").trim()).filter(Boolean);
@@ -5109,9 +5136,21 @@ const BREED_KEYS = (()=>{
   add("Επανιέλ Πον-Οντεμέρ", "pont-audemer", "pont audemer", "οντεμερ");
   return k.sort((a,b)=>b[0].length - a[0].length);
 })();
+/* Ο πίνακας της κλήρωσης γράφει τη φυλή με κωδικό σε στενή στήλη: ES, EP, GS,
+   IS, IRWS. Ταιριάζουν μόνο ολόκληρο το κελί — το «es» μέσα σε άλλη λέξη
+   («Cesky») δεν είναι Αγγλικό Σέττερ. */
+const BREED_CODES = {
+  "EP":"Pointer", "P":"Pointer", "PI":"Pointer",
+  "ES":"Αγγλικό Σέττερ", "SI":"Αγγλικό Σέττερ",
+  "GS":"Σέττερ Γκόρντον", "SG":"Σέττερ Γκόρντον",
+  "IS":"Ιρλανδικό Σέττερ", "IRS":"Ιρλανδικό Σέττερ", "SIR":"Ιρλανδικό Σέττερ",
+  "IRWS":"Ιρλανδικό Ασπροκόκκινο Σέττερ", "IRW":"Ιρλανδικό Ασπροκόκκινο Σέττερ"
+};
 function normBreed(v){
   const s = noTone(v);
   if(!s) return null;
+  const code = String(v||"").toUpperCase().replace(/[^A-ZΑ-Ω]/g,"");
+  if(BREED_CODES[code]) return BREED_CODES[code];
   for(const [w, b] of BREED_KEYS) if(s.includes(w)) return b;
   /* τελευταία ευκαιρία: σκέτο «σέττερ» σε φύλλο αγγλικού ομίλου */
   if(s.includes("sett") || s.includes("σεττ") || s.includes("σετ")) return "Αγγλικό Σέττερ";
@@ -5298,7 +5337,12 @@ function doImport(){
       reg: reg || (dog&&dog.reg) || "", chip: get(r,"chip") || (dog&&dog.chip) || "",
       book: get(r,"book") || (dog&&dog.book) || "", dob: normDate(get(r,"dob")) || (dog&&dog.dob) || "",
       kennel: get(r,"kennel") || (dog&&dog.kennel) || "",
-      ownerId: ownerId || (dog&&dog.ownerId) || ""
+      /* A draw sheet names only the ΚΥΝΑΓΩΓΟΣ. With no owner column he is who the
+         dog belongs to as far as the register is concerned — otherwise 26 dogs
+         import under «— χωρίς κυναγωγό —» and every one has to be attached by
+         hand. Where the sheet does name an owner, the owner keeps the dog and the
+         handler stays on the entry, which is the distinction Άρθρο 5 draws. */
+      ownerId: ownerId || handlerId || (dog&&dog.ownerId) || ""
     };
     if(dog){ Object.assign(dog, fields); updated++; }
     else { dog = {id:uid(), cy:true, ...fields}; DB.dogs.push(dog); added++; }
