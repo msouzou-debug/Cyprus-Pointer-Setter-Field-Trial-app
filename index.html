@@ -272,6 +272,9 @@ hr{border:0;border-top:1px solid var(--line);margin:var(--s4) 0}
   border:1px solid var(--line-s);border-radius:var(--r);padding:12px 14px;margin-bottom:var(--s2);
   width:100%;text-align:left;min-height:var(--tap)}
 .brief.done{background:var(--sand);border-color:var(--line)}
+/* the handle beside the row, not inside it */
+.briefrow{display:flex;align-items:center;gap:4px;margin-bottom:var(--s2)}
+.briefrow .brief{margin-bottom:0}
 .brief .n{font:800 30px/1 var(--f-d);color:var(--ink);min-width:32px;
   font-variant-numeric:tabular-nums;flex:none}
 .brief.done .n{color:var(--dim)}
@@ -321,12 +324,37 @@ body.dropping::after{content:"Αφήστε το αρχείο για φόρτωσ
   z-index:60;display:flex;align-items:center;justify-content:center;pointer-events:none;
   background:rgba(30,43,77,.86);color:#fff;font:600 22px/1.3 var(--f-d);text-align:center;
   padding:40px}
-/* reordering: the row is the handle, so it says so and it moves */
-.brief.drag{touch-action:none;transition:transform .12s ease}
-.brief.drag .grip{flex:none;color:var(--slate-2);font-size:19px;line-height:1;
-  letter-spacing:-2px;margin-right:2px}
-.brief.drag.dragging{transition:none;position:relative;z-index:5;cursor:grabbing;
+/* Two gestures on a drawn order, two handles, and nothing else on the screen
+   moves: the ⠿ grip drags a ζεύγος up or down the terrain, and a dog box drags
+   onto another dog box so the two change places. Everything else is a button. */
+/* A handle a gloved thumb can find: the same 44px target the rest of the app uses,
+   not the size of the glyph inside it. */
+.grip{flex:none;display:inline-flex;align-items:center;justify-content:center;
+  width:44px;min-width:44px;height:44px;min-height:44px;padding:0;
+  color:var(--slate-2);font:400 22px/1 var(--f-b);cursor:grab;touch-action:none;
+  border-radius:8px;background:none;border:0}
+.grip:hover{color:var(--ink);background:var(--sand)}
+.grip:active{cursor:grabbing}
+/* A drawn order is a list you touch, not text you copy. Left selectable, a press
+   that misses a handle selects the names instead, and the *next* press starts the
+   browser dragging that selection — which eats the pointer events and the box
+   never moves. One line here, and both gestures are reliable. */
+[data-brow]{transition:transform .12s ease;user-select:none;-webkit-user-select:none}
+[data-brow].dragging{transition:none;position:relative;z-index:5;pointer-events:none;
   box-shadow:0 10px 24px rgba(20,30,54,.22);background:#fff;border-radius:var(--r)}
+[data-brow].dropto{box-shadow:inset 0 4px 0 var(--setter)}
+[data-brow].dropto.below{box-shadow:inset 0 -4px 0 var(--setter)}
+/* A dog box is a name, and a name is text: pressing on it and moving starts the
+   browser's own text-selection drag, which swallows the pointer events and the
+   box never leaves the ground. Selection off, and the drag is ours. */
+.dogbox{touch-action:none;cursor:grab;border-radius:8px;
+  user-select:none;-webkit-user-select:none;-webkit-user-drag:none}
+.dogbox:hover{background:var(--sand)}
+.dog.dogbox:hover{background:none;outline:1px solid var(--line-s);outline-offset:-1px}
+.dogbox.lifting{opacity:.45}
+.dogbox.target{outline:3px solid var(--setter);outline-offset:1px}
+.dogbox.ghost{box-shadow:0 10px 24px rgba(20,30,54,.28);background:#fff;
+  outline:1px solid var(--line-s);opacity:.95}
 /* the tick that says who this message goes to */
 .tick{flex:none;width:30px;height:30px;min-height:30px;padding:0;border-radius:8px;
   border:2px solid var(--line-s);background:#fff;color:#fff;cursor:pointer;
@@ -1260,8 +1288,13 @@ function render(){
   el("langBtn").title = langNext()[1];
   net.className = "offline" + (storageMode === "memory" ? " warn" : "");
   startClocks();
-  window.scrollTo({top:0});
+  /* A new screen starts at the top. An edit in place does not: moving a ζεύγος
+     or a σκύλος re-renders, and throwing the head judge back to the top of a
+     terrain after every move is how a correction gets abandoned half-made. */
+  const key = [S.view, S.trialId, S.tab, S.day, S.regTab, S.dogId].join("|");
+  if(key !== lastViewKey){ lastViewKey = key; window.scrollTo({top:0}); }
 }
+let lastViewKey = "";
 
 /* ---------- 7. Views: trials -------------------------------------------- */
 /* Cards by season, with the status chip the club uses. */
@@ -1325,7 +1358,6 @@ function fabFor(){
       return `<button class="b-act" data-act="doDraw">${label}</button>`;
     }
     if(S.tab==="braces"){
-      if(S.reorder) return "";
       const live = liveBrace(t);
       if(live) return `<button data-act="pauseBrace" style="flex:0 0 auto">${live.b.startedAt?"Παύση":"Συνέχεια"}</button>
         <button data-act="extendBrace" style="flex:0 0 auto">+5′</button>
@@ -1713,8 +1745,12 @@ function tDraw(t){
   const rows = [];
   if(d) day.terrains.forEach(tr=>(tr.braces||[]).forEach(b=>{
     const ea = t.entries.find(e=>e.id===b.a), eb = t.entries.find(e=>e.id===b.b);
-    rows.push({no:b.no, terrain:tr.name,
-      pair:(ea?dogName(ea.dogId):"—") + " / " + (eb?dogName(eb.dogId):"ΜΟΝΟΣ"),
+    /* each name is its own box, so it can be picked up and dropped on another */
+    const box = e => e && !(b.trailer && e.id === b.b)
+      ? `<span class="dogbox" data-dogbox="${tr.id}|${b.id}|${e.id}">${esc(dogName(e.dogId))}</span>`
+      : `<span>${esc(e ? dogName(e.dogId) : "ΜΟΝΟΣ")}</span>`;
+    rows.push({no:b.no, terrain:tr.name, tid:tr.id, bid:b.id,
+      pair: box(ea) + " / " + box(eb),
       handlers:[ea&&perName(ea.handlerId), eb&&perName(eb.handlerId)].filter(Boolean).join(" · ")});
   }));
   const shown = S.reveal === null ? rows.length : S.reveal;
@@ -1750,30 +1786,23 @@ function tDraw(t){
 
   ${!d ? `<div class="empty">Καμία κλήρωση ακόμη για την ημέρα ${S.day+1}. Πατήστε «Κλήρωση» για
       να κατανεμηθούν οι σκύλοι στα τερέν και να σχηματιστούν τα ζεύγη.</div>`
-    : `<div class="row noprint" style="margin:0 0 12px">
-      <button class="b-sm ${S.reorder?"tog on":""}" data-act="toggleReorder">Αναδιάταξη</button>
-      ${S.reorder?`<span class="tiny" style="align-self:center">Άρθρο 16 — κάθε αλλαγή καταγράφεται</span>`:""}
-    </div>
-    ${S.reorder?`<div class="note">Σύρετε ένα ζεύγος στη θέση του, ή μετακινήστε το με τα βελάκια.
-      Με το <b>⇄</b> δίπλα σε κάθε σκύλο τον στέλνετε σε άλλο ζεύγος και παίρνει τη θέση του
-      εκείνος. Η αρίθμηση ακολουθεί τη θέση: το ζεύγος 1 που κατεβαίνει τρεις θέσεις γίνεται
-      ζεύγος 4. Κάθε μετακίνηση σημειώνεται ως χειροκίνητη αλλαγή και τυπώνεται στη λίστα.</div>
-      ${day.terrains.map(tr=>{ const bs = tr.braces||[];
-        return `<div class="row" style="margin:18px 0 8px;align-items:baseline">
-            <h3 class="grow" style="margin:0">${esc(tr.name)}</h3>
-            <span class="muted">${bs.length} ${bs.length===1?"ζεύγος":"ζεύγη"}</span></div>
-          ${bs.length ? bs.map((b,i)=>braceMove(t,tr,b,i,bs.length)).join("")
-                      : `<div class="empty">Χωρίς ζεύγη σε αυτό το τερέν.</div>`}`;
-      }).join("")}`
-    : `<div style="display:flex;flex-direction:column;gap:10px">
-      ${rows.map((r,i)=>`<div class="card" data-brace-row style="display:flex;align-items:center;gap:14px;margin:0" ${i<shown?"":"hidden"}>
+    : `<div class="tiny noprint" style="margin:0 0 12px">Σύρετε το <b>⠿</b> για να πάει ένα
+      ζεύγος πάνω ή κάτω μέσα στο τερέν του, ή ένα <b>όνομα σκύλου</b> πάνω σε άλλο για να
+      αλλάξουν θέσεις. Η αρίθμηση ακολουθεί τη θέση· κάθε μετακίνηση καταγράφεται ως
+      χειροκίνητη αλλαγή και τυπώνεται (Άρθρο 16).</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      ${rows.map((r,i)=>`<div class="card" data-brace-row data-brow="${r.tid}|${r.bid}"
+        style="display:flex;align-items:center;gap:12px;margin:0" ${i<shown?"":"hidden"}>
+        <button class="grip noprint" data-drag="${r.tid}|${r.bid}"
+          title="Σύρετε, ή ↑ ↓, για να αλλάξετε τη σειρά του ζεύγους"
+          aria-label="Μετακίνηση ζεύγους ${r.no}">⠿</button>
         <span class="bno" style="font-size:34px;min-width:34px">${r.no}</span>
         <span style="flex:1;min-width:0">
           <span class="eyebrow" style="margin:0">${esc(r.terrain)}</span>
-          <b style="display:block;font:600 19px/1.25 var(--f-d);margin-top:5px">${esc(r.pair)}</b>
+          <b style="display:block;font:600 19px/1.25 var(--f-d);margin-top:5px">${r.pair}</b>
           <span class="muted">${esc(r.handlers)}</span>
         </span></div>`).join("")}
-    </div>`}
+    </div>
     <div style="border-top:1px solid var(--line);margin-top:18px;padding-top:14px">
       <div class="fingerprint">κωδικός ${esc(d.seed)}<br>${new Date(d.at).toLocaleString("el-GR")} · ${esc(d.mode)}<br>αποτύπωμα ${esc(d.hash)}</div>
       <p style="margin-top:8px">Η σειρά είναι ενδεικτική — Άρθρο 16.</p>
@@ -1875,7 +1904,11 @@ function braceCard(t, tr, b, opts){
     /* Σημειώσεις is the action a judge reaches for on every run, so it sits
        with the dog. The rare ones — επανάκληση, ανταλλαγή — live in the footer
        and keep the halves readable from arm's length. */
-    return `<div class="dog ${cls}">
+    /* The half itself is the dog box: drag it onto another dog anywhere in the
+       day and the two change places. Ο συμπληρωματικός stays put — he is
+       completing a ζεύγος, not competing in it (Άρθρο 40). */
+    const box = isTrailer ? "" : ` dogbox" data-dogbox="${tr.id}|${b.id}|${e.id}`;
+    return `<div class="dog ${cls}${box}">
       <div class="pos">${pos}</div>
       ${isTrailer?`<div style="margin-top:6px"><span class="chip">ΣΥΜΠΛΗΡΩΜΑΤΙΚΟΣ</span></div>`:""}
       <div class="nm">${esc(d.name||"—")}</div>
@@ -1914,8 +1947,12 @@ function braceCard(t, tr, b, opts){
   if(b.trailer) foot.push("Εκτός κλήρωσης. Δεν προσμετράται στα τρία ζεύγη (Άρθρο 40).");
   if(b.manual) foot.push(`Χειροκίνητη αλλαγή από τον Πρόεδρο Κριτών, ${esc(b.manual.at||"")}. Τυπώνεται στη λίστα.`);
 
-  return `<div class="brace ${running?"run":""} ${done?"done":""} ${b.recall?"recall":""}">
+  return `<div class="brace ${running?"run":""} ${done?"done":""} ${b.recall?"recall":""}"
+    data-brow="${tr.id}|${b.id}">
     <div class="bhead">
+      <button class="grip noprint" data-drag="${tr.id}|${b.id}"
+        title="Σύρετε, ή ↑ ↓, για να αλλάξετε τη σειρά του ζεύγους"
+        aria-label="Μετακίνηση ζεύγους ${b.no}">⠿</button>
       <div class="bno">${b.no}</div>
       ${opts.big&&running?`<div style="margin-left:auto;text-align:right">
           ${state}${clockEl(b,true,t)}
@@ -1937,86 +1974,6 @@ function braceCard(t, tr, b, opts){
     ${extra.length?`<div class="bfoot noprint"><div class="row tight">${extra.join("")}</div></div>`:""}</div>`;
 }
 
-/* reorder mode: the same row with a handle at each end. Deliberately not
-   drag-and-drop — a gloved thumb on a hillside wants a target it can hit. */
-/* Reordering: drag the whole row, or step it with the arrows. A handler turns
-   up late and his brace goes down the list — dragging says that in one gesture,
-   and the arrows are there for a cold morning with gloves on. */
-function braceMove(t, tr, b, i, n){
-  const ea = t.entries.find(e=>e.id===b.a), eb = t.entries.find(e=>e.id===b.b);
-  const names = (ea?dogName(ea.dogId):"—") + " / " + (eb?dogName(eb.dogId):"ΜΟΝΟΣ");
-  /* Two different moves belong on this row, and the head judge needs both when a
-     κυναγωγός is late: the ζεύγος up or down, which changes *when* it runs, and a
-     σκύλος across to another ζεύγος, which changes *who runs with whom*. The
-     second line carries one button per dog so it is clear which one is moving. */
-  const swap = e => (e && !(b.trailer && e.id === b.b))
-    ? `<button class="b-sm" data-swap="${tr.id}|${b.id}|${e.id}"
-        >⇄ ${esc(dogName(e.dogId))}</button>` : "";
-  const across = [swap(ea), swap(eb)].filter(Boolean).join("");
-  return `<div class="brief drag" data-drag="${tr.id}|${b.id}" style="cursor:grab;flex-wrap:wrap">
-    <span class="grip" aria-hidden="true">⠿</span>
-    <span class="n">${b.no}</span>
-    <span class="who"><b>${esc(names)}</b>
-      ${b.manual?`<span class="tiny">χειροκίνητη αλλαγή</span>`:""}</span>
-    <span class="row tight" style="flex:none;flex-wrap:nowrap">
-      <button class="b-sm" data-bmove="${tr.id}|${b.id}|-1" ${i===0?"disabled":""}
-        aria-label="Πάνω" style="width:52px;padding:0">↑</button>
-      <button class="b-sm" data-bmove="${tr.id}|${b.id}|1" ${i===n-1?"disabled":""}
-        aria-label="Κάτω" style="width:52px;padding:0">↓</button>
-    </span>
-    ${across?`<span class="row tight" style="flex-basis:100%;margin:6px 0 0 34px">${across}</span>`:""}
-  </div>`;
-}
-/* Pointer events, so one path covers a mouse and a thumb. The row follows the
-   finger, the others slide out of the way, and the drop lands where the gap is.
-   Buttons inside the row keep working — a drag only starts past a few pixels. */
-function dragReorder(ev){
-  const row = ev.target.closest("[data-drag]");
-  if(!row || ev.target.closest("button")) return;
-  const list = row.parentElement;
-  const rows = [...list.querySelectorAll("[data-drag]")];
-  const from = rows.indexOf(row);
-  const [tid, bid] = row.dataset.drag.split("|");
-  const startY = ev.clientY;
-  const h = row.getBoundingClientRect().height;
-  let moved = false, to = from;
-
-  const onMove = e=>{
-    const dy = e.clientY - startY;
-    if(!moved && Math.abs(dy) < 6) return;
-    if(!moved){ moved = true; row.classList.add("dragging");
-                row.setPointerCapture && row.setPointerCapture(e.pointerId);
-                document.body.style.userSelect = "none"; }
-    e.preventDefault();
-    to = Math.max(0, Math.min(rows.length - 1, from + Math.round(dy / h)));
-    row.style.transform = "translateY(" + dy + "px)";
-    rows.forEach((r, i)=>{
-      if(r === row) return;
-      let shift = 0;
-      if(from < to && i > from && i <= to) shift = -h;
-      if(from > to && i >= to && i < from) shift = h;
-      r.style.transform = shift ? "translateY(" + shift + "px)" : "";
-    });
-  };
-  const onUp = ()=>{
-    document.removeEventListener("pointermove", onMove);
-    document.removeEventListener("pointerup", onUp);
-    document.removeEventListener("pointercancel", onUp);
-    document.body.style.userSelect = "";
-    rows.forEach(r=>{ r.style.transform = ""; r.classList.remove("dragging"); });
-    if(!moved || to === from) return;
-    const t = trialById(S.trialId); if(!t) return;
-    const terr = t.days[S.day].terrains.find(x=>x.id === tid); if(!terr) return;
-    const bs = terr.braces || [];
-    const idx = bs.findIndex(x=>x.id === bid); if(idx < 0) return;
-    const [b] = bs.splice(idx, 1);
-    bs.splice(to, 0, b);
-    renumberAndMark(t, terr, bs, b);
-  };
-  document.addEventListener("pointermove", onMove, {passive:false});
-  document.addEventListener("pointerup", onUp);
-  document.addEventListener("pointercancel", onUp);
-}
 /* Άρθρο 16: the order may be changed, never silently. Numbering is positional,
    so brace 1 dropped three places down becomes brace 4, and the move is stamped
    on the braces it touched and printed on the draw list. */
@@ -2026,6 +1983,197 @@ function renumberAndMark(t, tr, bs, moved){
   moved.manual = stamp;
   save(); render();
 }
+/* Swapping two dogs between ζεύγη, whichever terrain each is on. Both braces are
+   stamped, because both changed. Shared by the drag and by the Ανταλλαγή dialog. */
+function swapEntries(t, eid, other){
+  if(!eid || !other || eid === other) return false;
+  const stamp = {by:"Πρόεδρος Κριτών", at:new Date().toLocaleString("el-GR")};
+  (t.days[S.day].terrains||[]).forEach(tr=>(tr.braces||[]).forEach(b=>{
+    let touched = false;
+    if(b.a===eid){ b.a = other; touched = true; } else if(b.a===other){ b.a = eid; touched = true; }
+    if(b.b===eid){ b.b = other; touched = true; } else if(b.b===other){ b.b = eid; touched = true; }
+    if(touched) b.manual = stamp;
+  }));
+  return true;
+}
+
+/* Pointer events, so one path covers a mouse and a thumb.
+
+   Only two things on these screens move, and each has its own handle. The ⠿ grip
+   drags a ζεύγος up or down inside its τερέν — the row follows the finger and the
+   row it would land on is marked. Everything else on the row is a button and
+   stays one: a drag that started anywhere on the row meant a tap on Σημειώσεις
+   moved the brace instead. */
+function dragReorder(ev){
+  const grip = ev.target.closest("[data-drag]");
+  if(!grip) return;
+  const row = grip.closest("[data-brow]"); if(!row) return;
+  const [tid, bid] = grip.dataset.drag.split("|");
+  /* only the braces of this τερέν: two terrains render into the same container
+     and a brace never moves from one to the other by being dragged */
+  const rows = [...document.querySelectorAll("[data-brow]")]
+    .filter(r => r.dataset.brow.split("|")[0] === tid);
+  const from = rows.indexOf(row); if(from < 0) return;
+  const startY = ev.clientY;
+  let moved = false, to = from, mark = null;
+
+  const clear = ()=>{ if(mark) mark.classList.remove("dropto","below"); mark = null; };
+  const onMove = e=>{
+    const dy = e.clientY - startY;
+    if(!moved && Math.abs(dy) < 6) return;
+    if(!moved){ moved = true; row.classList.add("dragging");
+                grip.setPointerCapture && grip.setPointerCapture(e.pointerId);
+                document.body.style.userSelect = "none"; }
+    e.preventDefault();
+    row.style.transform = "translateY(" + dy + "px)";
+    /* The landing row is worked out from where the rows actually are, not from
+       what is under the finger: the action bar is fixed to the bottom of the
+       screen and hit-testing hands back that button instead of the row beneath
+       it, so a drop at the foot of a phone screen was being thrown away.
+       Rows of unequal height — an open ζεύγος beside collapsed ones — work
+       either way, because each row is measured, not assumed. */
+    to = from;
+    let best = null;
+    rows.forEach((r, i)=>{
+      if(r === row) return;
+      const rc = r.getBoundingClientRect();
+      if(e.clientY >= rc.top && e.clientY <= rc.bottom){ best = r; to = i; }
+    });
+    if(!best){                                   /* πάνω από την πρώτη ή κάτω από την τελευταία */
+      const firstR = rows[0].getBoundingClientRect();
+      const lastR  = rows[rows.length-1].getBoundingClientRect();
+      if(e.clientY < firstR.top && row !== rows[0]){ best = rows[0]; to = 0; }
+      else if(e.clientY > lastR.bottom && row !== rows[rows.length-1]){
+        best = rows[rows.length-1]; to = rows.length - 1; }
+    }
+    clear();
+    if(best){
+      mark = best; best.classList.add("dropto");
+      if(to > from) best.classList.add("below");
+    } else to = from;
+  };
+  const onUp = ()=>{
+    document.removeEventListener("pointermove", onMove);
+    document.removeEventListener("pointerup", onUp);
+    document.removeEventListener("pointercancel", onUp);
+    document.body.style.userSelect = "";
+    clear();
+    row.style.transform = ""; row.classList.remove("dragging");
+    if(!moved || to === from) return;
+    const t = trialById(S.trialId); if(!t) return;
+    const terr = t.days[S.day].terrains.find(x=>x.id === tid); if(!terr) return;
+    const bs = terr.braces || [];
+    const idx = bs.findIndex(x=>x.id === bid); if(idx < 0) return;
+    const [b] = bs.splice(idx, 1);
+    bs.splice(to, 0, b);
+    renumberAndMark(t, terr, bs, b);
+    toast("Το ζεύγος πήγε στη θέση " + (to + 1));
+  };
+  document.addEventListener("pointermove", onMove, {passive:false});
+  document.addEventListener("pointerup", onUp);
+  document.addEventListener("pointercancel", onUp);
+}
+
+/* A drag is not the only way in. The grip is a real button, so it takes focus,
+   and ↑ ↓ on it step the ζεύγος one place — the same move, the same mark. That
+   is the keyboard path, and it is also the cold-morning path for anyone who
+   would rather tap twice than drag with a glove on. */
+function moveBrace(tid, bid, dir){
+  const t = trialById(S.trialId); if(!t) return false;
+  const tr = (t.days[S.day].terrains||[]).find(x=>x.id===tid); if(!tr) return false;
+  const bs = tr.braces || [];
+  const i = bs.findIndex(b=>b.id===bid), j = i + dir;
+  if(i < 0 || j < 0 || j >= bs.length) return false;
+  const [b] = bs.splice(i, 1);
+  bs.splice(j, 0, b);
+  renumberAndMark(t, tr, bs, b);
+  /* the row was re-rendered under the finger — put the focus back on its grip */
+  const again = document.querySelector(`[data-drag="${tid}|${bid}"]`);
+  if(again) again.focus();
+  return true;
+}
+document.addEventListener("keydown", ev=>{
+  const grip = ev.target.closest && ev.target.closest("[data-drag]");
+  if(!grip) return;
+  const dir = ev.key === "ArrowUp" ? -1 : ev.key === "ArrowDown" ? 1 : 0;
+  if(!dir) return;
+  ev.preventDefault();
+  const [tid, bid] = grip.dataset.drag.split("|");
+  if(moveBrace(tid, bid, dir)) toast("Το ζεύγος μετακινήθηκε");
+});
+
+/* The second gesture: a dog box dragged onto another dog box, and the two change
+   places. A copy of the box follows the finger so it is clear what is being
+   carried, and the box it is over is outlined so it is clear where it will land. */
+function dragDogBox(ev){
+  const src = ev.target.closest("[data-dogbox]");
+  if(!src || ev.target.closest("button.b-full, button.b-sm")) return;
+  const eid = src.dataset.dogbox.split("|")[2];
+  const r = src.getBoundingClientRect();
+  const offX = ev.clientX - r.left, offY = ev.clientY - r.top;
+  const boxes = [...document.querySelectorAll("[data-dogbox]")];
+  let moved = false, ghost = null, over = null;
+
+  const onMove = e=>{
+    if(!moved && Math.abs(e.clientX-ev.clientX) < 6 && Math.abs(e.clientY-ev.clientY) < 6) return;
+    if(!moved){
+      moved = true;
+      src.classList.add("lifting");
+      ghost = src.cloneNode(true);
+      ghost.removeAttribute("data-dogbox");
+      ghost.classList.remove("lifting"); ghost.classList.add("ghost");
+      ghost.style.cssText += ";position:fixed;left:0;top:0;margin:0;z-index:60;"
+        + "pointer-events:none;width:" + r.width + "px";
+      document.body.appendChild(ghost);
+      document.body.style.userSelect = "none";
+      /* No setPointerCapture here. The moves are listened for on the document and
+         the box is an inline span inside the row: capturing on it stopped the
+         events arriving at all, so the drag froze after the first few pixels. */
+    }
+    e.preventDefault();
+    ghost.style.transform = "translate(" + (e.clientX-offX) + "px," + (e.clientY-offY) + "px)";
+    /* measured, not hit-tested — same reason as the row drag: the fixed action
+       bar sits over the bottom of the screen and would take the drop */
+    let box = null;
+    for(const el3 of boxes){
+      if(el3 === src) continue;
+      const rc = el3.getBoundingClientRect();
+      if(e.clientX >= rc.left && e.clientX <= rc.right
+         && e.clientY >= rc.top && e.clientY <= rc.bottom){ box = el3; break; }
+    }
+    const ok = box && box.dataset.dogbox.split("|")[2] !== eid;
+    if(over && over !== box) over.classList.remove("target");
+    over = ok ? box : null;
+    if(over) over.classList.add("target");
+  };
+  const onUp = ()=>{
+    document.removeEventListener("pointermove", onMove);
+    document.removeEventListener("pointerup", onUp);
+    document.removeEventListener("pointercancel", onUp);
+    document.body.style.userSelect = "";
+    src.classList.remove("lifting");
+    if(ghost) ghost.remove();
+    const target = over; if(over) over.classList.remove("target");
+    if(!moved) return;
+    /* A real drag never also opens the brace underneath it. The guard has to
+       expire on its own: a drag that ends over a different element fires no
+       click at all, and a listener left armed would swallow the next tap. */
+    const eatClick = e=>{ e.stopPropagation(); e.preventDefault(); };
+    document.addEventListener("click", eatClick, {capture:true, once:true});
+    setTimeout(()=>document.removeEventListener("click", eatClick, {capture:true}), 400);
+    if(!target) return;
+    const t = trialById(S.trialId); if(!t) return;
+    const other = target.dataset.dogbox.split("|")[2];
+    const a = dogName((t.entries.find(x=>x.id===eid)||{}).dogId);
+    const bnm = dogName((t.entries.find(x=>x.id===other)||{}).dogId);
+    if(!swapEntries(t, eid, other)) return;
+    save(); render();
+    toast(a + " ⇄ " + bnm + " — χειροκίνητη αλλαγή");
+  };
+  document.addEventListener("pointermove", onMove, {passive:false});
+  document.addEventListener("pointerup", onUp);
+  document.addEventListener("pointercancel", onUp);
+}
 
 /* collapsed: a number and two names, which is all you need to know where you are */
 function braceBrief(t, tr, b){
@@ -2033,14 +2181,24 @@ function braceBrief(t, tr, b){
   const done = b.status==="ΟΛΟΚΛΗΡΩΘΗΚΕ";
   const names = (ea?dogName(ea.dogId):"—") + " / " + (eb?dogName(eb.dogId):"ΜΟΝΟΣ");
   const who = [ea&&perName(ea.handlerId), eb&&perName(eb.handlerId)].filter(Boolean).join(" · ");
-  return `<button class="brief ${done?"done":""}" data-openbrace="${b.id}">
+  const box = e => e && !(b.trailer && e.id === b.b)
+    ? `<span class="dogbox" data-dogbox="${tr.id}|${b.id}|${e.id}">${esc(dogName(e.dogId))}</span>`
+    : `<span>${esc(e ? dogName(e.dogId) : "ΜΟΝΟΣ")}</span>`;
+  /* The grip is a button of its own and sits outside the one that opens the
+     ζεύγος: a focusable handle inside a button cannot be reached by keyboard,
+     and the whole row must not become a drag handle. */
+  return `<div class="briefrow" data-brow="${tr.id}|${b.id}">
+    <button class="grip noprint" data-drag="${tr.id}|${b.id}"
+      title="Σύρετε, ή ↑ ↓, για να αλλάξετε τη σειρά του ζεύγους"
+      aria-label="Μετακίνηση ζεύγους ${b.no}">⠿</button>
+    <button class="brief ${done?"done":""}" data-openbrace="${b.id}">
     <span class="n">${b.no}</span>
-    <span class="who"><b>${esc(names)}</b><span>${esc(who)}</span></span>
+    <span class="who"><b>${box(ea)} / ${box(eb)}</b><span>${esc(who)}</span></span>
     ${done ? qualChip(t,b.a) || `<span class="chip">ΟΛΟΚΛΗΡΩΘΗΚΕ</span>`
       : b.recall ? `<span class="chip y">ΕΠΑΝΑΚΛΗΣΗ</span>`
       : (b.solo&&!b.b) ? `<span class="chip">ΜΟΝΟΣ</span>`
       : `<span class="chip">ΕΚΚΡΕΜΕΙ</span>`}
-  </button>`;
+  </button></div>`;
 }
 /* Field mode. The live brace is expanded with its countdown; the rest collapse
    to a number and two names, so scrolling a terrain you know where you are
@@ -2062,13 +2220,10 @@ function tBraces(t){
       ${DB.judges.map(j=>`<option value="${j.id}" ${jf===j.id?"selected":""}>${esc(j.name)}</option>`).join("")}
     </select></div>
     <button class="b-sm" data-act="print" style="align-self:flex-end">Εκτύπωση / PDF</button>
-    <button class="b-sm ${S.reorder?"tog on":""}" data-act="toggleReorder"
-      style="align-self:flex-end">Αναδιάταξη</button>
   </div>
-  ${S.reorder?`<div class="note">Σύρετε ένα ζεύγος στη θέση του, ή μετακινήστε το με τα βελάκια.
-    Με το <b>⇄</b> δίπλα σε κάθε σκύλο τον στέλνετε σε άλλο ζεύγος και παίρνει τη θέση του εκείνος.
-    Η αρίθμηση ακολουθεί τη θέση: το ζεύγος 1 που κατεβαίνει τρεις θέσεις γίνεται ζεύγος 4.
-    Κάθε μετακίνηση σημειώνεται ως χειροκίνητη αλλαγή και τυπώνεται στη λίστα (Άρθρο 16).</div>`:""}
+  <div class="tiny noprint" style="margin-bottom:12px">Σύρετε το <b>⠿</b> για να πάει ένα ζεύγος
+    πάνω ή κάτω, ή ένα <b>όνομα σκύλου</b> πάνω σε άλλο για να αλλάξουν θέσεις. Καταγράφεται ως
+    χειροκίνητη αλλαγή (Άρθρο 16).</div>
   ${printHd}
   ${terrains.map(tr=>{
     const braces = tr.braces||[];
@@ -2079,12 +2234,10 @@ function tBraces(t){
       <span class="muted">${braces.length} ${braces.length===1?"ζεύγος":"ζεύγη"}
         ${tr.judgeIds.length?"· "+tr.judgeIds.map(j=>esc((judById(j)||{}).name||"?")).join(", "):""}</span>
     </div>
-    ${braces.length ? (S.reorder
-        ? braces.map((b,i)=>braceMove(t,tr,b,i,braces.length)).join("")
-        : braces.map(b=>{
+    ${braces.length ? braces.map(b=>{
             const open = b===live || S.openBrace===b.id;
             return open ? braceCard(t,tr,b,{big:b===live, actions:true}) : braceBrief(t,tr,b);
-          }).join(""))
+          }).join("")
       : `<div class="empty">Χωρίς ζεύγη σε αυτό το τερέν.</div>`}`;
   }).join("")}
   <div class="tiny noprint" style="margin-top:16px">Άρθρο 30: ο κριτής μπορεί να ζητήσει
@@ -4139,7 +4292,7 @@ function exportTrialDoc(t){
 
 /* ---------- 15. Actions -------------------------------------------------- */
 document.addEventListener("click", ev=>{
-  const el2 = ev.target.closest("[data-nav],[data-tab],[data-day],[data-act],[data-open],[data-dog],[data-editdog],[data-edithandler],[data-newdogfor],[data-btick],[data-batch],[data-ftick],[data-fall],[data-nterrain],[data-smspick],[data-chan],[data-editjudge],[data-editterrain],[data-editentry],[data-note],[data-res],[data-bstat],[data-trailer],[data-untrailer],[data-recall],[data-sms],[data-copy],[data-wa],[data-smsdone],[data-set],[data-nstep],[data-nwidth],[data-nfault],[data-delpt],[data-nset],[data-ptset],[data-openbrace],[data-swap],[data-swapwith],[data-regtab],[data-bsec],[data-regbsec],[data-setlang],[data-assign],[data-autoassign],[data-pick],[data-bmove],[data-signoff],[data-unlock]");
+  const el2 = ev.target.closest("[data-nav],[data-tab],[data-day],[data-act],[data-open],[data-dog],[data-editdog],[data-edithandler],[data-newdogfor],[data-btick],[data-batch],[data-ftick],[data-fall],[data-nterrain],[data-smspick],[data-chan],[data-editjudge],[data-editterrain],[data-editentry],[data-note],[data-res],[data-bstat],[data-trailer],[data-untrailer],[data-recall],[data-sms],[data-copy],[data-wa],[data-smsdone],[data-set],[data-nstep],[data-nwidth],[data-nfault],[data-delpt],[data-nset],[data-ptset],[data-openbrace],[data-swap],[data-swapwith],[data-regtab],[data-bsec],[data-regbsec],[data-setlang],[data-assign],[data-autoassign],[data-pick],[data-signoff],[data-unlock]");
   if(!el2) return;
   const d = el2.dataset;
   const t = trialById(S.trialId);
@@ -4227,17 +4380,6 @@ document.addEventListener("click", ev=>{
   /* Άρθρο 16 — the order is an indication, so the head judge may move a brace
      up or down the running order. Numbering is positional, so brace 1 moved
      three places down becomes brace 4. Both the move and the mark are kept. */
-  if(d.bmove){
-    const [tid, bid, dir] = d.bmove.split("|");
-    const tr = t.days[S.day].terrains.find(x=>x.id===tid);
-    if(!tr) return;
-    const bs = tr.braces || [];
-    const i = bs.findIndex(b=>b.id===bid), j = i + (+dir);
-    if(i < 0 || j < 0 || j >= bs.length) return;
-    [bs[i], bs[j]] = [bs[j], bs[i]];
-    bs[j].manual = {by:"Πρόεδρος Κριτών", at:new Date().toLocaleString("el-GR")};
-    renumberAndMark(t, tr, bs, bs[i]);
-    return; }
 
   if(d.swap){ dlgSwap(t, d.swap); return; }
   if(d.swapwith){ doSwap(t, el2.dataset.swapwith); return; }
@@ -4314,6 +4456,7 @@ document.addEventListener("click", ev=>{
 document.addEventListener("pointerdown", ev=>{
   if(ev.button !== undefined && ev.button !== 0) return;
   if(ev.target.closest("[data-drag]")) dragReorder(ev);
+  else if(ev.target.closest("[data-dogbox]")) dragDogBox(ev);
 });
 
 document.addEventListener("change", ev=>{
@@ -4450,13 +4593,7 @@ function doSwap(t, spec){
   const other = (el("sw_with")||{}).value;
   if(!other) return;
   if(!confirmAct("Χειροκίνητη αλλαγή στην κληρωμένη σειρά. Καταγράφεται και τυπώνεται. Συνέχεια;")) return;
-  const stamp = {by:"Πρόεδρος Κριτών", at:new Date().toLocaleString("el-GR")};
-  (t.days[S.day].terrains||[]).forEach(tr=>(tr.braces||[]).forEach(b=>{
-    let touched = false;
-    if(b.a===eid){ b.a = other; touched = true; } else if(b.a===other){ b.a = eid; touched = true; }
-    if(b.b===eid){ b.b = other; touched = true; } else if(b.b===other){ b.b = eid; touched = true; }
-    if(touched) b.manual = stamp;
-  }));
+  swapEntries(t, eid, other);
   save(); closeDlg(); render(); toast("Η αλλαγή καταγράφηκε");
 }
 
@@ -4502,7 +4639,6 @@ const ACT = {
   /* the bottom bar of the live terrain */
   /* Reordering shows every ζεύγος: the staged reveal of the draw would otherwise
      hide the rows the head judge is trying to move. */
-  toggleReorder: ()=>{ S.reorder = !S.reorder; S.openBrace = null; S.reveal = null; render(); },
   nextBrace: (btn, t)=>{
     const live = liveBrace(t);
     if(live) setBraceStatus(live.b, "ΟΛΟΚΛΗΡΩΘΗΚΕ");

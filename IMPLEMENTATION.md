@@ -623,6 +623,49 @@ SMS. It now refuses, and says so on the screen where it is fixed rather than thr
 The existing orphan card in the μητρώο stays — it is the repair path for records already made that
 way — and the σκύλοι table marks each one instead of showing an empty cell.
 
+## Two handles, and the Ζεύγη screen back
+
+The «Αναδιάταξη» toggle is gone, and with it the worst thing in the app. It was a **global flag**:
+turned on anywhere, the Ζεύγη screen stopped being the screen the αγώνας is run from — the live
+ζεύγος, its countdown, Έναρξη and Σημειώσεις were all replaced by a flat list of rows, and it
+stayed that way across navigation until somebody found the toggle again. Correcting a drawn order
+should never cost the head judge the screen he works from. Ζεύγη is now always the αγώνας screen.
+
+Reordering happens in place instead, through **two handles and nothing else**:
+
+- **⠿ moves the ζεύγος.** Only the grip drags — the rest of the row is buttons and stays buttons.
+  Dragging by the whole row meant a thumb aimed at Σημειώσεις moved the brace instead. It is a
+  44px target, the same as everything else that gets touched with a glove on.
+- **A dog box moves the σκύλος.** Drag a name onto another name and the two change places, in the
+  same τερέν or across. A copy of the box follows the finger and the box it is over is outlined,
+  so what is being carried and where it will land are both visible. Ο συμπληρωματικός has no box:
+  he completes a ζεύγος, he does not compete in it (Άρθρο 40).
+- A brace never leaves its τερέν by being dragged; the row list is scoped to the τερέν.
+- A tap on a dog name still opens the ζεύγος. A drag never does both.
+- **↑ ↓ on the grip do the same move.** It is a real button, so it takes focus, and the arrow keys
+  step the ζεύγος one place — the keyboard path, and the cold-morning path for anyone who would
+  rather tap twice than drag with a glove on. The old arrow *buttons* are gone with the mode they
+  lived in; this is the same code they called.
+
+Three things had to be got right underneath, and each was a real failure, not a detail:
+
+- **The drop target is measured, not hit-tested.** `elementFromPoint` hands back the fixed action
+  bar at the foot of the screen, so a drop anywhere near the bottom of a phone was thrown away.
+  The landing row is worked out from where the rows actually are. This is also what lets rows of
+  unequal height work — an open ζεύγος beside collapsed ones.
+- **The rows are `user-select:none`.** A press that missed a handle selected the names; the *next*
+  press then started the browser dragging that selection, which ate the pointer events and the box
+  never left the ground. A drawn order is a list you touch, not text you copy.
+- **The click guard expires.** A drag that ends over a different element fires no click at all, so
+  a one-shot "swallow the next click" listener stayed armed and ate the following tap.
+
+## The screen stays where it was
+
+`render()` ended with an unconditional `window.scrollTo({top:0})`. Every move — every save of any
+kind — threw the head judge back to the top of the page, which on a two-terrain day is several
+screens above the ζεύγος he was correcting. It now scrolls to the top only when the **screen**
+changes: view, αγώνας, tab, day, register tab. An edit in place leaves the page where it was.
+
 ## Deliberate departures from the canvas
 
 - **Offline chip.** The canvas shows «Εκτός σύνδεσης – 6 αλλαγές σε αναμονή». There is no server
