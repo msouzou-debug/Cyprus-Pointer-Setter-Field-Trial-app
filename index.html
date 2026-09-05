@@ -585,21 +585,64 @@ const CLOSED = "ΟΛΟΚΛΗΡΩΘΗΚΕ";
    δείκτες και σέττερ. Τμήμα 2.1 είναι ο Pointer· 2.2 τα τέσσερα σέττερ. Ο αριθμός
    είναι το πρότυπο F.C.I. Ο διαχωρισμός φυλής στα τερέν (Derby) είναι ακριβώς
    αυτό το 2.1 / 2.2 — δεν είναι δικός μας κανόνας. */
-const BREEDS = ["Pointer","Αγγλικό Σέττερ","Σέττερ Γκόρντον",
-                "Ιρλανδικό Σέττερ","Ιρλανδικό Ασπροκόκκινο Σέττερ"];
+/* Τμήμα 2 — αγγλικές φυλές· Τμήμα 1 — ηπειρωτικές. Η F.C.I. τις κρίνει με
+   χωριστούς κανονισμούς, γι' αυτό ο κατάλογος είναι χωρισμένος και στην οθόνη. */
 const BREED_FCI = {
-  "Pointer":                       {no:1,   en:"Pointer",                    sec:"2.1"},
+  /* Τμήμα 2 — βρετανικοί και ιρλανδοί δείκτες και σέττερ */
+  "Pointer":                       {no:1,   en:"English Pointer",            sec:"2.1"},
   "Αγγλικό Σέττερ":                {no:2,   en:"English Setter",             sec:"2.2"},
   "Σέττερ Γκόρντον":               {no:6,   en:"Gordon Setter",              sec:"2.2"},
   "Ιρλανδικό Σέττερ":              {no:120, en:"Irish Red Setter",           sec:"2.2"},
-  "Ιρλανδικό Ασπροκόκκινο Σέττερ": {no:330, en:"Irish Red and White Setter", sec:"2.2"}
+  "Ιρλανδικό Ασπροκόκκινο Σέττερ": {no:330, en:"Irish Red and White Setter", sec:"2.2"},
+  /* Τμήμα 1 — ηπειρωτικοί δείκτες, με τη σειρά του προτύπου F.C.I. */
+  "Ουγγρικό Βίζλα κοντότριχο":     {no:57,  en:"Hungarian Short-haired Pointer (Vizsla)", sec:"1"},
+  "Δείκτης του Μπούργκος":         {no:90,  en:"Burgos Pointing Dog",        sec:"1"},
+  "Επανιέλ Βρετάνης":              {no:95,  en:"Brittany Spaniel",           sec:"1"},
+  "Γερμανικός σκληρότριχος":       {no:98,  en:"German Wire-haired Pointing Dog", sec:"1"},
+  "Βαϊμαράνερ":                    {no:99,  en:"Weimaraner",                 sec:"1"},
+  "Μικρός Μινστερλάντερ":          {no:102, en:"Kleiner Münsterländer",      sec:"1"},
+  "Γαλάζιο Επανιέλ Πικαρδίας":     {no:106, en:"Blue Picardy Spaniel",       sec:"1"},
+  "Γκριφόν Κόρταλς":               {no:107, en:"Wire-haired Pointing Griffon Korthals", sec:"1"},
+  "Επανιέλ Πικαρδίας":             {no:108, en:"Picardy Spaniel",            sec:"1"},
+  "Επανιέλ Πον-Οντεμέρ":           {no:114, en:"Pont-Audemer Spaniel",       sec:"1"},
+  "Δείκτης Σαιν-Ζερμαίν":          {no:115, en:"Saint Germain Pointer",      sec:"1"},
+  "Γερμανικός μακρύτριχος":        {no:117, en:"Deutsch Langhaar",           sec:"1"},
+  "Μεγάλος Μινστερλάντερ":         {no:118, en:"Large Münsterländer",        sec:"1"},
+  "Γερμανικός κοντότριχος":        {no:119, en:"German Short-haired Pointing Dog", sec:"1"},
+  "Γαλλικός Δείκτης Γασκώνης":     {no:133, en:"French Pointing Dog — Gascogne type", sec:"1"},
+  "Γαλλικός Δείκτης Πυρηναίων":    {no:134, en:"French Pointing Dog — Pyrenean type", sec:"1"},
+  "Ιταλικό Σπινόνε":               {no:165, en:"Italian Spinone",            sec:"1"},
+  "Γαλλικό Επανιέλ":               {no:175, en:"French Spaniel",             sec:"1"},
+  "Δείκτης του Αριέζ":             {no:177, en:"Ariege Pointing Dog",        sec:"1"},
+  "Δείκτης Μπουρμπονναί":          {no:179, en:"Bourbonnais Pointing Dog",   sec:"1"},
+  "Δείκτης Ωβέρνης":               {no:180, en:"Auvergne Pointer",           sec:"1"},
+  "Πορτογαλικός Δείκτης":          {no:187, en:"Portuguese Pointing Dog",    sec:"1"},
+  "Ιταλικός Δείκτης (Μπράκκο)":    {no:202, en:"Italian Pointing Dog",       sec:"1"},
+  "Πούντελποϊντερ":                {no:216, en:"Pudelpointer",               sec:"1"},
+  "Στάμπιχουν":                    {no:222, en:"Stabijhoun",                 sec:"1"},
+  "Δείκτης της Δρέντε":            {no:224, en:"Drentsche Partridge Dog",    sec:"1"},
+  "Γερμανικός Στιχελχάαρ":         {no:232, en:"Deutsch Stichelhaar",        sec:"1"},
+  "Ουγγρικό Βίζλα σκληρότριχο":    {no:239, en:"Hungarian Wire-haired Pointer", sec:"1"},
+  "Τσέχικο Φούσεκ":                {no:245, en:"Bohemian Wire-haired Pointing Griffon", sec:"1"},
+  "Παλαιός Δανικός Δείκτης":       {no:281, en:"Old Danish Pointing Dog",    sec:"1"},
+  "Σλοβακικός σκληρότριχος":       {no:320, en:"Wirehaired Slovakian Pointer", sec:"1"}
 };
+const BREED_SECTION = b => ((BREED_FCI[b]||{}).sec||"2").charAt(0);
+const BREEDS_BRIT = Object.keys(BREED_FCI).filter(b=>BREED_SECTION(b)==="2");
+const BREEDS_CONT = Object.keys(BREED_FCI).filter(b=>BREED_SECTION(b)==="1");
+const BREEDS = BREEDS_BRIT.concat(BREEDS_CONT);
+const BREED_SECTIONS = [["2","Αγγλικές φυλές"],["1","Ηπειρωτικές φυλές"]];
 /* «Σκωτικό Σέττερ» ήταν το παλιό όνομα του ομίλου για τον Γκόρντον. Μετονομάζεται
    στη φόρτωση ώστε κανένας σκύλος να μη χάσει τη φυλή του. */
 const BREED_RENAMED = { "Σκωτικό Σέττερ": "Σέττερ Γκόρντον" };
 const breedLabel = b => (BREED_FCI[b] && BREED_FCI[b].en !== b)
   ? b + " (" + BREED_FCI[b].en + ")" : b;
-const BREED_GROUP = b => (BREED_FCI[b]||{}).sec === "2.1" ? "POINTER" : "SETTER";
+/* Το κλείδωμα τερέν σε φυλή είναι το τμήμα της F.C.I.: 2.1 ο Pointer, 2.2 τα
+   σέττερ, 1 οι ηπειρωτικοί. Ένας ηπειρωτικός δεν είναι σέττερ. */
+const BREED_GROUP = b => {
+  const sec = (BREED_FCI[b]||{}).sec;
+  return sec === "2.1" ? "POINTER" : sec === "1" ? "CONT" : "SETTER";
+};
 const TYPES = ["Πρακτικού Κυνηγίου","Έρευνας Κυνηγίου","Μεγάλης Έρευνας","Κλασικός","Derby","Ε.Κ.Ι.","Ε.ΦΥ.Π."];
 const AWARDS = ["-","CACT","RCACT","CACIT","RCACIT"];
 const QUALS = ["-","1ος ΕΞΑΙΡΕΤΟΣ","2ος ΕΞΑΙΡΕΤΟΣ","ΕΞΑΙΡΕΤΟΣ","Τ.Μ.Ε.","1ος ΠΟΛΥ ΚΑΛΟΣ","ΠΟΛΥ ΚΑΛΟΣ","ΚΑΛΟΣ","Π.Φ.Π. (CQN)","ΑΝΕΠΑΡΚΗΣ","ΑΠΟΚΛΕΙΣΜΟΣ"];
@@ -1270,7 +1313,8 @@ function tTerrains(t){
     return `<div class="card">
       <h3 style="margin:0">${esc(tr.name)}</h3>
       ${tr.breedGroup?`<div class="muted" style="margin-top:6px">Φυλή: ${
-        tr.breedGroup==="POINTER"?"Pointer (F.C.I. 2.1)":"Σέττερ (F.C.I. 2.2)"}</div>`:""}
+        tr.breedGroup==="POINTER"?"Pointer (F.C.I. 2.1)"
+        :tr.breedGroup==="CONT"?"Ηπειρωτικές (F.C.I. Τμήμα 1)":"Σέττερ (F.C.I. 2.2)"}</div>`:""}
 
       <div class="noprint" style="margin-top:12px;display:grid;gap:12px;max-width:420px">
         ${slots.map(seat).join("")}</div>
@@ -2412,14 +2456,19 @@ function vRegistry(){
     <button class="item ${tab==="dogs"?"on":""}" data-regtab="dogs">Σκύλοι · ${DB.dogs.length}</button>
     <button class="item ${tab==="judges"?"on":""}" data-regtab="judges">Κριτές · ${DB.judges.length}</button>
     <hr style="margin:16px 20px">
-    <div class="eyebrow" style="padding:0 20px">Φυλή</div>
-    <div class="tiny" style="padding:10px 20px 0;line-height:1.9">${
-      BREEDS.map(b=>`${esc(b)} · ${byBreed[b]||0}`)
-        .concat(Object.keys(byBreed).filter(b=>!BREED_FCI[b])
-          .map(b=>`${esc(b)} · ${byBreed[b]}`))
-        .join("<br>")}</div>
-    <div class="tiny" style="padding:10px 20px 0;color:var(--dim)">Ονοματολογία F.C.I.,
-      Ομάδα 7 · Τμήμα 2</div>
+    ${BREED_SECTIONS.map(([k,l])=>{
+      /* only the breeds the club actually owns, plus the five αγγλικές always,
+         because an empty club still knows which five it is for */
+      const list = (k==="2" ? BREEDS_BRIT : BREEDS_CONT).filter(b=>k==="2" || byBreed[b]);
+      if(!list.length) return "";
+      return `<div class="eyebrow" style="padding:0 20px;margin-top:14px">${l}</div>
+      <div class="tiny" style="padding:8px 20px 0;line-height:1.9">${
+        list.map(b=>`${esc(b)} · ${byBreed[b]||0}`).join("<br>")}</div>`;}).join("")}
+    ${(()=>{ const odd = Object.keys(byBreed).filter(b=>b!=="—" && !BREED_FCI[b]);
+      return odd.length ? `<div class="eyebrow" style="padding:0 20px;margin-top:14px">Εκτός καταλόγου</div>
+        <div class="tiny" style="padding:8px 20px 0;line-height:1.9">${
+          odd.map(b=>`${esc(b)} · ${byBreed[b]}`).join("<br>")}</div>` : ""; })()}
+    <div class="tiny" style="padding:12px 20px 0;color:var(--dim)">Ονοματολογία F.C.I., Ομάδα 7</div>
   </div>`;
 
   const heading = (eyebrow, title, right)=>`<div class="row" style="align-items:flex-end;gap:16px;margin-bottom:18px">
@@ -2502,14 +2551,31 @@ function vRegistry(){
       : `<div class="empty">Κανένας κυναγωγός ακόμη. Καταχωρήστε πρώτα τον κυναγωγό και μετά
           τους σκύλους του, ή εισαγάγετε αρχείο από την καρτέλα Σκύλοι.</div>`);
   } else {
+    /* Το μητρώο κόβεται πρώτα σε τμήμα και μετά σε φυλή: «δείξε μου τους
+       ηπειρωτικούς» είναι η ερώτηση που γίνεται πριν από «δείξε μου τα Βίζλα». */
+    const secList = S.regSec === "1" ? BREEDS_CONT : S.regSec === "2" ? BREEDS_BRIT : BREEDS;
+    const shown = dogs.filter(d=>
+      (!S.regSec || BREED_SECTION(d.breed) === S.regSec) &&
+      (!S.regBreed || d.breed === S.regBreed));
+    const breedBar = `<div class="row noprint" style="margin:-4px 0 16px;align-items:flex-end">
+      <div class="row tight">${BREED_SECTIONS.map(([k,l])=>
+        `<button class="tog ${S.regSec===k?"on":""}" data-regbsec="${k}">${l}</button>`).join("")}</div>
+      <div style="flex:1 1 240px;max-width:340px"><label>Φυλή</label>
+        <select data-regbreed>${[["","Όλες οι φυλές"]].concat(secList.map(b=>
+          [b, breedLabel(b) + " · " + (byBreed[b]||0)])).map(([v,l])=>
+          `<option value="${esc(v)}" ${S.regBreed===v?"selected":""}>${esc(l)}</option>`).join("")}</select></div>
+      ${(S.regSec||S.regBreed)?`<button class="b-sm" data-act="regClear">Καθαρισμός</button>
+        <div class="tiny">${shown.length} από ${dogs.length}</div>`:""}
+    </div>`;
     body = heading("Μητρώο","Σκύλοι",
       `<div style="width:300px;max-width:100%"><input id="q" placeholder="Αναζήτηση ονόματος ή Κ.Ο.Κ."
         oninput="filterDogs(this.value)"></div>
        <button class="b-act" data-act="newDog">Νέος σκύλος</button>`)
-      + (dogs.length ? `<div class="card" style="padding:0"><div class="scroll"><table id="dogTbl">
+      + breedBar
+      + (shown.length ? `<div class="card" style="padding:0"><div class="scroll"><table id="dogTbl">
         <thead><tr><th>Όνομα</th><th>Κ.Ο.Κ.</th><th>Φύλο</th><th>Έτος</th><th>Φυλή</th>
           <th>Κυναγωγός</th><th>Αγώνες</th><th class="noprint"></th></tr></thead>
-        <tbody>${dogs.map(d=>{
+        <tbody>${shown.map(d=>{
           const n = DB.trials.filter(t=>t.entries.some(e=>e.dogId===d.id)).length;
           return `<tr data-name="${esc((d.name+" "+(d.reg||"")+" "+(d.kennel||"")).toLowerCase())}">
           <td><b>${esc(d.name)}</b>${d.guest?`<span class="chip" style="margin-left:6px">ΕΠΙΣΚΕΠΤΗΣ</span>`:""}${
@@ -2523,6 +2589,8 @@ function vRegistry(){
           <td class="noprint"><button class="b-sm" data-dog="${d.id}">Ιστορικό</button>
             <button class="b-sm" data-editdog="${d.id}">Επεξ.</button></td></tr>`;}).join("")}
         </tbody></table></div></div>`
+      : dogs.length
+      ? `<div class="empty">Κανένας σκύλος με αυτή τη φυλή. Αλλάξτε ή καθαρίστε το φίλτρο.</div>`
       : `<div class="empty">Κανένας σκύλος στο μητρώο. Εισαγάγετε αρχείο Excel ή προσθέστε σκύλο.</div>`)
       + `<div class="card">
         <div class="eyebrow">Εισαγωγή</div>
@@ -2871,17 +2939,36 @@ function dlgTrial(t){
     ${t.id?`<button class="b-warn" data-act="delTrial" data-id="${t.id}">Διαγραφή</button>`:""}</div>`);
 }
 
+/* Δύο κουμπιά και μία λίστα: πρώτα τμήμα, μετά φυλή. Τριάντα έξι φυλές σε μία
+   λίστα είναι αδύνατο να διαβαστούν στο τερέν· πέντε ή τριάντα μία είναι. */
+function breedPicker(breed){
+  const sec = BREED_SECTION(breed);
+  const list = sec === "1" ? BREEDS_CONT : BREEDS_BRIT;
+  const pick = list.includes(breed) ? breed : list[0];
+  /* Το επίσημο αγγλικό όνομα μπαίνει από κάτω, όχι μέσα στη λίστα: «Ουγγρικό
+     Βίζλα κοντότριχο (Hungarian Short-haired Pointer (Vizsla))» δεν χωρά σε
+     κινητό, και η λίστα είναι που διαβάζεται με το δάχτυλο. */
+  return `<label>Φυλή</label>
+    <div class="row tight noprint" style="margin-bottom:6px">${BREED_SECTIONS.map(([k,l])=>
+      `<button type="button" class="tog b-sm ${sec===k?"on":""}" style="flex:1 1 200px"
+        data-bsec="${k}">${l}</button>`).join("")}</div>
+    <select id="d_breed">${list.map(b=>
+      `<option value="${esc(b)}" ${b===pick?"selected":""}>${esc(b)} · F.C.I. ${
+        BREED_FCI[b].no}</option>`).join("")}</select>
+    <div class="tiny" id="d_breedFci" style="margin-top:4px">${esc(BREED_FCI[pick].en)}</div>`;
+}
 function dlgDog(d){
   d = d || {};
   dlg(`<h2>${d.id?"Επεξεργασία σκύλου":"Νέος σκύλος"}</h2>
-  <div class="row">${fld("d_name","Όνομα",d.name)}
-    ${sel("d_breed","Φυλή",BREEDS.map(b=>[b,breedLabel(b)]),d.breed||BREEDS[0])}</div>
-  <div class="tiny" style="margin:-4px 0 10px">Ονοματολογία F.C.I. — Ομάδα 7 (Δείκτες),
-    Τμήμα 2: βρετανικοί και ιρλανδοί δείκτες και σέττερ. Πρότυπα 1, 2, 6, 120, 330.</div>
+  <div class="row">${fld("d_name","Όνομα",d.name)}${fld("d_reg","Αρ. Κ.Ο.Κ.",d.reg)}</div>
+  <div id="d_breedWrap">${breedPicker(d.breed||BREEDS[0])}</div>
+  <div class="tiny" style="margin:6px 0 10px">Ονοματολογία F.C.I. — Ομάδα 7 (Δείκτες).
+    Τμήμα 2 οι αγγλικές φυλές, Τμήμα 1 οι ηπειρωτικές· η F.C.I. τις κρίνει με χωριστούς
+    κανονισμούς.</div>
   <div class="row">${sel("d_sex","Φύλο",[["Α","Αρσενικός"],["Θ","Θηλυκός"]],d.sex||"Α")}
-    ${fld("d_reg","Αρ. Κ.Ο.Κ.",d.reg)}</div>
+    ${fld("d_dob","Ημ. γέννησης",d.dob,"date")}</div>
   <div class="row">${fld("d_chip","Τσιπ / δερματοστιξία",d.chip)}${fld("d_book","Αρ. βιβλιαρίου εργασίας",d.book)}</div>
-  <div class="row">${fld("d_dob","Ημ. γέννησης",d.dob,"date")}${fld("d_kennel","Εκτροφείο",d.kennel)}</div>
+  <div class="row">${fld("d_kennel","Εκτροφείο",d.kennel)}</div>
   <hr><h3>Κυναγωγός</h3>
   <div class="row">${sel("d_owner","Επιλογή από το μητρώο",
       [["","+ Νέος κυναγωγός"]].concat(DB.people.slice().sort((a,b)=>a.name.localeCompare(b.name,"el"))
@@ -2933,7 +3020,8 @@ function dlgTerrain(t, tr){
   dlg(`<h2>${tr.id?"Επεξεργασία τερέν":"Νέο τερέν"}</h2>
   <div class="row">${fld("tr_name","Όνομα τερέν",tr.name||terrainLetter(t.days[S.day]))}</div>
   <div class="row">${sel("tr_bg","Φυλή (μόνο για Derby)",
-    [["","Όλες"],["POINTER","Pointer — F.C.I. 2.1"],["SETTER","Σέττερ — F.C.I. 2.2"]],tr.breedGroup||"")}</div>
+    [["","Όλες"],["POINTER","Pointer — F.C.I. 2.1"],["SETTER","Σέττερ — F.C.I. 2.2"],
+     ["CONT","Ηπειρωτικές — F.C.I. Τμήμα 1"]],tr.breedGroup||"")}</div>
   <div class="tiny">Ο κεντρικός κριτής και οι κριτές 1 και 2 ορίζονται στην κάρτα του τερέν.</div>
   <div class="row" style="margin-top:12px">
     <button class="b-pri grow" data-act="saveTerrain" data-id="${tr.id||""}">Αποθήκευση</button>
@@ -3729,7 +3817,7 @@ function exportTrialDoc(t){
 
 /* ---------- 15. Actions -------------------------------------------------- */
 document.addEventListener("click", ev=>{
-  const el2 = ev.target.closest("[data-nav],[data-tab],[data-day],[data-act],[data-open],[data-dog],[data-editdog],[data-edithandler],[data-newdogfor],[data-btick],[data-batch],[data-ftick],[data-fall],[data-nterrain],[data-smspick],[data-chan],[data-editjudge],[data-editterrain],[data-editentry],[data-note],[data-res],[data-bstat],[data-trailer],[data-untrailer],[data-recall],[data-sms],[data-copy],[data-wa],[data-smsdone],[data-set],[data-nstep],[data-nwidth],[data-nfault],[data-delpt],[data-nset],[data-ptset],[data-openbrace],[data-swap],[data-swapwith],[data-regtab],[data-assign],[data-autoassign],[data-pick],[data-bmove],[data-signoff],[data-unlock]");
+  const el2 = ev.target.closest("[data-nav],[data-tab],[data-day],[data-act],[data-open],[data-dog],[data-editdog],[data-edithandler],[data-newdogfor],[data-btick],[data-batch],[data-ftick],[data-fall],[data-nterrain],[data-smspick],[data-chan],[data-editjudge],[data-editterrain],[data-editentry],[data-note],[data-res],[data-bstat],[data-trailer],[data-untrailer],[data-recall],[data-sms],[data-copy],[data-wa],[data-smsdone],[data-set],[data-nstep],[data-nwidth],[data-nfault],[data-delpt],[data-nset],[data-ptset],[data-openbrace],[data-swap],[data-swapwith],[data-regtab],[data-bsec],[data-regbsec],[data-assign],[data-autoassign],[data-pick],[data-bmove],[data-signoff],[data-unlock]");
   if(!el2) return;
   const d = el2.dataset;
   const t = trialById(S.trialId);
@@ -3832,6 +3920,13 @@ document.addEventListener("click", ev=>{
   if(d.swap){ dlgSwap(t, d.swap); return; }
   if(d.swapwith){ doSwap(t, el2.dataset.swapwith); return; }
   if(d.regtab){ S.regTab = d.regtab; render(); return; }
+  /* the breed picker swaps its own list in place — re-rendering the dialog
+     would throw away everything already typed into the form */
+  if(d.bsec){
+    const wrap = el("d_breedWrap");
+    if(wrap) wrap.innerHTML = breedPicker(d.bsec === "1" ? BREEDS_CONT[0] : BREEDS_BRIT[0]);
+    return; }
+  if(d.regbsec){ S.regSec = S.regSec === d.regbsec ? "" : d.regbsec; S.regBreed = ""; render(); return; }
 
   /* Sign-off locks the terrain's scores and notes. Unlocking is the head
      judge's call, needs a reason, and the reason is kept on the record. */
@@ -3901,6 +3996,15 @@ document.addEventListener("pointerdown", ev=>{
 document.addEventListener("change", ev=>{
   const sf = ev.target.dataset.statf;
   if(sf){ statFilter()[sf] = ev.target.value; render(); return; }
+  if(ev.target.id === "d_breed"){
+    const n = el("d_breedFci");
+    if(n) n.textContent = (BREED_FCI[ev.target.value]||{}).en || "";
+    return; }
+  if(ev.target.dataset.regbreed !== undefined){
+    S.regBreed = ev.target.value;
+    /* picking a breed settles which τμήμα you are in — the buttons follow */
+    if(S.regBreed) S.regSec = BREED_SECTION(S.regBreed);
+    render(); return; }
   const t = trialById(S.trialId);
   const r = ev.target.dataset.res;
   if(r && t){ const [eid,f] = r.split("|");
@@ -4486,6 +4590,7 @@ const ACT = {
   xlsPaid: (b,t)=>exportPaidXls(t),
   xlsStats: ()=>exportStatsXls(),
   statsClear: ()=>{ S.stat = {year:"",month:"",type:"",handler:"",dog:""}; render(); },
+  regClear: ()=>{ S.regSec = ""; S.regBreed = ""; render(); },
 
   /* Selection. Everyone is picked to begin with, because the usual job is
      "send it to the lot". */
@@ -4860,18 +4965,65 @@ function guessField(header){
     for(const k of keys) if(h.includes(k) && k.length > len){ best = f; len = k.length; }
   return best;
 }
+/* Ό,τι γράφει πραγματικά ένα φύλλο. Ο πίνακας χτίζεται από τα ονόματα της F.C.I.
+   — ελληνικά και αγγλικά — και συμπληρώνεται με τα κοινά ονόματα που γράφουν οι
+   κυναγωγοί. Κερδίζει η μεγαλύτερη λέξη που ταιριάζει: αλλιώς το «pointing dog»
+   κάθε ηπειρωτικού θα διαβαζόταν ως Pointer, και το «Pudelpointer» επίσης.
+   Οι τόνοι φεύγουν και από τις δύο πλευρές — κανείς δεν τους βάζει στο Excel. */
+const noTone = x => String(x||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().trim();
+const BREED_KEYS = (()=>{
+  const k = [], add = (b, ...words) => words.forEach(w => k.push([noTone(w), b]));
+  Object.entries(BREED_FCI).forEach(([b, f]) => add(b, b, f.en));
+  add("Pointer", "pointer", "ποιντερ");
+  add("Αγγλικό Σέττερ", "english setter", "αγγλικο σεττερ");
+  add("Σέττερ Γκόρντον", "gordon", "γκορντον", "σκωτικο σεττερ", "scottish setter");
+  add("Ιρλανδικό Σέττερ", "irish setter", "ιρλανδικο σεττερ", "red setter");
+  add("Ιρλανδικό Ασπροκόκκινο Σέττερ", "irish red and white", "irish red & white",
+      "irish red-and-white", "red and white setter", "ασπροκοκκινο", "r&w setter");
+  add("Γερμανικός κοντότριχος", "kurzhaar", "κουρτσχααρ", "german shorthaired",
+      "german short-haired", "german short haired", "deutsch kurzhaar");
+  add("Γερμανικός σκληρότριχος", "drahthaar", "ντρατχααρ", "german wirehaired",
+      "german wire-haired", "german wire haired", "deutsch drahthaar");
+  add("Γερμανικός μακρύτριχος", "langhaar", "λανγκχααρ");
+  add("Γερμανικός Στιχελχάαρ", "stichelhaar", "στιχελχααρ");
+  add("Ουγγρικό Βίζλα κοντότριχο", "vizsla", "βιζλα", "magyar vizsla");
+  add("Ουγγρικό Βίζλα σκληρότριχο", "wirehaired vizsla", "wire-haired vizsla",
+      "drotszoru", "σκληροτριχο βιζλα");
+  add("Επανιέλ Βρετάνης", "breton", "brittany", "μπρετον", "epagneul breton");
+  add("Βαϊμαράνερ", "weimaraner", "βαιμαρανερ", "weimar");
+  add("Ιταλικός Δείκτης (Μπράκκο)", "bracco", "μπρακκο", "μπρακο", "bracco italiano");
+  add("Ιταλικό Σπινόνε", "spinone", "σπινονε");
+  add("Γκριφόν Κόρταλς", "korthals", "κορταλς", "griffon korthals");
+  add("Πούντελποϊντερ", "pudelpointer", "πουντελποιντερ");
+  add("Μικρός Μινστερλάντερ", "kleiner munsterlander", "kleiner munsterlaender",
+      "small munsterlander", "μικρος μινστερλαντερ");
+  add("Μεγάλος Μινστερλάντερ", "grosser munsterlander", "large munsterlander",
+      "μεγαλος μινστερλαντερ");
+  add("Τσέχικο Φούσεκ", "fousek", "φουσεκ");
+  add("Στάμπιχουν", "stabyhoun", "stabijhoun", "σταμπιχουν");
+  add("Δείκτης της Δρέντε", "drent", "δρεντε");
+  add("Παλαιός Δανικός Δείκτης", "honsehund", "old danish");
+  add("Σλοβακικός σκληρότριχος", "slovak", "σλοβακ");
+  add("Δείκτης του Μπούργκος", "burgos", "μπουργκος");
+  add("Πορτογαλικός Δείκτης", "perdigueiro", "portuguese pointing");
+  add("Γαλλικός Δείκτης Γασκώνης", "gascogne", "γασκων");
+  add("Γαλλικός Δείκτης Πυρηναίων", "pyren", "πυρηνα");
+  add("Δείκτης Ωβέρνης", "auvergne", "ωβερν");
+  add("Δείκτης Μπουρμπονναί", "bourbonnais", "μπουρμπον");
+  add("Δείκτης του Αριέζ", "ariege", "αριεζ");
+  add("Δείκτης Σαιν-Ζερμαίν", "saint germain", "st germain", "ζερμαιν");
+  add("Γαλλικό Επανιέλ", "french spaniel", "epagneul francais");
+  add("Γαλάζιο Επανιέλ Πικαρδίας", "bleu de picardie", "blue picardy", "γαλαζιο επανιελ");
+  add("Επανιέλ Πικαρδίας", "picard", "πικαρδ");
+  add("Επανιέλ Πον-Οντεμέρ", "pont-audemer", "pont audemer", "οντεμερ");
+  return k.sort((a,b)=>b[0].length - a[0].length);
+})();
 function normBreed(v){
-  const s = String(v||"").toLowerCase();
+  const s = noTone(v);
   if(!s) return null;
-  if(s.includes("point") || s.includes("πόιντ") || s.includes("ποιντ")) return "Pointer";
-  /* the red and white is its own breed (F.C.I. 330), not a colour of the red,
-     so it is read before «irish» ever gets a chance to claim the row */
-  if(/red[\s-]*(and|&|\/)?[\s-]*white|r&w|ασπροκ|κοκκιν[οα]?[\s-]*ασπρ|ασπρ[οα]?[\s-]*κοκκιν/.test(s))
-    return "Ιρλανδικό Ασπροκόκκινο Σέττερ";
-  if(s.includes("gordon") || s.includes("γκόρντον") || s.includes("γκορντον")
-     || s.includes("σκωτ") || s.includes("scot")) return "Σέττερ Γκόρντον";
-  if(s.includes("irish") || s.includes("ιρλαν")) return "Ιρλανδικό Σέττερ";
-  if(s.includes("sett")  || s.includes("σέττ") || s.includes("σετ"))  return "Αγγλικό Σέττερ";
+  for(const [w, b] of BREED_KEYS) if(s.includes(w)) return b;
+  /* τελευταία ευκαιρία: σκέτο «σέττερ» σε φύλλο αγγλικού ομίλου */
+  if(s.includes("sett") || s.includes("σεττ") || s.includes("σετ")) return "Αγγλικό Σέττερ";
   return null;
 }
 function normSex(v){

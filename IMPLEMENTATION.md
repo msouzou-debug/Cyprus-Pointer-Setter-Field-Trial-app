@@ -394,6 +394,34 @@ Pointers and Setters**, with the F.C.I. standard number against each:
 - The dog form offers each breed with its English F.C.I. name in brackets, and the Μητρώο sidebar
   lists all five whether or not the club owns one yet.
 
+### Αγγλικές / Ηπειρωτικές
+
+The register carries the **whole of Group 7** now — the five αγγλικές above and the 31 ηπειρωτικές
+of Section 1, each with its F.C.I. standard number. The F.C.I. judges the two sections under
+separate regulations, so the app splits them everywhere they are chosen:
+
+- **The dog form** opens with two buttons — «Αγγλικές φυλές» / «Ηπειρωτικές φυλές» — and the
+  dropdown carries only that section. Five names or thirty-one, never thirty-six. The switch
+  redraws the picker alone, so nothing already typed into the form is lost, and editing a
+  continental dog opens on the continental list. The official English name sits under the select
+  rather than inside the option: «Ουγγρικό Βίζλα κοντότριχο (Hungarian Short-haired Pointer
+  (Vizsla)) · F.C.I. 57» does not fit a phone, and the list is what gets read with a thumb.
+- **The Μητρώο** has the same two buttons over the dog table, plus a breed dropdown that counts
+  each one. Picking a breed settles the section, so the buttons follow the dropdown.
+- **`BREED_GROUP` gained `CONT`.** A continental dog used to answer "SETTER", which meant a Derby
+  terrain reserved for σέττερ would have accepted a Weimaraner. The terrain restriction now offers
+  «Ηπειρωτικές — F.C.I. Τμήμα 1» as its own choice.
+- **The importer reads all 36.** The old `normBreed` matched «point» first, so *Pudelpointer* and
+  *German Shorthaired Pointer* both landed as Pointer. It is now a longest-match table built from
+  the F.C.I. names themselves and filled out with what sheets actually say — Kurzhaar, Drahthaar,
+  Vizsla, Breton, Bracco, Spinone, Korthals, Fousek — with accents stripped from both sides,
+  because nobody types them into Excel.
+
+The breed table is transcribed from the F.C.I. nomenclature (id, name, group, section) rather than
+typed from memory; `fci.be` itself is blocked here, so the numbers were taken from a published
+mirror of that nomenclature and each one is shown in the app beside its breed, where a wrong one
+would be visible rather than silent.
+
 ### What could not be checked
 
 `fci.be` is **blocked by this environment's egress proxy** (403 on CONNECT), as are the national-club
