@@ -881,6 +881,21 @@ function download(name, mime, content){
   setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
 }
 function phoneClean(p){ return String(p||"").replace(/[^\d+]/g,""); }
+/* The register holds numbers the way they were written down — "00 357 99 677210",
+   "99 314100", "99695551" all appear in the club's own list. sms: forgives that;
+   wa.me and viber:// do not, they want E.164 and nothing else. Normalise on the
+   way out only: what the μητρώο stores stays as the club typed it. */
+function phoneE164(p){
+  let n = phoneClean(p).replace(/(?!^)\+/g, "");
+  if(!n) return "";
+  if(n.slice(0,2) === "00") n = "+" + n.slice(2);
+  if(n.charAt(0) !== "+"){
+    if(/^357\d{8}$/.test(n))   n = "+" + n;          /* κωδικός χώρας χωρίς + */
+    else if(/^\d{8}$/.test(n)) n = "+357" + n;       /* κυπριακός, τοπικός */
+    else if(n.length >= 10)    n = "+" + n;          /* ξένος, με κωδικό χώρας */
+  }
+  return n;
+}
 /* A laptop has no messaging app, so an sms: link does nothing and silently
    marks the message sent. The screen offers WhatsApp Web and the clipboard
    there instead, and says why. */
@@ -2007,6 +2022,21 @@ function drawCheck(t){
         + "Η κλήρωση θα τους μετακινήσει.");
   });
 
+  /* H2 is only as good as the link between a κριτής and his own record in the
+     μητρώο κυναγωγών. Unlinked, judgeConflict() returns false for him and the
+     draw enforces nothing — silently, which is the part worth saying out loud. */
+  const unlinked = [...new Set([].concat(...day.terrains.map(tr=>tr.judgeIds||[])))]
+    .map(judById).filter(j=>j && !j.personId);
+  if(unlinked.length){
+    const sur = n => noTone(String(n||"").split(/\s+/).filter(Boolean).pop());
+    const hint = unlinked.map(j=>{
+      const same = DB.people.filter(p=>sur(p.name) && sur(p.name)===sur(j.name)).map(p=>p.name);
+      return j.name + (same.length ? ` (ίδιο επώνυμο: ${same.join(", ")})` : "");
+    });
+    warn.push(`Χωρίς σύνδεση με το μητρώο κυναγωγών: ${hint.join(" · ")}. `
+      + "Για αυτούς ο έλεγχος του Άρθρου 49 δεν μπορεί να γίνει — συνδέστε τους στο Μητρώο → Κριτές.");
+  }
+
   const braces = Math.ceil(active.length / need);
   if(active.length && braces < 3)
     warn.push(`${active.length} σκύλοι δίνουν ${braces} ${braces===1?"ζεύγος":"ζεύγη"}. `
@@ -2324,7 +2354,7 @@ function smsQueue(t){
       const e = t.entries.find(x=>x.id===id); if(!e) return;
       const key = e.handlerId || e.id; if(seen.has(key)) return; seen.add(key);
       out.push({kind:"handler", key:e.id, name:perName(e.handlerId), entry:e,
-                phone:phoneClean((perById(e.handlerId)||{}).phone), body:smsBody(t,e)});
+                phone:phoneE164((perById(e.handlerId)||{}).phone), body:smsBody(t,e)});
     });
   }));
   const judged = new Set();
@@ -2333,7 +2363,7 @@ function smsQueue(t){
     judged.add(j);
     const jg = judById(j); if(!jg) return;
     out.push({kind:"judge", key:"j:"+j, name:jg.name, judge:jg,
-              phone:phoneClean(jg.phone), body:judgeSmsBody(t, jg)});
+              phone:phoneE164(jg.phone), body:judgeSmsBody(t, jg)});
   }));
   return out;
 }

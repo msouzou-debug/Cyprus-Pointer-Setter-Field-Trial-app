@@ -564,6 +564,36 @@ the flat drawn-order list has no list for a drag to reorder within.
 - Every move is stamped as a χειροκίνητη αλλαγή on both braces it touched and prints on the draw
   list, which is Άρθρο 16 either way: the order may be changed, never silently.
 
+## The club's own backup, and what it showed
+
+`KOAD_20260905.json` — the Αγώνας Βουνού of 6 September, 26 σκύλοι in 13 ζεύγη over two τερέν —
+was loaded through the app's own `loadBackup` path, not through a fixture. It merges clean: 26
+σκύλοι, 16 κυναγωγοί, 5 κριτές, one ΚΛΗΡΩΜΕΝΟΣ αγώνας, every δήλωση in a ζεύγος, no orphans. **It
+is not committed here.** The file carries members' names and mobile numbers and this repository is
+public; the backup belongs on the head judge's device, and travels between devices by ↑ Φόρτωση.
+
+Two things in it were app problems, not data entry problems.
+
+**The numbers are written the way people write them.** The club's list holds `00 357 99 677210`,
+`99 314100`, `99695551`, `99 564880` — four formats among five numbers. `sms:` forgives all of it;
+`wa.me` and `viber://` forgive none of it. `wa.me/0035799677210` and `wa.me/99695551` are both
+dead links, so στάδιο 4 would have opened WhatsApp on nothing and the message would have been
+marked ΕΣΤΑΛΗ. `phoneE164()` now normalises on the way out only — `00` becomes `+`, a bare
+`357`+8 gets its `+`, eight digits are read as Κύπρος — and what the μητρώο **stores stays exactly
+as the club typed it**, because that is the number someone will read off a screen and dial by hand.
+
+**Άρθρο 49 was not being checked, and said nothing about it.** All five κριτές had no link to the
+μητρώο κυναγωγών, and `judgeConflict()` needs that link: with `personId` empty it returns false for
+every dog, so H2 passes vacuously and the κλήρωση enforces nothing. The draw had already run.
+Ο έλεγχος πριν από την κλήρωση now names the unlinked κριτές and, where a κυναγωγός shares the
+επώνυμο, names him too — *Χαράλαμπος Γρηγοριου (ίδιο επώνυμο: Κ. ΓΡΗΓΟΡΙΟΥ)*, who has six σκύλους
+in this αγώνας while Γρηγοριου κρίνει το Τερέν Β. Whether they are the same man is not something
+the app can decide; leaving the rule silently unenforced was.
+
+Two facts about the data itself, for the head judge rather than for the code: **11 of the 16
+κυναγωγοί have no mobile**, so στάδιο 4 reaches 13 of the 26 δηλώσεις; and **0 of 26 are marked
+πληρωμένες**, which is what the Πληρωμές export will report.
+
 ## Deliberate departures from the canvas
 
 - **Offline chip.** The canvas shows «Εκτός σύνδεσης – 6 αλλαγές σε αναμονή». There is no server
