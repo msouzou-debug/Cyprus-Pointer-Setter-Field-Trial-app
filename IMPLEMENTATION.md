@@ -666,6 +666,30 @@ kind — threw the head judge back to the top of the page, which on a two-terrai
 screens above the ζεύγος he was correcting. It now scrolls to the top only when the **screen**
 changes: view, αγώνας, tab, day, register tab. An edit in place leaves the page where it was.
 
+## Επανάκληση: two dogs, one ζεύγος
+
+Reported from the ground on 6 September: a recall was called after ζεύγος 8, two dogs were picked,
+and the app put **each one down on his own** instead of running them together.
+
+The cause was in the shape of the feature, not in a detail. The button was per dog —
+«Επανάκληση ΟΝΟΜΑ» in each half of the card — and behind it one line wrote
+`{a: eid, b: null, solo: true}`. There was no way to say *these two, together*: pressing it twice
+could only ever produce two solo runs. Άρθρο 30 gives the judges a second run for a dog of great
+merit, and in the field that is very often **two dogs put down again to be seen against each
+other** — which is the whole point of the second run.
+
+The button now asks. **Τρέχει: μόνος του, ή μαζί με …** — the other dogs of that τερέν, named with
+their κυναγωγός. One ζεύγος comes out either way: `solo` only when he really is alone. Και:
+
+- The second dog is chosen from **the same τερέν**. Άρθρο 30 is a second run under the judges of
+  that ground, not a new draw.
+- **Ο συμπληρωματικός is never offered** — he completes a ζεύγος, he does not compete (Άρθρο 40) —
+  and he is excluded wherever he appears, not only in the brace he was added to.
+- Both dogs **keep their place in the running order**. The recall is an extra run at the end of the
+  τερέν; the original ζεύγη are untouched.
+- Each keeps his own φύλλο σημειώσεων, as before — notes are keyed per dog per run.
+- The card's footer names both: *Δεύτερη διαδρομή, ΕΛΣΑ και ΤΟΣΚΑ μαζί (Άρθρο 30)*.
+
 ## Deliberate departures from the canvas
 
 - **Offline chip.** The canvas shows «Εκτός σύνδεσης – 6 αλλαγές σε αναμονή». There is no server

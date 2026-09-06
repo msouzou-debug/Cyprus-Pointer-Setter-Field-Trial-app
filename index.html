@@ -1943,7 +1943,12 @@ function braceCard(t, tr, b, opts){
   else state = `<span class="bstate">ΕΚΚΡΕΜΕΙ</span>`;
 
   const foot = [];
-  if(b.recall) foot.push(`Δεύτερη διαδρομή του ${esc(dogName((ea||{}).dogId))} (Άρθρο 30). Ξεχωριστό φύλλο σημειώσεων.`);
+  if(b.recall){
+    const who = [ea, eb].filter(Boolean).map(e=>esc(dogName(e.dogId)));
+    foot.push((who.length > 1
+      ? `Δεύτερη διαδρομή, ${who.join(" και ")} μαζί`
+      : `Δεύτερη διαδρομή του ${who[0]||"—"}`) + " (Άρθρο 30). Ξεχωριστό φύλλο σημειώσεων.");
+  }
   if(b.trailer) foot.push("Εκτός κλήρωσης. Δεν προσμετράται στα τρία ζεύγη (Άρθρο 40).");
   if(b.manual) foot.push(`Χειροκίνητη αλλαγή από τον Πρόεδρο Κριτών, ${esc(b.manual.at||"")}. Τυπώνεται στη λίστα.`);
 
@@ -4292,7 +4297,7 @@ function exportTrialDoc(t){
 
 /* ---------- 15. Actions -------------------------------------------------- */
 document.addEventListener("click", ev=>{
-  const el2 = ev.target.closest("[data-nav],[data-tab],[data-day],[data-act],[data-open],[data-dog],[data-editdog],[data-edithandler],[data-newdogfor],[data-btick],[data-batch],[data-ftick],[data-fall],[data-nterrain],[data-smspick],[data-chan],[data-editjudge],[data-editterrain],[data-editentry],[data-note],[data-res],[data-bstat],[data-trailer],[data-untrailer],[data-recall],[data-sms],[data-copy],[data-wa],[data-smsdone],[data-set],[data-nstep],[data-nwidth],[data-nfault],[data-delpt],[data-nset],[data-ptset],[data-openbrace],[data-swap],[data-swapwith],[data-regtab],[data-bsec],[data-regbsec],[data-setlang],[data-assign],[data-autoassign],[data-pick],[data-signoff],[data-unlock]");
+  const el2 = ev.target.closest("[data-nav],[data-tab],[data-day],[data-act],[data-open],[data-dog],[data-editdog],[data-edithandler],[data-newdogfor],[data-btick],[data-batch],[data-ftick],[data-fall],[data-nterrain],[data-smspick],[data-chan],[data-editjudge],[data-editterrain],[data-editentry],[data-note],[data-res],[data-bstat],[data-trailer],[data-untrailer],[data-recall],[data-recallgo],[data-sms],[data-copy],[data-wa],[data-smsdone],[data-set],[data-nstep],[data-nwidth],[data-nfault],[data-delpt],[data-nset],[data-ptset],[data-openbrace],[data-swap],[data-swapwith],[data-regtab],[data-bsec],[data-regbsec],[data-setlang],[data-assign],[data-autoassign],[data-pick],[data-signoff],[data-unlock]");
   if(!el2) return;
   const d = el2.dataset;
   const t = trialById(S.trialId);
@@ -4424,15 +4429,8 @@ document.addEventListener("click", ev=>{
     if(b){ b.b = null; b.solo = true; b.trailer = false; save(); render(); }
     return; }
 
-  if(d.recall){                                  // Άρθρο 30 — επανάκληση
-    const [tid,eid] = d.recall.split("|");
-    const tr = t.days[S.day].terrains.find(x=>x.id===tid);
-    if(!tr) return;
-    if(!confirmAct("Επανάκληση του σκύλου; Θα προστεθεί νέα διαδρομή στο τέλος του τερέν.")) return;
-    tr.braces.push({id:uid(), no:tr.braces.length+1, a:eid, b:null, solo:true,
-                    recall:true, status:"ΕΚΚΡΕΜΕΙ"});
-    save(); render(); toast("Προστέθηκε επανάκληση");
-    return; }
+  if(d.recall){ dlgRecall(t, d.recall); return; }      // Άρθρο 30 — επανάκληση
+  if(d.recallgo){ doRecall(t, el2.dataset.recallgo); return; }
 
   if(d.sms!==undefined && el2.hasAttribute("data-sms")){
     const x = smsQueue(t)[+d.sms]; if(!x) return;
@@ -4563,6 +4561,54 @@ function setBraceStatus(b, status){
   if(status==="ΕΚΚΡΕΜΕΙ"){ b.elapsed = 0; b.startedAt = null; b.endedAt = null; }
   if(status==="ΟΛΟΚΛΗΡΩΘΗΚΕ") b.endedAt = Date.now();
   b.status = status;
+}
+
+/* --- επανάκληση, Άρθρο 30 ---
+   A recall used to add one dog on his own, always, because the button was per
+   dog and the code behind it wrote `b:null, solo:true`. Two dogs recalled meant
+   two separate solo runs, which is not what the judges asked for: a recall is
+   very often two dogs put down together again to be seen against each other.
+   The head judge now says who runs — alone, or with a second dog from the same
+   τερέν — and gets one ζεύγος either way. */
+function dlgRecall(t, spec){
+  const [tid, eid] = spec.split("|");
+  const tr = (t.days[S.day].terrains||[]).find(x=>x.id===tid);
+  if(!tr) return;
+  const me = t.entries.find(x=>x.id===eid) || {};
+  /* everyone who ran in this τερέν, himself and the συμπληρωματικοί aside —
+     Άρθρο 30 is a second run under the judges of that ground */
+  /* a συμπληρωματικός is excluded wherever he appears, not only in the brace he
+     completes — once recalled into a second ζεύγος he would otherwise come back */
+  const trailers = new Set();
+  (tr.braces||[]).forEach(b=>{ if(b.trailer && b.b) trailers.add(b.b); });
+  const seen = new Set(), opts = [];
+  (tr.braces||[]).forEach(b=>[b.a, b.b].forEach(id=>{
+    if(!id || id === eid || seen.has(id) || trailers.has(id)) return;
+    const e = t.entries.find(x=>x.id===id); if(!e) return;
+    seen.add(id);
+    opts.push({id, label:`${dogName(e.dogId)} — ${perName(e.handlerId)}`});
+  }));
+  opts.sort((a,b)=>a.label.localeCompare(b.label,"el"));
+  dlg(`<h2>Επανάκληση — Άρθρο 30</h2>
+  <p class="muted">Νέα διαδρομή για τον <b>${esc(dogName(me.dogId))}</b>, στο τέλος του
+    ${esc(tr.name)}. Ο σκύλος κρατά τη θέση του στη σειρά· αυτή είναι επιπλέον.</p>
+  <div class="row">${sel("rc_with","Τρέχει",
+    [["","Μόνος του"]].concat(opts.map(o=>[o.id, "Μαζί με " + o.label])), "")}</div>
+  <div class="tiny">Δύο σκύλοι σε επανάκληση μπαίνουν στο <b>ίδιο ζεύγος</b> και κρίνονται μαζί.
+    Κάθε ένας κρατά δικό του φύλλο σημειώσεων.</div>
+  <div class="row" style="margin-top:14px">
+    <button class="b-pri grow" data-recallgo="${tid}|${eid}">Προσθήκη επανάκλησης</button>
+    <button class="grow" data-act="close">Άκυρο</button></div>`);
+}
+function doRecall(t, spec){
+  const [tid, eid] = spec.split("|");
+  const tr = (t.days[S.day].terrains||[]).find(x=>x.id===tid); if(!tr) return;
+  const other = (el("rc_with")||{}).value || null;
+  tr.braces = tr.braces || [];
+  tr.braces.push({id:uid(), no:tr.braces.length+1, a:eid, b:other,
+                  solo:!other, recall:true, status:"ΕΚΚΡΕΜΕΙ"});
+  save(); closeDlg(); render();
+  toast(other ? "Προστέθηκε επανάκληση με δύο σκύλους" : "Προστέθηκε επανάκληση");
 }
 
 /* --- manual change to a drawn order (Άρθρο 16) --- */
