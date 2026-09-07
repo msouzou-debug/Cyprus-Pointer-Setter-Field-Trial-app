@@ -274,6 +274,9 @@ hr{border:0;border-top:1px solid var(--line);margin:var(--s4) 0}
 .brief.done{background:var(--sand);border-color:var(--line)}
 /* the handle beside the row, not inside it */
 .briefrow{display:flex;align-items:center;gap:4px;margin-bottom:var(--s2)}
+/* οι τέσσερις γλώσσες δίπλα-δίπλα σε γραφείο, δύο-δύο σε κινητό */
+.terms-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:10px 18px;margin-top:12px}
 .briefrow .brief{margin-bottom:0}
 .brief .n{font:800 30px/1 var(--f-d);color:var(--ink);min-width:32px;
   font-variant-numeric:tabular-nums;flex:none}
@@ -711,7 +714,8 @@ const DEFAULT_SETTINGS = { sms:DEFAULT_SMS, smsFoot:DEFAULT_SMS_FOOT, smsMode:"f
    γλώσσα, ένα αντίγραφο από αγγλικό κινητό δεν θα συγχωνευόταν με ελληνικό
    υπολογιστή και οι πόντοι θα σταματούσαν να βγαίνουν. Μεταφράζεται μόνο ό,τι
    πάει στην οθόνη. */
-const LANGS = [["el","Ελληνικά","ΕΛ"],["en","English","EN"]];
+const LANGS = [["el","Ελληνικά","ΕΛ"],["en","English","EN"],["fr","Français","FR"],
+               ["de","Deutsch","DE"],["it","Italiano","IT"]];
 const STR = { en: {
   /* πλοήγηση */
   "Αγώνες":"Trials", "Μητρώο":"Register", "Στατιστικά":"Statistics",
@@ -736,6 +740,31 @@ const STR = { en: {
   "Ημ. γέννησης":"Date of birth", "Εκτροφείο":"Kennel", "Κυναγωγός":"Handler",
   "Τσιπ / δερματοστιξία":"Chip / tattoo", "Αρ. βιβλιαρίου εργασίας":"Working book no.",
   "Ονοματεπώνυμο":"Full name", "Κινητό":"Mobile", "Χώρα":"Country",
+  /* Η κάρτα σημειώσεων. Οι όροι του κανονισμού μπαίνουν χωριστά από το TERMS —
+     εδώ είναι μόνο τα δικά μας λεκτικά, που δεν τα ορίζει κανένας κανονισμός. */
+  "Έρευνα":"Quest", "Πάθος":"Drive", "Μεθοδικότητα":"Method",
+  "Καλπασμός και στυλ φυλής":"Gallop and breed style", "Επαφή με κυναγωγό":"Contact with handler",
+  "Πλάτος έρευνας":"Width of quest", "Στενή":"Narrow", "Κανονική":"Normal",
+  "Ανοικτή":"Open", "Πολύ ανοικτή":"Very open",
+  "Πόντοι":"Points", "πόντος":"point", "πόντοι":"points", "+ Πόντος":"+ Point",
+  "Θήραμα":"Game", "Πέρδικα":"Partridge", "Φραγκολίνα":"Francolin",
+  "Μπεκάτσα":"Woodcock", "Ορτύκι":"Quail", "Άλλο":"Other",
+  "Ποιότητα":"Quality", "Πόντος έκπληξης":"Snap point", "Εξαίρετη ένδειξη":"Outstanding indication",
+  "Λεπτομέρειες διαδρομής":"Run detail",
+  "Στέρεη":"Firm", "Μέτρια":"Moderate", "Αδύναμη":"Weak",
+  "Αποφασιστικό":"Decisive", "Με στήριξη":"With support", "Άρνηση":"Refusal",
+  "Μερική":"Partial", "Δεν ζητήθηκε":"Not asked", "Σωστό":"Correct", "Ελλιπές":"Incomplete",
+  "Δεν προέκυψε":"Did not arise", "Αυθόρμητη":"Spontaneous", "Κατόπιν εντολής":"On command",
+  "Γλωσσάρι":"Glossary", "όροι":"terms", "από":"of",
+  "Κανένας πόντος καταγεγραμμένος.":"No point recorded.", "Λευκές φέρμες":"Empty points",
+  "Σφάλματα αποκλεισμού":"Eliminating faults", "Άρθρο 33":"Article 33",
+  "Ο αποκλεισμός τερματίζει τη διαδρομή. Επιλέξτε το σφάλμα και επιβεβαιώστε· η ενέργεια καταγράφεται.":"Elimination ends the run. Pick the fault and confirm; the action is recorded.",
+  "Αποκλεισμός σκύλου":"Eliminate dog", "Ελεύθερο σχόλιο":"Free comment",
+  "Υπαγόρευση":"Dictate", "Κριτής":"Judge",
+  "Το τερέν είναι υπογεγραμμένο.":"This terrain is signed off.",
+  "Κλείσιμο":"Close",
+  "Αναζήτηση όρου σε οποιαδήποτε γλώσσα":"Search a term in any language",
+  "Κανένας όρος δεν ταιριάζει.":"No term matches.",
   "Χώρα εκτροφής":"Country of breeding",
   "Αποστολή προς":"Will be sent to", "Τοπικός αριθμός· θα σταλεί ως":"Local number · sent as",
   "Γράψτε τον αριθμό με +":"Write the number with +",
@@ -786,11 +815,85 @@ const STR = { en: {
    Λέγεται tx() και όχι t(): το `t` είναι ο αγώνας σε όλο το υπόλοιπο αρχείο,
    και μια συνάρτηση που κρύβεται πίσω από μια μεταβλητή είναι σφάλμα που δεν
    φαίνεται μέχρι να ανοίξει η λάθος οθόνη. */
+/* ---------- Ορολογία κρίσης, πέντε γλώσσες ------------------------------
+   43 όροι από τους κανονισμούς που κρατά το αποθετήριο (fci/, national/).
+   Κανένας δεν μεταφράστηκε: κάθε ένας στέκει αυτούσιος μέσα στο έγγραφο που
+   επικαλείται, και ο έλεγχος fci/tools/check-terms.py το επαληθεύει. Όπου μια
+   γλώσσα δεν έχει τον όρο, το κελί είναι 0 — κενό, όχι εικασία.
+   [ελληνικά, όπως το γράφει η οθόνη ή "", ομάδα, [en,fr,de,it], βάση, Άρθρο Κ.Ο.Α.Δ., σημείωση, πηγές] */
+const TERMS = [
+ ["τερέν","","a",["terrain","terrain","Prüfungsgelände, Gelände","terreno"],"aco","Άρθρο 48","","EN ACO II.1 heading · FR ACO II.1 heading; SCC art. 33 · DE ACO II.1 heading; ACO II.8 · IT ENCI art. 3"],
+ ["ζεύγος","","a",["brace, couple","couple","Paar, Paarlauf","coppia"],"aco","Άρθρο 4","","EN ACO IX.25; ACO II.12 · FR ACO II.12; ACO IX.25 · DE ACO II.12; VPS Paarsuche (PS) · IT ENCI art. 8"],
+ ["διαδρομή","","a",["run, round","tour, parcours","Durchgang","turno"],"aco","Άρθρο 24","Η F.C.I. ορίζει τουλάχιστον δεκαπέντε λεπτά για την πρώτη διαδρομή (ACO II.5).","EN ACO II.5; SC art. 14 · FR ACO II.5; SCC art. 29 · DE ACO II.5 · IT ENCI art. 7"],
+ ["κλήρωση","","a",["drawing of lots","tirage au sort","Auslosung","sorteggio"],"aco","Άρθρο 16","Και οι τέσσερις πηγές λένε το ίδιο: η σειρά είναι ενδεικτική. ACO I.17 «The drawing is only an indication of the running order».","EN ACO I.17; ACO IX.19; ACO VIII.8 · FR ACO I.17; SCC art. 14 · DE ACO VIII.8 · IT ENCI art. 3"],
+ ["επανάκληση","","a",["recall","rappel",0,"richiamo, turno di richiamo"],"own","Άρθρο 30","Ο γερμανικός όρος στο ACO II.7 στέκει ως «beim erneuten Aufrufen»· δεν υπάρχει μονολεκτικό ουσιαστικό στα κείμενα που έχουμε.","EN SC art. 14, 15 · FR ACO II.7; SCC art. 34 · IT ENCI art. 7"],
+ ["μπαράζ","","a",["barrage, run-off","barrage",0,0],"own","","Στα ιταλικά δεν βρέθηκε αντίστοιχος όρος: η ENCI λύνει το ίδιο πρόβλημα με «turni per l'assegnazione del CACIT» και «batterie» (ENCI art. 4), όχι με ξεχωριστή λέξη.","EN ACO I.25, I.26; SC art. 22 · FR SCC art. 3; LEX «C.A.C.I.T.»"],
+ ["κυναγωγός","","a",["handler","conducteur","Führer","conduttore"],"aco","Άρθρο 5","","EN ACO II.11 · FR ACO II.11 · DE ACO II.11; VPS § 9 Führen der Hunde · IT ENCI art. 8"],
+ ["κριτής","","a",["judge","juge","Richter","esperto giudice"],"aco","Άρθρο 48","","EN ACO II.11 · FR ACO II.11 · DE ACO II.11; VPS § 5 · IT ENCI art. 11"],
+ ["Πρόεδρος Κριτών","","a",["chief judge, president of the jury","président du jury",0,0],"own","Άρθρο 48","","EN SC art. 9; ACO IX.25 · FR ACO IX.25; SCC art. 14"],
+ ["οίστρος","","a",["bitches in season","chiennes en chaleurs","läufige Hündin",0],"own","","Οι κανονισμοί δεν συμφωνούν: το SC art. 3b δέχεται θηλυκές σε οίστρο στο τέλος του γύρου και μόνο μεταξύ τους· το ACO I.6 τις αποκλείει εντελώς. Δεν είναι θέμα ορολογίας — είναι δύο διαφορετικοί κανόνες, βρετανικός και ηπειρωτικός.","EN SC art. 3b · FR SCC art. 3 · DE ACO I.6"],
+ ["έρευνα","","d",["quest","quête","Suche","cerca"],"aco","","ACO II.15: «ενεργητική, έξυπνη και μεθοδική, χωρίς να ρυθμίζεται με τη σφυρίχτρα».","EN ACO IX.25; ACO II.15 · FR ACO II.15; ACO IX.25; SCC art. 33 · DE ACO II.15; VPS § 6 · IT ENCI art. 8"],
+ ["μύτη","","d",["nose","nez","Nase","potenza olfattiva"],"own","","","EN GQ art. 5 · FR SCC art. 33 · DE VPS § 5 Nase, § 5 Nasengebrauch · IT ENCI art. 17, 25"],
+ ["ύφος","","d",["style","style","Stil","stile"],"own","","Και οι τέσσερις το δένουν με τη φυλή: ασύμβατο ύφος είναι σφάλμα, όχι γούστο.","EN SC art. 22 · FR SCC art. 3 · DE VPS § 6 Stil der Suche · IT ENCI art. 11 §3 «Stile non conforme alla razza»"],
+ ["ρυθμός","","d",["pace","allure","Schnelligkeit und Ausdauer","azione, fondo"],"own","","","EN ACO IX.25 · FR ACO IX.25 · DE VPS § 7 · IT ENCI art. 11 §1, §7"],
+ ["πόντος","","d",["point","point","Punkt","punto"],"aco","","ACO II.13: κανένα βραβείο σε σκύλο χωρίς έναν τουλάχιστον ολοκληρωμένο πόντο.","EN ACO II.13 · FR ACO II.13 · DE ACO II.13 · IT ENCI art. 8"],
+ ["ανέβασμα στην αναθυμίαση","Ανέβασμα στην αναθυμίαση","p",["winding game","remontée d'émanation","weites Anziehen",0],"aco","","Το πρώτο σκέλος του πόντου στο ACO II.13. Στα ιταλικά δεν στέκει ως ξεχωριστός όρος στον κανονισμό της ENCI.","EN ACO II.13 · FR ACO II.13 · DE ACO II.13"],
+ ["φέρμα","Φέρμα","p",["pointing","arrêt debout tendu","festes Vorstehen, stehend und straff","ferma"],"aco","","Και τα τέσσερα κείμενα ζητούν όρθια και τεντωμένη φέρμα. Ξαπλωτή φέρμα δεν αποκλείει, αλλά κόβει το ΕΞΑΙΡΕΤΟΣ (ACO II.13· ENCI art. 11 §12 «Ferma non rigida»).","EN ACO II.13 · FR ACO II.13 · DE ACO II.13; VPS § 7 · IT ENCI art. 11, 17"],
+ ["ποντάρισμα","Ποντάρισμα","p",["commanded approach","coulé à l'ordre","Nachziehen auf Befehl","guidata, accostata"],"aco","","Η άρνηση αποκλείει και στα τέσσερα: ACO II.13 «Refusal to execute a commanded approach leads to elimination»· ENCI art. 11 §16 «Rifiuto di guidare».","EN ACO II.13 · FR ACO II.13 · DE ACO II.13; VPS § 11, § 13 · IT ENCI art. 25; art. 11 §16"],
+ ["ξεσήκωμα κατόπιν εντολής","","p",["commanded flush","flush à l'ordre","Herausstoßen auf Befehl",0],"aco","","","EN ACO II.13 · FR ACO II.13 · DE ACO II.13"],
+ ["ακινησία στο πέταγμα","Ακινησία στο πέταγμα","p",["immobile when the game leaves","immobilité au départ du gibier","Unbeweglichkeit beim Aufstehen des Wildes","immobilità a frullo"],"aco","","","EN ACO II.13 · FR ACO II.13 · DE ACO II.13 · IT ENCI art. 11 §5"],
+ ["ακινησία στον πυροβολισμό","Ακινησία στον πυροβολισμό","p",["steady at gunshot","sagesse au coup de feu","Ruhe beim Schuss, Schussruhe","immobilità allo sparo"],"aco","","","EN ACO II.13 · FR ACO II.13; ACO II.10 · DE ACO II.13; VPS § 15, § 17 · IT ENCI art. 11 §5"],
+ ["συναίνεση","Συναίνεση","p",["backing, honouring","patron, patronner","Sekundieren, Mitstehen","consenso"],"aco","","Η άρνηση αποκλείει: GQ art. 8 «A refusal to back is an eliminating fault»· SCC art. 3 «Le refus de patron … est éliminatoire»· ENCI art. 11 §8.","EN ACO IX.25; ACO II.19; GQ art. 8 · FR ACO II.19; SCC art. 3 · DE ACO II.19; VPS § 11, § 12, § 14 · IT ENCI art. 9"],
+ ["λευκή φέρμα","","p",["pointing without result, false pointing","faux arrêt","leeres Vorstehen","ferma a vuoto"],"aco","Άρθρο 27","Ο Κ.Ο.Α.Δ. κόβει στο ΠΟΛΥ ΚΑΛΟΣ με δύο λευκές (Άρθρο 27)· η ENCI art. 11 §14 αποκλείει πάνω από τρεις.","EN ACO II.19; ACO IX.25 · FR ACO II.19 · DE ACO II.19 · IT ENCI art. 11 §14, art. 25"],
+ ["απόρτ","Απόρτ","p",["retrieve","rapport","Apportieren, Bringen","riporto"],"own","","","EN SC art. 20 · FR LEX· SCC art. 15 · DE VPS § 11, § 13 · IT ENCI art. 10"],
+ ["Συνειδητό ξεσήκωμα","","s",["intentional flush","mettre sciemment à l'envol","wissentliches Herausstoßen","avvertire e forzare"],"aco","Άρθρο 33","","EN ACO II.8; GQ art. 7 · FR ACO II.8 · DE ACO II.8 · IT ENCI art. 11 §15"],
+ ["Κουτούλημα","","s",["flush","tape","Herausstoßen von Wild","sfrullo"],"aco","Άρθρο 33","Ακούσιο ξεσήκωμα. Δεν μετρά στο πρώτο πέρασμα με τον άνεμο, δεξιά και αριστερά (ACO II.8· ENCI art. 11).","EN ACO II.8 · FR ACO II.8 · DE ACO II.8 · IT ENCI art. 11 §2 (δεύτερος κατάλογος)"],
+ ["Προσπέρασμα","","s",[0,0,0,"sorpasso, trascuro del selvatico"],"own","Άρθρο 33","","IT ENCI art. 11 §3 (δεύτερος κατάλογος)"],
+ ["Εκτός ελέγχου","","s",["out of hand","sortie de main","aus der Hand","fuori mano"],"aco","Άρθρο 33","Το μόνο σφάλμα που αποκλείει ακόμη και μέσα στο ελεύθερο πρώτο λεπτό (SCC art. 27).","EN ACO II.9 · FR ACO II.9; SCC art. 27 · DE ACO II.9 · IT ENCI art. 11 §6"],
+ ["Τρεις λευκές σε διαφορετική κατεύθυνση","","s",["pointing without result","faux arrêts","leeres Vorstehen","più di tre ferme a vuoto"],"own","Άρθρο 33","","EN ACO II.19 · FR ACO II.19 · DE ACO II.19 · IT ENCI art. 11 §14"],
+ ["Άρνηση συναίνεσης","","s",["refusal of backing (honouring)","refus de patron","Nichtsekundieren, Verweigern des Sekundierens","rifiuto di consenso"],"own","Άρθρο 33","Προσοχή: η VPS § 14.3 λέει ρητά ότι το Nichtsekundieren ΔΕΝ αποκλείει από τη γερμανική εξέταση. Ο όρος είναι κοινός, ο κανόνας όχι.","EN ACO IX.25; GQ art. 8 · FR SCC art. 3 · DE VPS § 14.3 · IT ENCI art. 11 §8"],
+ ["Κροτοφοβία","","s",["gun-shy","crainte caractérisée du coup de feu","Schussscheue","paura del colpo allo sparo"],"aco","Άρθρο 33","","EN ACO II.10 · FR ACO II.10; SCC art. 32 · DE ACO II.10 · IT ENCI art. 11 §19"],
+ ["Θηραματοφοβία","","s",[0,0,0,0],"own","Άρθρο 33","Δεν στέκει ως όρος στα κείμενα της F.C.I., της S.C.C. ή της ENCI. Μόνο η γερμανική εξέταση έχει ξεχωριστό κεφάλαιο για τη συμπεριφορά μπροστά σε θήραμα που ο σκύλος βλέπει.",""],
+ ["Κλαφούνισμα","","s",[0,"donner de la voix",0,"canizza persistente"],"own","Άρθρο 33","Η αγγλική στήλη δεν έχει πηγή στα κείμενα που έχουμε — η S.C.C. art. 3 το λέει εξίσου αποκλειστικό με την άρνηση συναίνεσης, αλλά στα γαλλικά.","FR SCC art. 3 · IT ENCI art. 11 §18"],
+ ["Ανεπαρκής έρευνα","","s",["insufficient in quest","insuffisant en quête","unplanmäßige Suche","cerca disordinata"],"aco","Άρθρο 33","","EN ACO IX.25 · FR ACO IX.25 · DE ACO II.19 · IT ENCI art. 11 §2"],
+ ["Παρενόχληση συνδιαγωνιζόμενου","","s",["hindering the brace mate","gêner son concurrent","den Konkurrenten behindern","rimorchio e disturbo al compagno di coppia"],"aco","Άρθρο 33","","EN ACO IX.25 · FR ACO IX.25 · DE ACO II.19 · IT ENCI art. 11 §5"],
+ ["Καταδίωξη επί μακρόν","","s",["chasing","poursuite","Hetze","rincorsa a fondo del selvatico"],"own","Άρθρο 33","","EN ACO II.9 · FR SCC art. 27 · DE VPS § 15 Gehorsam am Haarnutzwild · IT ENCI art. 11 §17"],
+ ["Άρνηση πονταρίσματος","","s",["refusal to execute a commanded approach","refus de couler à l'ordre","Verweigern des Befehls zum Nachziehen","rifiuto di guidare quando è in condizione di farlo"],"aco","Άρθρο 33","","EN ACO II.13 · FR ACO II.13 · DE ACO II.13 · IT ENCI art. 11 §16"],
+ ["Πτώση ρυθμού","","s",["insufficient in pace","insuffisant en allure","mangelnde Ausdauer","mancanza di fondo"],"own","Άρθρο 33","","EN ACO IX.25 · FR ACO IX.25 · DE VPS § 7 · IT ENCI art. 11 §7"],
+ ["ΕΞΑΙΡΕΤΟΣ","","b",["EXCELLENT","Excellent","Hervorragend","Eccellente"],"aco","Άρθρο 27","","EN ACO II.13; SC art. 20 · FR LEX «B., T.B., Exc.»; SCC art. 3 · DE ACO II.13 · IT ENCI art. 25"],
+ ["ΠΟΛΥ ΚΑΛΟΣ","","b",["VERY GOOD","Très Bon","Sehr gut","Molto Buono"],"own","Άρθρο 27","","EN SC art. 20 · FR LEX «B., T.B., Exc.» · DE ACO · IT ENCI art. 26"],
+ ["ΚΑΛΟΣ","","b",["GOOD","Bon","Gut","Buono"],"own","Άρθρο 27","","EN SC art. 20 · FR LEX «B., T.B., Exc.» · DE ACO · IT ENCI"],
+ ["Π.Φ.Π. (CQN)","","b",["CQN","C.Q.N.",0,0],"own","","Εκτός κατάταξης, σε σκύλο μεγάλης αξίας με σφάλμα δρεσαρίσματος: SC art. 20 και LEX λένε το ίδιο, με τα ίδια λόγια.","EN SC art. 20 · FR LEX"],
+ ["CACT / RCACT / CACIT / RCACIT","","b",["CACT / RCACT / CACIT / RCACIT","CACT / RCACT / CACIT / RCACIT","CACT / RCACT / CACIT / RCACIT","CAC / CACIT"],"own","","Διεθνή αρκτικόλεξα — ίδια σε κάθε γλώσσα, δεν μεταφράζονται.","EN TIT· SC art. 22 · FR LEX· SCC art. 3 · DE ACO I.25 · IT ENCI art. 4"],
+];
+const TERM_GROUPS = [["a","Ο αγώνας"],["d","Η διαδρομή"],["p","Η ανατομία του πόντου"],
+                     ["s","Σφάλματα αποκλεισμού"],["b","Βαθμολογία"]];
+const TERM_LANGS = ["en","fr","de","it"];
+/* Οι όροι μπαίνουν στους πίνακες γλώσσας: ό,τι δείχνει η οθόνη ελληνικά και
+   στέκει στο γλωσσάρι, γυρίζει στη γλώσσα του κριτή. */
+TERMS.forEach(([el, alias, , t]) => TERM_LANGS.forEach((L, i) => {
+  if(!t[i]) return;
+  const d = (STR[L] = STR[L] || {});
+  d[el] = t[i];
+  if(alias) d[alias] = t[i];
+  /* Το γλωσσάρι γράφει «έρευνα», μια επικεφαλίδα γράφει «Έρευνα». Ίδια λέξη, ένα
+     κεφαλαίο· χωρίς αυτό ο Γάλλος κριτής θα έβλεπε εφεδρικό αγγλικό εκεί που
+     υπάρχει «quête» με πηγή. */
+  const cap = el.charAt(0).toUpperCase() + el.slice(1);
+  if(cap !== el && d[cap] === undefined) d[cap] = t[i];
+}));
+
 function tx(s){
   const L = (DB && DB.settings && DB.settings.lang) || "el";
   if(L === "el") return s;
+  /* Γαλλικά, γερμανικά και ιταλικά έχουν την ορολογία των κριτών, γιατί αυτή στέκει
+     στους κανονισμούς. Τα υπόλοιπα — «Νέος αγώνας», «Αποθήκευση» — δεν στέκουν
+     πουθενά, οπότε πέφτουν στα αγγλικά αντί να γραφτούν από εμάς. Ελληνικά μόνο
+     όταν δεν υπάρχει ούτε αγγλικό. */
   const d = STR[L];
-  return d && d[s] !== undefined ? d[s] : s;
+  if(d && d[s] !== undefined) return d[s];
+  const en = STR.en;
+  return en && en[s] !== undefined ? en[s] : s;
 }
 function langNext(){
   const i = LANGS.findIndex(l => l[0] === ((DB.settings||{}).lang || "el"));
@@ -1244,7 +1347,7 @@ let S = {view:"trials", trialId:null, tab:"entries", day:0, judgeFilter:"", dogI
 
 function nav(){
   const tabs = [["trials","Αγώνες"],["registry","Μητρώο"],["stats","Στατιστικά"],
-                ["install","Εγκατάσταση"],["settings","Ρυθμίσεις"]]
+                ["terms","Γλωσσάρι"],["install","Εγκατάσταση"],["settings","Ρυθμίσεις"]]
                 .map(([k,l]) => [k, tx(l)]);
   /* The two transfer buttons live in the bar itself, next to Στατιστικά, and are
      on every screen. They were buried three taps inside Ρυθμίσεις, which is the
@@ -1275,7 +1378,7 @@ function render(){
   nav();
   el("warn").innerHTML = warnBar();
   const v = {trials:vTrials, trial:vTrial, registry:vRegistry, stats:vStats,
-             settings:vSettings, dog:vDog, install:vInstall}[S.view];
+             settings:vSettings, dog:vDog, install:vInstall, terms:vTerms}[S.view];
   el("app").innerHTML = v ? v() : "";
   el("fab").innerHTML = fabFor();
   document.body.toggleAttribute("data-field", isFieldScreen());
@@ -2417,7 +2520,8 @@ function noteSheet(t, day, tr, b, e, d, note, judgeName){
     </table>
     <h4>ΣΦΑΛΜΑΤΑ ΑΠΟΚΛΕΙΣΜΟΥ · ΑΡΘΡΟ 33</h4>
     <div style="font:400 8.5pt/1.5 var(--f-b)">${FAULTS.map(f=>
-      (n.faults||[]).includes(f) ? `<b style="text-decoration:underline">${f}</b>` : f).join(" · ")}</div>
+      (n.faults||[]).includes(f) ? `<b style="text-decoration:underline">${esc(tx(f))}</b>`
+                                 : esc(tx(f))).join(" · ")}</div>
     <div style="display:flex;gap:12px;margin-top:12px">
       <div style="flex:1"><span style="font:400 9pt/1 var(--f-b)">Λευκές φέρμες</span>
         <div class="box">${n.whites?esc(String(n.whites)):""}</div></div>
@@ -2752,8 +2856,13 @@ function tResults(t){
     rows.push(`<tr>
       <td><b>${esc(dogName(e.dogId))}</b><div class="tiny">${esc(tr.name)} · ζεύγος ${b.no}${b.recall?" · επανάκληση":""}</div>
         ${hint?`<div class="tiny" style="color:var(--stubble-ink)">${hint}</div>`:""}</td>
-      <td><select data-res="${e.id}|qual" ${locked?"disabled":""}>${QUALS.map(q=>`<option ${r.qual===q?"selected":""}>${q}</option>`).join("")}</select></td>
-      <td><select data-res="${e.id}|award" ${locked?"disabled":""}>${AWARDS.map(a=>`<option ${r.award===a?"selected":""}>${a}</option>`).join("")}</select></td>
+      <td><select data-res="${e.id}|qual" ${locked?"disabled":""}>${QUALS.map(q=>
+        /* το value μένει ελληνικό: είναι το κλειδί του πίνακα πόντων και ό,τι
+           γράφεται στη βάση. Χωρίς αυτό, μια αλλαγή γλώσσας θα αποθήκευε
+           «Hervorragend» και ο πίνακας δεν θα έβρισκε τίποτα. */
+        `<option value="${esc(q)}" ${r.qual===q?"selected":""}>${esc(tx(q))}</option>`).join("")}</select></td>
+      <td><select data-res="${e.id}|award" ${locked?"disabled":""}>${AWARDS.map(a=>
+        `<option value="${esc(a)}" ${r.award===a?"selected":""}>${esc(a)}</option>`).join("")}</select></td>
       <td class="num"><b style="font:800 21px/1 var(--f-d)">${pointsFor(t,r)}</b></td>
       <td class="noprint"><button class="b-sm" data-note="${e.id}::${b.id}">${locked?"Προβολή":"Σημειώσεις"}</button></td>
     </tr>`);
@@ -3296,7 +3405,8 @@ function vSettings(){
     <p class="tiny">${tx("Η γλώσσα αλλάζει μόνο ό,τι βλέπετε. Στη βάση όλα μένουν ελληνικά — η κατάσταση, η βαθμολογία, η μορφή του αγώνα — ώστε ένα αντίγραφο από αγγλικό κινητό να συγχωνεύεται κανονικά σε ελληνικό υπολογιστή και ο πίνακας πόντων να βρίσκει το κλειδί του.")}</p>
     <div class="row tight" style="margin-top:10px">${LANGS.map(([k,name])=>
       `<button class="tog ${(DB.settings.lang||"el")===k?"on":""}" data-setlang="${k}">${esc(name)}</button>`).join("")}</div>
-    <p class="tiny" style="margin-top:10px">${tx("Μεταφρασμένα: η πλοήγηση, τα έξι βήματα, το μητρώο, τα στατιστικά, οι καταστάσεις και οι βαθμολογίες. Τα μεγάλα επεξηγηματικά κείμενα και τα είδη αγώνα μένουν προς το παρόν ελληνικά — η ορολογία των κριτών θα μπει από τους κανονισμούς της F.C.I. και όχι από δική μας μετάφραση.")}</p></div>
+    <p class="tiny" style="margin-top:10px">${tx("Η ορολογία των κριτών — φέρμα, ποντάρισμα, συναίνεση, τα σφάλματα του Άρθρου 33, οι βαθμολογίες — μπήκε από τους ίδιους τους κανονισμούς και σε πέντε γλώσσες. Κανένας όρος δεν μεταφράστηκε· δείτε τους με την πηγή τους στο Γλωσσάρι. Στα γαλλικά, γερμανικά και ιταλικά τα υπόλοιπα της οθόνης πέφτουν στα αγγλικά, γιατί για αυτά δεν υπάρχει κανονισμός να τα ορίσει.")}</p>
+    <div class="row tight" style="margin-top:10px"><button class="b-sm" data-nav="terms">${tx("Γλωσσάρι")} · ${TERMS.length} ${tx("όροι")}</button></div></div>
 
   <div class="card"><h3>Πίνακας βαθμών</h3>
     <p class="tiny">Βασικοί βαθμοί ανά βαθμολογία/τίτλο. Πολλαπλασιάζονται με τον συντελεστή του αγώνα
@@ -3868,7 +3978,7 @@ function dlgNote(t, runKey){
   if(signedBy){
     dlg(`<h2 style="margin-bottom:2px">${esc(dogName(entry.dogId))}</h2>
       <div class="tiny" style="margin-bottom:16px">${esc(where||"")}</div>
-      <div class="note"><b>Το τερέν είναι υπογεγραμμένο.</b> Υπογραφή από ${esc(signedBy.by)},
+      <div class="note"><b>${tx("Το τερέν είναι υπογεγραμμένο.")}</b> Υπογραφή από ${esc(signedBy.by)},
         ${esc(signedBy.at)}. Οι σημειώσεις δεν αλλάζουν χωρίς ξεκλείδωμα από τον Πρόεδρο Κριτών
         (Βαθμολογία → Ξεκλείδωμα).</div>
       <div class="card">${noteSummary(n)}</div>
@@ -3877,31 +3987,32 @@ function dlgNote(t, runKey){
   }
   dlg(`<h2 style="margin-bottom:2px">${esc(dogName(entry.dogId))}</h2>
   <div class="tiny" style="margin-bottom:16px">${esc(where||"")}${where?" · ":""}${esc(perName(entry.handlerId))}
-    <br>Κριτής: ${esc((judById(jid)||{}).name||"Πρόεδρος Κριτών")}</div>
+    <br>${tx("Κριτής")}: ${esc((judById(jid)||{}).name||"Πρόεδρος Κριτών")}</div>
 
   <div class="card">
-    <div class="eyebrow">Έρευνα</div>
-    ${scale("passion","Πάθος",n.passion)}
-    ${scale("method","Μεθοδικότητα",n.method)}
-    ${scale("style","Καλπασμός και στυλ φυλής",n.style)}
-    ${scale("contact","Επαφή με κυναγωγό",n.contact)}
-    <div style="font-size:17px">Πλάτος έρευνας</div>
+    <div class="eyebrow">${tx("Έρευνα")}</div>
+    ${scale("passion",tx("Πάθος"),n.passion)}
+    ${scale("method",tx("Μεθοδικότητα"),n.method)}
+    ${scale("style",tx("Καλπασμός και στυλ φυλής"),n.style)}
+    ${scale("contact",tx("Επαφή με κυναγωγό"),n.contact)}
+    <div style="font-size:17px">${tx("Πλάτος έρευνας")}</div>
     <div class="badge-list" style="margin-top:8px">${widths.map(x=>
-      `<button class="tog ${n.width===x?"on":""}" data-nwidth="${x}">${x}</button>`).join("")}</div>
+      `<button class="tog ${n.width===x?"on":""}" data-nwidth="${esc(x)}">${esc(tx(x))}</button>`).join("")}</div>
   </div>
 
   <div class="card">
-    <div class="row"><span class="eyebrow grow" style="margin:0">Πόντοι</span>
-      <span class="muted" id="ptCount">${(n.points||[]).length} ${(n.points||[]).length===1?"πόντος":"πόντοι"}</span></div>
+    <div class="row"><span class="eyebrow grow" style="margin:0">${tx("Πόντοι")}</span>
+      <span class="muted" id="ptCount">${(n.points||[]).length} ${
+        tx((n.points||[]).length===1?"πόντος":"πόντοι")}</span></div>
     <div id="ptList" style="margin-top:12px">${(n.points||[]).map((p,i)=>ptRow(p,i)).join("")
-      ||`<div class="muted">Κανένας πόντος καταγεγραμμένος.</div>`}</div>
-    <button class="b-full" style="margin-top:12px" data-act="addPoint">+ Πόντος</button>
+      ||`<div class="muted">${tx("Κανένας πόντος καταγεγραμμένος.")}</div>`}</div>
+    <button class="b-full" style="margin-top:12px" data-act="addPoint">${tx("+ Πόντος")}</button>
   </div>
 
   <div class="card">
     <div class="row" style="align-items:flex-start;gap:14px">
       <div class="grow">
-        <div class="eyebrow">Λευκές φέρμες</div>
+        <div class="eyebrow">${tx("Λευκές φέρμες")}</div>
         <div class="tiny" id="whiteHint" style="max-width:230px">${WHITE_HINTS[Math.min(w,3)]}</div>
       </div>
       <div class="step">
@@ -3913,20 +4024,19 @@ function dlgNote(t, runKey){
   </div>
 
   <div class="danger-zone">
-    <div class="eyebrow">Σφάλματα αποκλεισμού · Άρθρο 33</div>
-    <p style="font-size:16px">Ο αποκλεισμός τερματίζει τη διαδρομή. Επιλέξτε το σφάλμα και
-      επιβεβαιώστε· η ενέργεια καταγράφεται.</p>
+    <div class="eyebrow">${tx("Σφάλματα αποκλεισμού")} · ${tx("Άρθρο 33")}</div>
+    <p style="font-size:16px">${tx("Ο αποκλεισμός τερματίζει τη διαδρομή. Επιλέξτε το σφάλμα και επιβεβαιώστε· η ενέργεια καταγράφεται.")}</p>
     <div class="badge-list">${FAULTS.map(f=>
-      `<button class="tog red ${(n.faults||[]).includes(f)?"on":""}" data-nfault="${esc(f)}">${f}</button>`).join("")}</div>
+      `<button class="tog red ${(n.faults||[]).includes(f)?"on":""}" data-nfault="${esc(f)}">${esc(tx(f))}</button>`).join("")}</div>
     <button class="b-full" id="elimBtn" style="margin-top:14px;background:var(--bad);border-color:var(--bad);color:#fff"
-      data-act="confirmElim">Αποκλεισμός σκύλου</button>
+      data-act="confirmElim">${tx("Αποκλεισμός σκύλου")}</button>
   </div>
 
   <div class="card">
-    <div class="eyebrow">Ελεύθερο σχόλιο</div>
+    <div class="eyebrow">${tx("Ελεύθερο σχόλιο")}</div>
     <textarea id="n_text" placeholder="Ό,τι δεν χωράει στα παραπάνω.">${esc(n.text||"")}</textarea>
     <div class="row" style="margin-top:12px">
-      <button data-act="dictate" style="min-height:56px;padding:0 18px">🎙 Υπαγόρευση</button>
+      <button data-act="dictate" style="min-height:56px;padding:0 18px">🎙 ${tx("Υπαγόρευση")}</button>
       <span class="saved" id="noteSaved"></span>
     </div>
   </div>
@@ -3941,11 +4051,13 @@ function dlgNote(t, runKey){
    point is on the sheet; everything below them is optional detail the judge
    adds if the run gives him time. */
 function ptRow(p,i){
+  /* Ό,τι γράφεται στο data-ptset μένει ελληνικό — αυτό αποθηκεύεται. Μεταφράζεται
+     μόνο ό,τι διαβάζει ο κριτής. */
   const grp=(id,label,opts)=>`<div style="margin-top:10px">
-    <div style="font-size:15px;color:var(--slate)">${label}</div>
+    <div style="font-size:15px;color:var(--slate)">${esc(tx(label))}</div>
     <div class="badge-list" style="margin-top:6px">${opts.map(x=>
       `<button class="tog ${p[id]===x?"on":""}" style="min-height:44px;font-size:16px;padding:0 12px"
-        data-ptset="${i}|${id}|${esc(x)}">${x}</button>`).join("")}</div></div>`;
+        data-ptset="${i}|${id}|${esc(x)}">${esc(tx(x))}</button>`).join("")}</div></div>`;
   /* θήραμα and ποιότητα are always open — that is the three-tap path. The rest
      of the run is detail the judge opens when he has a hand free. */
   const detail = ["ferma","pontar","akinF","akinS","aport","syn"].filter(k=>p[k]);
@@ -3957,7 +4069,7 @@ function ptRow(p,i){
         <span style="font:600 17px/1 var(--f-b);margin-left:8px">${esc(p.game||"—")}</span>
         ${summary?`<div class="tiny">${esc(summary)}</div>`:""}
       </div>
-      <button class="b-sm b-warn" style="flex:none" data-delpt="${i}">Διαγραφή</button></div>
+      <button class="b-sm b-warn" style="flex:none" data-delpt="${i}">${tx("Διαγραφή")}</button></div>
     ${grp("game","Θήραμα",["Πέρδικα","Φραγκολίνα","Μπεκάτσα","Ορτύκι","Άλλο"])}
     ${grp("quality","Ποιότητα",["Ανέβασμα στην αναθυμίαση","Πόντος έκπληξης","Εξαίρετη ένδειξη"])}
     <details ${detail.length?"open":""} style="margin-top:12px">
@@ -4529,10 +4641,10 @@ function redrawPoints(){
   /* a chip tap redraws the list; whatever the judge had open stays open */
   const open = [...document.querySelectorAll("#ptList details")].map(d=>d.open);
   el("ptList").innerHTML = pts.map((p,i)=>ptRow(p,i)).join("")
-    || `<div class="muted">Κανένας πόντος καταγεγραμμένος.</div>`;
+    || `<div class="muted">${tx("Κανένας πόντος καταγεγραμμένος.")}</div>`;
   document.querySelectorAll("#ptList details").forEach((d,i)=>{ if(open[i] !== undefined) d.open = open[i]; });
   const c = el("ptCount");
-  if(c) c.textContent = pts.length + " " + (pts.length===1 ? "πόντος" : "πόντοι");
+  if(c) c.textContent = pts.length + " " + tx(pts.length===1 ? "πόντος" : "πόντοι");
 }
 
 /* Autosave, with a quiet acknowledgement and never a modal. The judge is
@@ -5105,6 +5217,7 @@ const ACT = {
   statsClear: ()=>{ S.stat = {year:"",month:"",type:"",handler:"",dog:""}; render(); },
   /* Η γλώσσα αλλάζει μόνο την οθόνη. Τα δεδομένα μένουν όπως γράφτηκαν. */
   lang: ()=>{ DB.settings.lang = langNext()[0]; save(); render(); },
+  termsClear: ()=>{ S.termQ = ""; render(); },
   regClear: ()=>{ S.regSec = ""; S.regBreed = ""; render(); },
   /* Ρωτά τον service worker αν υπάρχει νεότερη έκδοση. Το «updatefound» είναι το
      σήμα που δεν λέει ψέματα: πυροδοτείται μόλις αρχίσει να εγκαθίσταται νέος. */
@@ -6216,6 +6329,63 @@ const REPO = "https://github.com/msouzou-debug/Cyprus-Pointer-Setter-Field-Trial
 function appUrl(){
   if(location.protocol.startsWith("http")) return location.origin + location.pathname.replace(/index\.html$/, "");
   return (DB.settings.appUrl || "").trim();
+}
+
+/* ---------- Γλωσσάρι -----------------------------------------------------
+   Ο κριτής που κρίνει με ξένο συνάδελφο, ή ο κυναγωγός που τρέχει έξω, θέλει τη
+   λέξη και όχι τη μετάφρασή της. Κάθε όρος δείχνει την πηγή του: ποιος κανονισμός,
+   ποιο άρθρο. Δουλεύει εκτός σύνδεσης όπως όλα τα υπόλοιπα, και τυπώνεται. */
+function vTerms(){
+  const q = (S.termQ || "").trim().toLowerCase();
+  const hit = t => !q || (t[0] + " " + t[1] + " " + t[3].filter(Boolean).join(" ")
+                          + " " + t[5] + " " + t[7]).toLowerCase().includes(q);
+  const shown = TERMS.filter(hit);
+  const head = `<div class="row" style="align-items:flex-end;gap:16px;margin-bottom:6px">
+      <div class="grow"><div class="eyebrow">Κ.Ο.Α.Δ.</div>
+      <h1 style="margin:0">${tx("Γλωσσάρι")}</h1></div>
+      <button class="b-sm noprint" data-act="print" style="align-self:flex-end">Εκτύπωση / PDF</button>
+    </div>
+    <p class="muted" style="margin:0 0 14px">${TERMS.length} όροι κρίσης σε πέντε γλώσσες.
+      Κανένας δεν μεταφράστηκε: ο καθένας στέκει αυτούσιος μέσα στον κανονισμό που
+      αναφέρεται από κάτω του.</p>
+    <div class="row noprint" style="margin-bottom:16px">
+      <div class="grow" style="max-width:380px">
+        <input id="termQ" placeholder="${tx("Αναζήτηση όρου σε οποιαδήποτε γλώσσα")}"
+          value="${esc(S.termQ||"")}" oninput="S.termQ=this.value;render();el('termQ').focus()"></div>
+      ${q?`<button class="b-sm" data-act="termsClear" style="align-self:flex-end">${tx("Καθαρισμός")}</button>
+        <div class="tiny" style="align-self:flex-end;padding-bottom:12px">${shown.length} ${
+          tx("από")} ${TERMS.length}</div>`:""}
+    </div>`;
+  if(!shown.length) return head + `<div class="empty">${tx("Κανένας όρος δεν ταιριάζει.")}</div>`;
+  const LAB = {en:"English", fr:"Français", de:"Deutsch", it:"Italiano"};
+  const body = TERM_GROUPS.map(([g, gl])=>{
+    const rows = shown.filter(t => t[2] === g);
+    if(!rows.length) return "";
+    return `<div class="eyebrow" style="margin:22px 0 10px">${esc(gl)}</div>
+      ${rows.map(t=>{
+        const [el, , , tr, basis, koad, note, src] = t;
+        return `<div class="card" style="margin-bottom:10px">
+          <div class="row" style="align-items:baseline;gap:10px">
+            <h3 class="grow" style="margin:0">${esc(el)}</h3>
+            ${koad?`<span class="chip">${esc(koad)}</span>`:""}
+            <span class="chip ${basis==="aco"?"n":""}" title="${basis==="aco"
+              ? "Ο όρος στέκει στο ίδιο άρθρο του κανονισμού της F.C.I. σε τρεις γλώσσες"
+              : "Κάθε γλώσσα δίνει τον όρο της από τον δικό της κανονισμό"}">${
+              basis==="aco" ? "F.C.I." : "ιδίας"}</span>
+          </div>
+          <div class="terms-grid">${TERM_LANGS.map((L,i)=>
+            `<div><div class="tiny" style="color:var(--dim)">${LAB[L]}</div>
+              <div class="${tr[i]?"":"muted"}" style="font:600 17px/1.3 var(--f-b)">${
+                tr[i] ? esc(tr[i]) : "—"}</div></div>`).join("")}</div>
+          ${note?`<p class="tiny" style="margin:10px 0 0">${esc(note)}</p>`:""}
+          <div class="fingerprint" style="margin-top:8px;font-size:13px">${esc(src)}</div>
+        </div>`;
+      }).join("")}`;
+  }).join("");
+  return head + body + `<div class="tiny" style="margin-top:20px">Πηγές: οι κανονισμοί της
+    F.C.I. και των εθνικών ομοσπονδιών, στο αποθετήριο της εφαρμογής (<b>fci/</b> και
+    <b>national/</b>). Κενό κελί σημαίνει ότι ο όρος δεν στέκει στα κείμενα εκείνης της
+    γλώσσας — δεν συμπληρώθηκε με εικασία.</div>`;
 }
 
 function vInstall(){
