@@ -1,0 +1,1064 @@
+{
+ "about": "Ορολογία κρίσης field trial σε πέντε γλώσσες. Κάθε όρος με την πηγή του μέσα στα έγγραφα του αποθετηρίου. Τίποτα δεν μεταφράστηκε από μνήμη· όπου μια γλώσσα δεν έχει τον όρο στα κείμενα, το πεδίο είναι null και λέγεται.",
+ "basis": {
+  "aco": "Ο όρος στέκει στο ίδιο άρθρο του κανονισμού ηπειρωτικών δεικτών της F.C.I. σε αγγλικά, γαλλικά και γερμανικά — η αντιστοιχία είναι της F.C.I.",
+  "own": "Κάθε γλώσσα δίνει τον όρο της από τον δικό της κανονισμό για την ίδια πράξη· η αντιστοιχία προκύπτει από τους ορισμούς."
+ },
+ "sources": {
+  "ACO": "fci/FCI-ACO-REG-{en-2019,fr-2011,de-2019}.pdf — ανά άρθρο",
+  "SC": "fci/FCI-ABR-REG-S-C-en.pdf",
+  "GQ": "fci/FCI-ABR-REG-GQU-en.pdf",
+  "TIT": "fci/FCI-REG-TIT-en-2024.pdf",
+  "SCC": "national/SCC-CUNCA-reglement-FT-fr-2026.pdf — ανά άρθρο",
+  "LEX": "national/SCC-lexique-travail-fr.pdf",
+  "VPS": "national/VPS-Pruefungsordnung-de-2026.pdf — ανά §",
+  "ENCI": "national/ENCI-prove-razze-da-ferma-it-2026.pdf — ανά άρθρο"
+ },
+ "terms": [
+  {
+   "el": "τερέν",
+   "group": "αγώνας",
+   "basis": "aco",
+   "en": {
+    "t": "terrain",
+    "src": "ACO II.1 heading",
+    "q": "TERRAIN"
+   },
+   "fr": {
+    "t": "terrain",
+    "src": "ACO II.1 heading; SCC art. 33",
+    "q": "TERRAIN"
+   },
+   "de": {
+    "t": "Prüfungsgelände, Gelände",
+    "src": "ACO II.1 heading; ACO II.8",
+    "q": "DAS PRÜFUNGSGELÄNDE"
+   },
+   "it": {
+    "t": "terreno",
+    "src": "ENCI art. 3",
+    "q": "terreno"
+   },
+   "koad": "Άρθρο 48"
+  },
+  {
+   "el": "ζεύγος",
+   "group": "αγώνας",
+   "basis": "aco",
+   "en": {
+    "t": "brace, couple",
+    "src": "ACO IX.25; ACO II.12",
+    "q": "brace, couple"
+   },
+   "fr": {
+    "t": "couple",
+    "src": "ACO II.12; ACO IX.25",
+    "q": "couple"
+   },
+   "de": {
+    "t": "Paar, Paarlauf",
+    "src": "ACO II.12; VPS Paarsuche (PS)",
+    "q": "Paar, Paarlauf"
+   },
+   "it": {
+    "t": "coppia",
+    "src": "ENCI art. 8",
+    "q": "coppia"
+   },
+   "koad": "Άρθρο 4"
+  },
+  {
+   "el": "διαδρομή",
+   "group": "αγώνας",
+   "basis": "aco",
+   "en": {
+    "t": "run, round",
+    "src": "ACO II.5; SC art. 14",
+    "q": "run, round"
+   },
+   "fr": {
+    "t": "tour, parcours",
+    "src": "ACO II.5; SCC art. 29",
+    "q": "tour, parcours"
+   },
+   "de": {
+    "t": "Durchgang",
+    "src": "ACO II.5",
+    "q": "Durchgang"
+   },
+   "it": {
+    "t": "turno",
+    "src": "ENCI art. 7",
+    "q": "turno"
+   },
+   "koad": "Άρθρο 24",
+   "note": "Η F.C.I. ορίζει τουλάχιστον δεκαπέντε λεπτά για την πρώτη διαδρομή (ACO II.5)."
+  },
+  {
+   "el": "κλήρωση",
+   "group": "αγώνας",
+   "basis": "aco",
+   "en": {
+    "t": "drawing of lots",
+    "src": "ACO I.17; ACO IX.19; ACO VIII.8",
+    "q": "drawing of lots"
+   },
+   "fr": {
+    "t": "tirage au sort",
+    "src": "ACO I.17; SCC art. 14",
+    "q": "tirage au sort"
+   },
+   "de": {
+    "t": "Auslosung",
+    "src": "ACO VIII.8",
+    "q": "Auslosung"
+   },
+   "it": {
+    "t": "sorteggio",
+    "src": "ENCI art. 3",
+    "q": "sorteggio"
+   },
+   "koad": "Άρθρο 16",
+   "note": "Και οι τέσσερις πηγές λένε το ίδιο: η σειρά είναι ενδεικτική. ACO I.17 «The drawing is only an indication of the running order»."
+  },
+  {
+   "el": "επανάκληση",
+   "group": "αγώνας",
+   "basis": "own",
+   "en": {
+    "t": "recall",
+    "src": "SC art. 14, 15",
+    "q": "recall"
+   },
+   "fr": {
+    "t": "rappel",
+    "src": "ACO II.7; SCC art. 34",
+    "q": "rappel"
+   },
+   "de": null,
+   "it": {
+    "t": "richiamo, turno di richiamo",
+    "src": "ENCI art. 7",
+    "q": "richiamo, turno di richiamo"
+   },
+   "koad": "Άρθρο 30",
+   "note": "Ο γερμανικός όρος στο ACO II.7 στέκει ως «beim erneuten Aufrufen»· δεν υπάρχει μονολεκτικό ουσιαστικό στα κείμενα που έχουμε."
+  },
+  {
+   "el": "μπαράζ",
+   "group": "αγώνας",
+   "basis": "own",
+   "en": {
+    "t": "barrage, run-off",
+    "src": "ACO I.25, I.26; SC art. 22",
+    "q": "barrage, run-off"
+   },
+   "fr": {
+    "t": "barrage",
+    "src": "SCC art. 3; LEX «C.A.C.I.T.»",
+    "q": "barrage"
+   },
+   "de": null,
+   "it": null,
+   "note": "Στα ιταλικά δεν βρέθηκε αντίστοιχος όρος: η ENCI λύνει το ίδιο πρόβλημα με «turni per l'assegnazione del CACIT» και «batterie» (ENCI art. 4), όχι με ξεχωριστή λέξη."
+  },
+  {
+   "el": "κυναγωγός",
+   "group": "αγώνας",
+   "basis": "aco",
+   "en": {
+    "t": "handler",
+    "src": "ACO II.11",
+    "q": "handler"
+   },
+   "fr": {
+    "t": "conducteur",
+    "src": "ACO II.11",
+    "q": "conducteur"
+   },
+   "de": {
+    "t": "Führer",
+    "src": "ACO II.11; VPS § 9 Führen der Hunde",
+    "q": "Führer"
+   },
+   "it": {
+    "t": "conduttore",
+    "src": "ENCI art. 8",
+    "q": "conduttore"
+   },
+   "koad": "Άρθρο 5"
+  },
+  {
+   "el": "κριτής",
+   "group": "αγώνας",
+   "basis": "aco",
+   "en": {
+    "t": "judge",
+    "src": "ACO II.11",
+    "q": "judge"
+   },
+   "fr": {
+    "t": "juge",
+    "src": "ACO II.11",
+    "q": "juge"
+   },
+   "de": {
+    "t": "Richter",
+    "src": "ACO II.11; VPS § 5",
+    "q": "Richter"
+   },
+   "it": {
+    "t": "esperto giudice",
+    "src": "ENCI art. 11",
+    "q": "esperto giudice"
+   },
+   "koad": "Άρθρο 48"
+  },
+  {
+   "el": "Πρόεδρος Κριτών",
+   "group": "αγώνας",
+   "basis": "own",
+   "en": {
+    "t": "chief judge, president of the jury",
+    "src": "SC art. 9; ACO IX.25",
+    "q": "chief judge, president of the jury"
+   },
+   "fr": {
+    "t": "président du jury",
+    "src": "ACO IX.25; SCC art. 14",
+    "q": "président du jury"
+   },
+   "de": null,
+   "it": null,
+   "koad": "Άρθρο 48"
+  },
+  {
+   "el": "οίστρος",
+   "group": "αγώνας",
+   "basis": "own",
+   "en": {
+    "t": "bitches in season",
+    "src": "SC art. 3b",
+    "q": "Bitches in season"
+   },
+   "fr": {
+    "t": "chiennes en chaleurs",
+    "src": "SCC art. 3",
+    "q": "chiennes en chaleurs"
+   },
+   "de": {
+    "t": "läufige Hündin",
+    "src": "ACO I.6",
+    "q": "läufige Hündin"
+   },
+   "it": null,
+   "note": "Οι κανονισμοί δεν συμφωνούν: το SC art. 3b δέχεται θηλυκές σε οίστρο στο τέλος του γύρου και μόνο μεταξύ τους· το ACO I.6 τις αποκλείει εντελώς. Δεν είναι θέμα ορολογίας — είναι δύο διαφορετικοί κανόνες, βρετανικός και ηπειρωτικός."
+  },
+  {
+   "el": "έρευνα",
+   "group": "διαδρομή",
+   "basis": "aco",
+   "en": {
+    "t": "quest",
+    "src": "ACO IX.25; ACO II.15",
+    "q": "quest"
+   },
+   "fr": {
+    "t": "quête",
+    "src": "ACO II.15; ACO IX.25; SCC art. 33",
+    "q": "quête"
+   },
+   "de": {
+    "t": "Suche",
+    "src": "ACO II.15; VPS § 6",
+    "q": "Suche"
+   },
+   "it": {
+    "t": "cerca",
+    "src": "ENCI art. 8",
+    "q": "cerca"
+   },
+   "note": "ACO II.15: «ενεργητική, έξυπνη και μεθοδική, χωρίς να ρυθμίζεται με τη σφυρίχτρα»."
+  },
+  {
+   "el": "μύτη",
+   "group": "διαδρομή",
+   "basis": "own",
+   "en": {
+    "t": "nose",
+    "src": "GQ art. 5",
+    "q": "nose"
+   },
+   "fr": {
+    "t": "nez",
+    "src": "SCC art. 33",
+    "q": "nez et de la façon de prendre connaissance du gi"
+   },
+   "de": {
+    "t": "Nase",
+    "src": "VPS § 5 Nase, § 5 Nasengebrauch",
+    "q": "Nase"
+   },
+   "it": {
+    "t": "potenza olfattiva",
+    "src": "ENCI art. 17, 25",
+    "q": "olfattiva"
+   }
+  },
+  {
+   "el": "ύφος",
+   "group": "διαδρομή",
+   "basis": "own",
+   "en": {
+    "t": "style",
+    "src": "SC art. 22",
+    "q": "style in relation to its breed"
+   },
+   "fr": {
+    "t": "style",
+    "src": "SCC art. 3",
+    "q": "style inhérent à la race"
+   },
+   "de": {
+    "t": "Stil",
+    "src": "VPS § 6 Stil der Suche",
+    "q": "Stil"
+   },
+   "it": {
+    "t": "stile",
+    "src": "ENCI art. 11 §3 «Stile non conforme alla razza»",
+    "q": "stile"
+   },
+   "note": "Και οι τέσσερις το δένουν με τη φυλή: ασύμβατο ύφος είναι σφάλμα, όχι γούστο."
+  },
+  {
+   "el": "ρυθμός",
+   "group": "διαδρομή",
+   "basis": "own",
+   "en": {
+    "t": "pace",
+    "src": "ACO IX.25",
+    "q": "insufficient in pace or in quest"
+   },
+   "fr": {
+    "t": "allure",
+    "src": "ACO IX.25",
+    "q": "insuffisant en allure"
+   },
+   "de": {
+    "t": "Schnelligkeit und Ausdauer",
+    "src": "VPS § 7",
+    "q": "Ausdauer"
+   },
+   "it": {
+    "t": "azione, fondo",
+    "src": "ENCI art. 11 §1, §7",
+    "q": "azione, fondo"
+   }
+  },
+  {
+   "el": "πόντος",
+   "group": "διαδρομή",
+   "basis": "aco",
+   "en": {
+    "t": "point",
+    "src": "ACO II.13",
+    "q": "point"
+   },
+   "fr": {
+    "t": "point",
+    "src": "ACO II.13",
+    "q": "point"
+   },
+   "de": {
+    "t": "Punkt",
+    "src": "ACO II.13",
+    "q": "Punkt"
+   },
+   "it": {
+    "t": "punto",
+    "src": "ENCI art. 8",
+    "q": "punto"
+   },
+   "note": "ACO II.13: κανένα βραβείο σε σκύλο χωρίς έναν τουλάχιστον ολοκληρωμένο πόντο."
+  },
+  {
+   "el": "ανέβασμα στην αναθυμίαση",
+   "group": "πόντος",
+   "basis": "aco",
+   "en": {
+    "t": "winding game",
+    "src": "ACO II.13",
+    "q": "winds game and points standing and rigid"
+   },
+   "fr": {
+    "t": "remontée d'émanation",
+    "src": "ACO II.13",
+    "q": "remontée d'émanation"
+   },
+   "de": {
+    "t": "weites Anziehen",
+    "src": "ACO II.13",
+    "q": "weitem Anziehen"
+   },
+   "it": null,
+   "note": "Το πρώτο σκέλος του πόντου στο ACO II.13. Στα ιταλικά δεν στέκει ως ξεχωριστός όρος στον κανονισμό της ENCI."
+  },
+  {
+   "el": "φέρμα",
+   "group": "πόντος",
+   "basis": "aco",
+   "en": {
+    "t": "pointing",
+    "src": "ACO II.13",
+    "q": "points standing and rigid"
+   },
+   "fr": {
+    "t": "arrêt debout tendu",
+    "src": "ACO II.13",
+    "q": "arrêt debout tendu"
+   },
+   "de": {
+    "t": "festes Vorstehen, stehend und straff",
+    "src": "ACO II.13; VPS § 7",
+    "q": "festes Vorstehen, stehend und straff"
+   },
+   "it": {
+    "t": "ferma",
+    "src": "ENCI art. 11, 17",
+    "q": "ferma"
+   },
+   "note": "Και τα τέσσερα κείμενα ζητούν όρθια και τεντωμένη φέρμα. Ξαπλωτή φέρμα δεν αποκλείει, αλλά κόβει το ΕΞΑΙΡΕΤΟΣ (ACO II.13· ENCI art. 11 §12 «Ferma non rigida»)."
+  },
+  {
+   "el": "ποντάρισμα",
+   "group": "πόντος",
+   "basis": "aco",
+   "en": {
+    "t": "commanded approach",
+    "src": "ACO II.13",
+    "q": "commanded approach"
+   },
+   "fr": {
+    "t": "coulé à l'ordre",
+    "src": "ACO II.13",
+    "q": "coulé à l'ordre"
+   },
+   "de": {
+    "t": "Nachziehen auf Befehl",
+    "src": "ACO II.13; VPS § 11, § 13",
+    "q": "Nachziehen auf Befehl"
+   },
+   "it": {
+    "t": "guidata, accostata",
+    "src": "ENCI art. 25; art. 11 §16",
+    "q": "guidata, accostata"
+   },
+   "note": "Η άρνηση αποκλείει και στα τέσσερα: ACO II.13 «Refusal to execute a commanded approach leads to elimination»· ENCI art. 11 §16 «Rifiuto di guidare»."
+  },
+  {
+   "el": "ξεσήκωμα κατόπιν εντολής",
+   "group": "πόντος",
+   "basis": "aco",
+   "en": {
+    "t": "commanded flush",
+    "src": "ACO II.13",
+    "q": "commanded flush"
+   },
+   "fr": {
+    "t": "flush à l'ordre",
+    "src": "ACO II.13",
+    "q": "flush à l'ordre"
+   },
+   "de": {
+    "t": "Herausstoßen auf Befehl",
+    "src": "ACO II.13",
+    "q": "Herausstoßen auf Befehl"
+   },
+   "it": null
+  },
+  {
+   "el": "ακινησία στο πέταγμα",
+   "group": "πόντος",
+   "basis": "aco",
+   "en": {
+    "t": "immobile when the game leaves",
+    "src": "ACO II.13",
+    "q": "immobile when the game leaves"
+   },
+   "fr": {
+    "t": "immobilité au départ du gibier",
+    "src": "ACO II.13",
+    "q": "immobilité au départ du gibier"
+   },
+   "de": {
+    "t": "Unbeweglichkeit beim Aufstehen des Wildes",
+    "src": "ACO II.13",
+    "q": "Unbeweglichkeit an Ort und Stelle beim Aufstehen des Wildes"
+   },
+   "it": {
+    "t": "immobilità a frullo",
+    "src": "ENCI art. 11 §5",
+    "q": "immobilità a frullo"
+   }
+  },
+  {
+   "el": "ακινησία στον πυροβολισμό",
+   "group": "πόντος",
+   "basis": "aco",
+   "en": {
+    "t": "steady at gunshot",
+    "src": "ACO II.13",
+    "q": "steady at gunshot"
+   },
+   "fr": {
+    "t": "sagesse au coup de feu",
+    "src": "ACO II.13; ACO II.10",
+    "q": "sagesse au coup de feu"
+   },
+   "de": {
+    "t": "Ruhe beim Schuss, Schussruhe",
+    "src": "ACO II.13; VPS § 15, § 17",
+    "q": "Ruhe beim Schuss, Schussruhe"
+   },
+   "it": {
+    "t": "immobilità allo sparo",
+    "src": "ENCI art. 11 §5",
+    "q": "immobilità a frullo e sparo"
+   }
+  },
+  {
+   "el": "συναίνεση",
+   "group": "πόντος",
+   "basis": "aco",
+   "en": {
+    "t": "backing, honouring",
+    "src": "ACO IX.25; ACO II.19; GQ art. 8",
+    "q": "backing, honouring"
+   },
+   "fr": {
+    "t": "patron, patronner",
+    "src": "ACO II.19; SCC art. 3",
+    "q": "patron, patronner"
+   },
+   "de": {
+    "t": "Sekundieren, Mitstehen",
+    "src": "ACO II.19; VPS § 11, § 12, § 14",
+    "q": "Sekundieren, Mitstehen"
+   },
+   "it": {
+    "t": "consenso",
+    "src": "ENCI art. 9",
+    "q": "consenso"
+   },
+   "note": "Η άρνηση αποκλείει: GQ art. 8 «A refusal to back is an eliminating fault»· SCC art. 3 «Le refus de patron … est éliminatoire»· ENCI art. 11 §8."
+  },
+  {
+   "el": "λευκή φέρμα",
+   "group": "πόντος",
+   "basis": "aco",
+   "en": {
+    "t": "pointing without result, false pointing",
+    "src": "ACO II.19; ACO IX.25",
+    "q": "pointing without result, false pointing"
+   },
+   "fr": {
+    "t": "faux arrêt",
+    "src": "ACO II.19",
+    "q": "faux arrêt"
+   },
+   "de": {
+    "t": "leeres Vorstehen",
+    "src": "ACO II.19",
+    "q": "leeres Vorstehen"
+   },
+   "it": {
+    "t": "ferma a vuoto",
+    "src": "ENCI art. 11 §14, art. 25",
+    "q": "ferme a vuoto"
+   },
+   "koad": "Άρθρο 27",
+   "note": "Ο Κ.Ο.Α.Δ. κόβει στο ΠΟΛΥ ΚΑΛΟΣ με δύο λευκές (Άρθρο 27)· η ENCI art. 11 §14 αποκλείει πάνω από τρεις."
+  },
+  {
+   "el": "απόρτ",
+   "group": "πόντος",
+   "basis": "own",
+   "en": {
+    "t": "retrieve",
+    "src": "SC art. 20",
+    "q": "retrieve game shot"
+   },
+   "fr": {
+    "t": "rapport",
+    "src": "LEX· SCC art. 15",
+    "q": "rapport"
+   },
+   "de": {
+    "t": "Apportieren, Bringen",
+    "src": "VPS § 11, § 13",
+    "q": "Apportieren, Bringen"
+   },
+   "it": {
+    "t": "riporto",
+    "src": "ENCI art. 10",
+    "q": "riporto"
+   }
+  },
+  {
+   "el": "Συνειδητό ξεσήκωμα",
+   "group": "σφάλματα",
+   "basis": "aco",
+   "en": {
+    "t": "intentional flush",
+    "src": "ACO II.8; GQ art. 7",
+    "q": "intentional flush"
+   },
+   "fr": {
+    "t": "mettre sciemment à l'envol",
+    "src": "ACO II.8",
+    "q": "mettra sciemment à l’envol"
+   },
+   "de": {
+    "t": "wissentliches Herausstoßen",
+    "src": "ACO II.8",
+    "q": "wissentlich Wild herausstößt"
+   },
+   "it": {
+    "t": "avvertire e forzare",
+    "src": "ENCI art. 11 §15",
+    "q": "avvertire e forzare"
+   },
+   "koad": "Άρθρο 33"
+  },
+  {
+   "el": "Κουτούλημα",
+   "group": "σφάλματα",
+   "basis": "aco",
+   "en": {
+    "t": "flush",
+    "src": "ACO II.8",
+    "q": "flush"
+   },
+   "fr": {
+    "t": "tape",
+    "src": "ACO II.8",
+    "q": "tape"
+   },
+   "de": {
+    "t": "Herausstoßen von Wild",
+    "src": "ACO II.8",
+    "q": "Herausstoßen von Wild"
+   },
+   "it": {
+    "t": "sfrullo",
+    "src": "ENCI art. 11 §2 (δεύτερος κατάλογος)",
+    "q": "sfrullo"
+   },
+   "koad": "Άρθρο 33",
+   "note": "Ακούσιο ξεσήκωμα. Δεν μετρά στο πρώτο πέρασμα με τον άνεμο, δεξιά και αριστερά (ACO II.8· ENCI art. 11)."
+  },
+  {
+   "el": "Προσπέρασμα",
+   "group": "σφάλματα",
+   "basis": "own",
+   "en": null,
+   "fr": null,
+   "de": null,
+   "it": {
+    "t": "sorpasso, trascuro del selvatico",
+    "src": "ENCI art. 11 §3 (δεύτερος κατάλογος)",
+    "q": "sorpasso, trascuro del selvatico"
+   },
+   "koad": "Άρθρο 33"
+  },
+  {
+   "el": "Εκτός ελέγχου",
+   "group": "σφάλματα",
+   "basis": "aco",
+   "en": {
+    "t": "out of hand",
+    "src": "ACO II.9",
+    "q": "out of hand"
+   },
+   "fr": {
+    "t": "sortie de main",
+    "src": "ACO II.9; SCC art. 27",
+    "q": "sortie de main"
+   },
+   "de": {
+    "t": "aus der Hand",
+    "src": "ACO II.9",
+    "q": "aus der Hand"
+   },
+   "it": {
+    "t": "fuori mano",
+    "src": "ENCI art. 11 §6",
+    "q": "fuori mano"
+   },
+   "koad": "Άρθρο 33",
+   "note": "Το μόνο σφάλμα που αποκλείει ακόμη και μέσα στο ελεύθερο πρώτο λεπτό (SCC art. 27)."
+  },
+  {
+   "el": "Τρεις λευκές σε διαφορετική κατεύθυνση",
+   "group": "σφάλματα",
+   "basis": "own",
+   "en": {
+    "t": "pointing without result",
+    "src": "ACO II.19",
+    "q": "pointing without result"
+   },
+   "fr": {
+    "t": "faux arrêts",
+    "src": "ACO II.19",
+    "q": "faux arrêts"
+   },
+   "de": {
+    "t": "leeres Vorstehen",
+    "src": "ACO II.19",
+    "q": "leeres Vorstehen"
+   },
+   "it": {
+    "t": "più di tre ferme a vuoto",
+    "src": "ENCI art. 11 §14",
+    "q": "più di tre ferme a vuoto"
+   },
+   "koad": "Άρθρο 33"
+  },
+  {
+   "el": "Άρνηση συναίνεσης",
+   "group": "σφάλματα",
+   "basis": "own",
+   "en": {
+    "t": "refusal of backing (honouring)",
+    "src": "ACO IX.25; GQ art. 8",
+    "q": "refusal of backing (honouring)"
+   },
+   "fr": {
+    "t": "refus de patron",
+    "src": "SCC art. 3",
+    "q": "refus de patron"
+   },
+   "de": {
+    "t": "Nichtsekundieren, Verweigern des Sekundierens",
+    "src": "VPS § 14.3",
+    "q": "Nichtsekundieren, Verweigern des Sekundierens"
+   },
+   "it": {
+    "t": "rifiuto di consenso",
+    "src": "ENCI art. 11 §8",
+    "q": "rifiuto di consenso"
+   },
+   "koad": "Άρθρο 33",
+   "note": "Προσοχή: η VPS § 14.3 λέει ρητά ότι το Nichtsekundieren ΔΕΝ αποκλείει από τη γερμανική εξέταση. Ο όρος είναι κοινός, ο κανόνας όχι."
+  },
+  {
+   "el": "Κροτοφοβία",
+   "group": "σφάλματα",
+   "basis": "aco",
+   "en": {
+    "t": "gun-shy",
+    "src": "ACO II.10",
+    "q": "gun-shy"
+   },
+   "fr": {
+    "t": "crainte caractérisée du coup de feu",
+    "src": "ACO II.10; SCC art. 32",
+    "q": "crainte caractérisée du coup de feu"
+   },
+   "de": {
+    "t": "Schussscheue",
+    "src": "ACO II.10",
+    "q": "Schussscheue"
+   },
+   "it": {
+    "t": "paura del colpo allo sparo",
+    "src": "ENCI art. 11 §19",
+    "q": "paura del colpo allo sparo"
+   },
+   "koad": "Άρθρο 33"
+  },
+  {
+   "el": "Θηραματοφοβία",
+   "group": "σφάλματα",
+   "basis": "own",
+   "en": null,
+   "fr": null,
+   "de": null,
+   "it": null,
+   "koad": "Άρθρο 33",
+   "note": "Δεν στέκει ως όρος στα κείμενα της F.C.I., της S.C.C. ή της ENCI. Μόνο η γερμανική εξέταση έχει ξεχωριστό κεφάλαιο για τη συμπεριφορά μπροστά σε θήραμα που ο σκύλος βλέπει."
+  },
+  {
+   "el": "Κλαφούνισμα",
+   "group": "σφάλματα",
+   "basis": "own",
+   "en": null,
+   "fr": {
+    "t": "donner de la voix",
+    "src": "SCC art. 3",
+    "q": "donner de la voix"
+   },
+   "de": null,
+   "it": {
+    "t": "canizza persistente",
+    "src": "ENCI art. 11 §18",
+    "q": "canizza persistente"
+   },
+   "koad": "Άρθρο 33",
+   "note": "Η αγγλική στήλη δεν έχει πηγή στα κείμενα που έχουμε — η S.C.C. art. 3 το λέει εξίσου αποκλειστικό με την άρνηση συναίνεσης, αλλά στα γαλλικά."
+  },
+  {
+   "el": "Ανεπαρκής έρευνα",
+   "group": "σφάλματα",
+   "basis": "aco",
+   "en": {
+    "t": "insufficient in quest",
+    "src": "ACO IX.25",
+    "q": "insufficient in pace or in quest"
+   },
+   "fr": {
+    "t": "insuffisant en quête",
+    "src": "ACO IX.25",
+    "q": "insuffisant en allure"
+   },
+   "de": {
+    "t": "unplanmäßige Suche",
+    "src": "ACO II.19",
+    "q": "unplanmäßige Suche"
+   },
+   "it": {
+    "t": "cerca disordinata",
+    "src": "ENCI art. 11 §2",
+    "q": "cerca disordinata"
+   },
+   "koad": "Άρθρο 33"
+  },
+  {
+   "el": "Παρενόχληση συνδιαγωνιζόμενου",
+   "group": "σφάλματα",
+   "basis": "aco",
+   "en": {
+    "t": "hindering the brace mate",
+    "src": "ACO IX.25",
+    "q": "hinders its brace mate persistently"
+   },
+   "fr": {
+    "t": "gêner son concurrent",
+    "src": "ACO IX.25",
+    "q": "gênerait son concurrent"
+   },
+   "de": {
+    "t": "den Konkurrenten behindern",
+    "src": "ACO II.19",
+    "q": "behindert"
+   },
+   "it": {
+    "t": "rimorchio e disturbo al compagno di coppia",
+    "src": "ENCI art. 11 §5",
+    "q": "rimorchio e disturbo al compagno di coppia"
+   },
+   "koad": "Άρθρο 33"
+  },
+  {
+   "el": "Καταδίωξη επί μακρόν",
+   "group": "σφάλματα",
+   "basis": "own",
+   "en": {
+    "t": "chasing",
+    "src": "ACO II.9",
+    "q": "chasing"
+   },
+   "fr": {
+    "t": "poursuite",
+    "src": "SCC art. 27",
+    "q": "poursuite"
+   },
+   "de": {
+    "t": "Hetze",
+    "src": "VPS § 15 Gehorsam am Haarnutzwild",
+    "q": "Hetze"
+   },
+   "it": {
+    "t": "rincorsa a fondo del selvatico",
+    "src": "ENCI art. 11 §17",
+    "q": "rincorsa a fondo del selvatico"
+   },
+   "koad": "Άρθρο 33"
+  },
+  {
+   "el": "Άρνηση πονταρίσματος",
+   "group": "σφάλματα",
+   "basis": "aco",
+   "en": {
+    "t": "refusal to execute a commanded approach",
+    "src": "ACO II.13",
+    "q": "refusal to execute a commanded approach"
+   },
+   "fr": {
+    "t": "refus de couler à l'ordre",
+    "src": "ACO II.13",
+    "q": "refus de couler à l'ordre"
+   },
+   "de": {
+    "t": "Verweigern des Befehls zum Nachziehen",
+    "src": "ACO II.13",
+    "q": "Verweigern des Befehls zum Nachziehen"
+   },
+   "it": {
+    "t": "rifiuto di guidare quando è in condizione di farlo",
+    "src": "ENCI art. 11 §16",
+    "q": "rifiuto di guidare quando è in condizione di farlo"
+   },
+   "koad": "Άρθρο 33"
+  },
+  {
+   "el": "Πτώση ρυθμού",
+   "group": "σφάλματα",
+   "basis": "own",
+   "en": {
+    "t": "insufficient in pace",
+    "src": "ACO IX.25",
+    "q": "insufficient in pace"
+   },
+   "fr": {
+    "t": "insuffisant en allure",
+    "src": "ACO IX.25",
+    "q": "insuffisant en allure"
+   },
+   "de": {
+    "t": "mangelnde Ausdauer",
+    "src": "VPS § 7",
+    "q": "Ausdauer"
+   },
+   "it": {
+    "t": "mancanza di fondo",
+    "src": "ENCI art. 11 §7",
+    "q": "mancanza di fondo"
+   },
+   "koad": "Άρθρο 33"
+  },
+  {
+   "el": "ΕΞΑΙΡΕΤΟΣ",
+   "group": "βαθμολογία",
+   "basis": "aco",
+   "en": {
+    "t": "EXCELLENT",
+    "src": "ACO II.13; SC art. 20",
+    "q": "EXCELLENT"
+   },
+   "fr": {
+    "t": "Excellent",
+    "src": "LEX «B., T.B., Exc.»; SCC art. 3",
+    "q": "Excellent"
+   },
+   "de": {
+    "t": "Hervorragend",
+    "src": "ACO II.13",
+    "q": "Hervorragend"
+   },
+   "it": {
+    "t": "Eccellente",
+    "src": "ENCI art. 25",
+    "q": "Eccellente"
+   },
+   "koad": "Άρθρο 27"
+  },
+  {
+   "el": "ΠΟΛΥ ΚΑΛΟΣ",
+   "group": "βαθμολογία",
+   "basis": "own",
+   "en": {
+    "t": "VERY GOOD",
+    "src": "SC art. 20",
+    "q": "VERY GOOD"
+   },
+   "fr": {
+    "t": "Très Bon",
+    "src": "LEX «B., T.B., Exc.»",
+    "q": "Très Bon"
+   },
+   "de": {
+    "t": "Sehr gut",
+    "src": "ACO",
+    "q": "Sehr gut"
+   },
+   "it": {
+    "t": "Molto Buono",
+    "src": "ENCI art. 26",
+    "q": "Molto Buono"
+   },
+   "koad": "Άρθρο 27"
+  },
+  {
+   "el": "ΚΑΛΟΣ",
+   "group": "βαθμολογία",
+   "basis": "own",
+   "en": {
+    "t": "GOOD",
+    "src": "SC art. 20",
+    "q": "GOOD"
+   },
+   "fr": {
+    "t": "Bon",
+    "src": "LEX «B., T.B., Exc.»",
+    "q": "Bon"
+   },
+   "de": {
+    "t": "Gut",
+    "src": "ACO",
+    "q": "Gut"
+   },
+   "it": {
+    "t": "Buono",
+    "src": "ENCI",
+    "q": "Buono"
+   },
+   "koad": "Άρθρο 27"
+  },
+  {
+   "el": "Π.Φ.Π. (CQN)",
+   "group": "βαθμολογία",
+   "basis": "own",
+   "en": {
+    "t": "CQN",
+    "src": "SC art. 20",
+    "q": "CQN will only be awarded"
+   },
+   "fr": {
+    "t": "C.Q.N.",
+    "src": "LEX",
+    "q": "C.Q.N. (CERTIFICAT DE QUALITES NATURELLES)"
+   },
+   "de": null,
+   "it": null,
+   "note": "Εκτός κατάταξης, σε σκύλο μεγάλης αξίας με σφάλμα δρεσαρίσματος: SC art. 20 και LEX λένε το ίδιο, με τα ίδια λόγια."
+  },
+  {
+   "el": "CACT / RCACT / CACIT / RCACIT",
+   "group": "βαθμολογία",
+   "basis": "own",
+   "en": {
+    "t": "CACT / RCACT / CACIT / RCACIT",
+    "src": "TIT· SC art. 22",
+    "q": "CACT / RCACT / CACIT / RCACIT"
+   },
+   "fr": {
+    "t": "CACT / RCACT / CACIT / RCACIT",
+    "src": "LEX· SCC art. 3",
+    "q": "CACT / RCACT / CACIT / RCACIT"
+   },
+   "de": {
+    "t": "CACT / RCACT / CACIT / RCACIT",
+    "src": "ACO I.25",
+    "q": "CACT / RCACT / CACIT / RCACIT"
+   },
+   "it": {
+    "t": "CAC / CACIT",
+    "src": "ENCI art. 4",
+    "q": "CAC / CACIT"
+   },
+   "note": "Διεθνή αρκτικόλεξα — ίδια σε κάθε γλώσσα, δεν μεταφράζονται."
+  }
+ ]
+}
