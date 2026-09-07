@@ -1,9 +1,10 @@
-# Regulations — what is here and what is missing
+# Regulations — what is here, and what each one is good for
 
 Uploaded 5 September 2026 as 25 files. Ten distinct documents; the other fifteen were
 **byte-identical** re-downloads of the same file, so nothing had to be judged between versions —
-every set of duplicates had one identical SHA-256. They were removed. Three more documents arrived
-on 7 September and are noted below.
+every set of duplicates had one identical SHA-256. They were removed. Four more arrived on
+7 September — the S.C.C. and Verein für Pointer und Setter regulations, the ENCI breed
+nomenclature, and the current ENCI trial regulation — and the set is now complete.
 
 ## F.C.I. — the international baseline
 
@@ -26,7 +27,8 @@ The first two are the ones that govern what Κ.Ο.Α.Δ. runs.
 | `../national/SCC-CUNCA-reglement-FT-fr-2026.pdf` | S.C.C. / C.U.N.C.A., **Règlements des Épreuves de Travail pour chiens d'arrêt** — field-trials, Grande Quête, épreuves à la française, BICP, TAN | 53 | in force 1 February 2026; amendments approved by the S.C.C. Committee 29 January 2026 |
 | `../national/SCC-lexique-travail-fr.pdf` | S.C.C., Lexique travail — French working-trial vocabulary | 5 | — |
 | `../national/VPS-Pruefungsordnung-de-2026.pdf` | Verein für Pointer und Setter e.V., **Prüfungsordnung** | 48 | Fassung Januar 2013, Stand 14 August 2026 |
-| `../national/ENCI-prove-razze-da-ferma-it-2024.pdf` | ENCI, Regolamento delle prove – verifiche zootecniche per i cani delle razze da ferma | 24 | Consiglio Direttivo 6 February 2024 |
+| `../national/ENCI-prove-razze-da-ferma-it-2026.pdf` | ENCI, **Regolamento delle prove – verifiche zootecniche per i cani delle razze da ferma** | 26 | amended by the Consiglio Direttivo 17 April 2026, in force the same day |
+| `../national/ENCI-prove-razze-da-ferma-it-2024.pdf` | the same, **superseded** — kept only to read a change against | 24 | Consiglio Direttivo 6 February 2024 |
 | `../national/ENCI-razze-gruppo7-it.html` | ENCI, Libro genealogico — **Elenco Razze Gruppo 7**, the Italian breed nomenclature | — | saved page, `enci.it/libro-genealogico/razze?idGruppo=7` |
 | `../national/JGHV-VSwPO-VFsPO-de-2026.pdf` | JGHV Verbandsschweißprüfungsordnung / Verbandsfährtenschuhprüfungsordnung | 32 | Verbandsversammlung 15 March 2026, in force 1 December 2026 |
 
@@ -69,8 +71,38 @@ beside the F.C.I.'s own English, French, German and Spanish and the ENCI's Itali
   trials. It is kept because it is a genuine JGHV document, but the German pointing-dog terminology
   comes from `VPS-Pruefungsordnung-de-2026.pdf`, which is now here.
 
+## What changed in the ENCI regulation, 2024 → 2026
+
+Both editions are here, so the change is readable rather than asserted. The text is 93.9% the same;
+23 places differ, 24 lines out and 108 in, and four amendments the 2024 copy predates — 23 July
+2024, 17 October 2024, 27 February 2025, 24/25 September 2025 — plus 17 April 2026 itself. What
+actually moved:
+
+- **A closed season.** Trials on wild game, woodcock, snipe, partridge and woodcock monitoring
+  **may not be held between 15 April and 15 July**, the breeding period. New rule, no equivalent
+  in 2024.
+- **The tracking collar is now named and confined.** Where 2024 allowed a generic *localizzatore*
+  alongside the bell, the 2026 text names one device — the **ENCI BTB6000 HYBRID** — says the jury
+  consults it *only* to locate a dog on point, gives the handler its palmare / smartwatch / phone
+  *only* to recover a dog in difficulty, and **forbids any other locating device on the collar**.
+  This is repeated in every trial type, which is most of the 108 added lines.
+- **British breeds run in couple** except now also **in snipe trials**, alongside the first round of
+  the Derby, woodcock and mountain game. The same exception is added for the continentals.
+- **Derby**: entry is now by age — partridge and wild-game trials **after 12 months** — instead of
+  "not before 1 September of the previous year", and having run in *any* free trial now bars entry.
+- **Prize money** on classic quail trials, capped at 40% of entries in 2024, is simply "not
+  permitted" now.
+- **A judge may judge only one batteria per sub-trial per day** (continentali mista, mista
+  continentali italiani, mista inglesi, and so on). New.
+- **Shot-game trials and the retrieving certificate** may only be run inside the open hunting season,
+  organised by ENCI or an authorised specialist association, with the Regional Decree attached to
+  the jury request.
+- Grande quête and classic quail trials **now count as special trials** for championship purposes,
+  provided the qualifications are Italian.
+
+None of this binds Κ.Ο.Α.Δ. — these are Italian national rules and the club runs under the F.C.I.
+They matter here only as the Italian source for the judging vocabulary.
+
 ## Still missing
 
-- The **current ENCI trial regulation**, modified by the Consiglio Direttivo on 17 April 2026, which
-  replaces the February 2024 edition held here. The 2024 copy is still usable for the shape of the
-  Italian rules; a rule read from it must be checked against the current one before it is relied on.
+Nothing. Every document named in the earlier revisions of this file is now in the repository.
