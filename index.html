@@ -1387,8 +1387,12 @@ function render(){
   const net = el("net");
   net.textContent = tx(storageMode === "memory" ? "Χωρίς αποθήκευση"
     : (navigator.onLine ? "Συνδεδεμένο" : "Εκτός σύνδεσης"));
-  el("langBtn").textContent = langNext()[2];
-  el("langBtn").title = langNext()[1];
+  /* Με δύο γλώσσες το κουμπί ήταν διακόπτης και έδειχνε πού πας. Με πέντε αυτό
+     δεν στέκει: χρειάζονταν τέσσερα πατήματα για τα ιταλικά, και δεν έλεγε ποτέ σε
+     ποια γλώσσα είσαι. Τώρα δείχνει την τρέχουσα και ανοίγει τη λίστα. */
+  const cur = LANGS.find(l => l[0] === ((DB.settings||{}).lang || "el")) || LANGS[0];
+  el("langBtn").textContent = cur[2];
+  el("langBtn").title = cur[1];
   net.className = "offline" + (storageMode === "memory" ? " warn" : "");
   startClocks();
   /* A new screen starts at the top. An edit in place does not: moving a ζεύγος
@@ -4414,7 +4418,7 @@ document.addEventListener("click", ev=>{
   const d = el2.dataset;
   const t = trialById(S.trialId);
 
-  if(d.nav){ S.view=d.nav; S.trialId=null; render(); return; }
+  if(d.nav){ S.view=d.nav; S.trialId=null; closeDlg(); render(); return; }
   if(d.tab){ S.tab=d.tab; render(); return; }
   if(d.day!==undefined && d.day!==""){ S.day=+d.day; render(); return; }
   if(d.open){ S.view="trial"; S.trialId=d.open; S.tab="entries"; S.day=0; render(); return; }
@@ -4507,7 +4511,7 @@ document.addEventListener("click", ev=>{
     const wrap = el("d_breedWrap");
     if(wrap) wrap.innerHTML = breedPicker(d.bsec === "1" ? BREEDS_CONT[0] : BREEDS_BRIT[0]);
     return; }
-  if(d.setlang){ DB.settings.lang = d.setlang; save(); render(); return; }
+  if(d.setlang){ DB.settings.lang = d.setlang; save(); closeDlg(); render(); return; }
   if(d.regbsec){ S.regSec = S.regSec === d.regbsec ? "" : d.regbsec; S.regBreed = ""; render(); return; }
 
   /* Sign-off locks the terrain's scores and notes. Unlocking is the head
@@ -4675,6 +4679,28 @@ function setBraceStatus(b, status){
   b.status = status;
 }
 
+/* Πέντε γλώσσες δεν χωρούν σε κυκλικό κουμπί. Μία λίστα, με σημαδεμένη την
+   τρέχουσα και με τον όρο που αλλάζει γραμμένο δίπλα σε κάθε γλώσσα — ώστε να
+   φαίνεται τι ακριβώς κερδίζεις πριν πατήσεις. */
+function dlgLang(){
+  const cur = (DB.settings||{}).lang || "el";
+  const demo = TERMS.find(x => x[0] === "φέρμα");
+  dlg(`<h2>${tx("Γλώσσα")}</h2>
+  <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">${LANGS.map(([k,name,code])=>{
+    const i = TERM_LANGS.indexOf(k);
+    const word = k === "el" ? demo[0] : (i >= 0 && demo[3][i]) || "";
+    return `<button class="tog ${cur===k?"on":""}" data-setlang="${k}"
+      style="display:flex;align-items:baseline;gap:10px;text-align:left;min-height:52px">
+      <b style="font:700 14px/1 var(--f-m);letter-spacing:.06em;min-width:26px">${code}</b>
+      <span class="grow" style="font:600 17px/1.2 var(--f-b)">${esc(name)}</span>
+      ${word?`<span class="tiny" style="font-style:italic">${esc(word)}</span>`:""}
+    </button>`;}).join("")}</div>
+  <p class="tiny" style="margin-top:14px">${tx("Η ορολογία των κριτών γυρίζει και στις πέντε, από τους ίδιους τους κανονισμούς. Τα υπόλοιπα της οθόνης πέφτουν στα αγγλικά όπου δεν υπάρχει κανονισμός να τα ορίσει. Στη βάση όλα μένουν ελληνικά.")}</p>
+  <div class="row tight" style="margin-top:12px">
+    <button class="b-sm grow" data-nav="terms">${tx("Γλωσσάρι")}</button>
+    <button class="grow" data-act="close">${tx("Κλείσιμο")}</button></div>`);
+}
+
 /* --- επανάκληση, Άρθρο 30 ---
    A recall used to add one dog on his own, always, because the button was per
    dog and the code behind it wrote `b:null, solo:true`. Two dogs recalled meant
@@ -4687,6 +4713,13 @@ function dlgRecall(t, spec){
   const tr = (t.days[S.day].terrains||[]).find(x=>x.id===tid);
   if(!tr) return;
   const me = t.entries.find(x=>x.id===eid) || {};
+  /* Μια επανάκληση που περιμένει μισή — ένας σκύλος μόνος του, με τη δεύτερη θέση
+     κενή. Ο κριτής που καλεί δεύτερο σκύλο τον θέλει σχεδόν πάντα εκεί, δίπλα στον
+     πρώτο, όχι σε δικό του ζεύγος. Προσφέρεται πρώτο και είναι το προεπιλεγμένο·
+     πριν, κάθε επανάκληση έφτιαχνε καινούριο μονό ζεύγος. */
+  const open = (tr.braces||[]).find(b => b.recall && b.a && !b.b && b.a !== eid
+                                      && b.status === "ΕΚΚΡΕΜΕΙ");
+  const openName = open ? dogName((t.entries.find(x=>x.id===open.a)||{}).dogId) : "";
   /* everyone who ran in this τερέν, himself and the συμπληρωματικοί aside —
      Άρθρο 30 is a second run under the judges of that ground */
   /* a συμπληρωματικός is excluded wherever he appears, not only in the brace he
@@ -4696,16 +4729,22 @@ function dlgRecall(t, spec){
   const seen = new Set(), opts = [];
   (tr.braces||[]).forEach(b=>[b.a, b.b].forEach(id=>{
     if(!id || id === eid || seen.has(id) || trailers.has(id)) return;
+    if(open && id === open.a) return;          /* προσφέρεται πιο πάνω, ως «δίπλα του» */
     const e = t.entries.find(x=>x.id===id); if(!e) return;
     seen.add(id);
     opts.push({id, label:`${dogName(e.dogId)} — ${perName(e.handlerId)}`});
   }));
   opts.sort((a,b)=>a.label.localeCompare(b.label,"el"));
+  const choices = (open ? [["join:" + open.id,
+      `Δίπλα στον ${openName} — επανάκληση, ζεύγος ${open.no}`]] : [])
+    .concat([["", open ? "Μόνος του, σε νέο ζεύγος" : "Μόνος του"]])
+    .concat(opts.map(o=>[o.id, "Μαζί με " + o.label]));
   dlg(`<h2>Επανάκληση — Άρθρο 30</h2>
   <p class="muted">Νέα διαδρομή για τον <b>${esc(dogName(me.dogId))}</b>, στο τέλος του
     ${esc(tr.name)}. Ο σκύλος κρατά τη θέση του στη σειρά· αυτή είναι επιπλέον.</p>
-  <div class="row">${sel("rc_with","Τρέχει",
-    [["","Μόνος του"]].concat(opts.map(o=>[o.id, "Μαζί με " + o.label])), "")}</div>
+  ${open?`<div class="note">Ο <b>${esc(openName)}</b> περιμένει μόνος του στην επανάκληση,
+    ζεύγος ${open.no}. Αφήστε το ως έχει και οι δύο τρέχουν μαζί.</div>`:""}
+  <div class="row">${sel("rc_with","Τρέχει", choices, choices[0][0])}</div>
   <div class="tiny">Δύο σκύλοι σε επανάκληση μπαίνουν στο <b>ίδιο ζεύγος</b> και κρίνονται μαζί.
     Κάθε ένας κρατά δικό του φύλλο σημειώσεων.</div>
   <div class="row" style="margin-top:14px">
@@ -4715,8 +4754,24 @@ function dlgRecall(t, spec){
 function doRecall(t, spec){
   const [tid, eid] = spec.split("|");
   const tr = (t.days[S.day].terrains||[]).find(x=>x.id===tid); if(!tr) return;
-  const other = (el("rc_with")||{}).value || null;
   tr.braces = tr.braces || [];
+  let other = (el("rc_with")||{}).value || null;
+  /* Δύο δρόμοι στην ίδια θέση: είτε ζητήθηκε ρητά το «δίπλα του», είτε επιλέχθηκε
+     σκύλος που ήδη περιμένει μόνος του σε επανάκληση. Και στους δύο γεμίζει η κενή
+     θέση — αλλιώς ο ίδιος σκύλος θα βρισκόταν σε δύο ζεύγη ταυτόχρονα. */
+  let join = null;
+  if(other && other.indexOf("join:") === 0){
+    join = tr.braces.find(b => b.id === other.slice(5)) || null; other = null;
+  } else if(other){
+    join = tr.braces.find(b => b.recall && b.a === other && !b.b
+                            && b.status === "ΕΚΚΡΕΜΕΙ") || null;
+  }
+  if(join){
+    join.b = eid; join.solo = false;
+    save(); closeDlg(); render();
+    toast("Μπήκε δίπλα στον " + dogName((t.entries.find(x=>x.id===join.a)||{}).dogId));
+    return;
+  }
   tr.braces.push({id:uid(), no:tr.braces.length+1, a:eid, b:other,
                   solo:!other, recall:true, status:"ΕΚΚΡΕΜΕΙ"});
   save(); closeDlg(); render();
@@ -5216,7 +5271,7 @@ const ACT = {
   xlsStats: ()=>exportStatsXls(),
   statsClear: ()=>{ S.stat = {year:"",month:"",type:"",handler:"",dog:""}; render(); },
   /* Η γλώσσα αλλάζει μόνο την οθόνη. Τα δεδομένα μένουν όπως γράφτηκαν. */
-  lang: ()=>{ DB.settings.lang = langNext()[0]; save(); render(); },
+  lang: ()=> dlgLang(),
   termsClear: ()=>{ S.termQ = ""; render(); },
   regClear: ()=>{ S.regSec = ""; S.regBreed = ""; render(); },
   /* Ρωτά τον service worker αν υπάρχει νεότερη έκδοση. Το «updatefound» είναι το
