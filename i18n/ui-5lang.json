@@ -1775,17 +1775,17 @@
   "fr": "L'application ne se télécharge pas depuis un magasin. Elle s'ouvre à une adresse et s'ajoute à l'écran d'accueil. Après la première fois, elle fonctionne sans réseau, ce qui est tout l'intérêt sur le terrain.",
   "it": "L'applicazione non si scarica da uno store. Si apre a un indirizzo e si aggiunge alla schermata Home. Dopo la prima volta funziona senza segnale, che è poi il punto sul terreno."
  },
+ "Η εφαρμογή είναι λίγα αρχεία —": {
+  "en": "The app is a handful of files —",
+  "fr": "L'application, c'est quelques fichiers —",
+  "de": "Die Anwendung besteht aus wenigen Dateien —",
+  "it": "L'applicazione sono pochi file —"
+ },
  "Η εφαρμογή είναι μία σελίδα και λειτουργεί χωρίς σύνδεση. Τα δεδομένα μένουν σε αυτή τη συσκευή και δεν συγχρονίζονται μόνα τους. Δύο κριτές σε δύο κινητά δεν βλέπουν ο ένας τις αλλαγές του άλλου· ανταλλάσσουν αρχείο. Κατάσταση αποθήκευσης:": {
   "de": "Die Anwendung ist eine einzige Seite und läuft offline. Die Daten bleiben auf diesem Gerät und gleichen sich nicht von selbst ab. Zwei Richter auf zwei Telefonen sehen die Änderungen des anderen nicht; sie tauschen eine Datei. Speicherzustand:",
   "en": "The app is a single page and works offline. The data stays on this device and does not synchronise by itself. Two judges on two phones do not see each other's changes; they exchange a file. Storage state:",
   "fr": "L'application est une seule page et fonctionne hors ligne. Les données restent sur cet appareil et ne se synchronisent pas d'elles-mêmes. Deux juges sur deux téléphones ne voient pas les modifications l'un de l'autre ; ils échangent un fichier. État du stockage :",
   "it": "L'applicazione è una sola pagina e funziona fuori linea. I dati restano su questo dispositivo e non si sincronizzano da soli. Due giudici su due telefoni non vedono le modifiche l'uno dell'altro; si scambiano un file. Stato dell'archiviazione:"
- },
- "Η εφαρμογή είναι τέσσερα αρχεία —": {
-  "de": "Die Anwendung besteht aus vier Dateien —",
-  "en": "The app is four files —",
-  "fr": "L'application, c'est quatre fichiers —",
-  "it": "L'applicazione sono quattro file —"
  },
  "Η εφαρμογή τρέχει από την κρυφή μνήμη της συσκευής, ώστε να δουλεύει χωρίς σήμα. Αυτό σημαίνει ότι μια διόρθωση φτάνει σε εσάς την επόμενη φορά που θα την ανοίξετε με σύνδεση.": {
   "de": "Die Anwendung läuft aus dem Zwischenspeicher des Geräts, damit sie ohne Netz funktioniert. Eine Korrektur erreicht Sie also beim nächsten Öffnen mit Verbindung.",
