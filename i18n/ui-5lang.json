@@ -1,0 +1,4052 @@
+{
+ "(Άρθρο 24)": {
+  "de": "(Artikel 24)",
+  "en": "(Article 24)",
+  "fr": "(Article 24)",
+  "it": "(Articolo 24)"
+ },
+ "(Άρθρο 48": {
+  "de": "(Artikel 48",
+  "en": "(Article 48",
+  "fr": "(Article 48",
+  "it": "(Articolo 48"
+ },
+ "(ίδιο επώνυμο:": {
+  "de": "(gleicher Nachname:",
+  "en": "(same surname:",
+  "fr": "(même nom de famille :",
+  "it": "(stesso cognome:"
+ },
+ "). Κενό κελί σημαίνει ότι ο όρος δεν στέκει στα κείμενα εκείνης της γλώσσας — δεν συμπληρώθηκε με εικασία.": {
+  "de": "). Eine leere Zelle bedeutet, dass der Begriff in den Texten jener Sprache nicht vorkommt — sie wurde nicht durch Vermutung gefüllt.",
+  "en": "). An empty cell means the term does not appear in that language's texts — it was not filled in by guesswork.",
+  "fr": "). Une cellule vide signifie que le terme ne figure pas dans les textes de cette langue — elle n'a pas été remplie par conjecture.",
+  "it": "). Una cella vuota significa che il termine non compare nei testi di quella lingua — non è stata riempita per congettura."
+ },
+ "). Ο πίνακας πόντων είναι δεδομένα και αλλάζει από τις Ρυθμίσεις. Ο κριτής αποφασίζει τη βαθμολογία· οι υποδείξεις της εφαρμογής είναι ενδεικτικές.": {
+  "de": "). Die Punktetabelle ist eine Angabe und wird in den Einstellungen geändert. Der Richter entscheidet über die Bewertung; die Vorschläge der Anwendung sind nur Hinweise.",
+  "en": "). The points table is data and is changed in Settings. The judge decides the qualification; what the app suggests is indicative only.",
+  "fr": "). Le barème de points est une donnée et se modifie dans les Réglages. Le juge décide de la qualification ; ce que propose l'application n'est qu'indicatif.",
+  "it": "). La tabella dei punti è un dato e si modifica dalle Impostazioni. Il giudice decide la qualifica; i suggerimenti dell'applicazione sono soltanto indicativi."
+ },
+ "+ Ένας κυναγωγός": {
+  "de": "+ Ein Führer",
+  "en": "+ One handler",
+  "fr": "+ Un conducteur",
+  "it": "+ Un conduttore"
+ },
+ "+ Νέος": {
+  "de": "+ Neu",
+  "en": "+ New",
+  "fr": "+ Nouveau",
+  "it": "+ Nuovo"
+ },
+ "+ Νέος κυναγωγός": {
+  "de": "+ Neuer Führer",
+  "en": "+ New handler",
+  "fr": "+ Nouveau conducteur",
+  "it": "+ Nuovo conduttore"
+ },
+ "+ Προσθήκη τερέν": {
+  "de": "+ Gelände hinzufügen",
+  "en": "+ Add terrain",
+  "fr": "+ Ajouter un terrain",
+  "it": "+ Aggiungi terreno"
+ },
+ "+ Πόντος": {
+  "de": "+ Punkt",
+  "en": "+ Point",
+  "fr": "+ Point",
+  "it": "+ Punto"
+ },
+ "+ Σκύλος": {
+  "de": "+ Hund",
+  "en": "+ Dog",
+  "fr": "+ Chien",
+  "it": "+ Cane"
+ },
+ "+ Συμπληρωματικός": {
+  "de": "+ Ergänzungshund",
+  "en": "+ Supplementary",
+  "fr": "+ Supplémentaire",
+  "it": "+ Supplementare"
+ },
+ ", ζεύγος": {
+  "de": ", Paar",
+  "en": ", brace",
+  "fr": ", couple",
+  "it": ", coppia"
+ },
+ ", στο τέλος του": {
+  "de": ", am Ende von",
+  "en": ", at the end of",
+  "fr": ", à la fin de",
+  "it": ", alla fine di"
+ },
+ ". Ένας αγώνας μπαίνει στο ιστορικό από Εξαγωγές → Ολοκλήρωση αγώνα· οι πόντοι μετρούν έτσι κι αλλιώς.": {
+  "de": ". Eine Prüfung geht über Exporte → Prüfung abschließen in die Historie; die Punkte zählen ohnehin.",
+  "en": ". A trial goes into the history from Exports → Close trial; the points count either way.",
+  "fr": ". Une épreuve passe à l'historique depuis Exports → Clôturer l'épreuve ; les points comptent de toute façon.",
+  "it": ". Una prova passa allo storico da Esportazioni → Chiudi la prova; i punti contano comunque."
+ },
+ ". Όποιος τον έστειλε πάτησε «Αποστολή αγώνα» ή": {
+  "de": ". Wer sie geschickt hat, hat „Prüfung senden“ gedrückt oder",
+  "en": ". Whoever sent it pressed \"Send trial\" or",
+  "fr": ". Celui qui l'a envoyé a appuyé sur « Envoyer l'épreuve » ou",
+  "it": ". Chi l'ha inviata ha premuto «Invia prova» oppure"
+ },
+ ". Αφήστε το ως έχει και οι δύο τρέχουν μαζί.": {
+  "de": ". Lassen Sie es so, und die beiden laufen zusammen.",
+  "en": ". Leave it as it is and the two run together.",
+  "fr": ". Laissez tel quel et les deux courent ensemble.",
+  "it": ". Lasciate così e i due corrono insieme."
+ },
+ ". Αφαιρέστε τον κριτή ή μεταφέρετε τον σκύλο σε άλλο τερέν.": {
+  "de": ". Entfernen Sie den Richter oder verlegen Sie den Hund auf ein anderes Gelände.",
+  "en": ". Remove the judge or move the dog to another terrain.",
+  "fr": ". Retirez le juge ou déplacez le chien sur un autre terrain.",
+  "it": ". Togliete il giudice o spostate il cane su un altro terreno."
+ },
+ ". Δύο τρόποι να συνεχίσετε:": {
+  "de": ". Zwei Wege, weiterzumachen:",
+  "en": ". Two ways to carry on:",
+  "fr": ". Deux façons de continuer :",
+  "it": ". Due modi per continuare:"
+ },
+ ". Εκεί γίνεται η κλήρωση, τα SMS, οι σημειώσεις και η βαθμολογία.": {
+  "de": ". Dort finden Auslosung, SMS, Notizen und Bewertung statt.",
+  "en": ". That is where the draw, the SMS, the notes and the scoring happen.",
+  "fr": ". C'est là que se font le tirage, les SMS, les notes et la notation.",
+  "it": ". Lì si fanno il sorteggio, gli SMS, le note e la valutazione."
+ },
+ ". Η βαθμολογία και οι σημειώσεις κλειδώνουν. Συνέχεια;": {
+  "de": ". Bewertung und Notizen werden gesperrt. Fortfahren?",
+  "en": ". The scoring and the notes will be locked. Continue?",
+  "fr": ". La notation et les notes seront verrouillées. Continuer ?",
+  "it": ". La valutazione e le note verranno bloccate. Continuare?"
+ },
+ ". Η κλήρωση θα τους μετακινήσει αλλού.": {
+  "de": ". Die Auslosung wird sie anderswohin verschieben.",
+  "en": ". The draw will move them elsewhere.",
+  "fr": ". Le tirage les déplacera ailleurs.",
+  "it": ". Il sorteggio li sposterà altrove."
+ },
+ ". Ο αγώνας είναι στο ιστορικό και μετρά στα Στατιστικά:": {
+  "de": ". Die Prüfung liegt in der Historie und zählt in der Statistik:",
+  "en": ". The trial is in the history and counts in Statistics:",
+  "fr": ". L'épreuve est dans l'historique et compte dans les Statistiques :",
+  "it": ". La prova è nello storico e conta nelle Statistiche:"
+ },
+ ". Ο σκύλος κρατά τη θέση του στη σειρά· αυτή είναι επιπλέον.": {
+  "de": ". Der Hund behält seinen Platz in der Reihenfolge; dieser Gang kommt hinzu.",
+  "en": ". The dog keeps its place in the order; this run is extra.",
+  "fr": ". Le chien garde sa place dans l'ordre ; ce parcours est en plus.",
+  "it": ". Il cane mantiene il suo posto nell'ordine; questo turno è in più."
+ },
+ ". Οι σημειώσεις δεν αλλάζουν χωρίς ξεκλείδωμα από τον Πρόεδρο Κριτών (Βαθμολογία → Ξεκλείδωμα).": {
+  "de": ". Die Notizen lassen sich ohne Entsperrung durch den Obmann des Richterkollegiums nicht ändern (Bewertung → Entsperren).",
+  "en": ". The notes cannot be changed without an unlock by the President of the Jury (Scoring → Unlock).",
+  "fr": ". Les notes ne peuvent être modifiées sans déverrouillage par le Président du jury (Notation → Déverrouiller).",
+  "it": ". Le note non si modificano senza sblocco da parte del Presidente di giuria (Valutazione → Sblocca)."
+ },
+ ". Πατήστε «Κλήρωση» για να κατανεμηθούν οι σκύλοι στα τερέν και να σχηματιστούν τα ζεύγη.": {
+  "de": ". Drücken Sie „Auslosung“, um die Hunde auf die Gelände zu verteilen und die Paare zu bilden.",
+  "en": ". Press \"Draw\" to spread the dogs across the terrains and form the braces.",
+  "fr": ". Appuyez sur « Tirage » pour répartir les chiens sur les terrains et former les couples.",
+  "it": ". Premete «Sorteggio» per distribuire i cani sui terreni e formare le coppie."
+ },
+ ". Τα ζεύγη κληρώνονται από την αρχή μέσα σε κάθε τερέν.": {
+  "de": ". Die Paare werden innerhalb jedes Geländes von Neuem ausgelost.",
+  "en": ". The braces are drawn again from scratch within each terrain.",
+  "fr": ". Les couples sont retirés au sort depuis le début dans chaque terrain.",
+  "it": ". Le coppie vengono sorteggiate da capo all'interno di ogni terreno."
+ },
+ ". Τυπώνεται στη λίστα.": {
+  "de": ". Er wird auf der Liste gedruckt.",
+  "en": ". It is printed on the list.",
+  "fr": ". Il est imprimé sur la liste.",
+  "it": ". Viene stampato sulla lista."
+ },
+ "1ος ΕΞΑΙΡΕΤΟΣ": {
+  "de": "1. Hervorragend",
+  "en": "1st EXCELLENT",
+  "fr": "1er Excellent",
+  "it": "1° Eccellente"
+ },
+ "1ος ΠΟΛΥ ΚΑΛΟΣ": {
+  "de": "1. Sehr gut",
+  "en": "1st VERY GOOD",
+  "fr": "1er Très Bon",
+  "it": "1° Molto Buono"
+ },
+ "2ος ΕΞΑΙΡΕΤΟΣ": {
+  "de": "2. Hervorragend",
+  "en": "2nd EXCELLENT",
+  "fr": "2e Excellent",
+  "it": "2° Eccellente"
+ },
+ "CSV ζευγών": {
+  "de": "Paare als CSV",
+  "en": "Braces CSV",
+  "fr": "CSV des couples",
+  "it": "CSV delle coppie"
+ },
+ "Chrome ή Edge στη διεύθυνση.": {
+  "de": "Chrome oder Edge unter der Adresse.",
+  "en": "Chrome or Edge at the address.",
+  "fr": "Chrome ou Edge à l'adresse.",
+  "it": "Chrome o Edge all'indirizzo."
+ },
+ "Chrome → μενού ⋮ → Εγκατάσταση εφαρμογής.": {
+  "de": "Chrome → Menü ⋮ → App installieren.",
+  "en": "Chrome → ⋮ menu → Install app.",
+  "fr": "Chrome → menu ⋮ → Installer l'application.",
+  "it": "Chrome → menu ⋮ → Installa app."
+ },
+ "Excel (.xlsx), Word (.docx, από πίνακα) και CSV. Θα αντιστοιχίσετε μόνοι σας ποια στήλη είναι τι· δεν χρειάζεται συγκεκριμένη σειρά στηλών. Οι σκύλοι που υπάρχουν ήδη ενημερώνονται αντί να διπλογραφούν.": {
+  "de": "Excel (.xlsx), Word (.docx, aus einer Tabelle) und CSV. Sie ordnen selbst zu, welche Spalte was ist; eine bestimmte Spaltenreihenfolge ist nicht nötig. Bereits vorhandene Hunde werden aktualisiert statt doppelt angelegt.",
+  "en": "Excel (.xlsx), Word (.docx, from a table) and CSV. You map which column is what yourself; no particular column order is needed. Dogs that already exist are updated instead of being duplicated.",
+  "fr": "Excel (.xlsx), Word (.docx, à partir d'un tableau) et CSV. C'est vous qui indiquez quelle colonne est quoi ; aucun ordre de colonnes n'est imposé. Les chiens déjà présents sont mis à jour au lieu d'être dupliqués.",
+  "it": "Excel (.xlsx), Word (.docx, da tabella) e CSV. Sarete voi a indicare quale colonna è cosa; non serve un ordine preciso delle colonne. I cani già presenti vengono aggiornati invece che duplicati."
+ },
+ "Excel με ζωντανούς τύπους": {
+  "de": "Excel mit lebenden Formeln",
+  "en": "Excel with live formulas",
+  "fr": "Excel avec formules vivantes",
+  "it": "Excel con formule attive"
+ },
+ "Excel πληρωμών": {
+  "de": "Excel der Zahlungen",
+  "en": "Payments Excel",
+  "fr": "Excel des paiements",
+  "it": "Excel dei pagamenti"
+ },
+ "Safari → Κοινή χρήση → Προσθήκη στην οθόνη Αφετηρίας.": {
+  "de": "Safari → Teilen → Zum Home-Bildschirm.",
+  "en": "Safari → Share → Add to Home Screen.",
+  "fr": "Safari → Partager → Sur l'écran d'accueil.",
+  "it": "Safari → Condividi → Aggiungi a Home."
+ },
+ "Word (αποτελέσματα)": {
+  "de": "Word (Ergebnisse)",
+  "en": "Word (results)",
+  "fr": "Word (résultats)",
+  "it": "Word (risultati)"
+ },
+ "iPhone και iPad": {
+  "de": "iPhone und iPad",
+  "en": "iPhone and iPad",
+  "fr": "iPhone et iPad",
+  "it": "iPhone e iPad"
+ },
+ "«Εγκατάσταση εφαρμογής».": {
+  "de": "„App installieren“.",
+  "en": "\"Install app\".",
+  "fr": "« Installer l'application ».",
+  "it": "«Installa app»."
+ },
+ "«Προσθήκη στην οθόνη Αφετηρίας».": {
+  "de": "„Zum Home-Bildschirm“.",
+  "en": "\"Add to Home Screen\".",
+  "fr": "« Sur l'écran d'accueil ».",
+  "it": "«Aggiungi a Home»."
+ },
+ "· Θήραμα:": {
+  "de": "· Wild:",
+  "en": "· Game:",
+  "fr": "· Gibier :",
+  "it": "· Selvaggina:"
+ },
+ "· Συντελεστής ×": {
+  "de": "· Koeffizient ×",
+  "en": "· Coefficient ×",
+  "fr": "· Coefficient ×",
+  "it": "· Coefficiente ×"
+ },
+ "· βαθμολογία": {
+  "de": "· Bewertung",
+  "en": "· qualification",
+  "fr": "· qualification",
+  "it": "· qualifica"
+ },
+ "· εσείς τον φορτώνετε με το": {
+  "de": "· Sie laden sie mit",
+  "en": "· you load it with",
+  "fr": "· vous le chargez avec",
+  "it": "· voi la caricate con"
+ },
+ "· ζεύγος": {
+  "de": "· Paar",
+  "en": "· brace",
+  "fr": "· couple",
+  "it": "· coppia"
+ },
+ "· συντελεστής ×": {
+  "de": "· Koeffizient ×",
+  "en": "· coefficient ×",
+  "fr": "· coefficient ×",
+  "it": "· coefficiente ×"
+ },
+ "» έχει": {
+  "de": "“ hat",
+  "en": "\" has",
+  "fr": " » a",
+  "it": "» ha"
+ },
+ "». Διορθώστε τους από το Μητρώο.": {
+  "de": "“. Korrigieren Sie sie im Register.",
+  "en": "\". Correct them from the Register.",
+  "fr": " ». Corrigez-les depuis le Registre.",
+  "it": "». Correggeteli dal Registro."
+ },
+ "Άγριο θήραμα": {
+  "de": "Wildwild",
+  "en": "Wild game",
+  "fr": "Gibier sauvage",
+  "it": "Selvaggina selvatica"
+ },
+ "Άκυρο": {
+  "de": "Abbrechen",
+  "en": "Cancel",
+  "fr": "Annuler",
+  "it": "Annulla"
+ },
+ "Άλλο": {
+  "de": "Anderes",
+  "en": "Other",
+  "fr": "Autre",
+  "it": "Altro"
+ },
+ "Άλλοι σκύλοι": {
+  "de": "Andere Hunde",
+  "en": "Other dogs",
+  "fr": "Autres chiens",
+  "it": "Altri cani"
+ },
+ "Άνοιγμα επόμενου μηνύματος": {
+  "de": "Nächste Nachricht öffnen",
+  "en": "Open next message",
+  "fr": "Ouvrir le message suivant",
+  "it": "Apri il messaggio successivo"
+ },
+ "Άρθρο 30: ο κριτής μπορεί να ζητήσει": {
+  "de": "Artikel 30: der Richter kann verlangen",
+  "en": "Article 30: the judge may call for",
+  "fr": "Article 30 : le juge peut demander",
+  "it": "Articolo 30: il giudice può chiedere"
+ },
+ "Άρθρο 33": {
+  "de": "Artikel 33",
+  "en": "Article 33",
+  "fr": "Article 33",
+  "it": "Articolo 33"
+ },
+ "Άρνηση": {
+  "de": "Verweigerung",
+  "en": "Refusal",
+  "fr": "Refus",
+  "it": "Rifiuto"
+ },
+ "Έκδοση": {
+  "de": "Version",
+  "en": "Version",
+  "fr": "Version",
+  "it": "Versione"
+ },
+ "Έλεγχος ενημέρωσης": {
+  "de": "Auf Aktualisierung prüfen",
+  "en": "Check for an update",
+  "fr": "Vérifier la mise à jour",
+  "it": "Controlla l'aggiornamento"
+ },
+ "Έναν-έναν ·": {
+  "de": "Einzeln ·",
+  "en": "One by one ·",
+  "fr": "Un par un ·",
+  "it": "Uno per uno ·"
+ },
+ "Έναρξη ζεύγους": {
+  "de": "Paar starten",
+  "en": "Start brace",
+  "fr": "Lancer le couple",
+  "it": "Avvia la coppia"
+ },
+ "Ένας σκύλος που δεν είναι στο μητρώο ούτε δηλωμένος σήμερα μπορεί να τρέξει ως συμπληρωματικός. Γράψτε το όνομά του εδώ και αφήστε το πεδίο πιο πάνω κενό.": {
+  "de": "Ein Hund, der weder im Register steht noch heute gemeldet ist, kann als Ergänzungshund laufen. Schreiben Sie seinen Namen hierher und lassen Sie das Feld darüber leer.",
+  "en": "A dog that is neither in the register nor entered today may run as a supplementary. Write its name here and leave the field above empty.",
+  "fr": "Un chien qui n'est ni au registre ni engagé aujourd'hui peut courir comme supplémentaire. Écrivez son nom ici et laissez vide le champ ci-dessus.",
+  "it": "Un cane che non è né nel registro né iscritto oggi può correre come supplementare. Scrivete qui il suo nome e lasciate vuoto il campo qui sopra."
+ },
+ "Ένας σκύλος τρέχει σε ένα μόνο τερέν.": {
+  "de": "Ein Hund läuft nur auf einem Gelände.",
+  "en": "A dog runs on one terrain only.",
+  "fr": "Un chien ne court que sur un seul terrain.",
+  "it": "Un cane corre su un solo terreno."
+ },
+ "Έρευνας Κυνηγίου": {
+  "de": "Jagdsuche",
+  "en": "Hunting Research",
+  "fr": "Recherche de chasse",
+  "it": "Ricerca di caccia"
+ },
+ "Έτος": {
+  "de": "Jahr",
+  "en": "Year",
+  "fr": "Année",
+  "it": "Anno"
+ },
+ "Έτσι βγαίνει η επικεφαλίδα για «": {
+  "de": "So sieht der Kopf aus für „",
+  "en": "This is how the heading comes out for \"",
+  "fr": "Voici l'en-tête obtenu pour « ",
+  "it": "Ecco come esce l'intestazione per «"
+ },
+ "Έχετε την τελευταία έκδοση: ": {
+  "de": "Sie haben die neueste Version: ",
+  "en": "You have the latest version: ",
+  "fr": "Vous avez la dernière version : ",
+  "it": "Avete l'ultima versione: "
+ },
+ "Ή απλώς σελιδοδείκτης· ο υπολογιστής σπάνια μένει χωρίς σήμα.": {
+  "de": "Oder einfach ein Lesezeichen; ein Rechner bleibt selten ohne Netz.",
+  "en": "Or simply a bookmark; a computer is seldom left without a signal.",
+  "fr": "Ou simplement un signet ; un ordinateur reste rarement sans réseau.",
+  "it": "Oppure semplicemente un segnalibro; un computer resta di rado senza segnale."
+ },
+ "Ίδιο εκτροφείο": {
+  "de": "Gleicher Zwinger",
+  "en": "Same kennel",
+  "fr": "Même élevage",
+  "it": "Stesso allevamento"
+ },
+ "Ίδιος ιδιοκτήτης": {
+  "de": "Gleicher Eigentümer",
+  "en": "Same owner",
+  "fr": "Même propriétaire",
+  "it": "Stesso proprietario"
+ },
+ "Ό,τι δεν χωράει στα παραπάνω.": {
+  "de": "Alles, was oben nicht hineinpasst.",
+  "en": "Whatever does not fit the above.",
+  "fr": "Tout ce qui n'entre pas dans ce qui précède.",
+  "it": "Tutto ciò che non rientra in quanto sopra."
+ },
+ "Όλα": {
+  "de": "Alle",
+  "en": "All",
+  "fr": "Tous",
+  "it": "Tutti"
+ },
+ "Όλες": {
+  "de": "Alle",
+  "en": "All",
+  "fr": "Toutes",
+  "it": "Tutte"
+ },
+ "Όλες οι φυλές": {
+  "de": "Alle Rassen",
+  "en": "All breeds",
+  "fr": "Toutes les races",
+  "it": "Tutte le razze"
+ },
+ "Όλοι": {
+  "de": "Alle",
+  "en": "All",
+  "fr": "Tous",
+  "it": "Tutti"
+ },
+ "Όλοι οι σκύλοι": {
+  "de": "Alle Hunde",
+  "en": "All dogs",
+  "fr": "Tous les chiens",
+  "it": "Tutti i cani"
+ },
+ "Όλοι του": {
+  "de": "Alle seine",
+  "en": "All of his",
+  "fr": "Tous les siens",
+  "it": "Tutti i suoi"
+ },
+ "Όνομα": {
+  "de": "Name",
+  "en": "Name",
+  "fr": "Nom",
+  "it": "Nome"
+ },
+ "Όνομα και φυλή": {
+  "de": "Name und Rasse",
+  "en": "Name and breed",
+  "fr": "Nom et race",
+  "it": "Nome e razza"
+ },
+ "Όνομα τερέν": {
+  "de": "Name des Geländes",
+  "en": "Name of the terrain",
+  "fr": "Nom du terrain",
+  "it": "Nome del terreno"
+ },
+ "Όταν τελειώσει ο αγώνας, κλείστε τον: περνά στο ιστορικό και τα αποτελέσματά του μένουν στα Στατιστικά.": {
+  "de": "Wenn die Prüfung vorbei ist, schließen Sie sie ab: sie geht in die Historie, ihre Ergebnisse bleiben in der Statistik.",
+  "en": "When the trial is over, close it: it moves to the history and its results stay in Statistics.",
+  "fr": "Quand l'épreuve est terminée, clôturez-la : elle passe à l'historique et ses résultats restent dans les Statistiques.",
+  "it": "Quando la prova è finita, chiudetela: passa allo storico e i suoi risultati restano nelle Statistiche."
+ },
+ "Όχι": {
+  "de": "Nein",
+  "en": "No",
+  "fr": "Non",
+  "it": "No"
+ },
+ "Ώρα": {
+  "de": "Uhrzeit",
+  "en": "Time",
+  "fr": "Heure",
+  "it": "Ora"
+ },
+ "Ώρα προσέλευσης": {
+  "de": "Antrittszeit",
+  "en": "Time of arrival",
+  "fr": "Heure de convocation",
+  "it": "Ora di ritrovo"
+ },
+ "ΑΝΕΠΑΡΚΗΣ": {
+  "de": "UNGENÜGEND",
+  "en": "INSUFFICIENT",
+  "fr": "INSUFFISANT",
+  "it": "INSUFFICIENTE"
+ },
+ "ΑΠΟΚΛΕΙΣΜΟΣ": {
+  "de": "AUSGESCHLOSSEN",
+  "en": "ELIMINATED",
+  "fr": "ÉLIMINÉ",
+  "it": "ELIMINATO"
+ },
+ "ΑΠΟΣΥΡΘΗΚΕ": {
+  "de": "ZURÜCKGEZOGEN",
+  "en": "WITHDRAWN",
+  "fr": "RETIRÉ",
+  "it": "RITIRATO"
+ },
+ "ΑΠΩΝ": {
+  "de": "ABWESEND",
+  "en": "ABSENT",
+  "fr": "ABSENT",
+  "it": "ASSENTE"
+ },
+ "ΑΡΘΡΟ 49": {
+  "de": "ARTIKEL 49",
+  "en": "ARTICLE 49",
+  "fr": "ARTICLE 49",
+  "it": "ARTICOLO 49"
+ },
+ "ΑΤΟΜΙΚΟΣ": {
+  "de": "EINZELN",
+  "en": "SOLO",
+  "fr": "INDIVIDUEL",
+  "it": "INDIVIDUALE"
+ },
+ "Αγγλικές φυλές": {
+  "de": "Britische Rassen",
+  "en": "British breeds",
+  "fr": "Races britanniques",
+  "it": "Razze britanniche"
+ },
+ "Αγώνας:": {
+  "de": "Prüfung:",
+  "en": "Trial:",
+  "fr": "Épreuve :",
+  "it": "Prova:"
+ },
+ "Αγώνες": {
+  "de": "Prüfungen",
+  "en": "Trials",
+  "fr": "Épreuves",
+  "it": "Prove"
+ },
+ "Αδύναμη": {
+  "de": "Schwach",
+  "en": "Weak",
+  "fr": "Faible",
+  "it": "Debole"
+ },
+ "Αθλοθέτηση": {
+  "de": "Ausgeschriebene Auszeichnung",
+  "en": "Award on offer",
+  "fr": "Récompense mise en jeu",
+  "it": "Premio in palio"
+ },
+ "Ακινησία": {
+  "de": "Ruhe",
+  "en": "Steadiness",
+  "fr": "Sagesse",
+  "it": "Immobilità"
+ },
+ "Αλλάξτε ή καθαρίστε τα φίλτρα.": {
+  "de": "Ändern oder löschen Sie die Filter.",
+  "en": "Change or clear the filters.",
+  "fr": "Modifiez ou effacez les filtres.",
+  "it": "Cambiate o azzerate i filtri."
+ },
+ "Αλλαγή σκύλων": {
+  "de": "Hunde wechseln",
+  "en": "Change dogs",
+  "fr": "Changer les chiens",
+  "it": "Cambia i cani"
+ },
+ "Αν το τηλέφωνο δεν σας αφήνει να διαλέξετε το αρχείο, ανοίξτε το στην εφαρμογή μηνυμάτων, αντιγράψτε όλο το κείμενο και επικολλήστε το εδώ.": {
+  "de": "Lässt das Telefon Sie die Datei nicht auswählen, öffnen Sie sie in der Nachrichten-App, kopieren Sie den ganzen Text und fügen Sie ihn hier ein.",
+  "en": "If the phone will not let you pick the file, open it in the messaging app, copy the whole text and paste it here.",
+  "fr": "Si le téléphone ne vous laisse pas choisir le fichier, ouvrez-le dans l'application de messagerie, copiez tout le texte et collez-le ici.",
+  "it": "Se il telefono non vi lascia scegliere il file, apritelo nell'app dei messaggi, copiate tutto il testo e incollatelo qui."
+ },
+ "Αν το τηλέφωνο δεν σας αφήνει να το διαλέξετε, ανοίξτε το αρχείο, αντιγράψτε όλο το κείμενο και χρησιμοποιήστε την «Επικόλληση κειμένου».": {
+  "de": "Lässt das Telefon Sie sie nicht auswählen, öffnen Sie die Datei, kopieren Sie den ganzen Text und nutzen Sie „Text einfügen“.",
+  "en": "If the phone will not let you pick it, open the file, copy the whole text and use \"Paste text\".",
+  "fr": "Si le téléphone ne vous laisse pas le choisir, ouvrez le fichier, copiez tout le texte et utilisez « Coller le texte ».",
+  "it": "Se il telefono non vi lascia sceglierlo, aprite il file, copiate tutto il testo e usate «Incolla testo»."
+ },
+ "Ανάθεση σκύλων": {
+  "de": "Hunde zuteilen",
+  "en": "Assign dogs",
+  "fr": "Affecter des chiens",
+  "it": "Assegna i cani"
+ },
+ "Αναίρεση": {
+  "de": "Rückgängig",
+  "en": "Undo",
+  "fr": "Annuler",
+  "it": "Annulla"
+ },
+ "Αναζήτηση": {
+  "de": "Suche",
+  "en": "Search",
+  "fr": "Recherche",
+  "it": "Ricerca"
+ },
+ "Αναζήτηση κυναγωγού ή σκύλου": {
+  "de": "Führer oder Hund suchen",
+  "en": "Search handler or dog",
+  "fr": "Chercher un conducteur ou un chien",
+  "it": "Cerca conduttore o cane"
+ },
+ "Αναζήτηση ονόματος ή Κ.Ο.Κ.": {
+  "de": "Name oder Zuchtbuchnummer suchen",
+  "en": "Search name or stud book no.",
+  "fr": "Chercher un nom ou un n° du livre des origines",
+  "it": "Cerca nome o n. del libro genealogico"
+ },
+ "Αναζήτηση σκύλου ή κυναγωγού": {
+  "de": "Hund oder Führer suchen",
+  "en": "Search dog or handler",
+  "fr": "Chercher un chien ou un conducteur",
+  "it": "Cerca cane o conduttore"
+ },
+ "Αναζήτηση όρου σε οποιαδήποτε γλώσσα": {
+  "de": "Einen Begriff in beliebiger Sprache suchen",
+  "en": "Search a term in any language",
+  "fr": "Chercher un terme dans n'importe quelle langue",
+  "it": "Cerca un termine in qualsiasi lingua"
+ },
+ "Ανοίξατε το αρχείο απευθείας και ο περιηγητής δεν επιτρέπει αποθήκευση. Ό,τι καταχωρήσετε θα χαθεί μόλις κλείσετε τη σελίδα. Κλείστε το και ανοίξτε την εφαρμογή από τη διεύθυνση του ομίλου, ή κατεβάστε αντίγραφο (Ρυθμίσεις → Μεταφορά) πριν κλείσετε.": {
+  "de": "Sie haben die Datei direkt geöffnet, und der Browser lässt kein Speichern zu. Alles, was Sie eingeben, geht beim Schließen der Seite verloren. Schließen Sie sie und öffnen Sie die Anwendung über die Adresse des Vereins, oder laden Sie vor dem Schließen eine Sicherung herunter (Einstellungen → Übertragung).",
+  "en": "You opened the file directly and the browser does not allow saving. Anything you enter will be lost as soon as you close the page. Close it and open the app from the club's address, or download a backup (Settings → Transfer) before you close.",
+  "fr": "Vous avez ouvert le fichier directement et le navigateur n'autorise pas l'enregistrement. Tout ce que vous saisirez sera perdu dès la fermeture de la page. Fermez-la et ouvrez l'application depuis l'adresse du club, ou téléchargez une sauvegarde (Réglages → Transfert) avant de fermer.",
+  "it": "Avete aperto il file direttamente e il browser non consente il salvataggio. Tutto ciò che inserite andrà perso appena chiudete la pagina. Chiudetela e aprite l'applicazione dall'indirizzo del club, oppure scaricate una copia (Impostazioni → Trasferimento) prima di chiudere."
+ },
+ "Ανοίξτε τη διεύθυνση στο Chrome.": {
+  "de": "Öffnen Sie die Adresse in Chrome.",
+  "en": "Open the address in Chrome.",
+  "fr": "Ouvrez l'adresse dans Chrome.",
+  "it": "Aprite l'indirizzo in Chrome."
+ },
+ "Ανοίξτε τη διεύθυνση στο Safari.": {
+  "de": "Öffnen Sie die Adresse in Safari.",
+  "en": "Open the address in Safari.",
+  "fr": "Ouvrez l'adresse dans Safari.",
+  "it": "Aprite l'indirizzo in Safari."
+ },
+ "Ανοίξτε τον καθένα με το Επεξ. και δώστε του κυναγωγό.": {
+  "de": "Öffnen Sie jeden mit Bearb. und geben Sie ihm einen Führer.",
+  "en": "Open each one with Edit and give it a handler.",
+  "fr": "Ouvrez chacun avec Modif. et donnez-lui un conducteur.",
+  "it": "Aprite ciascuno con Modif. e assegnategli un conduttore."
+ },
+ "Ανοικτή": {
+  "de": "Weit",
+  "en": "Open",
+  "fr": "Ouverte",
+  "it": "Ampia"
+ },
+ "Ανοικτό για αλλαγές": {
+  "de": "Für Änderungen offen",
+  "en": "Open for changes",
+  "fr": "Ouvert aux modifications",
+  "it": "Aperto alle modifiche"
+ },
+ "Ανταλλαγή": {
+  "de": "Tauschen",
+  "en": "Swap",
+  "fr": "Échanger",
+  "it": "Scambia"
+ },
+ "Ανταλλαγή με": {
+  "de": "Tauschen mit",
+  "en": "Swap with",
+  "fr": "Échanger avec",
+  "it": "Scambia con"
+ },
+ "Ανταλλαγή σκύλου": {
+  "de": "Hund tauschen",
+  "en": "Swap dog",
+  "fr": "Échanger le chien",
+  "it": "Scambia il cane"
+ },
+ "Αντιγραφή": {
+  "de": "Kopieren",
+  "en": "Copy",
+  "fr": "Copier",
+  "it": "Copia"
+ },
+ "Αντιγραφή συνδέσμου": {
+  "de": "Link kopieren",
+  "en": "Copy link",
+  "fr": "Copier le lien",
+  "it": "Copia il link"
+ },
+ "Αντιστοίχιση στηλών": {
+  "de": "Spalten zuordnen",
+  "en": "Match the columns",
+  "fr": "Correspondance des colonnes",
+  "it": "Corrispondenza delle colonne"
+ },
+ "Αποθήκευση": {
+  "de": "Speichern",
+  "en": "Save",
+  "fr": "Enregistrer",
+  "it": "Salva"
+ },
+ "Αποθετήριο GitHub": {
+  "de": "GitHub-Repository",
+  "en": "GitHub repository",
+  "fr": "Dépôt GitHub",
+  "it": "Repository GitHub"
+ },
+ "Αποκλεισμός σκύλου": {
+  "de": "Hund ausschließen",
+  "en": "Eliminate dog",
+  "fr": "Éliminer le chien",
+  "it": "Elimina il cane"
+ },
+ "Αποκλεισμός του": {
+  "de": "Ausschluss von",
+  "en": "Elimination of",
+  "fr": "Élimination de",
+  "it": "Eliminazione di"
+ },
+ "Αποστολή αγώνα": {
+  "de": "Prüfung senden",
+  "en": "Send trial",
+  "fr": "Envoyer l'épreuve",
+  "it": "Invia la prova"
+ },
+ "Αποστολή προς": {
+  "de": "Wird gesendet an",
+  "en": "Will be sent to",
+  "fr": "Sera envoyé à",
+  "it": "Verrà inviato a"
+ },
+ "Αποστολή σε όλους": {
+  "de": "An alle senden",
+  "en": "Send to all",
+  "fr": "Envoyer à tous",
+  "it": "Invia a tutti"
+ },
+ "Αποστολή σε όλους ·": {
+  "de": "An alle senden ·",
+  "en": "Send to all ·",
+  "fr": "Envoyer à tous ·",
+  "it": "Invia a tutti ·"
+ },
+ "Αποστολή σειράς": {
+  "de": "Reihenfolge senden",
+  "en": "Send the order",
+  "fr": "Envoyer l'ordre",
+  "it": "Invia l'ordine"
+ },
+ "Αποστολή σειράς ως κείμενο": {
+  "de": "Reihenfolge als Text senden",
+  "en": "Send the order as text",
+  "fr": "Envoyer l'ordre en texte",
+  "it": "Invia l'ordine come testo"
+ },
+ "Αποστολή στο κινητό": {
+  "de": "Aufs Telefon senden",
+  "en": "Send to the phone",
+  "fr": "Envoyer sur le téléphone",
+  "it": "Invia al telefono"
+ },
+ "Αποφασιστικό": {
+  "de": "Entschlossen",
+  "en": "Decisive",
+  "fr": "Décisif",
+  "it": "Deciso"
+ },
+ "Απρίλιος": {
+  "de": "April",
+  "en": "April",
+  "fr": "Avril",
+  "it": "Aprile"
+ },
+ "Από υπολογιστή δεν στέλνονται SMS.": {
+  "de": "Von einem Rechner aus lassen sich keine SMS senden.",
+  "en": "SMS cannot be sent from a computer.",
+  "fr": "On n'envoie pas de SMS depuis un ordinateur.",
+  "it": "Da un computer non si inviano SMS."
+ },
+ "Αρ. Κ.Ο.Κ.": {
+  "de": "Zuchtbuchnummer",
+  "en": "Stud book no.",
+  "fr": "N° au livre des origines",
+  "it": "N. del libro genealogico"
+ },
+ "Αρ. βιβλιαρίου εργασίας": {
+  "de": "Nummer des Leistungsbuchs",
+  "en": "Working book no.",
+  "fr": "N° du carnet de travail",
+  "it": "N. del libretto di lavoro"
+ },
+ "Αρ. μέλους": {
+  "de": "Mitgliedsnummer",
+  "en": "Member no.",
+  "fr": "N° de membre",
+  "it": "N. di socio"
+ },
+ "Αριστερά της επιτροπής (2ος)": {
+  "de": "Links vom Richterkollegium (2.)",
+  "en": "Left of the jury (2nd)",
+  "fr": "À gauche du jury (2e)",
+  "it": "A sinistra della giuria (2°)"
+ },
+ "Αρσενικό": {
+  "de": "Rüde",
+  "en": "Male",
+  "fr": "Mâle",
+  "it": "Maschio"
+ },
+ "Αρσενικός": {
+  "de": "Rüde",
+  "en": "Male",
+  "fr": "Mâle",
+  "it": "Maschio"
+ },
+ "Ατομικός": {
+  "de": "Einzeln",
+  "en": "Solo",
+  "fr": "Individuel",
+  "it": "Individuale"
+ },
+ "Αυθόρμητη": {
+  "de": "Spontan",
+  "en": "Spontaneous",
+  "fr": "Spontané",
+  "it": "Spontanea"
+ },
+ "Αυτόματη κατανομή": {
+  "de": "Automatische Zuteilung",
+  "en": "Automatic assignment",
+  "fr": "Répartition automatique",
+  "it": "Assegnazione automatica"
+ },
+ "Αφαίρεση συμπληρωματικού": {
+  "de": "Ergänzungshund entfernen",
+  "en": "Remove supplementary",
+  "fr": "Retirer le supplémentaire",
+  "it": "Togli il supplementare"
+ },
+ "Αύγουστος": {
+  "de": "August",
+  "en": "August",
+  "fr": "Août",
+  "it": "Agosto"
+ },
+ "Αύξηση": {
+  "de": "Erhöhen",
+  "en": "Increase",
+  "fr": "Augmenter",
+  "it": "Aumenta"
+ },
+ "Βαθμολογία": {
+  "de": "Bewertung",
+  "en": "Scoring",
+  "fr": "Notation",
+  "it": "Valutazione"
+ },
+ "Βασικοί βαθμοί ανά βαθμολογία/τίτλο. Πολλαπλασιάζονται με τον συντελεστή του αγώνα (×2 ζεύγη, ×3 ή ×4 σε άγριο θήραμα για ΕΚ/ΠΚ).": {
+  "de": "Grundpunkte je Bewertung/Titel. Sie werden mit dem Koeffizienten der Prüfung multipliziert (×2 im Paar, ×3 oder ×4 auf Wildwild für Jagdsuche / Praktische Jagd).",
+  "en": "Base points per qualification/title. They are multiplied by the trial's coefficient (×2 braces, ×3 or ×4 on wild game for Hunting Research / Practical Hunting).",
+  "fr": "Points de base par qualification/titre. Ils sont multipliés par le coefficient de l'épreuve (×2 en couple, ×3 ou ×4 sur gibier sauvage pour Recherche de chasse / Chasse pratique).",
+  "it": "Punti base per qualifica/titolo. Vengono moltiplicati per il coefficiente della prova (×2 in batteria, ×3 o ×4 su selvaggina selvatica per Ricerca di caccia / Caccia pratica)."
+ },
+ "Για ομάδες WhatsApp ή Viber, την επιτροπή ή τον πίνακα ανακοινώσεων. Στέλνει τη σειρά σε απλό κείμενο, όχι αρχείο.": {
+  "de": "Für WhatsApp- oder Viber-Gruppen, den Vorstand oder das schwarze Brett. Sendet die Reihenfolge als reinen Text, nicht als Datei.",
+  "en": "For WhatsApp or Viber groups, the committee or the notice board. It sends the order as plain text, not a file.",
+  "fr": "Pour les groupes WhatsApp ou Viber, le comité ou le tableau d'affichage. Envoie l'ordre en texte simple, pas en fichier.",
+  "it": "Per i gruppi WhatsApp o Viber, il comitato o la bacheca. Invia l'ordine come testo semplice, non come file."
+ },
+ "Γλωσσάρι": {
+  "de": "Glossar",
+  "en": "Glossary",
+  "fr": "Lexique",
+  "it": "Glossario"
+ },
+ "Γλώσσα": {
+  "de": "Sprache",
+  "en": "Language",
+  "fr": "Langue",
+  "it": "Lingua"
+ },
+ "Γράψτε τον αριθμό με +": {
+  "de": "Schreiben Sie die Nummer mit +",
+  "en": "Write the number with +",
+  "fr": "Écrivez le numéro avec +",
+  "it": "Scrivete il numero con +"
+ },
+ "Γράψτε τον αριθμό όπως τον γράφετε πάντα· η χώρα βάζει τον κωδικό όταν φύγει το μήνυμα. Το τηλέφωνο χρησιμοποιείται μόνο για την ενημέρωση σειράς στους αγώνες.": {
+  "de": "Schreiben Sie die Nummer so, wie Sie sie immer schreiben; das Land setzt die Vorwahl davor, wenn die Nachricht hinausgeht. Die Nummer dient allein dazu, die Startreihenfolge der Prüfungen mitzuteilen.",
+  "en": "Write the number the way you always write it; the country puts the code in front when the message goes out. The phone is used only to send the running order for trials.",
+  "fr": "Écrivez le numéro comme vous l'écrivez toujours ; le pays place l'indicatif au moment de l'envoi. Le téléphone ne sert qu'à communiquer l'ordre de passage des épreuves.",
+  "it": "Scrivete il numero come lo scrivete sempre; il paese mette il prefisso quando il messaggio parte. Il telefono serve solo a comunicare l'ordine di turno delle prove."
+ },
+ "Γραμμές χωρίς όνομα (αγνοήθηκαν):": {
+  "de": "Zeilen ohne Namen (übergangen):",
+  "en": "Rows with no name (ignored):",
+  "fr": "Lignes sans nom (ignorées) :",
+  "it": "Righe senza nome (ignorate):"
+ },
+ "Γραμμή επικεφαλίδων": {
+  "de": "Kopfzeile",
+  "en": "Header row",
+  "fr": "Ligne d'en-têtes",
+  "it": "Riga di intestazione"
+ },
+ "ΔΗΛΩΜΕΝΟΣ": {
+  "de": "GEMELDET",
+  "en": "ENTERED",
+  "fr": "ENGAGÉ",
+  "it": "ISCRITTO"
+ },
+ "ΔΗΛΩΣΕΙΣ": {
+  "de": "MELDUNGEN OFFEN",
+  "en": "ENTRIES OPEN",
+  "fr": "ENGAGEMENTS OUVERTS",
+  "it": "ISCRIZIONI APERTE"
+ },
+ "ΔΟΚΙΜΟΣ": {
+  "de": "ANWÄRTER",
+  "en": "PROBATIONARY",
+  "fr": "STAGIAIRE",
+  "it": "IN PROVA"
+ },
+ "Δίπλα στον": {
+  "de": "Neben",
+  "en": "Beside",
+  "fr": "À côté de",
+  "it": "Accanto a"
+ },
+ "Δεδομένα": {
+  "de": "Daten",
+  "en": "Data",
+  "fr": "Données",
+  "it": "Dati"
+ },
+ "Δεκέμβριος": {
+  "de": "Dezember",
+  "en": "December",
+  "fr": "Décembre",
+  "it": "Dicembre"
+ },
+ "Δεν έχει γίνει κλήρωση για την ημέρα αυτή. Πηγαίνετε στην καρτέλα «Κλήρωση».": {
+  "de": "Für diesen Tag wurde keine Auslosung gemacht. Gehen Sie zum Reiter „Auslosung“.",
+  "en": "No draw has been made for this day. Go to the \"Draw\" tab.",
+  "fr": "Aucun tirage n'a été fait pour cette journée. Allez à l'onglet « Tirage ».",
+  "it": "Per questa giornata non è stato fatto il sorteggio. Andate alla scheda «Sorteggio»."
+ },
+ "Δεν έχουν οριστεί τερέν. Επιλέξτε πόσα χρειάζονται.": {
+  "de": "Es wurden keine Gelände festgelegt. Wählen Sie, wie viele nötig sind.",
+  "en": "No terrains have been set. Choose how many are needed.",
+  "fr": "Aucun terrain n'a été défini. Choisissez combien il en faut.",
+  "it": "Non è stato definito alcun terreno. Scegliete quanti ne servono."
+ },
+ "Δεν αντιστοιχίστηκαν και θα αγνοηθούν:": {
+  "de": "Nicht zugeordnet und werden übergangen:",
+  "en": "Not matched and will be ignored:",
+  "fr": "Non associées et seront ignorées :",
+  "it": "Non associate e verranno ignorate:"
+ },
+ "Δεν βαθμολογείται.": {
+  "de": "Nicht bewertet.",
+  "en": "Not scored.",
+  "fr": "Non noté.",
+  "it": "Non valutato."
+ },
+ "Δεν ζητήθηκε": {
+  "de": "Nicht verlangt",
+  "en": "Not asked",
+  "fr": "Non demandé",
+  "it": "Non richiesto"
+ },
+ "Δεν πληρούνται τα ελάχιστα.": {
+  "de": "Die Mindestzahlen sind nicht erfüllt.",
+  "en": "The minimums are not met.",
+  "fr": "Les minimums ne sont pas atteints.",
+  "it": "I minimi non sono raggiunti."
+ },
+ "Δεν προέκυψε": {
+  "de": "Kam nicht vor",
+  "en": "Did not arise",
+  "fr": "Ne s'est pas présenté",
+  "it": "Non si è presentato"
+ },
+ "Δεν υπάρχει άλλος κληρωμένος σκύλος για ανταλλαγή.": {
+  "de": "Es gibt keinen anderen ausgelosten Hund zum Tauschen.",
+  "en": "There is no other drawn dog to swap with.",
+  "fr": "Il n'y a pas d'autre chien tiré au sort pour l'échange.",
+  "it": "Non c'è un altro cane sorteggiato con cui scambiare."
+ },
+ "Δεν υπάρχει διακομιστής, οπότε αυτή είναι η μόνη συγχρόνιση. Η διαδρομή έχει τρία βήματα:": {
+  "de": "Es gibt keinen Server, dies ist also der einzige Abgleich. Der Weg hat drei Schritte:",
+  "en": "There is no server, so this is the only synchronisation. The route has three steps:",
+  "fr": "Il n'y a pas de serveur, c'est donc la seule synchronisation. Le trajet comporte trois étapes :",
+  "it": "Non c'è un server, quindi questa è l'unica sincronizzazione. Il percorso ha tre passaggi:"
+ },
+ "Δεν υπάρχει εγκατεστημένος service worker σε αυτή τη συσκευή.": {
+  "de": "Auf diesem Gerät ist kein Service Worker installiert.",
+  "en": "No service worker is installed on this device.",
+  "fr": "Aucun service worker n'est installé sur cet appareil.",
+  "it": "Su questo dispositivo non è installato alcun service worker."
+ },
+ "Δεν υπάρχει σύνδεσμος για κοινή χρήση και ο περιηγητής δεν αποθηκεύει τίποτε. Γράψτε τη διεύθυνση του ομίλου παρακάτω για να φτιαχτεί ο κωδικός QR.": {
+  "de": "Es gibt keinen Link zum Teilen, und der Browser speichert nichts. Schreiben Sie unten die Adresse des Vereins, damit der QR-Code erzeugt wird.",
+  "en": "There is no link to share and the browser stores nothing. Write the club's address below so the QR code can be made.",
+  "fr": "Il n'y a pas de lien à partager et le navigateur ne conserve rien. Écrivez l'adresse du club ci-dessous pour que le QR code soit créé.",
+  "it": "Non c'è un link da condividere e il browser non conserva nulla. Scrivete qui sotto l'indirizzo del club perché venga creato il codice QR."
+ },
+ "Δεξιά της επιτροπής (1ος)": {
+  "de": "Rechts vom Richterkollegium (1.)",
+  "en": "Right of the jury (1st)",
+  "fr": "À droite du jury (1er)",
+  "it": "A destra della giuria (1°)"
+ },
+ "Δεύτερη διαδρομή του": {
+  "de": "Zweiter Gang von",
+  "en": "Second run for",
+  "fr": "Deuxième parcours de",
+  "it": "Secondo turno di"
+ },
+ "Δεύτερη διαδρομή,": {
+  "de": "Zweiter Gang,",
+  "en": "Second run,",
+  "fr": "Deuxième parcours,",
+  "it": "Secondo turno,"
+ },
+ "Δηλώσεις ημέρας": {
+  "de": "Meldungen des Tages",
+  "en": "Entries for the day",
+  "fr": "Engagements du jour",
+  "it": "Iscrizioni della giornata"
+ },
+ "Δημιουργήστε τον πρώτο αγώνα, ή πατήστε": {
+  "de": "Legen Sie die erste Prüfung an, oder drücken Sie",
+  "en": "Create the first trial, or press",
+  "fr": "Créez la première épreuve, ou appuyez sur",
+  "it": "Create la prima prova, oppure premete"
+ },
+ "Δημιουργία συμμετοχών σε αγώνα": {
+  "de": "Meldungen in einer Prüfung anlegen",
+  "en": "Create entries in a trial",
+  "fr": "Créer des engagements dans une épreuve",
+  "it": "Crea iscrizioni in una prova"
+ },
+ "Δημιουργία συμμετοχών στον αγώνα «": {
+  "de": "Meldungen anlegen in der Prüfung „",
+  "en": "Create entries in the trial \"",
+  "fr": "Créer des engagements dans l'épreuve « ",
+  "it": "Crea iscrizioni nella prova «"
+ },
+ "Διάρκεια διαδρομής (λεπτά)": {
+  "de": "Dauer eines Ganges (Minuten)",
+  "en": "Length of a run (minutes)",
+  "fr": "Durée du parcours (minutes)",
+  "it": "Durata del turno (minuti)"
+ },
+ "Διαγραφή": {
+  "de": "Löschen",
+  "en": "Delete",
+  "fr": "Supprimer",
+  "it": "Elimina"
+ },
+ "Διαγραφή όλων": {
+  "de": "Alle löschen",
+  "en": "Delete all",
+  "fr": "Tout supprimer",
+  "it": "Elimina tutto"
+ },
+ "Διαχείριση Αγώνων · σαρώστε για εγκατάσταση": {
+  "de": "Prüfungsverwaltung · zum Installieren scannen",
+  "en": "Trial Manager · scan to install",
+  "fr": "Gestion des épreuves · scannez pour installer",
+  "it": "Gestione prove · scansionate per installare"
+ },
+ "Διεύθυνση του ομίλου": {
+  "de": "Adresse des Vereins",
+  "en": "The club's address",
+  "fr": "Adresse du club",
+  "it": "Indirizzo del club"
+ },
+ "Δύο λευκές: μέγιστο ΠΟΛΥ ΚΑΛΟΣ (Άρθρο 27).": {
+  "de": "Zwei: höchstens Sehr gut (Artikel 27).",
+  "en": "Two: VERY GOOD at most (Article 27).",
+  "fr": "Deux : Très Bon au maximum (Article 27).",
+  "it": "Due: al massimo Molto Buono (Articolo 27)."
+ },
+ "Δύο σκύλοι σε επανάκληση μπαίνουν στο": {
+  "de": "Zwei Hunde im Recall kommen in dasselbe",
+  "en": "Two dogs in a recall go into the",
+  "fr": "Deux chiens en rappel entrent dans le",
+  "it": "Due cani in richiamo entrano nella stessa"
+ },
+ "ΕΚΚΡΕΜΕΙ": {
+  "de": "OFFEN",
+  "en": "PENDING",
+  "fr": "EN ATTENTE",
+  "it": "IN ATTESA"
+ },
+ "ΕΛΕΥΘΕΡΟ ΣΧΟΛΙΟ": {
+  "de": "FREIER KOMMENTAR",
+  "en": "FREE COMMENT",
+  "fr": "COMMENTAIRE LIBRE",
+  "it": "COMMENTO LIBERO"
+ },
+ "ΕΠΑΝΑΚΛΗΣΗ": {
+  "de": "RECALL",
+  "en": "RECALL",
+  "fr": "RAPPEL",
+  "it": "RICHIAMO"
+ },
+ "ΕΠΙΣΗΜΟΣ": {
+  "de": "ORDENTLICH",
+  "en": "FULL",
+  "fr": "TITULAIRE",
+  "it": "EFFETTIVO"
+ },
+ "ΕΠΙΣΚΕΠΤΗΣ": {
+  "de": "GAST",
+  "en": "VISITOR",
+  "fr": "VISITEUR",
+  "it": "OSPITE"
+ },
+ "ΕΡΕΥΝΑ": {
+  "de": "SUCHE",
+  "en": "QUEST",
+  "fr": "QUÊTE",
+  "it": "CERCA"
+ },
+ "ΕΣΤΑΛΗ": {
+  "de": "GESENDET",
+  "en": "SENT",
+  "fr": "ENVOYÉ",
+  "it": "INVIATO"
+ },
+ "Είδος": {
+  "de": "Art",
+  "en": "Type",
+  "fr": "Type",
+  "it": "Tipo"
+ },
+ "Είδος αγώνα": {
+  "de": "Art der Prüfung",
+  "en": "Type of trial",
+  "fr": "Type d'épreuve",
+  "it": "Tipo di prova"
+ },
+ "Εγκατάσταση": {
+  "de": "Installation",
+  "en": "Install",
+  "fr": "Installation",
+  "it": "Installazione"
+ },
+ "Εγκατάσταση στο τηλέφωνο": {
+  "de": "Auf dem Telefon installieren",
+  "en": "Install on the phone",
+  "fr": "Installer sur le téléphone",
+  "it": "Installa sul telefono"
+ },
+ "Εικονίδιο εγκατάστασης στη γραμμή διευθύνσεων.": {
+  "de": "Installationssymbol in der Adressleiste.",
+  "en": "Install icon in the address bar.",
+  "fr": "Icône d'installation dans la barre d'adresse.",
+  "it": "Icona di installazione nella barra degli indirizzi."
+ },
+ "Εισαγωγή": {
+  "de": "Import",
+  "en": "Import",
+  "fr": "Importer",
+  "it": "Importa"
+ },
+ "Εισαγωγή αρχείου": {
+  "de": "Datei importieren",
+  "en": "Import a file",
+  "fr": "Importer un fichier",
+  "it": "Importa un file"
+ },
+ "Εισαγωγή ολοκληρώθηκε.": {
+  "de": "Import abgeschlossen.",
+  "en": "Import finished.",
+  "fr": "Importation terminée.",
+  "it": "Importazione completata."
+ },
+ "Εκτροφείο": {
+  "de": "Zwinger",
+  "en": "Kennel",
+  "fr": "Élevage",
+  "it": "Allevamento"
+ },
+ "Εκτός καταλόγου": {
+  "de": "Nicht in der Liste",
+  "en": "Not in the list",
+  "fr": "Hors liste",
+  "it": "Fuori elenco"
+ },
+ "Εκτός σύνδεσης": {
+  "de": "Offline",
+  "en": "Offline",
+  "fr": "Hors ligne",
+  "it": "Fuori linea"
+ },
+ "Εκτός σύνδεσης. Οι αλλαγές αποθηκεύονται στη συσκευή και ταξιδεύουν με τη Μεταφορά.": {
+  "de": "Offline. Änderungen werden auf dem Gerät gespeichert und reisen per Übertragung.",
+  "en": "Offline. Changes are saved on the device and travel by Transfer.",
+  "fr": "Hors ligne. Les modifications sont enregistrées sur l'appareil et voyagent par Transfert.",
+  "it": "Fuori linea. Le modifiche restano sul dispositivo e viaggiano con il Trasferimento."
+ },
+ "Εκτύπωση": {
+  "de": "Drucken",
+  "en": "Print",
+  "fr": "Imprimer",
+  "it": "Stampa"
+ },
+ "Εκτύπωση / PDF": {
+  "de": "Drucken / PDF",
+  "en": "Print / PDF",
+  "fr": "Imprimer / PDF",
+  "it": "Stampa / PDF"
+ },
+ "Εκτύπωση αφίσας": {
+  "de": "Plakat drucken",
+  "en": "Print the poster",
+  "fr": "Imprimer l'affiche",
+  "it": "Stampa il manifesto"
+ },
+ "Εκτύπωση λίστας": {
+  "de": "Liste drucken",
+  "en": "Print the list",
+  "fr": "Imprimer la liste",
+  "it": "Stampa la lista"
+ },
+ "Ελεύθερο σχόλιο": {
+  "de": "Freier Kommentar",
+  "en": "Free comment",
+  "fr": "Commentaire libre",
+  "it": "Commento libero"
+ },
+ "Ελληνικά (UCS-2), 70 χαρακτήρες στο πρώτο τμήμα και 67 σε κάθε επόμενο. Πληρώνονται από το δικό σας τηλέφωνο.": {
+  "de": "Griechisch (UCS-2), 70 Zeichen im ersten Segment und 67 in jedem weiteren. Bezahlt werden sie von Ihrem eigenen Telefon.",
+  "en": "Greek (UCS-2), 70 characters in the first segment and 67 in each one after. They are paid for from your own phone.",
+  "fr": "Grec (UCS-2), 70 caractères dans le premier segment et 67 dans chacun des suivants. Ils sont payés depuis votre propre téléphone.",
+  "it": "Greco (UCS-2), 70 caratteri nel primo segmento e 67 in ciascuno successivo. Si pagano dal vostro telefono."
+ },
+ "Ελλιπές": {
+  "de": "Unvollständig",
+  "en": "Incomplete",
+  "fr": "Incomplet",
+  "it": "Incompleto"
+ },
+ "Ενημερώθηκαν:": {
+  "de": "Aktualisiert:",
+  "en": "Updated:",
+  "fr": "Mis à jour :",
+  "it": "Aggiornati:"
+ },
+ "Εξαίρετη ένδειξη": {
+  "de": "Hervorragende Anzeige",
+  "en": "Outstanding indication",
+  "fr": "Indication remarquable",
+  "it": "Indicazione eccellente"
+ },
+ "Εξαγωγές": {
+  "de": "Exporte",
+  "en": "Exports",
+  "fr": "Exports",
+  "it": "Esportazioni"
+ },
+ "Εξαγωγές αγώνα": {
+  "de": "Exporte der Prüfung",
+  "en": "Trial exports",
+  "fr": "Exports de l'épreuve",
+  "it": "Esportazioni della prova"
+ },
+ "Επανάκληση — Άρθρο 30": {
+  "de": "Recall — Artikel 30",
+  "en": "Recall — Article 30",
+  "fr": "Rappel — Article 30",
+  "it": "Richiamo — Articolo 30"
+ },
+ "Επαναφορά κανονισμού": {
+  "de": "Werte der Ordnung wiederherstellen",
+  "en": "Restore the regulation values",
+  "fr": "Rétablir les valeurs du règlement",
+  "it": "Ripristina i valori del regolamento"
+ },
+ "Επαναφορά σε εξέλιξη": {
+  "de": "Wieder auf laufend setzen",
+  "en": "Put back in progress",
+  "fr": "Remettre en cours",
+  "it": "Rimetti in corso"
+ },
+ "Επαφή με κυναγωγό": {
+  "de": "Führer kontaktieren",
+  "en": "Contact the handler",
+  "fr": "Contacter le conducteur",
+  "it": "Contatta il conduttore"
+ },
+ "Επεξ.": {
+  "de": "Bearb.",
+  "en": "Edit",
+  "fr": "Modif.",
+  "it": "Modif."
+ },
+ "Επεξεργασία": {
+  "de": "Bearbeiten",
+  "en": "Edit",
+  "fr": "Modifier",
+  "it": "Modifica"
+ },
+ "Επεξεργασία αγώνα": {
+  "de": "Prüfung bearbeiten",
+  "en": "Edit trial",
+  "fr": "Modifier l'épreuve",
+  "it": "Modifica la prova"
+ },
+ "Επεξεργασία κριτή": {
+  "de": "Richter bearbeiten",
+  "en": "Edit judge",
+  "fr": "Modifier le juge",
+  "it": "Modifica il giudice"
+ },
+ "Επεξεργασία κυναγωγού": {
+  "de": "Führer bearbeiten",
+  "en": "Edit handler",
+  "fr": "Modifier le conducteur",
+  "it": "Modifica il conduttore"
+ },
+ "Επεξεργασία σκύλου": {
+  "de": "Hund bearbeiten",
+  "en": "Edit dog",
+  "fr": "Modifier le chien",
+  "it": "Modifica il cane"
+ },
+ "Επεξεργασία στοιχείων": {
+  "de": "Angaben bearbeiten",
+  "en": "Edit the details",
+  "fr": "Modifier les données",
+  "it": "Modifica i dati"
+ },
+ "Επεξεργασία συμμετοχής": {
+  "de": "Meldung bearbeiten",
+  "en": "Edit entry",
+  "fr": "Modifier l'engagement",
+  "it": "Modifica l'iscrizione"
+ },
+ "Επεξεργασία τερέν": {
+  "de": "Gelände bearbeiten",
+  "en": "Edit terrain",
+  "fr": "Modifier le terrain",
+  "it": "Modifica il terreno"
+ },
+ "Επικεφαλίδα — πεδία {ΑΓΩΝΑΣ} {ΗΜΕΡΟΜΗΝΙΑ} {ΤΟΠΟΘΕΣΙΑ} {ΩΡΑ}": {
+  "de": "Kopfzeile — Felder {ΑΓΩΝΑΣ} {ΗΜΕΡΟΜΗΝΙΑ} {ΤΟΠΟΘΕΣΙΑ} {ΩΡΑ}",
+  "en": "Heading — fields {ΑΓΩΝΑΣ} {ΗΜΕΡΟΜΗΝΙΑ} {ΤΟΠΟΘΕΣΙΑ} {ΩΡΑ}",
+  "fr": "En-tête — champs {ΑΓΩΝΑΣ} {ΗΜΕΡΟΜΗΝΙΑ} {ΤΟΠΟΘΕΣΙΑ} {ΩΡΑ}",
+  "it": "Intestazione — campi {ΑΓΩΝΑΣ} {ΗΜΕΡΟΜΗΝΙΑ} {ΤΟΠΟΘΕΣΙΑ} {ΩΡΑ}"
+ },
+ "Επικόλληση": {
+  "de": "Einfügen",
+  "en": "Paste",
+  "fr": "Coller",
+  "it": "Incolla"
+ },
+ "Επικόλληση αντιγράφου": {
+  "de": "Sicherung einfügen",
+  "en": "Paste a backup",
+  "fr": "Coller une sauvegarde",
+  "it": "Incolla una copia"
+ },
+ "Επικόλληση κειμένου": {
+  "de": "Text einfügen",
+  "en": "Paste text",
+  "fr": "Coller le texte",
+  "it": "Incolla testo"
+ },
+ "Επιλέξτε κυναγωγό για να δείτε τους σκύλους του.": {
+  "de": "Wählen Sie einen Führer, um seine Hunde zu sehen.",
+  "en": "Choose a handler to see his dogs.",
+  "fr": "Choisissez un conducteur pour voir ses chiens.",
+  "it": "Scegliete un conduttore per vedere i suoi cani."
+ },
+ "Επιλέξτε ποιοι σκύλοι τρέχουν σε αυτό το τερέν. Όσοι δεν ανατεθούν πουθενά κατανέμονται από την κλήρωση.": {
+  "de": "Wählen Sie, welche Hunde auf diesem Gelände laufen. Nicht zugeteilte werden von der Auslosung verteilt.",
+  "en": "Choose which dogs run on this terrain. Those left unassigned are spread by the draw.",
+  "fr": "Choisissez quels chiens courent sur ce terrain. Ceux qui ne sont affectés nulle part sont répartis par le tirage.",
+  "it": "Scegliete quali cani corrono su questo terreno. Quelli non assegnati vengono distribuiti dal sorteggio."
+ },
+ "Επιλέξτε τον κυναγωγό και σημειώστε ποιοι σκύλοι του τρέχουν σήμερα.": {
+  "de": "Wählen Sie den Führer und haken Sie ab, welche seiner Hunde heute laufen.",
+  "en": "Choose the handler and tick which of his dogs run today.",
+  "fr": "Choisissez le conducteur et cochez lesquels de ses chiens courent aujourd'hui.",
+  "it": "Scegliete il conduttore e spuntate quali dei suoi cani corrono oggi."
+ },
+ "Επιλογή": {
+  "de": "Auswahl",
+  "en": "Select",
+  "fr": "Sélection",
+  "it": "Selezione"
+ },
+ "Επιλογή από το μητρώο": {
+  "de": "Aus dem Register wählen",
+  "en": "Choose from the register",
+  "fr": "Choisir dans le registre",
+  "it": "Scegli dal registro"
+ },
+ "Επιλογή αρχείου Excel / Word / CSV": {
+  "de": "Excel-/Word-/CSV-Datei wählen",
+  "en": "Choose an Excel / Word / CSV file",
+  "fr": "Choisir un fichier Excel / Word / CSV",
+  "it": "Scegli un file Excel / Word / CSV"
+ },
+ "Επιλογή όλων": {
+  "de": "Alle auswählen",
+  "en": "Select all",
+  "fr": "Tout sélectionner",
+  "it": "Seleziona tutto"
+ },
+ "Επισυνάψτε το αρχείο": {
+  "de": "Hängen Sie die Datei an",
+  "en": "Attach the file",
+  "fr": "Joignez le fichier",
+  "it": "Allegate il file"
+ },
+ "Επόμενο ζεύγος": {
+  "de": "Nächstes Paar",
+  "en": "Next brace",
+  "fr": "Couple suivant",
+  "it": "Coppia successiva"
+ },
+ "Ζ.": {
+  "de": "P.",
+  "en": "Br.",
+  "fr": "C.",
+  "it": "C."
+ },
+ "ΖΕΥΓΗ": {
+  "de": "PAARE",
+  "en": "BRACES",
+  "fr": "COUPLES",
+  "it": "COPPIE"
+ },
+ "Ζεύγη": {
+  "de": "Paare",
+  "en": "Braces",
+  "fr": "Couples",
+  "it": "Coppie"
+ },
+ "Ζεύγος / θέση": {
+  "de": "Paar / Platz",
+  "en": "Brace / place",
+  "fr": "Couple / place",
+  "it": "Coppia / posto"
+ },
+ "Η «Αποστολή στο κινητό» στέλνει τον αγώνα μαζί με τα κληρωμένα ζεύγη — φορτώστε τον στο κινητό (Ρυθμίσεις → Φόρτωση αρχείου → Συγχώνευση) και συνεχίστε από εκεί στο τερέν. Τα SMS φεύγουν από όποια συσκευή κρατά τη σειρά.": {
+  "de": "„Aufs Telefon senden“ schickt die Prüfung samt ausgelosten Paaren — laden Sie sie auf dem Telefon (Einstellungen → Datei laden → Zusammenführen) und machen Sie von dort im Gelände weiter. Die SMS gehen von dem Gerät hinaus, das die Reihenfolge hält.",
+  "en": "\"Send to the phone\" sends the trial together with the drawn braces — load it on the phone (Settings → Load file → Merge) and carry on from there in the field. The SMS go out from whichever device holds the running order.",
+  "fr": "« Envoyer sur le téléphone » envoie l'épreuve avec les couples tirés — chargez-la sur le téléphone (Réglages → Charger un fichier → Fusionner) et continuez de là sur le terrain. Les SMS partent de l'appareil qui détient l'ordre de passage.",
+  "it": "«Invia al telefono» manda la prova insieme alle coppie sorteggiate — caricatela sul telefono (Impostazioni → Carica file → Unisci) e proseguite da lì sul terreno. Gli SMS partono dal dispositivo che tiene l'ordine di turno."
+ },
+ "Η Μεγάλη Έρευνα γίνεται πάντα σε ζεύγη (Άρ. 4). Για CACIT χρειάζονται 3 κριτές ανά τερέν (Άρ. 48).": {
+  "de": "Die Grande Quête wird stets im Paar gelaufen (Art. 4). Für das CACIT sind drei Richter je Gelände erforderlich (Art. 48).",
+  "en": "Grande Quête is always run in braces (Art. 4). For CACIT three judges per terrain are required (Art. 48).",
+  "fr": "La Grande Quête se court toujours en couple (Art. 4). Pour le CACIT il faut trois juges par terrain (Art. 48).",
+  "it": "La Grande Quête si corre sempre in coppia (Art. 4). Per il CACIT servono tre giudici per terreno (Art. 48)."
+ },
+ "Η γλώσσα αλλάζει μόνο ό,τι βλέπετε. Στη βάση όλα μένουν ελληνικά — η κατάσταση, η βαθμολογία, η μορφή του αγώνα — ώστε ένα αντίγραφο από αγγλικό κινητό να συγχωνεύεται κανονικά σε ελληνικό υπολογιστή και ο πίνακας πόντων να βρίσκει το κλειδί του.": {
+  "de": "Die Sprache ändert nur, was Sie sehen. Gespeichert wird alles auf Griechisch — Status, Bewertung, Form der Prüfung — damit eine auf einem englischen Telefon erstellte Sicherung sich in einen griechischen Rechner einfügt und die Punktetabelle ihren Schlüssel wiederfindet.",
+  "en": "The language changes what you see and nothing else. Everything is stored in Greek — status, grading, trial format — so that a backup made on an English phone merges into a Greek laptop and the points table still finds its key.",
+  "fr": "La langue ne change que ce que vous voyez. Tout est enregistré en grec — état, qualification, forme de l'épreuve — pour qu'une sauvegarde faite sur un téléphone en anglais fusionne sans peine dans un ordinateur en grec et que le barème retrouve sa clé.",
+  "it": "La lingua cambia solo ciò che vedete. Nella base dati resta tutto in greco — stato, qualifica, forma della prova — così che una copia fatta su un telefono in inglese si unisca senza problemi a un computer in greco e la tabella dei punti ritrovi la sua chiave."
+ },
+ "Η γραμμή επικεφαλίδων εντοπίστηκε αυτόματα. Ελέγξτε κάθε στήλη πριν την εισαγωγή· είναι η μόνη ευκαιρία να πιαστεί λάθος στήλη.": {
+  "de": "Die Kopfzeile wurde automatisch erkannt. Prüfen Sie jede Spalte vor dem Import; es ist die einzige Gelegenheit, eine falsche Spalte zu bemerken.",
+  "en": "The header row was found automatically. Check every column before importing; it is the only chance to catch a wrong column.",
+  "fr": "La ligne d'en-têtes a été repérée automatiquement. Vérifiez chaque colonne avant l'importation ; c'est la seule occasion de rattraper une mauvaise colonne.",
+  "it": "La riga di intestazione è stata individuata automaticamente. Controllate ogni colonna prima dell'importazione; è l'unica occasione per accorgersi di una colonna sbagliata."
+ },
+ "Η διαδρομή σας:": {
+  "de": "Ihr Gang:",
+  "en": "Your run:",
+  "fr": "Votre parcours :",
+  "it": "Il vostro turno:"
+ },
+ "Η εφαρμογή άνοιξε από αρχείο, όχι από διεύθυνση.": {
+  "de": "Die Anwendung wurde aus einer Datei geöffnet, nicht über eine Adresse.",
+  "en": "The app was opened from a file, not from an address.",
+  "fr": "L'application a été ouverte depuis un fichier, non depuis une adresse.",
+  "it": "L'applicazione è stata aperta da un file, non da un indirizzo."
+ },
+ "Η εφαρμογή δεν άνοιξε από διεύθυνση, οπότε δεν υπάρχει ενημέρωση να ελεγχθεί.": {
+  "de": "Die Anwendung wurde nicht über eine Adresse geöffnet, es gibt also keine Aktualisierung zu prüfen.",
+  "en": "The app was not opened from an address, so there is no update to check for.",
+  "fr": "L'application n'a pas été ouverte depuis une adresse, il n'y a donc pas de mise à jour à vérifier.",
+  "it": "L'applicazione non è stata aperta da un indirizzo, quindi non c'è alcun aggiornamento da controllare."
+ },
+ "Η εφαρμογή δεν κατεβαίνει από κατάστημα. Ανοίγει σε μια διεύθυνση και προστίθεται στην αρχική οθόνη. Μετά την πρώτη φορά δουλεύει χωρίς σήμα, που είναι και το ζητούμενο στο τερέν.": {
+  "de": "Die Anwendung wird nicht aus einem Store geladen. Sie öffnet sich unter einer Adresse und wird zum Startbildschirm hinzugefügt. Nach dem ersten Mal läuft sie ohne Netz — genau darum geht es im Gelände.",
+  "en": "The app is not downloaded from a store. It opens at an address and is added to the home screen. After the first time it works with no signal, which is the whole point in the field.",
+  "fr": "L'application ne se télécharge pas depuis un magasin. Elle s'ouvre à une adresse et s'ajoute à l'écran d'accueil. Après la première fois, elle fonctionne sans réseau, ce qui est tout l'intérêt sur le terrain.",
+  "it": "L'applicazione non si scarica da uno store. Si apre a un indirizzo e si aggiunge alla schermata Home. Dopo la prima volta funziona senza segnale, che è poi il punto sul terreno."
+ },
+ "Η εφαρμογή είναι μία σελίδα και λειτουργεί χωρίς σύνδεση. Τα δεδομένα μένουν σε αυτή τη συσκευή και δεν συγχρονίζονται μόνα τους. Δύο κριτές σε δύο κινητά δεν βλέπουν ο ένας τις αλλαγές του άλλου· ανταλλάσσουν αρχείο. Κατάσταση αποθήκευσης:": {
+  "de": "Die Anwendung ist eine einzige Seite und läuft offline. Die Daten bleiben auf diesem Gerät und gleichen sich nicht von selbst ab. Zwei Richter auf zwei Telefonen sehen die Änderungen des anderen nicht; sie tauschen eine Datei. Speicherzustand:",
+  "en": "The app is a single page and works offline. The data stays on this device and does not synchronise by itself. Two judges on two phones do not see each other's changes; they exchange a file. Storage state:",
+  "fr": "L'application est une seule page et fonctionne hors ligne. Les données restent sur cet appareil et ne se synchronisent pas d'elles-mêmes. Deux juges sur deux téléphones ne voient pas les modifications l'un de l'autre ; ils échangent un fichier. État du stockage :",
+  "it": "L'applicazione è una sola pagina e funziona fuori linea. I dati restano su questo dispositivo e non si sincronizzano da soli. Due giudici su due telefoni non vedono le modifiche l'uno dell'altro; si scambiano un file. Stato dell'archiviazione:"
+ },
+ "Η εφαρμογή είναι τέσσερα αρχεία —": {
+  "de": "Die Anwendung besteht aus vier Dateien —",
+  "en": "The app is four files —",
+  "fr": "L'application, c'est quatre fichiers —",
+  "it": "L'applicazione sono quattro file —"
+ },
+ "Η εφαρμογή τρέχει από την κρυφή μνήμη της συσκευής, ώστε να δουλεύει χωρίς σήμα. Αυτό σημαίνει ότι μια διόρθωση φτάνει σε εσάς την επόμενη φορά που θα την ανοίξετε με σύνδεση.": {
+  "de": "Die Anwendung läuft aus dem Zwischenspeicher des Geräts, damit sie ohne Netz funktioniert. Eine Korrektur erreicht Sie also beim nächsten Öffnen mit Verbindung.",
+  "en": "The app runs from the device's own cache so that it works with no signal. That means a fix reaches you the next time you open it with a connection.",
+  "fr": "L'application tourne depuis le cache de l'appareil pour fonctionner sans réseau. Autrement dit, une correction vous parvient la prochaine fois que vous l'ouvrez avec une connexion.",
+  "it": "L'applicazione gira dalla cache del dispositivo, così funziona senza segnale. Vuol dire che una correzione vi arriva la prossima volta che la aprite con una connessione."
+ },
+ "Η ημέρα": {
+  "de": "Der Tag",
+  "en": "The day",
+  "fr": "La journée",
+  "it": "La giornata"
+ },
+ "Η κλήρωση έγινε": {
+  "de": "Die Auslosung erfolgte",
+  "en": "The draw was made",
+  "fr": "Le tirage a été fait",
+  "it": "Il sorteggio è stato fatto"
+ },
+ "Η κλήρωση δεν μπορεί να γίνει ακόμη.": {
+  "de": "Die Auslosung ist noch nicht möglich.",
+  "en": "The draw cannot be made yet.",
+  "fr": "Le tirage ne peut pas encore avoir lieu.",
+  "it": "Il sorteggio non si può ancora fare."
+ },
+ "Η ορολογία των κριτών γυρίζει και στις πέντε, από τους ίδιους τους κανονισμούς. Η υπόλοιπη οθόνη είναι επαγγελματική, μη επίσημη μετάφραση. Στη βάση όλα μένουν ελληνικά.": {
+  "de": "Die Richterterminologie dreht sich in allen fünf Sprachen, den Ordnungen selbst entnommen. Der Rest des Bildschirms ist eine professionelle, nicht amtliche Übersetzung. In der Datenbank bleibt alles griechisch.",
+  "en": "The judging vocabulary turns in all five, taken from the regulations themselves. The rest of the screen is a professional, non-official translation. In the database everything stays Greek.",
+  "fr": "Le vocabulaire de jugement tourne dans les cinq langues, tiré des règlements eux-mêmes. Le reste de l'écran est une traduction professionnelle, non officielle. Dans la base, tout reste en grec.",
+  "it": "La terminologia di giudizio gira in tutte e cinque, presa dai regolamenti stessi. Il resto dello schermo è una traduzione professionale, non ufficiale. Nella base dati tutto resta in greco."
+ },
+ "Η ορολογία των κριτών — φέρμα, ποντάρισμα, συναίνεση, τα σφάλματα του Άρθρου 33, οι βαθμολογίες — μπήκε από τους ίδιους τους κανονισμούς και σε πέντε γλώσσες. Κανένας όρος δεν μεταφράστηκε· δείτε τους με την πηγή τους στο Γλωσσάρι. Η υπόλοιπη οθόνη είναι επαγγελματική, μη επίσημη μετάφραση, γιατί γι' αυτήν δεν υπάρχει κανονισμός να την ορίσει. Οι φυλές είναι της F.C.I. και της ENCI, οι χώρες του CLDR.": {
+  "de": "Die Richterterminologie — Vorstehen, Nachziehen auf Befehl, Sekundieren, die Fehler nach Artikel 33, die Bewertungen — stammt aus den Ordnungen selbst, in fünf Sprachen. Kein Begriff wurde übersetzt; sehen Sie jeden mit seiner Quelle im Glossar. Der Rest des Bildschirms ist eine professionelle, nicht amtliche Übersetzung, da ihn keine Ordnung festlegt. Die Rassen stammen von der F.C.I. und der ENCI, die Länder aus CLDR.",
+  "en": "The judging vocabulary — pointing, commanded approach, backing, the Article 33 faults, the qualifications — was taken from the regulations themselves, in five languages. No term was translated; see each one with its source in the Glossary. The rest of the screen is a professional, non-official translation, since no regulation defines it. The breeds come from the F.C.I. and the ENCI, the countries from CLDR.",
+  "fr": "Le vocabulaire de jugement — arrêt, coulé à l'ordre, patron, les fautes de l'Article 33, les qualifications — est tiré des règlements eux-mêmes, en cinq langues. Aucun terme n'a été traduit ; voyez chacun avec sa source dans le Lexique. Le reste de l'écran est une traduction professionnelle, non officielle, puisqu'aucun règlement ne le définit. Les races viennent de la F.C.I. et de l'ENCI, les pays du CLDR.",
+  "it": "La terminologia di giudizio — ferma, guidata, consenso, le mancanze dell'Articolo 33, le qualifiche — è presa dai regolamenti stessi, in cinque lingue. Nessun termine è stato tradotto; vedeteli con la loro fonte nel Glossario. Il resto dello schermo è una traduzione professionale, non ufficiale, perché nessun regolamento lo definisce. Le razze vengono dalla F.C.I. e dall'ENCI, i paesi dal CLDR."
+ },
+ "Η σειρά είναι ενδεικτική (Άρθρο 16).": {
+  "de": "Die Reihenfolge ist unverbindlich (Artikel 16).",
+  "en": "The order is indicative (Article 16).",
+  "fr": "L'ordre est indicatif (Article 16).",
+  "it": "L'ordine è indicativo (Articolo 16)."
+ },
+ "Η σειρά είναι ενδεικτική — Άρθρο 16.": {
+  "de": "Die Reihenfolge ist unverbindlich — Artikel 16.",
+  "en": "The order is indicative — Article 16.",
+  "fr": "L'ordre est indicatif — Article 16.",
+  "it": "L'ordine è indicativo — Articolo 16."
+ },
+ "Η σειρά είναι ενδεικτική — Άρθρο 16. Το μήνυμα ανοίγει στην εφαρμογή μηνυμάτων του τηλεφώνου· η αποστολή γίνεται από εκεί.": {
+  "de": "Die Reihenfolge ist unverbindlich — Artikel 16. Die Nachricht öffnet sich in der Nachrichten-App des Telefons; gesendet wird von dort.",
+  "en": "The order is indicative — Article 16. The message opens in the phone's messaging app; sending happens from there.",
+  "fr": "L'ordre est indicatif — Article 16. Le message s'ouvre dans l'application de messagerie du téléphone ; l'envoi se fait de là.",
+  "it": "L'ordine è indicativo — Articolo 16. Il messaggio si apre nell'app dei messaggi del telefono; l'invio avviene da lì."
+ },
+ "Η συγχώνευση κρατά ό,τι υπάρχει και προσθέτει· η αντικατάσταση σβήνει τη συσκευή. Στο τερέν θέλετε σχεδόν πάντα συγχώνευση.": {
+  "de": "Zusammenführen behält das Vorhandene und ergänzt; Ersetzen löscht das Gerät. Im Gelände wollen Sie fast immer Zusammenführen.",
+  "en": "Merging keeps what is there and adds; replacing wipes the device. In the field you almost always want merge.",
+  "fr": "La fusion garde ce qui existe et ajoute ; le remplacement efface l'appareil. Sur le terrain, c'est presque toujours la fusion qu'il faut.",
+  "it": "L'unione conserva quel che c'è e aggiunge; la sostituzione cancella il dispositivo. Sul terreno serve quasi sempre l'unione."
+ },
+ "Η τοποθεσία και η ώρα μπαίνουν στο SMS των κυναγωγών και των κριτών.": {
+  "de": "Ort und Uhrzeit stehen in der SMS an Führer und Richter.",
+  "en": "The place and the time go into the SMS to the handlers and the judges.",
+  "fr": "Le lieu et l'heure figurent dans le SMS aux conducteurs et aux juges.",
+  "it": "Il luogo e l'ora entrano nell'SMS ai conduttori e ai giudici."
+ },
+ "Η τοποθεσία και η ώρα προσέλευσης έρχονται από τον αγώνα (Επεξεργασία αγώνα). Αν δεν τις βάλετε στην επικεφαλίδα, μπαίνουν μόνες τους σε δική τους γραμμή — κανένα μήνυμα δεν φεύγει χωρίς πού και πότε.": {
+  "de": "Ort und Antrittszeit kommen aus der Prüfung (Prüfung bearbeiten). Setzen Sie sie nicht in die Kopfzeile, werden sie von selbst in eine eigene Zeile gestellt — keine Nachricht geht ohne Wo und Wann hinaus.",
+  "en": "The place and the arrival time come from the trial (Edit trial). If you do not put them in the heading, they are added on a line of their own — no message goes out without a where and a when.",
+  "fr": "Le lieu et l'heure de convocation viennent de l'épreuve (Modifier l'épreuve). Si vous ne les mettez pas dans l'en-tête, ils s'ajoutent d'eux-mêmes sur une ligne à part — aucun message ne part sans un où et un quand.",
+  "it": "Il luogo e l'ora di ritrovo vengono dalla prova (Modifica la prova). Se non li mettete nell'intestazione, si aggiungono da soli su una riga a parte — nessun messaggio parte senza un dove e un quando."
+ },
+ "Η υπογραφή κλειδώνει τη βαθμολογία και τις σημειώσεις του τερέν. Το ξεκλείδωμα γίνεται από τον Πρόεδρο Κριτών με αιτιολογία, που καταγράφεται.": {
+  "de": "Die Unterschrift sperrt Bewertung und Notizen des Geländes. Entsperrt wird durch den Obmann des Richterkollegiums mit Begründung, die festgehalten wird.",
+  "en": "Signing locks the scoring and the notes of the terrain. Unlocking is done by the President of the Jury with a reason, which is recorded.",
+  "fr": "La signature verrouille la notation et les notes du terrain. Le déverrouillage est fait par le Président du jury avec un motif, qui est consigné.",
+  "it": "La firma blocca la valutazione e le note del terreno. Lo sblocco lo fa il Presidente di giuria con una motivazione, che viene registrata."
+ },
+ "Η χώρα εκτροφής είναι εκείνη του εκτροφείου, όχι του κυναγωγού· από αυτήν βγαίνει και το «κυπριακής εκτροφής» στο μητρώο.": {
+  "de": "Das Zuchtland ist das des Zwingers, nicht das des Führers; daraus ergibt sich „zyprische Zucht“ im Register.",
+  "en": "The country of breeding is the kennel's, not the handler's; it is what produces \"Cyprus-bred\" in the register.",
+  "fr": "Le pays d'élevage est celui de l'élevage, non du conducteur ; c'est de là que vient « élevage chypriote » dans le registre.",
+  "it": "Il paese di allevamento è quello dell'allevamento, non del conduttore; da lì viene «allevamento cipriota» nel registro."
+ },
+ "Ημ. γέννησης": {
+  "de": "Wurftag",
+  "en": "Date of birth",
+  "fr": "Date de naissance",
+  "it": "Data di nascita"
+ },
+ "Ημέρα": {
+  "de": "Tag",
+  "en": "Day",
+  "fr": "Journée",
+  "it": "Giornata"
+ },
+ "Ημέρες": {
+  "de": "Tage",
+  "en": "Days",
+  "fr": "Journées",
+  "it": "Giornate"
+ },
+ "Ημερομηνία έναρξης": {
+  "de": "Anfangsdatum",
+  "en": "Start date",
+  "fr": "Date de début",
+  "it": "Data d'inizio"
+ },
+ "Ηπειρωτικές φυλές": {
+  "de": "Kontinentale Rassen",
+  "en": "Continental breeds",
+  "fr": "Races continentales",
+  "it": "Razze continentali"
+ },
+ "Ηπειρωτικές — F.C.I. Τμήμα 1": {
+  "de": "Kontinentale — F.C.I. Sektion 1",
+  "en": "Continental — F.C.I. Section 1",
+  "fr": "Continentales — F.C.I. Section 1",
+  "it": "Continentali — F.C.I. Sezione 1"
+ },
+ "Θήραμα": {
+  "de": "Wild",
+  "en": "Game",
+  "fr": "Gibier",
+  "it": "Selvaggina"
+ },
+ "Θα εισαχθούν": {
+  "de": "Werden importiert",
+  "en": "To be imported",
+  "fr": "Seront importés",
+  "it": "Verranno importati"
+ },
+ "Θηλυκό": {
+  "de": "Hündin",
+  "en": "Female",
+  "fr": "Femelle",
+  "it": "Femmina"
+ },
+ "Θηλυκός": {
+  "de": "Hündin",
+  "en": "Female",
+  "fr": "Femelle",
+  "it": "Femmina"
+ },
+ "Ιανουάριος": {
+  "de": "Januar",
+  "en": "January",
+  "fr": "Janvier",
+  "it": "Gennaio"
+ },
+ "Ιδιότητα": {
+  "de": "Funktion",
+  "en": "Capacity",
+  "fr": "Qualité",
+  "it": "Qualifica"
+ },
+ "Ιούλιος": {
+  "de": "Juli",
+  "en": "July",
+  "fr": "Juillet",
+  "it": "Luglio"
+ },
+ "Ιούνιος": {
+  "de": "Juni",
+  "en": "June",
+  "fr": "Juin",
+  "it": "Giugno"
+ },
+ "Ιστορικό": {
+  "de": "Historie",
+  "en": "History",
+  "fr": "Historique",
+  "it": "Storico"
+ },
+ "Ιστορικό · σεζόν": {
+  "de": "Historie · Saison",
+  "en": "History · season",
+  "fr": "Historique · saison",
+  "it": "Storico · stagione"
+ },
+ "Ιστορικό σκύλου": {
+  "de": "Historie des Hundes",
+  "en": "The dog's history",
+  "fr": "Historique du chien",
+  "it": "Storico del cane"
+ },
+ "Κ.Ο.Κ.": {
+  "de": "Zuchtbuch",
+  "en": "Stud book",
+  "fr": "Livre des origines",
+  "it": "Libro genealogico"
+ },
+ "ΚΛΕΙΔΩΜΕΝΟ": {
+  "de": "GESPERRT",
+  "en": "LOCKED",
+  "fr": "VERROUILLÉ",
+  "it": "BLOCCATO"
+ },
+ "ΚΛΗΡΩΜΕΝΟΣ": {
+  "de": "AUSGELOST",
+  "en": "DRAWN",
+  "fr": "TIRÉ",
+  "it": "SORTEGGIATO"
+ },
+ "ΚΡΙΤΗΣ": {
+  "de": "RICHTER",
+  "en": "JUDGE",
+  "fr": "JUGE",
+  "it": "GIUDICE"
+ },
+ "Κάθε σκύλος ανήκει σε έναν κυναγωγό — διαλέξτε τον από το μητρώο ή γράψτε το όνομά του εδώ. Έρχεται πρώτος στη λίστα όταν ο σκύλος μπαίνει σε αγώνα, και όνομα, χώρα και τηλέφωνο ενημερώνουν και το μητρώο κυναγωγών.": {
+  "de": "Jeder Hund gehört zu einem Führer — wählen Sie ihn aus dem Register oder schreiben Sie seinen Namen hierher. Er steht in der Liste vorn, wenn der Hund zu einer Prüfung gemeldet wird, und Name, Land und Telefon aktualisieren auch das Führerregister.",
+  "en": "Every dog belongs to a handler — pick him from the register or write his name here. He comes first in the list when the dog is entered in a trial, and name, country and phone update the handlers' register as well.",
+  "fr": "Chaque chien appartient à un conducteur — choisissez-le dans le registre ou écrivez son nom ici. Il vient en tête de liste quand le chien est engagé dans une épreuve, et le nom, le pays et le téléphone mettent aussi à jour le registre des conducteurs.",
+  "it": "Ogni cane appartiene a un conduttore — sceglietelo dal registro o scrivetene qui il nome. Compare per primo nell'elenco quando il cane viene iscritto a una prova, e nome, paese e telefono aggiornano anche il registro dei conduttori."
+ },
+ "Κάθε συσκευή κρατά τα δικά της δεδομένα. Η εγκατάσταση δίνει την εφαρμογή, όχι τους αγώνες — αυτοί ταξιδεύουν με τη Μεταφορά (Ρυθμίσεις).": {
+  "de": "Jedes Gerät hält seine eigenen Daten. Die Installation liefert die Anwendung, nicht die Prüfungen — die reisen per Übertragung (Einstellungen).",
+  "en": "Every device keeps its own data. Installing gives you the app, not the trials — those travel by Transfer (Settings).",
+  "fr": "Chaque appareil conserve ses propres données. L'installation donne l'application, pas les épreuves — celles-ci voyagent par Transfert (Réglages).",
+  "it": "Ogni dispositivo conserva i propri dati. L'installazione dà l'applicazione, non le prove — quelle viaggiano con il Trasferimento (Impostazioni)."
+ },
+ "Κάντε πρώτα την κλήρωση. Η βαθμολογία ακολουθεί τα ζεύγη.": {
+  "de": "Machen Sie zuerst die Auslosung. Die Bewertung folgt den Paaren.",
+  "en": "Make the draw first. The scoring follows the braces.",
+  "fr": "Faites d'abord le tirage. La notation suit les couples.",
+  "it": "Fate prima il sorteggio. La valutazione segue le coppie."
+ },
+ "Κάντε πρώτα την κλήρωση. Τα μηνύματα συντίθενται από τη σειρά της ημέρας.": {
+  "de": "Machen Sie zuerst die Auslosung. Die Nachrichten entstehen aus der Reihenfolge des Tages.",
+  "en": "Make the draw first. The messages are built from the day's running order.",
+  "fr": "Faites d'abord le tirage. Les messages sont composés à partir de l'ordre du jour.",
+  "it": "Fate prima il sorteggio. I messaggi si compongono dall'ordine della giornata."
+ },
+ "Καθαρισμός": {
+  "de": "Zurücksetzen",
+  "en": "Clear",
+  "fr": "Effacer",
+  "it": "Azzera"
+ },
+ "Καλπασμός και στυλ φυλής": {
+  "de": "Galopp und Rassestil",
+  "en": "Gallop and breed style",
+  "fr": "Galop et style de la race",
+  "it": "Galoppo e stile di razza"
+ },
+ "Καμία δηλωμένη συμμετοχή. Προσθέστε συμμετοχές πρώτα.": {
+  "de": "Keine Meldungen erfasst. Legen Sie zuerst Meldungen an.",
+  "en": "No entries declared. Add entries first.",
+  "fr": "Aucun engagement déclaré. Ajoutez d'abord des engagements.",
+  "it": "Nessuna iscrizione dichiarata. Aggiungete prima le iscrizioni."
+ },
+ "Καμία κλήρωση ακόμη για την ημέρα": {
+  "de": "Noch keine Auslosung für den Tag",
+  "en": "No draw yet for the day",
+  "fr": "Aucun tirage pour la journée",
+  "it": "Nessun sorteggio ancora per la giornata"
+ },
+ "Καμία λευκή φέρμα.": {
+  "de": "Kein leeres Vorstehen.",
+  "en": "No pointing without result.",
+  "fr": "Aucun faux arrêt.",
+  "it": "Nessuna ferma a vuoto."
+ },
+ "Καμία συμμετοχή ακόμη. Ανοίξτε τις «Δηλώσεις ημέρας» και σημειώστε ποιοι τρέχουν, ή εισαγάγετε αρχείο Excel.": {
+  "de": "Noch keine Meldungen. Öffnen Sie „Meldungen des Tages“ und haken Sie ab, wer läuft, oder importieren Sie eine Excel-Datei.",
+  "en": "No entries yet. Open \"Entries for the day\" and tick who runs, or import an Excel file.",
+  "fr": "Aucun engagement pour l'instant. Ouvrez « Engagements du jour » et cochez qui court, ou importez un fichier Excel.",
+  "it": "Ancora nessuna iscrizione. Aprite «Iscrizioni della giornata» e spuntate chi corre, oppure importate un file Excel."
+ },
+ "Καμία συμμετοχή δεν ταιριάζει.": {
+  "de": "Keine Meldung passt.",
+  "en": "No entry matches.",
+  "fr": "Aucun engagement ne correspond.",
+  "it": "Nessuna iscrizione corrisponde."
+ },
+ "Καμία συμμετοχή καταγεγραμμένη ακόμη για αυτόν τον σκύλο.": {
+  "de": "Für diesen Hund ist noch keine Meldung erfasst.",
+  "en": "No entry recorded for this dog yet.",
+  "fr": "Aucun engagement enregistré pour ce chien.",
+  "it": "Nessuna iscrizione registrata finora per questo cane."
+ },
+ "Κανένα αποτέλεσμα με αυτά τα φίλτρα": {
+  "de": "Kein Ergebnis mit diesen Filtern",
+  "en": "No result with these filters",
+  "fr": "Aucun résultat avec ces filtres",
+  "it": "Nessun risultato con questi filtri"
+ },
+ "Κανένας": {
+  "de": "Keiner",
+  "en": "None",
+  "fr": "Aucun",
+  "it": "Nessuno"
+ },
+ "Κανένας αγώνας ακόμη": {
+  "de": "Noch keine Prüfung",
+  "en": "No trials yet",
+  "fr": "Pas encore d'épreuve",
+  "it": "Ancora nessuna prova"
+ },
+ "Κανένας κριτής ακόμη. Συνδέστε κάθε κριτή με τον κυναγωγό του ίδιου ονόματος, ώστε η κλήρωση να μην βάζει τον σκύλο του στο τερέν που κρίνει (Άρθρο 49).": {
+  "de": "Noch kein Richter. Verknüpfen Sie jeden Richter mit dem gleichnamigen Führer, damit die Auslosung seinen Hund nicht auf das Gelände stellt, das er richtet (Artikel 49).",
+  "en": "No judge yet. Link each judge to the handler of the same name, so the draw does not put his dog on the terrain he judges (Article 49).",
+  "fr": "Aucun juge pour l'instant. Reliez chaque juge au conducteur du même nom, afin que le tirage ne place pas son chien sur le terrain qu'il juge (Article 49).",
+  "it": "Ancora nessun giudice. Collegate ogni giudice al conduttore con lo stesso nome, così il sorteggio non mette il suo cane sul terreno che giudica (Articolo 49)."
+ },
+ "Κανένας κυναγωγός ακόμη. Καταχωρήστε πρώτα τον κυναγωγό και μετά τους σκύλους του, ή εισαγάγετε αρχείο από την καρτέλα Σκύλοι.": {
+  "de": "Noch kein Führer. Erfassen Sie zuerst den Führer und dann seine Hunde, oder importieren Sie eine Datei über den Reiter Hunde.",
+  "en": "No handler yet. Record the handler first and then his dogs, or import a file from the Dogs tab.",
+  "fr": "Aucun conducteur pour l'instant. Enregistrez d'abord le conducteur puis ses chiens, ou importez un fichier depuis l'onglet Chiens.",
+  "it": "Ancora nessun conduttore. Registrate prima il conduttore e poi i suoi cani, oppure importate un file dalla scheda Cani."
+ },
+ "Κανένας πόντος καταγεγραμμένος.": {
+  "de": "Kein Punkt vermerkt.",
+  "en": "No point recorded.",
+  "fr": "Aucun point consigné.",
+  "it": "Nessun punto registrato."
+ },
+ "Κανένας σκύλος με αυτή τη φυλή. Αλλάξτε ή καθαρίστε το φίλτρο.": {
+  "de": "Kein Hund dieser Rasse. Ändern oder löschen Sie den Filter.",
+  "en": "No dog of this breed. Change or clear the filter.",
+  "fr": "Aucun chien de cette race. Modifiez ou effacez le filtre.",
+  "it": "Nessun cane di questa razza. Cambiate o azzerate il filtro."
+ },
+ "Κανένας σκύλος στο μητρώο. Εισαγάγετε αρχείο Excel ή προσθέστε σκύλο.": {
+  "de": "Kein Hund im Register. Importieren Sie eine Excel-Datei oder legen Sie einen Hund an.",
+  "en": "No dog in the register. Import an Excel file or add a dog.",
+  "fr": "Aucun chien au registre. Importez un fichier Excel ou ajoutez un chien.",
+  "it": "Nessun cane nel registro. Importate un file Excel o aggiungete un cane."
+ },
+ "Κανένας όρος δεν ταιριάζει.": {
+  "de": "Kein Begriff passt.",
+  "en": "No term matches.",
+  "fr": "Aucun terme ne correspond.",
+  "it": "Nessun termine corrisponde."
+ },
+ "Κανείς δεν ταιριάζει.": {
+  "de": "Niemand passt.",
+  "en": "Nobody matches.",
+  "fr": "Personne ne correspond.",
+  "it": "Nessuno corrisponde."
+ },
+ "Κανονική": {
+  "de": "Normal",
+  "en": "Normal",
+  "fr": "Normale",
+  "it": "Normale"
+ },
+ "Κατάσταση": {
+  "de": "Status",
+  "en": "Status",
+  "fr": "État",
+  "it": "Stato"
+ },
+ "Κατακλείδα": {
+  "de": "Schlusszeile",
+  "en": "Closing line",
+  "fr": "Formule de fin",
+  "it": "Chiusura"
+ },
+ "Καταχωρήστε τον πρώτο του σκύλο.": {
+  "de": "Erfassen Sie seinen ersten Hund.",
+  "en": "Record his first dog.",
+  "fr": "Enregistrez son premier chien.",
+  "it": "Registrate il suo primo cane."
+ },
+ "Κατόπιν εντολής": {
+  "de": "Auf Befehl",
+  "en": "On command",
+  "fr": "À l'ordre",
+  "it": "Al comando"
+ },
+ "Κεντρικός κριτής": {
+  "de": "Obmann",
+  "en": "Head judge",
+  "fr": "Juge principal",
+  "it": "Giudice capo"
+ },
+ "Κεντρικός κριτής:": {
+  "de": "Obmann:",
+  "en": "Head judge:",
+  "fr": "Juge principal :",
+  "it": "Giudice capo:"
+ },
+ "Κινητό": {
+  "de": "Mobil",
+  "en": "Mobile",
+  "fr": "Portable",
+  "it": "Cellulare"
+ },
+ "Κλήρωση ζευγών": {
+  "de": "Auslosung der Paare",
+  "en": "Draw of the braces",
+  "fr": "Tirage des couples",
+  "it": "Sorteggio delle coppie"
+ },
+ "Κλήρωση τώρα": {
+  "de": "Jetzt auslosen",
+  "en": "Draw now",
+  "fr": "Tirer maintenant",
+  "it": "Sorteggia ora"
+ },
+ "Κλήρωση…": {
+  "de": "Auslosung…",
+  "en": "Drawing…",
+  "fr": "Tirage…",
+  "it": "Sorteggio…"
+ },
+ "Κλασικός": {
+  "de": "Klassisch",
+  "en": "Classic",
+  "fr": "Classique",
+  "it": "Classica"
+ },
+ "Κλείσιμο": {
+  "de": "Schließen",
+  "en": "Close",
+  "fr": "Fermer",
+  "it": "Chiudi"
+ },
+ "Κλείστηκε": {
+  "de": "Abgeschlossen",
+  "en": "Closed",
+  "fr": "Clôturée",
+  "it": "Chiusa"
+ },
+ "Κοινή χρήση": {
+  "de": "Teilen",
+  "en": "Share",
+  "fr": "Partager",
+  "it": "Condividi"
+ },
+ "Κοινή χρήση συνδέσμου": {
+  "de": "Link teilen",
+  "en": "Share the link",
+  "fr": "Partager le lien",
+  "it": "Condividi il link"
+ },
+ "Κριτές": {
+  "de": "Richter",
+  "en": "Judges",
+  "fr": "Juges",
+  "it": "Giudici"
+ },
+ "Κριτές:": {
+  "de": "Richter:",
+  "en": "Judges:",
+  "fr": "Juges :",
+  "it": "Giudici:"
+ },
+ "Κριτής Μεγάλης Έρευνας": {
+  "de": "Richter für Grande Quête",
+  "en": "Grande Quête judge",
+  "fr": "Juge de Grande Quête",
+  "it": "Giudice di Grande Quête"
+ },
+ "Κριτής με δικό του σκύλο σε αυτό το τερέν (Άρθρο 49):": {
+  "de": "Ein Richter mit eigenem Hund auf diesem Gelände (Artikel 49):",
+  "en": "A judge with a dog of his own on this terrain (Article 49):",
+  "fr": "Un juge ayant son propre chien sur ce terrain (Article 49) :",
+  "it": "Un giudice con un proprio cane su questo terreno (Articolo 49):"
+ },
+ "Κυναγωγοί": {
+  "de": "Führer",
+  "en": "Handlers",
+  "fr": "Conducteurs",
+  "it": "Conduttori"
+ },
+ "Κυναγωγός": {
+  "de": "Führer",
+  "en": "Handler",
+  "fr": "Conducteur",
+  "it": "Conduttore"
+ },
+ "Κωδικός QR για τη διεύθυνση της εφαρμογής": {
+  "de": "QR-Code für die Adresse der Anwendung",
+  "en": "QR code for the app's address",
+  "fr": "QR code de l'adresse de l'application",
+  "it": "Codice QR dell'indirizzo dell'applicazione"
+ },
+ "Κωδικός κλήρωσης": {
+  "de": "Auslosungscode",
+  "en": "Draw seed",
+  "fr": "Code du tirage",
+  "it": "Codice del sorteggio"
+ },
+ "Λήψη": {
+  "de": "Sichern",
+  "en": "Download",
+  "fr": "Télécharger",
+  "it": "Scarica"
+ },
+ "Λήψη αρχείων (ZIP)": {
+  "de": "Dateien herunterladen (ZIP)",
+  "en": "Download the files (ZIP)",
+  "fr": "Télécharger les fichiers (ZIP)",
+  "it": "Scarica i file (ZIP)"
+ },
+ "Λήψη και πηγαίος κώδικας": {
+  "de": "Download und Quellcode",
+  "en": "Download and source code",
+  "fr": "Téléchargement et code source",
+  "it": "Download e codice sorgente"
+ },
+ "Λήψη μόνο μητρώου": {
+  "de": "Nur das Register herunterladen",
+  "en": "Download the register only",
+  "fr": "Télécharger le registre seul",
+  "it": "Scarica solo il registro"
+ },
+ "Λήψη πλήρους αντιγράφου": {
+  "de": "Vollständige Sicherung herunterladen",
+  "en": "Download a full backup",
+  "fr": "Télécharger une sauvegarde complète",
+  "it": "Scarica una copia completa"
+ },
+ "Λεπτομέρειες διαδρομής": {
+  "de": "Einzelheiten des Ganges",
+  "en": "Run detail",
+  "fr": "Détail du parcours",
+  "it": "Dettaglio del turno"
+ },
+ "Λευκές φέρμες": {
+  "de": "Leeres Vorstehen",
+  "en": "Pointing without result",
+  "fr": "Faux arrêts",
+  "it": "Ferme a vuoto"
+ },
+ "Λευκές φέρμες:": {
+  "de": "Leeres Vorstehen:",
+  "en": "Pointing without result:",
+  "fr": "Faux arrêts :",
+  "it": "Ferme a vuoto:"
+ },
+ "ΜΕ ΣΥΜΠΛΗΡΩΜΑΤΙΚΟ": {
+  "de": "MIT ERGÄNZUNGSHUND",
+  "en": "WITH A SUPPLEMENTARY",
+  "fr": "AVEC SUPPLÉMENTAIRE",
+  "it": "CON SUPPLEMENTARE"
+ },
+ "ΜΟΝΟΣ": {
+  "de": "ALLEIN",
+  "en": "ALONE",
+  "fr": "SEUL",
+  "it": "DA SOLO"
+ },
+ "Μάιος": {
+  "de": "Mai",
+  "en": "May",
+  "fr": "Mai",
+  "it": "Maggio"
+ },
+ "Μάρτιος": {
+  "de": "März",
+  "en": "March",
+  "fr": "Mars",
+  "it": "Marzo"
+ },
+ "Μέτρια": {
+  "de": "Mäßig",
+  "en": "Moderate",
+  "fr": "Moyenne",
+  "it": "Media"
+ },
+ "Μήνας": {
+  "de": "Monat",
+  "en": "Month",
+  "fr": "Mois",
+  "it": "Mese"
+ },
+ "Μήνυμα SMS": {
+  "de": "SMS-Nachricht",
+  "en": "SMS message",
+  "fr": "Message SMS",
+  "it": "Messaggio SMS"
+ },
+ "Μήνυμα, πόντοι, μεταφορά": {
+  "de": "Nachricht, Punkte, Übertragung",
+  "en": "Message, points, transfer",
+  "fr": "Message, points, transfert",
+  "it": "Messaggio, punti, trasferimento"
+ },
+ "Μία λευκή δεν εμποδίζει CAC (Άρθρο 27).": {
+  "de": "Ein leeres Vorstehen schließt das CAC nicht aus (Artikel 27).",
+  "en": "One pointing without result does not bar a CAC (Article 27).",
+  "fr": "Un faux arrêt n'empêche pas le CAC (Article 27).",
+  "it": "Una ferma a vuoto non impedisce il CAC (Articolo 27)."
+ },
+ "Με στήριξη": {
+  "de": "Mit Unterstützung",
+  "en": "With support",
+  "fr": "Avec soutien",
+  "it": "Con sostegno"
+ },
+ "Με τη σύνδεση, η κλήρωση δεν τοποθετεί τον σκύλο του κριτή στο τερέν που κρίνει (Άρθρο 49).": {
+  "de": "Ist die Verknüpfung gesetzt, stellt die Auslosung den Hund des Richters nicht auf das Gelände, das er richtet (Artikel 49).",
+  "en": "Once linked, the draw does not place a judge's dog on the terrain he judges (Article 49).",
+  "fr": "Une fois relié, le tirage ne place pas le chien du juge sur le terrain qu'il juge (Article 49).",
+  "it": "Con il collegamento, il sorteggio non mette il cane del giudice sul terreno che egli giudica (Articolo 49)."
+ },
+ "Μείωση": {
+  "de": "Verringern",
+  "en": "Decrease",
+  "fr": "Diminuer",
+  "it": "Diminuisci"
+ },
+ "Μεγάλη Έρευνα": {
+  "de": "Grande Quête",
+  "en": "Grande Quête",
+  "fr": "Grande Quête",
+  "it": "Grande Quête"
+ },
+ "Μεγάλης Έρευνας": {
+  "de": "Grande Quête",
+  "en": "Grande Quête",
+  "fr": "Grande Quête",
+  "it": "Grande Quête"
+ },
+ "Μεθοδικότητα": {
+  "de": "Planmäßigkeit",
+  "en": "Method",
+  "fr": "Méthode",
+  "it": "Metodo"
+ },
+ "Μενού ⋮, πάνω δεξιά.": {
+  "de": "Das Menü ⋮, oben rechts.",
+  "en": "The ⋮ menu, top right.",
+  "fr": "Le menu ⋮, en haut à droite.",
+  "it": "Il menu ⋮, in alto a destra."
+ },
+ "Μερική": {
+  "de": "Teilweise",
+  "en": "Partial",
+  "fr": "Partielle",
+  "it": "Parziale"
+ },
+ "Μετά την πρώτη φορά λειτουργεί χωρίς σήμα.": {
+  "de": "Nach dem ersten Mal läuft sie ohne Netz.",
+  "en": "After the first time it works with no signal.",
+  "fr": "Après la première fois, elle fonctionne sans réseau.",
+  "it": "Dopo la prima volta funziona senza segnale."
+ },
+ "Μετά τον αγώνα: το ίδιο αντίστροφα, ώστε να έχει και ο υπολογιστής τα αποτελέσματα.": {
+  "de": "Nach der Prüfung: dasselbe rückwärts, damit auch der Rechner die Ergebnisse hat.",
+  "en": "After the trial: the same in reverse, so the computer has the results too.",
+  "fr": "Après l'épreuve : la même chose en sens inverse, pour que l'ordinateur ait aussi les résultats.",
+  "it": "Dopo la prova: lo stesso all'inverso, così anche il computer ha i risultati."
+ },
+ "Μετακίνηση ζεύγους": {
+  "de": "Paar verschieben",
+  "en": "Move brace",
+  "fr": "Déplacer le couple",
+  "it": "Sposta la coppia"
+ },
+ "Μεταφορά σε άλλη συσκευή": {
+  "de": "Übertragung auf ein anderes Gerät",
+  "en": "Transfer to another device",
+  "fr": "Transfert vers un autre appareil",
+  "it": "Trasferimento a un altro dispositivo"
+ },
+ "Μητρώο": {
+  "de": "Register",
+  "en": "Register",
+  "fr": "Registre",
+  "it": "Registro"
+ },
+ "Μορφή": {
+  "de": "Form",
+  "en": "Form",
+  "fr": "Forme",
+  "it": "Forma"
+ },
+ "Μπεκάτσα": {
+  "de": "Waldschnepfe",
+  "en": "Woodcock",
+  "fr": "Bécasse",
+  "it": "Beccaccia"
+ },
+ "Μόνο κριτές": {
+  "de": "Nur Richter",
+  "en": "Judges only",
+  "fr": "Juges seulement",
+  "it": "Solo giudici"
+ },
+ "Μόνο κυναγωγοί": {
+  "de": "Nur Führer",
+  "en": "Handlers only",
+  "fr": "Conducteurs seulement",
+  "it": "Solo conduttori"
+ },
+ "Μόνο τα δικά του ζεύγη": {
+  "de": "Nur seine eigenen Paare",
+  "en": "His own braces only",
+  "fr": "Ses couples seulement",
+  "it": "Solo le sue coppie"
+ },
+ "Νέα διαδρομή για τον": {
+  "de": "Ein neuer Gang für",
+  "en": "A new run for",
+  "fr": "Un nouveau parcours pour",
+  "it": "Un nuovo turno per"
+ },
+ "Νέα κλήρωση": {
+  "de": "Neue Auslosung",
+  "en": "New draw",
+  "fr": "Nouveau tirage",
+  "it": "Nuovo sorteggio"
+ },
+ "Νέα κλήρωση — ακυρώνει την τρέχουσα": {
+  "de": "Neue Auslosung — hebt die bestehende auf",
+  "en": "New draw — cancels the present one",
+  "fr": "Nouveau tirage — annule celui en cours",
+  "it": "Nuovo sorteggio — annulla quello attuale"
+ },
+ "Νέα συμμετοχή": {
+  "de": "Neue Meldung",
+  "en": "New entry",
+  "fr": "Nouvel engagement",
+  "it": "Nuova iscrizione"
+ },
+ "Νέες συμμετοχές:": {
+  "de": "Neue Meldungen:",
+  "en": "New entries:",
+  "fr": "Nouveaux engagements :",
+  "it": "Nuove iscrizioni:"
+ },
+ "Νέο τερέν": {
+  "de": "Neues Gelände",
+  "en": "New terrain",
+  "fr": "Nouveau terrain",
+  "it": "Nuovo terreno"
+ },
+ "Νέοι κριτές:": {
+  "de": "Neue Richter:",
+  "en": "New judges:",
+  "fr": "Nouveaux juges :",
+  "it": "Nuovi giudici:"
+ },
+ "Νέοι σκύλοι:": {
+  "de": "Neue Hunde:",
+  "en": "New dogs:",
+  "fr": "Nouveaux chiens :",
+  "it": "Nuovi cani:"
+ },
+ "Νέος αγώνας": {
+  "de": "Neue Prüfung",
+  "en": "New trial",
+  "fr": "Nouvelle épreuve",
+  "it": "Nuova prova"
+ },
+ "Νέος κριτής": {
+  "de": "Neuer Richter",
+  "en": "New judge",
+  "fr": "Nouveau juge",
+  "it": "Nuovo giudice"
+ },
+ "Νέος κυναγωγός": {
+  "de": "Neuer Führer",
+  "en": "New handler",
+  "fr": "Nouveau conducteur",
+  "it": "Nuovo conduttore"
+ },
+ "Νέος σκύλος": {
+  "de": "Neuer Hund",
+  "en": "New dog",
+  "fr": "Nouveau chien",
+  "it": "Nuovo cane"
+ },
+ "Ναι": {
+  "de": "Ja",
+  "en": "Yes",
+  "fr": "Oui",
+  "it": "Sì"
+ },
+ "Νοέμβριος": {
+  "de": "November",
+  "en": "November",
+  "fr": "Novembre",
+  "it": "Novembre"
+ },
+ "Ξεκλείδωμα": {
+  "de": "Entsperren",
+  "en": "Unlock",
+  "fr": "Déverrouiller",
+  "it": "Sblocca"
+ },
+ "Ξεκλειδώματα": {
+  "de": "Entsperrungen",
+  "en": "Unlocks",
+  "fr": "Déverrouillages",
+  "it": "Sblocchi"
+ },
+ "Ο": {
+  "de": "Der",
+  "en": "The",
+  "fr": "Le",
+  "it": "Il"
+ },
+ "Ο ίδιος στο μητρώο κυναγωγών (Άρθρο 49)": {
+  "de": "Derselbe im Führerregister (Artikel 49)",
+  "en": "The same man in the handlers' register (Article 49)",
+  "fr": "Le même dans le registre des conducteurs (Article 49)",
+  "it": "Lo stesso nel registro dei conduttori (Articolo 49)"
+ },
+ "Ο αγώνας ταξιδεύει ως αρχείο": {
+  "de": "Die Prüfung reist als Datei",
+  "en": "The trial travels as a file",
+  "fr": "L'épreuve voyage sous forme de fichier",
+  "it": "La prova viaggia come file"
+ },
+ "Ο αποκλεισμός τερματίζει τη διαδρομή. Επιλέξτε το σφάλμα και επιβεβαιώστε· η ενέργεια καταγράφεται.": {
+  "de": "Der Ausschluss beendet den Gang. Wählen Sie den Fehler und bestätigen Sie; die Handlung wird festgehalten.",
+  "en": "Elimination ends the run. Pick the fault and confirm; the action is recorded.",
+  "fr": "L'élimination met fin au parcours. Choisissez la faute et confirmez ; l'action est consignée.",
+  "it": "L'eliminazione chiude il turno. Scegliete la mancanza e confermate; l'azione viene registrata."
+ },
+ "Ο αριθμός σκύλων είναι μονός. Επιλέξτε σκύλο για να συμπληρωθεί το τελευταίο ζεύγος. Ο συμπληρωματικός τρέχει για να ολοκληρωθεί η διαδρομή· δεν μπαίνει στην κλήρωση, δεν προσμετρά στα ελάχιστα ζεύγη και δεν βαθμολογείται.": {
+  "de": "Die Zahl der Hunde ist ungerade. Wählen Sie einen Hund, um das letzte Paar zu füllen. Der Ergänzungshund läuft, damit der Gang vollständig ist; er ist nicht in der Auslosung, zählt nicht für die Mindestzahl der Paare und wird nicht bewertet.",
+  "en": "The number of dogs is odd. Choose a dog to fill the last brace. The supplementary runs so the round is complete; he is not in the draw, does not count towards the minimum braces and is not scored.",
+  "fr": "Le nombre de chiens est impair. Choisissez un chien pour compléter le dernier couple. Le supplémentaire court pour que le parcours soit complet ; il n'entre pas dans le tirage, ne compte pas dans le minimum de couples et n'est pas noté.",
+  "it": "Il numero dei cani è dispari. Scegliete un cane per completare l'ultima coppia. Il supplementare corre perché il turno sia completo; non entra nel sorteggio, non conta per il minimo di coppie e non viene valutato."
+ },
+ "Ο κεντρικός κριτής και οι κριτές 1 και 2 ορίζονται στην κάρτα του τερέν.": {
+  "de": "Obmann sowie Richter 1 und 2 werden auf der Karte des Geländes festgelegt.",
+  "en": "The head judge and judges 1 and 2 are set on the terrain's card.",
+  "fr": "Le juge principal et les juges 1 et 2 se définissent sur la fiche du terrain.",
+  "it": "Il giudice capo e i giudici 1 e 2 si definiscono sulla scheda del terreno."
+ },
+ "Ο κριτής του τερέν έχει δικό του σκύλο εδώ (Άρθρο 49):": {
+  "de": "Der Richter des Geländes hat hier einen eigenen Hund (Artikel 49):",
+  "en": "The terrain's judge has a dog of his own here (Article 49):",
+  "fr": "Le juge du terrain a son propre chien ici (Article 49) :",
+  "it": "Il giudice del terreno ha qui un proprio cane (Articolo 49):"
+ },
+ "Ο κυναγωγός δεν έχει σκύλο στο μητρώο.": {
+  "de": "Der Führer hat keinen Hund im Register.",
+  "en": "The handler has no dog in the register.",
+  "fr": "Le conducteur n'a aucun chien au registre.",
+  "it": "Il conduttore non ha cani nel registro."
+ },
+ "Ο κυναγωγός του αρχείου μπαίνει στη συμμετοχή· δεν χρειάζεται να τους ξαναταιριάξετε.": {
+  "de": "Der in der Datei genannte Führer wird in die Meldung übernommen — ein erneutes Zuordnen entfällt.",
+  "en": "The handler named in the file goes onto the entry — no need to pair them again.",
+  "fr": "Le conducteur indiqué dans le fichier est reporté sur l'engagement — inutile de les réapparier.",
+  "it": "Il conduttore indicato nel file viene messo sull'iscrizione — non serve riabbinarli."
+ },
+ "Ο πίνακας γεμίζει μόλις βαθμολογηθεί ο πρώτος αγώνας.": {
+  "de": "Die Tabelle füllt sich, sobald die erste Prüfung bewertet ist.",
+  "en": "The table fills as soon as the first trial is scored.",
+  "fr": "Le tableau se remplit dès que la première épreuve est notée.",
+  "it": "La tabella si riempie appena la prima prova è valutata."
+ },
+ "Ο υπολογιστής δεν έχει εφαρμογή μηνυμάτων· τα κουμπιά εδώ ανοίγουν το WhatsApp Web ή αντιγράφουν το κείμενο για να το επικολλήσετε όπου θέλετε. Για κανονικά SMS στείλτε τον αγώνα στο κινητό σας (Εξαγωγές → Αποστολή στο κινητό) και στείλτε τα από εκεί.": {
+  "de": "Ein Rechner hat keine Nachrichten-App; die Schaltflächen hier öffnen WhatsApp Web oder kopieren den Text, damit Sie ihn beliebig einfügen. Für richtige SMS senden Sie die Prüfung auf Ihr Telefon (Exporte → Aufs Telefon senden) und verschicken sie von dort.",
+  "en": "A computer has no messaging app; the buttons here open WhatsApp Web or copy the text for you to paste wherever you like. For proper SMS, send the trial to your phone (Exports → Send to the phone) and send them from there.",
+  "fr": "Un ordinateur n'a pas d'application de messagerie ; les boutons ici ouvrent WhatsApp Web ou copient le texte pour que vous le colliez où vous voulez. Pour de vrais SMS, envoyez l'épreuve sur votre téléphone (Exports → Envoyer sur le téléphone) et envoyez-les de là.",
+  "it": "Un computer non ha un'app di messaggi; i pulsanti qui aprono WhatsApp Web o copiano il testo perché lo incolliate dove volete. Per SMS veri inviate la prova al vostro telefono (Esportazioni → Invia al telefono) e mandateli da lì."
+ },
+ "ΟΛΟΚΛΗΡΩΘΗΚΕ": {
+  "de": "ABGESCHLOSSEN",
+  "en": "COMPLETED",
+  "fr": "TERMINÉE",
+  "it": "CONCLUSA"
+ },
+ "ΟΛΟΚΛΗΡΩΜΕΝΟΣ": {
+  "de": "ABGESCHLOSSEN",
+  "en": "COMPLETED",
+  "fr": "TERMINÉE",
+  "it": "CONCLUSA"
+ },
+ "Οίστρος τελευταίες": {
+  "de": "Läufige Hündin zuletzt",
+  "en": "Bitches in season last",
+  "fr": "Chiennes en chaleurs en dernier",
+  "it": "Femmine in calore per ultime"
+ },
+ "Οι διαδρομές σας:": {
+  "de": "Ihre Gänge:",
+  "en": "Your runs:",
+  "fr": "Vos parcours :",
+  "it": "I vostri turni:"
+ },
+ "Οι ολοκληρωμένοι αγώνες μένουν στο μητρώο και μετρούν στα Στατιστικά. Ανοίγουν κανονικά για ανάγνωση και εκτύπωση.": {
+  "de": "Abgeschlossene Prüfungen bleiben im Register und zählen in der Statistik. Sie lassen sich wie gewohnt lesen und drucken.",
+  "en": "Completed trials stay in the register and count in Statistics. They open as usual for reading and printing.",
+  "fr": "Les épreuves terminées restent au registre et comptent dans les Statistiques. Elles s'ouvrent normalement pour la lecture et l'impression.",
+  "it": "Le prove concluse restano nel registro e contano nelle Statistiche. Si aprono normalmente per la lettura e la stampa."
+ },
+ "Οι σκύλοι που υπάρχουν ήδη (ίδιος αρ. Κ.Ο.Κ. ή ίδιο όνομα) ενημερώνονται αντί να διπλογραφούν.": {
+  "de": "Bereits vorhandene Hunde (gleiche Zuchtbuchnummer oder gleicher Name) werden aktualisiert statt doppelt angelegt.",
+  "en": "Dogs that already exist (same stud book no. or same name) are updated instead of being duplicated.",
+  "fr": "Les chiens déjà présents (même n° au livre des origines ou même nom) sont mis à jour au lieu d'être dupliqués.",
+  "it": "I cani già presenti (stesso n. del libro genealogico o stesso nome) vengono aggiornati invece che duplicati."
+ },
+ "Οι σκύλοι της χθεσινής ημέρας αλλάζουν τερέν:": {
+  "de": "Die Hunde des Vortags wechseln das Gelände:",
+  "en": "Yesterday's dogs change terrain:",
+  "fr": "Les chiens de la veille changent de terrain :",
+  "it": "I cani del giorno prima cambiano terreno:"
+ },
+ "Οκτώβριος": {
+  "de": "Oktober",
+  "en": "October",
+  "fr": "Octobre",
+  "it": "Ottobre"
+ },
+ "Ολοκλήρωση": {
+  "de": "Abschließen",
+  "en": "Close",
+  "fr": "Clôturer",
+  "it": "Chiudi"
+ },
+ "Ολοκλήρωση αγώνα": {
+  "de": "Prüfung abschließen",
+  "en": "Close the trial",
+  "fr": "Clôturer l'épreuve",
+  "it": "Chiudi la prova"
+ },
+ "Ολοκληρωμένος": {
+  "de": "Abgeschlossen",
+  "en": "Completed",
+  "fr": "Terminée",
+  "it": "Conclusa"
+ },
+ "Ονοματεπώνυμο": {
+  "de": "Vor- und Nachname",
+  "en": "Full name",
+  "fr": "Nom et prénom",
+  "it": "Nome e cognome"
+ },
+ "Ονοματολογία F.C.I. — Ομάδα 7 (Δείκτες). Τμήμα 2 οι αγγλικές φυλές, Τμήμα 1 οι ηπειρωτικές· η F.C.I. τις κρίνει με χωριστούς κανονισμούς.": {
+  "de": "F.C.I.-Nomenklatur — Gruppe 7 (Vorstehhunde). Sektion 2 die britischen Rassen, Sektion 1 die kontinentalen; die F.C.I. richtet sie nach getrennten Ordnungen.",
+  "en": "F.C.I. nomenclature — Group 7 (Pointing Dogs). Section 2 the British breeds, Section 1 the Continental ones; the F.C.I. judges them under separate regulations.",
+  "fr": "Nomenclature F.C.I. — Groupe 7 (Chiens d'arrêt). Section 2 les races britanniques, Section 1 les continentales ; la F.C.I. les juge sous des règlements distincts.",
+  "it": "Nomenclatura F.C.I. — Gruppo 7 (Cani da ferma). Sezione 2 le razze britanniche, Sezione 1 le continentali; la F.C.I. le giudica con regolamenti distinti."
+ },
+ "Ονοματολογία F.C.I., Ομάδα 7": {
+  "de": "F.C.I.-Nomenklatur, Gruppe 7",
+  "en": "F.C.I. nomenclature, Group 7",
+  "fr": "Nomenclature F.C.I., Groupe 7",
+  "it": "Nomenclatura F.C.I., Gruppo 7"
+ },
+ "Ονόματα κριτών": {
+  "de": "Namen der Richter",
+  "en": "Judges' names",
+  "fr": "Noms des juges",
+  "it": "Nomi dei giudici"
+ },
+ "Ονόματα κριτών στο μήνυμα": {
+  "de": "Namen der Richter in der Nachricht",
+  "en": "Judges' names in the message",
+  "fr": "Noms des juges dans le message",
+  "it": "Nomi dei giudici nel messaggio"
+ },
+ "Ορτύκι": {
+  "de": "Wachtel",
+  "en": "Quail",
+  "fr": "Caille",
+  "it": "Quaglia"
+ },
+ "ΠΟΝΤΟΙ": {
+  "de": "PUNKTE",
+  "en": "POINTS",
+  "fr": "POINTS",
+  "it": "PUNTI"
+ },
+ "Πάθος": {
+  "de": "Passion",
+  "en": "Drive",
+  "fr": "Passion",
+  "it": "Passione"
+ },
+ "Πάντα ισχύουν: ποτέ δύο σκύλοι του ίδιου κυναγωγού στο ίδιο ζεύγος · κανένας κριτής δεν κρίνει τερέν με δικό του σκύλο (Άρθρο 49). Ο «ίδιος ιδιοκτήτης» πιάνει τους σκύλους που ανήκουν στον ίδιο αλλά τους τρέχουν διαφορετικοί κυναγωγοί. Ο ίδιος κωδικός με τις ίδιες συμμετοχές δίνει πάντα την ίδια σειρά, οπότε η κλήρωση μπορεί να επαναληφθεί και να ελεγχθεί. Αλλάξτε τον ελεύθερα.": {
+  "de": "Immer gültig: nie zwei Hunde desselben Führers in einem Paar · kein Richter richtet ein Gelände, auf dem sein eigener Hund läuft (Artikel 49). „Gleicher Eigentümer“ erfasst Hunde eines Besitzers, die von verschiedenen Führern geführt werden. Derselbe Code mit denselben Meldungen ergibt stets dieselbe Reihenfolge, die Auslosung lässt sich also wiederholen und prüfen. Ändern Sie ihn beliebig.",
+  "en": "Always in force: never two dogs of the same handler in one brace · no judge judges a terrain holding a dog of his own (Article 49). \"Same owner\" catches dogs belonging to one man but run by different handlers. The same seed with the same entries always gives the same order, so the draw can be repeated and checked. Change it freely.",
+  "fr": "Toujours en vigueur : jamais deux chiens du même conducteur dans un couple · aucun juge ne juge un terrain où court son propre chien (Article 49). « Même propriétaire » attrape les chiens d'un même propriétaire menés par des conducteurs différents. Le même code avec les mêmes engagements donne toujours le même ordre : le tirage peut donc être refait et vérifié. Changez-le librement.",
+  "it": "Valgono sempre: mai due cani dello stesso conduttore nella stessa coppia · nessun giudice giudica un terreno dove corre un proprio cane (Articolo 49). «Stesso proprietario» prende i cani di uno stesso proprietario condotti da conduttori diversi. Lo stesso codice con le stesse iscrizioni dà sempre lo stesso ordine, quindi il sorteggio si può ripetere e verificare. Cambiatelo liberamente."
+ },
+ "Πάνω δεξιά, Προσθήκη.": {
+  "de": "Oben rechts, Hinzufügen.",
+  "en": "Top right, Add.",
+  "fr": "En haut à droite, Ajouter.",
+  "it": "In alto a destra, Aggiungi."
+ },
+ "Πέρδικα": {
+  "de": "Rebhuhn",
+  "en": "Partridge",
+  "fr": "Perdrix",
+  "it": "Pernice"
+ },
+ "Πίνακας βαθμών": {
+  "de": "Punktetabelle",
+  "en": "Points table",
+  "fr": "Barème de points",
+  "it": "Tabella dei punti"
+ },
+ "Πίνακας σεζόν": {
+  "de": "Saisontabelle",
+  "en": "Season table",
+  "fr": "Tableau de la saison",
+  "it": "Tabella della stagione"
+ },
+ "Πατήστε το κουμπί Κοινή χρήση, κάτω στη μέση.": {
+  "de": "Drücken Sie die Schaltfläche Teilen, unten in der Mitte.",
+  "en": "Press the Share button, bottom centre.",
+  "fr": "Appuyez sur le bouton Partager, en bas au centre.",
+  "it": "Premete il pulsante Condividi, in basso al centro."
+ },
+ "Περιεχόμενο αρχείου": {
+  "de": "Inhalt der Datei",
+  "en": "What is in the file",
+  "fr": "Contenu du fichier",
+  "it": "Contenuto del file"
+ },
+ "Περιεχόμενο μηνύματος": {
+  "de": "Inhalt der Nachricht",
+  "en": "What is in the message",
+  "fr": "Contenu du message",
+  "it": "Contenuto del messaggio"
+ },
+ "Περιστροφή τερέν (ιταλικό σύστημα)": {
+  "de": "Rotation der Gelände (italienisches System)",
+  "en": "Rotation of terrains (Italian system)",
+  "fr": "Rotation des terrains (système italien)",
+  "it": "Rotazione dei terreni (sistema italiano)"
+ },
+ "Πηγές: οι κανονισμοί της F.C.I. και των εθνικών ομοσπονδιών, στο αποθετήριο της εφαρμογής (": {
+  "de": "Quellen: die Ordnungen der F.C.I. und der nationalen Verbände, im Repository der Anwendung (",
+  "en": "Sources: the regulations of the F.C.I. and of the national federations, in the app's repository (",
+  "fr": "Sources : les règlements de la F.C.I. et des fédérations nationales, dans le dépôt de l'application (",
+  "it": "Fonti: i regolamenti della F.C.I. e delle federazioni nazionali, nel repository dell'applicazione ("
+ },
+ "Πλάτος έρευνας": {
+  "de": "Breite der Suche",
+  "en": "Width of quest",
+  "fr": "Largeur de quête",
+  "it": "Ampiezza della cerca"
+ },
+ "Πλήρης σειρά ημέρας": {
+  "de": "Vollständige Reihenfolge des Tages",
+  "en": "The full running order of the day",
+  "fr": "Ordre complet de la journée",
+  "it": "Ordine completo della giornata"
+ },
+ "Πληρούνται τα ελάχιστα: 6 σκύλοι και 3 ζεύγη.": {
+  "de": "Die Mindestzahlen sind erfüllt: 6 Hunde und 3 Paare.",
+  "en": "The minimums are met: 6 dogs and 3 braces.",
+  "fr": "Les minimums sont atteints : 6 chiens et 3 couples.",
+  "it": "I minimi sono raggiunti: 6 cani e 3 coppie."
+ },
+ "Πληρωμένο": {
+  "de": "Bezahlt",
+  "en": "Paid",
+  "fr": "Payé",
+  "it": "Pagato"
+ },
+ "Πληρωμές": {
+  "de": "Zahlungen",
+  "en": "Payments",
+  "fr": "Paiements",
+  "it": "Pagamenti"
+ },
+ "Ποιος πλήρωσε και ποιος όχι, ανά κυναγωγό, με τηλέφωνα για να τους πάρετε. Δεύτερο φύλλο μόνο με τους απλήρωτους, για τον ταμία. Η ένδειξη αλλάζει από Συμμετοχές → κάθε σκύλος → Πληρωμένο.": {
+  "de": "Wer bezahlt hat und wer nicht, nach Führer, mit Telefonnummern zum Anrufen. Ein zweites Blatt nur mit den Unbezahlten, für den Kassierer. Die Kennzeichnung ändert man über Meldungen → jeder Hund → Bezahlt.",
+  "en": "Who paid and who did not, by handler, with phone numbers so you can call them. A second sheet with the unpaid only, for the treasurer. The mark is changed from Entries → each dog → Paid.",
+  "fr": "Qui a payé et qui non, par conducteur, avec les téléphones pour les appeler. Une deuxième feuille avec les impayés seuls, pour le trésorier. L'indication se change depuis Engagements → chaque chien → Payé.",
+  "it": "Chi ha pagato e chi no, per conduttore, con i telefoni per chiamarli. Un secondo foglio con i soli non paganti, per il cassiere. L'indicazione si cambia da Iscrizioni → ogni cane → Pagato."
+ },
+ "Ποιότητα": {
+  "de": "Qualität",
+  "en": "Quality",
+  "fr": "Qualité",
+  "it": "Qualità"
+ },
+ "Πολύ ανοικτή": {
+  "de": "Sehr weit",
+  "en": "Very open",
+  "fr": "Très ouverte",
+  "it": "Molto ampia"
+ },
+ "Πρέπει να είναι Safari, όχι Chrome.": {
+  "de": "Es muss Safari sein, nicht Chrome.",
+  "en": "It must be Safari, not Chrome.",
+  "fr": "Ce doit être Safari, pas Chrome.",
+  "it": "Dev'essere Safari, non Chrome."
+ },
+ "Πρακτικού Κυνηγίου": {
+  "de": "Praktische Jagd",
+  "en": "Practical Hunting",
+  "fr": "Chasse pratique",
+  "it": "Caccia pratica"
+ },
+ "Προβολή": {
+  "de": "Ansehen",
+  "en": "View",
+  "fr": "Voir",
+  "it": "Vedi"
+ },
+ "Προβολή ως κριτής (βλέπει μόνο το τερέν του)": {
+  "de": "Ansicht als Richter (sieht nur sein Gelände)",
+  "en": "View as judge (sees only his own terrain)",
+  "fr": "Vue juge (ne voit que son terrain)",
+  "it": "Vista come giudice (vede solo il suo terreno)"
+ },
+ "Προεπισκόπηση · πρώτες": {
+  "de": "Vorschau · erste",
+  "en": "Preview · first",
+  "fr": "Aperçu · premières",
+  "it": "Anteprima · prime"
+ },
+ "Προσθήκη": {
+  "de": "Hinzufügen",
+  "en": "Add",
+  "fr": "Ajouter",
+  "it": "Aggiungi"
+ },
+ "Προσθήκη επανάκλησης": {
+  "de": "Recall hinzufügen",
+  "en": "Add a recall",
+  "fr": "Ajouter un rappel",
+  "it": "Aggiungi un richiamo"
+ },
+ "Προσθήκη συμπληρωματικού": {
+  "de": "Ergänzungshund hinzufügen",
+  "en": "Add a supplementary",
+  "fr": "Ajouter un supplémentaire",
+  "it": "Aggiungi un supplementare"
+ },
+ "Προσοχή:": {
+  "de": "Achtung:",
+  "en": "Note:",
+  "fr": "Attention :",
+  "it": "Attenzione:"
+ },
+ "Προτεινόμενη βαθμολογία": {
+  "de": "Vorgeschlagene Bewertung",
+  "en": "Suggested qualification",
+  "fr": "Qualification proposée",
+  "it": "Qualifica proposta"
+ },
+ "Προτιμήσεις — τηρούνται όπου γίνεται": {
+  "de": "Vorgaben — soweit möglich eingehalten",
+  "en": "Preferences — kept where possible",
+  "fr": "Préférences — respectées quand c'est possible",
+  "it": "Preferenze — rispettate ove possibile"
+ },
+ "Πρόεδρος Κριτών — όλα τα τερέν": {
+  "de": "Obmann des Richterkollegiums — alle Gelände",
+  "en": "President of the Jury — all terrains",
+  "fr": "Président du jury — tous les terrains",
+  "it": "Presidente di giuria — tutti i terreni"
+ },
+ "Πρώτα ο κυναγωγός, μετά ο σκύλος: οι κυναγωγοί μένουν χρόνια, οι σκύλοι αλλάζουν.": {
+  "de": "Zuerst der Führer, dann der Hund: Führer bleiben jahrelang, Hunde wechseln.",
+  "en": "The handler first, the dog after: handlers stay for years, dogs come and go.",
+  "fr": "D'abord le conducteur, ensuite le chien : les conducteurs restent des années, les chiens changent.",
+  "it": "Prima il conduttore, poi il cane: i conduttori restano per anni, i cani cambiano."
+ },
+ "Πρώτοι στη λίστα οι σκύλοι που έχει ή έχει τρέξει.": {
+  "de": "Seine eigenen Hunde und die, die er geführt hat, stehen in der Liste vorn.",
+  "en": "His own dogs, and those he has run, come first in the list.",
+  "fr": "Ses chiens, et ceux qu'il a menés, viennent en tête de liste.",
+  "it": "I suoi cani, e quelli che ha condotto, vengono per primi nell'elenco."
+ },
+ "Πόντοι": {
+  "de": "Punkte",
+  "en": "Points",
+  "fr": "Points",
+  "it": "Punti"
+ },
+ "Πόντοι = βασικοί πόντοι × συντελεστής": {
+  "de": "Punkte = Grundpunkte × Koeffizient",
+  "en": "Points = base points × coefficient",
+  "fr": "Points = points de base × coefficient",
+  "it": "Punti = punti base × coefficiente"
+ },
+ "Πόντοι κατά Αξιολόγηση. Ζεύγη ×2, άγριο θήραμα ×2. Ο πίνακας πόντων είναι δεδομένα και αλλάζει από τον όμιλο (Ρυθμίσεις).": {
+  "de": "Punkte nach Bewertung. Paare ×2, Wildwild ×2. Die Punktetabelle ist eine Angabe und wird vom Verein geändert (Einstellungen).",
+  "en": "Points by qualification. Braces ×2, wild game ×2. The points table is data and is changed by the club (Settings).",
+  "fr": "Points par qualification. Couples ×2, gibier sauvage ×2. Le barème de points est une donnée et se modifie par le club (Réglages).",
+  "it": "Punti per qualifica. Coppie ×2, selvaggina selvatica ×2. La tabella dei punti è un dato e la cambia il club (Impostazioni)."
+ },
+ "Πόντοι:": {
+  "de": "Punkte:",
+  "en": "Points:",
+  "fr": "Points :",
+  "it": "Punti:"
+ },
+ "Πόντος έκπληξης": {
+  "de": "Überraschungspunkt",
+  "en": "Snap point",
+  "fr": "Point surprise",
+  "it": "Punto a sorpresa"
+ },
+ "Πόσα τερέν": {
+  "de": "Wie viele Gelände",
+  "en": "How many terrains",
+  "fr": "Combien de terrains",
+  "it": "Quanti terreni"
+ },
+ "Πώς φεύγει": {
+  "de": "Wie sie hinausgeht",
+  "en": "How it goes out",
+  "fr": "Comment il part",
+  "it": "Come parte"
+ },
+ "Ρυθμίσεις": {
+  "de": "Einstellungen",
+  "en": "Settings",
+  "fr": "Réglages",
+  "it": "Impostazioni"
+ },
+ "ΣΕ ΕΞΕΛΙΞΗ": {
+  "de": "LAUFEND",
+  "en": "IN PROGRESS",
+  "fr": "EN COURS",
+  "it": "IN CORSO"
+ },
+ "ΣΥΜΠΛΗΡΩΜΑΤΙΚΟΣ": {
+  "de": "ERGÄNZUNGSHUND",
+  "en": "SUPPLEMENTARY",
+  "fr": "SUPPLÉMENTAIRE",
+  "it": "SUPPLEMENTARE"
+ },
+ "ΣΥΝΟΛΟ": {
+  "de": "GESAMT",
+  "en": "TOTAL",
+  "fr": "TOTAL",
+  "it": "TOTALE"
+ },
+ "ΣΥΝΟΛΟ ΑΓΩΝΑ": {
+  "de": "GESAMT DER PRÜFUNG",
+  "en": "TRIAL TOTAL",
+  "fr": "TOTAL DE L'ÉPREUVE",
+  "it": "TOTALE DELLA PROVA"
+ },
+ "ΣΦΑΛΜΑΤΑ ΑΠΟΚΛΕΙΣΜΟΥ · ΑΡΘΡΟ 33": {
+  "de": "AUSSCHLIESSENDE FEHLER · ARTIKEL 33",
+  "en": "ELIMINATING FAULTS · ARTICLE 33",
+  "fr": "FAUTES ÉLIMINATOIRES · ARTICLE 33",
+  "it": "MANCANZE ELIMINATORIE · ARTICOLO 33"
+ },
+ "Σέττερ — F.C.I. 2.2": {
+  "de": "Setter — F.C.I. 2.2",
+  "en": "Setters — F.C.I. 2.2",
+  "fr": "Setters — F.C.I. 2.2",
+  "it": "Setter — F.C.I. 2.2"
+ },
+ "Σήμανση": {
+  "de": "Markieren",
+  "en": "Marking",
+  "fr": "Marquage",
+  "it": "Marcatura"
+ },
+ "Σαρώστε με την κάμερα": {
+  "de": "Mit der Kamera scannen",
+  "en": "Scan with the camera",
+  "fr": "Scannez avec l'appareil photo",
+  "it": "Inquadrate con la fotocamera"
+ },
+ "Σε εξέλιξη": {
+  "de": "Laufend",
+  "en": "In progress",
+  "fr": "En cours",
+  "it": "In corso"
+ },
+ "Σε οίστρο (Άρθρο 9)": {
+  "de": "Läufige Hündin (Artikel 9)",
+  "en": "Bitch in season (Article 9)",
+  "fr": "Chienne en chaleurs (Article 9)",
+  "it": "Femmina in calore (Articolo 9)"
+ },
+ "Σεπτέμβριος": {
+  "de": "September",
+  "en": "September",
+  "fr": "Septembre",
+  "it": "Settembre"
+ },
+ "Σημειώσεις": {
+  "de": "Notizen",
+  "en": "Notes",
+  "fr": "Notes",
+  "it": "Note"
+ },
+ "Σημειώσεις κριτών": {
+  "de": "Notizen der Richter",
+  "en": "Judges' notes",
+  "fr": "Notes des juges",
+  "it": "Note dei giudici"
+ },
+ "Σημειώστε ποιοι σκύλοι τρέχουν σήμερα. Κάθε σκύλος μπαίνει με τον κυναγωγό κάτω από τον οποίο βρίσκεται.": {
+  "de": "Haken Sie ab, welche Hunde heute laufen. Jeder Hund wird mit dem Führer gemeldet, unter dem er steht.",
+  "en": "Tick which dogs run today. Each dog is entered with the handler he sits under.",
+  "fr": "Cochez quels chiens courent aujourd'hui. Chaque chien est engagé avec le conducteur sous lequel il figure.",
+  "it": "Spuntate quali cani corrono oggi. Ogni cane viene iscritto con il conduttore sotto cui figura."
+ },
+ "Σκύλοι": {
+  "de": "Hunde",
+  "en": "Dogs",
+  "fr": "Chiens",
+  "it": "Cani"
+ },
+ "Σκύλος": {
+  "de": "Hund",
+  "en": "Dog",
+  "fr": "Chien",
+  "it": "Cane"
+ },
+ "Στέλνει μόνο αυτόν τον αγώνα, με τους σκύλους και τους κυναγωγούς του — μικρό αρχείο που περνά από κάθε εφαρμογή μηνυμάτων. Στην άλλη συσκευή:": {
+  "de": "Sie sendet nur diese Prüfung, mit ihren Hunden und Führern — eine kleine Datei, die durch jede Nachrichten-App geht. Auf dem anderen Gerät:",
+  "en": "It sends this trial alone, with its dogs and handlers — a small file that goes through any messaging app. On the other device:",
+  "fr": "Il n'envoie que cette épreuve, avec ses chiens et ses conducteurs — un petit fichier qui passe par n'importe quelle messagerie. Sur l'autre appareil :",
+  "it": "Invia soltanto questa prova, con i suoi cani e conduttori — un file piccolo che passa da qualunque app di messaggi. Sull'altro dispositivo:"
+ },
+ "Στέρεη": {
+  "de": "Fest",
+  "en": "Firm",
+  "fr": "Ferme",
+  "it": "Salda"
+ },
+ "Στατιστικά": {
+  "de": "Statistik",
+  "en": "Statistics",
+  "fr": "Statistiques",
+  "it": "Statistiche"
+ },
+ "Στενή": {
+  "de": "Eng",
+  "en": "Narrow",
+  "fr": "Étroite",
+  "it": "Stretta"
+ },
+ "Στην άλλη συσκευή: ανοίξτε την εφαρμογή, Ρυθμίσεις → Φόρτωση αρχείου → Συγχώνευση.": {
+  "de": "Auf dem anderen Gerät: Anwendung öffnen, Einstellungen → Datei laden → Zusammenführen.",
+  "en": "On the other device: open the app, Settings → Load file → Merge.",
+  "fr": "Sur l'autre appareil : ouvrez l'application, Réglages → Charger un fichier → Fusionner.",
+  "it": "Sull'altro dispositivo: aprite l'applicazione, Impostazioni → Carica file → Unisci."
+ },
+ "Στο": {
+  "de": "Auf",
+  "en": "On",
+  "fr": "Sur",
+  "it": "Su"
+ },
+ "Στο κινητό:": {
+  "de": "Auf dem Telefon:",
+  "en": "On the phone:",
+  "fr": "Sur le téléphone :",
+  "it": "Sul telefono:"
+ },
+ "Στο τερέν: στείλτε το στήσιμο στο κινητό και κάντε την κλήρωση εκεί, μπροστά σε όλους. Από το σπίτι: κληρώστε τώρα και στείλτε τη σειρά με SMS στους κυναγωγούς· η σειρά παραμένει ενδεικτική (Άρθρο 16).": {
+  "de": "Im Gelände: schicken Sie den Aufbau aufs Telefon und losen Sie dort, vor allen. Von zu Hause: losen Sie jetzt und schicken Sie die Reihenfolge den Führern per SMS; die Reihenfolge bleibt unverbindlich (Artikel 16).",
+  "en": "In the field: send the setup to the phone and make the draw there, in front of everyone. From home: draw now and send the order to the handlers by SMS; the order remains indicative (Article 16).",
+  "fr": "Sur le terrain : envoyez la préparation sur le téléphone et faites le tirage là-bas, devant tout le monde. Depuis la maison : tirez maintenant et envoyez l'ordre aux conducteurs par SMS ; l'ordre reste indicatif (Article 16).",
+  "it": "Sul terreno: mandate l'impostazione al telefono e fate lì il sorteggio, davanti a tutti. Da casa: sorteggiate ora e mandate l'ordine ai conduttori via SMS; l'ordine resta indicativo (Articolo 16)."
+ },
+ "Στον υπολογιστή, πριν τον αγώνα: μητρώο, συμμετοχές, τερέν και κριτές. Μετά πατήστε": {
+  "de": "Am Rechner, vor der Prüfung: Register, Meldungen, Gelände und Richter. Dann drücken Sie",
+  "en": "On the computer, before the trial: register, entries, terrains and judges. Then press",
+  "fr": "Sur l'ordinateur, avant l'épreuve : registre, engagements, terrains et juges. Puis appuyez sur",
+  "it": "Al computer, prima della prova: registro, iscrizioni, terreni e giudici. Poi premete"
+ },
+ "Συγχώνευση": {
+  "de": "Zusammenführen",
+  "en": "Merge",
+  "fr": "Fusionner",
+  "it": "Unisci"
+ },
+ "Συγχώνευση ή αντικατάσταση;": {
+  "de": "Zusammenführen oder ersetzen?",
+  "en": "Merge or replace?",
+  "fr": "Fusionner ou remplacer ?",
+  "it": "Unire o sostituire?"
+ },
+ "Συμμετοχές": {
+  "de": "Meldungen",
+  "en": "Entries",
+  "fr": "Engagements",
+  "it": "Iscrizioni"
+ },
+ "Συμμετοχές κυναγωγού": {
+  "de": "Meldungen des Führers",
+  "en": "The handler's entries",
+  "fr": "Engagements du conducteur",
+  "it": "Iscrizioni del conduttore"
+ },
+ "Συνδεδεμένο": {
+  "de": "Online",
+  "en": "Online",
+  "fr": "En ligne",
+  "it": "In linea"
+ },
+ "Σφάλμα Άρθρου 33 καταγεγραμμένο:": {
+  "de": "Fehler nach Artikel 33 vermerkt:",
+  "en": "Article 33 fault recorded:",
+  "fr": "Faute de l'Article 33 consignée :",
+  "it": "Mancanza dell'Articolo 33 registrata:"
+ },
+ "Σφάλματα αποκλεισμού": {
+  "de": "Ausschließende Fehler",
+  "en": "Eliminating faults",
+  "fr": "Fautes éliminatoires",
+  "it": "Mancanze eliminatorie"
+ },
+ "Σφάλματα αποκλεισμού (Άρθρο 33):": {
+  "de": "Ausschließende Fehler (Artikel 33):",
+  "en": "Eliminating faults (Article 33):",
+  "fr": "Fautes éliminatoires (Article 33) :",
+  "it": "Mancanze eliminatorie (Articolo 33):"
+ },
+ "Σφάλματα αποκλεισμού:": {
+  "de": "Ausschließende Fehler:",
+  "en": "Eliminating faults:",
+  "fr": "Fautes éliminatoires :",
+  "it": "Mancanze eliminatorie:"
+ },
+ "Σωστό": {
+  "de": "Korrekt",
+  "en": "Correct",
+  "fr": "Correct",
+  "it": "Corretto"
+ },
+ "Σύρετε το": {
+  "de": "Ziehen Sie das",
+  "en": "Drag the",
+  "fr": "Faites glisser le",
+  "it": "Trascinate il"
+ },
+ "Σύρετε, ή ↑ ↓, για να αλλάξετε τη σειρά του ζεύγους": {
+  "de": "Ziehen, oder ↑ ↓, um die Stelle des Paares zu ändern",
+  "en": "Drag, or ↑ ↓, to change the brace's place in the order",
+  "fr": "Faites glisser, ou ↑ ↓, pour changer la place du couple",
+  "it": "Trascinate, o ↑ ↓, per cambiare il posto della coppia"
+ },
+ "ΤΡΕΧΕΙ": {
+  "de": "LÄUFT",
+  "en": "RUNNING",
+  "fr": "EN PISTE",
+  "it": "IN CORSO"
+ },
+ "Τίποτα σε αναμονή": {
+  "de": "Nichts offen",
+  "en": "Nothing waiting",
+  "fr": "Rien en attente",
+  "it": "Nulla in attesa"
+ },
+ "Τίτλος": {
+  "de": "Titel",
+  "en": "Title",
+  "fr": "Titre",
+  "it": "Titolo"
+ },
+ "Τίτλος αγώνα": {
+  "de": "Titel der Prüfung",
+  "en": "Title of the trial",
+  "fr": "Titre de l'épreuve",
+  "it": "Titolo della prova"
+ },
+ "Τα δεδομένα δεν αποθηκεύονται.": {
+  "de": "Die Daten werden nicht gespeichert.",
+  "en": "The data is not being saved.",
+  "fr": "Les données ne sont pas enregistrées.",
+  "it": "I dati non vengono salvati."
+ },
+ "Τα ελληνικά SMS χωρούν 70 χαρακτήρες στο πρώτο τμήμα και 67 σε κάθε επόμενο. Η πλήρης σειρά με 40 σκύλους βγάζει περίπου 15–20 τμήματα ανά μήνυμα. Ο πραγματικός αριθμός φαίνεται στην καρτέλα SMS του αγώνα.": {
+  "de": "Griechische SMS fassen 70 Zeichen im ersten Segment und 67 in jedem weiteren. Die vollständige Reihenfolge mit 40 Hunden ergibt etwa 15–20 Segmente je Nachricht. Die tatsächliche Zahl steht im SMS-Reiter der Prüfung.",
+  "en": "Greek SMS hold 70 characters in the first segment and 67 in each one after. The full order with 40 dogs comes to roughly 15–20 segments per message. The real number is shown on the trial's SMS tab.",
+  "fr": "Les SMS en grec contiennent 70 caractères dans le premier segment et 67 dans chacun des suivants. L'ordre complet avec 40 chiens fait environ 15 à 20 segments par message. Le nombre réel s'affiche dans l'onglet SMS de l'épreuve.",
+  "it": "Gli SMS in greco contengono 70 caratteri nel primo segmento e 67 in ciascuno successivo. L'ordine completo con 40 cani fa circa 15–20 segmenti per messaggio. Il numero reale si vede nella scheda SMS della prova."
+ },
+ "Τα τερέν παίρνουν όνομα Α, Β, Γ, Δ. Μπορείτε να το αλλάξετε από την Επεξεργασία. Η κατανομή των σκύλων γίνεται στην κλήρωση.": {
+  "de": "Die Gelände heißen Α, Β, Γ, Δ. Über Bearbeiten lässt sich das ändern. Die Verteilung der Hunde erfolgt bei der Auslosung.",
+  "en": "The terrains are named Α, Β, Γ, Δ. You can change that from Edit. The dogs are spread across them at the draw.",
+  "fr": "Les terrains sont nommés Α, Β, Γ, Δ. Vous pouvez le changer depuis Modifier. La répartition des chiens se fait au tirage.",
+  "it": "I terreni prendono nome Α, Β, Γ, Δ. Potete cambiarlo da Modifica. La distribuzione dei cani avviene al sorteggio."
+ },
+ "Το": {
+  "de": "Das",
+  "en": "The",
+  "fr": "Le",
+  "it": "Il"
+ },
+ "Το Excel περιέχει φύλλο «Παράμετροι» με τον πίνακα πόντων. Όλοι οι πόντοι υπολογίζονται με τύπους VLOOKUP/SUMIFS που δείχνουν εκεί — καμία σταθερή τιμή μέσα σε τύπο, ώστε όποιος ανοίξει το αρχείο να μπορεί να ελέγξει την αριθμητική. Ανοίγει σε Excel και LibreOffice. Η εκτύπωση είναι ασπρόμαυρη, για φωτοτυπία.": {
+  "de": "Die Excel-Datei enthält ein Blatt „Parameter“ mit der Punktetabelle. Alle Punkte werden über VLOOKUP/SUMIFS-Formeln berechnet, die dorthin verweisen — kein fester Wert in einer Formel, damit jeder, der die Datei öffnet, die Rechnung prüfen kann. Sie öffnet sich in Excel und LibreOffice. Der Druck ist schwarzweiß, zum Fotokopieren.",
+  "en": "The Excel file holds a \"Parameters\" sheet with the points table. Every points figure is worked out by VLOOKUP/SUMIFS formulas pointing at it — no fixed value inside a formula, so whoever opens the file can check the arithmetic. It opens in Excel and LibreOffice. Printing is black and white, for photocopying.",
+  "fr": "Le fichier Excel contient une feuille « Paramètres » avec le barème de points. Tous les points sont calculés par des formules VLOOKUP/SUMIFS qui y renvoient — aucune valeur fixe dans une formule, afin que celui qui ouvre le fichier puisse vérifier le calcul. Il s'ouvre dans Excel et LibreOffice. L'impression est en noir et blanc, pour la photocopie.",
+  "it": "Il file Excel contiene un foglio «Parametri» con la tabella dei punti. Tutti i punti sono calcolati con formule VLOOKUP/SUMIFS che vi rimandano — nessun valore fisso dentro una formula, così chi apre il file può verificare i conti. Si apre in Excel e LibreOffice. La stampa è in bianco e nero, per la fotocopia."
+ },
+ "Το Messenger δεν μπορεί να δεχτεί μήνυμα από αριθμό τηλεφώνου, γι' αυτό δεν υπάρχει εδώ.": {
+  "de": "Messenger kann keine an eine Telefonnummer gerichtete Nachricht annehmen, deshalb fehlt er hier.",
+  "en": "Messenger cannot take a message addressed to a phone number, which is why it is not here.",
+  "fr": "Messenger ne peut pas recevoir un message adressé à un numéro de téléphone, c'est pourquoi il n'est pas ici.",
+  "it": "Messenger non può ricevere un messaggio indirizzato a un numero di telefono, per questo non c'è."
+ },
+ "Το SMS θέλει τηλέφωνο· από υπολογιστή φεύγει WhatsApp.": {
+  "de": "Für SMS braucht es ein Telefon; vom Rechner geht es über WhatsApp.",
+  "en": "SMS needs a phone; from a computer it goes by WhatsApp.",
+  "fr": "Le SMS demande un téléphone ; depuis un ordinateur cela part par WhatsApp.",
+  "it": "L'SMS richiede un telefono; da un computer parte via WhatsApp."
+ },
+ "Το μήνυμα συντίθεται αυτόματα: επικεφαλίδα, οι διαδρομές του κυναγωγού, ολόκληρη η σειρά της ημέρας με τα δικά του ζεύγη σημειωμένα, και κατακλείδα.": {
+  "de": "Die Nachricht entsteht automatisch: Kopfzeile, die Gänge des Führers, die gesamte Reihenfolge des Tages mit seinen markierten Paaren und eine Schlusszeile.",
+  "en": "The message is built automatically: heading, the handler's own runs, the whole running order of the day with his braces marked, and a closing line.",
+  "fr": "Le message se compose automatiquement : en-tête, les parcours du conducteur, tout l'ordre de la journée avec ses couples signalés, et une formule de fin.",
+  "it": "Il messaggio si compone da solo: intestazione, i turni del conduttore, tutto l'ordine della giornata con le sue coppie segnalate, e una chiusura."
+ },
+ "Το μητρώο είναι άδειο. Καταχωρήστε πρώτα κυναγωγούς και σκύλους, ή εισαγάγετε αρχείο.": {
+  "de": "Das Register ist leer. Erfassen Sie zuerst Führer und Hunde, oder importieren Sie eine Datei.",
+  "en": "The register is empty. Record handlers and dogs first, or import a file.",
+  "fr": "Le registre est vide. Enregistrez d'abord conducteurs et chiens, ou importez un fichier.",
+  "it": "Il registro è vuoto. Registrate prima conduttori e cani, oppure importate un file."
+ },
+ "Το μητρώο σκύλων μπορεί να γεμίσει πρώτο, από το Μητρώο ή με εισαγωγή αρχείου Excel.": {
+  "de": "Das Hunderegister lässt sich zuerst füllen, über das Register oder durch Import einer Excel-Datei.",
+  "en": "The dog register can be filled first, from the Register or by importing an Excel file.",
+  "fr": "Le registre des chiens peut se remplir d'abord, depuis le Registre ou par importation d'un fichier Excel.",
+  "it": "Il registro dei cani si può riempire per primo, dal Registro o importando un file Excel."
+ },
+ "Το στήσιμο είναι έτοιμο": {
+  "de": "Der Aufbau steht",
+  "en": "The setup is ready",
+  "fr": "La préparation est prête",
+  "it": "L'impostazione è pronta"
+ },
+ "Το τερέν «": {
+  "de": "Das Gelände „",
+  "en": "Terrain \"",
+  "fr": "Le terrain « ",
+  "it": "Il terreno «"
+ },
+ "Το τερέν είναι υπογεγραμμένο.": {
+  "de": "Dieses Gelände ist unterschrieben.",
+  "en": "This terrain is signed off.",
+  "fr": "Ce terrain est signé.",
+  "it": "Questo terreno è firmato."
+ },
+ "Τοπικός αριθμός· θα σταλεί ως": {
+  "de": "Örtliche Nummer; gesendet wird sie als",
+  "en": "Local number; it will be sent as",
+  "fr": "Numéro local ; il sera envoyé comme",
+  "it": "Numero locale; verrà inviato come"
+ },
+ "Τοποθεσία": {
+  "de": "Ort",
+  "en": "Place",
+  "fr": "Lieu",
+  "it": "Luogo"
+ },
+ "Τρεις λευκές σε διαφορετικές κατευθύνσεις: αποκλεισμός (Άρθρο 27).": {
+  "de": "Drei in verschiedenen Richtungen: Ausschluss (Artikel 27).",
+  "en": "Three in different directions: elimination (Article 27).",
+  "fr": "Trois dans des directions différentes : élimination (Article 27).",
+  "it": "Tre in direzioni diverse: eliminazione (Articolo 27)."
+ },
+ "Τρόπος": {
+  "de": "Verfahren",
+  "en": "Method",
+  "fr": "Méthode",
+  "it": "Modo"
+ },
+ "Τσιπ / δερματοστιξία": {
+  "de": "Chip / Tätowierung",
+  "en": "Chip / tattoo",
+  "fr": "Puce / tatouage",
+  "it": "Microchip / tatuaggio"
+ },
+ "Υπάρχει ήδη κλήρωση για την ημέρα αυτή. Νέα κλήρωση την ακυρώνει.": {
+  "de": "Für diesen Tag wurde bereits ausgelost. Eine neue Auslosung hebt sie auf.",
+  "en": "A draw has already been made for this day. A new draw cancels it.",
+  "fr": "Un tirage a déjà eu lieu pour cette journée. Un nouveau tirage l'annule.",
+  "it": "Per questa giornata è già stato fatto il sorteggio. Un nuovo sorteggio lo annulla."
+ },
+ "Υπάρχει νέα έκδοση. Επαναφόρτωση τώρα;": {
+  "de": "Es gibt eine neue Version. Jetzt neu laden?",
+  "en": "There is a new version. Reload now?",
+  "fr": "Une nouvelle version existe. Recharger maintenant ?",
+  "it": "C'è una nuova versione. Ricaricare ora?"
+ },
+ "Υπαγόρευση": {
+  "de": "Diktieren",
+  "en": "Dictate",
+  "fr": "Dicter",
+  "it": "Detta"
+ },
+ "Υπογραφή": {
+  "de": "Unterschrift",
+  "en": "Signature",
+  "fr": "Signature",
+  "it": "Firma"
+ },
+ "Υπογραφή από": {
+  "de": "Unterschrieben von",
+  "en": "Signed by",
+  "fr": "Signé par",
+  "it": "Firmato da"
+ },
+ "Υπογραφή κριτή": {
+  "de": "Unterschrift des Richters",
+  "en": "Judge's signature",
+  "fr": "Signature du juge",
+  "it": "Firma del giudice"
+ },
+ "Υπογραφή του": {
+  "de": "Unterschrift von",
+  "en": "Signature of",
+  "fr": "Signature de",
+  "it": "Firma di"
+ },
+ "Υπολογιστής": {
+  "de": "Rechner",
+  "en": "Computer",
+  "fr": "Ordinateur",
+  "it": "Computer"
+ },
+ "Υπολογιστής:": {
+  "de": "Rechner:",
+  "en": "Computer:",
+  "fr": "Ordinateur :",
+  "it": "Computer:"
+ },
+ "ΦΥΛΛΟ ΣΗΜΕΙΩΣΕΩΝ ΚΡΙΤΗ": {
+  "de": "NOTIZBLATT DES RICHTERS",
+  "en": "JUDGE'S NOTE SHEET",
+  "fr": "FEUILLE DE NOTES DU JUGE",
+  "it": "FOGLIO NOTE DEL GIUDICE"
+ },
+ "Φέρμα / ποντάρισμα": {
+  "de": "Vorstehen / Nachziehen auf Befehl",
+  "en": "Pointing / commanded approach",
+  "fr": "Arrêt / coulé à l'ordre",
+  "it": "Ferma / guidata"
+ },
+ "Φεβρουάριος": {
+  "de": "Februar",
+  "en": "February",
+  "fr": "Février",
+  "it": "Febbraio"
+ },
+ "Φραγκολίνα": {
+  "de": "Frankolin",
+  "en": "Francolin",
+  "fr": "Francolin",
+  "it": "Francolino"
+ },
+ "Φυλή": {
+  "de": "Rasse",
+  "en": "Breed",
+  "fr": "Race",
+  "it": "Razza"
+ },
+ "Φυλή (μόνο για Derby)": {
+  "de": "Rasse (nur Derby)",
+  "en": "Breed (Derby only)",
+  "fr": "Race (Derby seulement)",
+  "it": "Razza (solo Derby)"
+ },
+ "Φυλή:": {
+  "de": "Rasse:",
+  "en": "Breed:",
+  "fr": "Race :",
+  "it": "Razza:"
+ },
+ "Φόρτωση": {
+  "de": "Laden",
+  "en": "Load",
+  "fr": "Charger",
+  "it": "Carica"
+ },
+ "Φόρτωση αρχείου από άλλη συσκευή": {
+  "de": "Datei von einem anderen Gerät laden",
+  "en": "Load a file from another device",
+  "fr": "Charger un fichier venu d'un autre appareil",
+  "it": "Carica un file da un altro dispositivo"
+ },
+ "Φύλλα σημειώσεων κριτή": {
+  "de": "Notizblätter des Richters",
+  "en": "Judge's note sheets",
+  "fr": "Feuilles de notes du juge",
+  "it": "Fogli note del giudice"
+ },
+ "Φύλλο": {
+  "de": "Blatt",
+  "en": "Sheet",
+  "fr": "Feuille",
+  "it": "Foglio"
+ },
+ "Φύλο": {
+  "de": "Geschlecht",
+  "en": "Sex",
+  "fr": "Sexe",
+  "it": "Sesso"
+ },
+ "ΧΕΙΡΟΚΙΝΗΤΗ ΑΛΛΑΓΗ": {
+  "de": "MANUELLE ÄNDERUNG",
+  "en": "MANUAL CHANGE",
+  "fr": "MODIFICATION MANUELLE",
+  "it": "MODIFICA MANUALE"
+ },
+ "ΧΕΙΡΟΚΙΝΗΤΗ ΑΝΑΘΕΣΗ": {
+  "de": "MANUELLE ZUTEILUNG",
+  "en": "MANUAL ASSIGNMENT",
+  "fr": "AFFECTATION MANUELLE",
+  "it": "ASSEGNAZIONE MANUALE"
+ },
+ "Χειροκίνητη αλλαγή από τον Πρόεδρο Κριτών,": {
+  "de": "Manuelle Änderung durch den Obmann des Richterkollegiums,",
+  "en": "Manual change by the President of the Jury,",
+  "fr": "Modification manuelle par le Président du jury,",
+  "it": "Modifica manuale del Presidente di giuria,"
+ },
+ "Χειροκίνητη αλλαγή στο": {
+  "de": "Manuelle Änderung auf",
+  "en": "Manual change on",
+  "fr": "Modification manuelle sur",
+  "it": "Modifica manuale su"
+ },
+ "Χρειάζονται": {
+  "de": "Erforderlich sind",
+  "en": "There must be",
+  "fr": "Il faut",
+  "it": "Servono"
+ },
+ "Χρειάζονται τουλάχιστον": {
+  "de": "Erforderlich sind mindestens",
+  "en": "There must be at least",
+  "fr": "Il faut au moins",
+  "it": "Servono almeno"
+ },
+ "Χρειάζονται τουλάχιστον 6 σκύλοι και 3 ζεύγη (ΕΚ Άρθρο 5, Άρθρο 40). Προσθέστε συμμετοχές ή συγχωνεύστε τερέν.": {
+  "de": "Mindestens 6 Hunde und 3 Paare sind erforderlich (Jagdsuche Artikel 5, Artikel 40). Ergänzen Sie Meldungen oder führen Sie Gelände zusammen.",
+  "en": "At least 6 dogs and 3 braces are required (Hunting Research Article 5, Article 40). Add entries or merge terrains.",
+  "fr": "Il faut au moins 6 chiens et 3 couples (Recherche de chasse Article 5, Article 40). Ajoutez des engagements ou fusionnez des terrains.",
+  "it": "Servono almeno 6 cani e 3 coppie (Ricerca di caccia Articolo 5, Articolo 40). Aggiungete iscrizioni o unite i terreni."
+ },
+ "Χωρίς αποθήκευση": {
+  "de": "Ohne Speicherung",
+  "en": "Not saved",
+  "fr": "Sans enregistrement",
+  "it": "Senza salvataggio"
+ },
+ "Χωρίς αποτελέσματα ακόμη": {
+  "de": "Noch keine Ergebnisse",
+  "en": "No results yet",
+  "fr": "Pas encore de résultats",
+  "it": "Ancora nessun risultato"
+ },
+ "Χωρίς αυτή, η εφαρμογή δεν ξέρει πού βρίσκεται.": {
+  "de": "Ohne sie weiß die Anwendung nicht, wo sie liegt.",
+  "en": "Without it, the app does not know where it lives.",
+  "fr": "Sans elle, l'application ne sait pas où elle se trouve.",
+  "it": "Senza di esso, l'applicazione non sa dove si trova."
+ },
+ "Χωρίς ζεύγη σε αυτό το τερέν.": {
+  "de": "Keine Paare auf diesem Gelände.",
+  "en": "No braces on this terrain.",
+  "fr": "Aucun couple sur ce terrain.",
+  "it": "Nessuna coppia su questo terreno."
+ },
+ "Χωρίς ζεύγη.": {
+  "de": "Keine Paare.",
+  "en": "No braces.",
+  "fr": "Aucun couple.",
+  "it": "Nessuna coppia."
+ },
+ "Χωρίς σύνδεση με το μητρώο κυναγωγών:": {
+  "de": "Ohne Verknüpfung zum Führerregister:",
+  "en": "Not linked to the handlers' register:",
+  "fr": "Sans lien avec le registre des conducteurs :",
+  "it": "Senza collegamento al registro dei conduttori:"
+ },
+ "Χώρα": {
+  "de": "Land",
+  "en": "Country",
+  "fr": "Pays",
+  "it": "Paese"
+ },
+ "Χώρα εκτροφής": {
+  "de": "Zuchtland",
+  "en": "Country of breeding",
+  "fr": "Pays d'élevage",
+  "it": "Paese di allevamento"
+ },
+ "άγριο θήραμα": {
+  "de": "Wildwild",
+  "en": "wild game",
+  "fr": "gibier sauvage",
+  "it": "selvaggina selvatica"
+ },
+ "έγινε": {
+  "de": "erfolgt",
+  "en": "done",
+  "fr": "fait",
+  "it": "fatto"
+ },
+ "έχει": {
+  "de": "hat",
+  "en": "has",
+  "fr": "a",
+  "it": "ha"
+ },
+ "ήδη σε άλλο τερέν και": {
+  "de": "bereits auf einem anderen Gelände und",
+  "en": "already on another terrain and",
+  "fr": "déjà sur un autre terrain et",
+  "it": "già su un altro terreno e"
+ },
+ "ίδιο ζεύγος": {
+  "de": "selbe Paar",
+  "en": "same brace",
+  "fr": "même couple",
+  "it": "stessa coppia"
+ },
+ "αγώνας": {
+  "de": "Prüfung",
+  "en": "trial",
+  "fr": "épreuve",
+  "it": "prova"
+ },
+ "αγώνες": {
+  "de": "Prüfungen",
+  "en": "trials",
+  "fr": "épreuves",
+  "it": "prove"
+ },
+ "αδιάθετο": {
+  "de": "nicht zugeteilt",
+  "en": "not assigned",
+  "fr": "non attribué",
+  "it": "non assegnato"
+ },
+ "αντικατάσταση": {
+  "de": "ersetzen",
+  "en": "replace",
+  "fr": "remplacement",
+  "it": "sostituzione"
+ },
+ "απλήρωτες": {
+  "de": "unbezahlt",
+  "en": "unpaid",
+  "fr": "impayés",
+  "it": "non pagate"
+ },
+ "απλήρωτο": {
+  "de": "unbezahlt",
+  "en": "unpaid",
+  "fr": "impayé",
+  "it": "non pagato"
+ },
+ "αποτύπωμα": {
+  "de": "Prüfsumme",
+  "en": "fingerprint",
+  "fr": "empreinte",
+  "it": "impronta"
+ },
+ "από": {
+  "de": "von",
+  "en": "of",
+  "fr": "sur",
+  "it": "su"
+ },
+ "αρσενικός": {
+  "de": "Rüde",
+  "en": "male",
+  "fr": "mâle",
+  "it": "maschio"
+ },
+ "αρχεία και εκτυπώσεις": {
+  "de": "Dateien und Ausdrucke",
+  "en": "files and printouts",
+  "fr": "fichiers et impressions",
+  "it": "file e stampe"
+ },
+ "ατομικός": {
+  "de": "Einzeln",
+  "en": "solo",
+  "fr": "individuel",
+  "it": "individuale"
+ },
+ "βαθμολογημένοι σκύλοι,": {
+  "de": "bewertete Hunde,",
+  "en": "dogs scored,",
+  "fr": "chiens notés,",
+  "it": "cani valutati,"
+ },
+ "για να πάει ένα ζεύγος πάνω ή κάτω μέσα στο τερέν του, ή ένα": {
+  "de": "um ein Paar innerhalb seines Geländes nach oben oder unten zu setzen, oder ein",
+  "en": "to move a brace up or down within its terrain, or a",
+  "fr": "pour faire monter ou descendre un couple dans son terrain, ou un",
+  "it": "per spostare una coppia su o giù dentro il suo terreno, oppure un"
+ },
+ "για να πάει ένα ζεύγος πάνω ή κάτω, ή ένα": {
+  "de": "um ein Paar nach oben oder unten zu setzen, oder ein",
+  "en": "to move a brace up or down, or a",
+  "fr": "pour faire monter ou descendre un couple, ou un",
+  "it": "per spostare una coppia su o giù, oppure un"
+ },
+ "για να συμπληρωθεί το τελευταίο ζεύγος.": {
+  "de": "um das letzte Paar zu füllen.",
+  "en": "to fill the last brace.",
+  "fr": "pour compléter le dernier couple.",
+  "it": "per completare l'ultima coppia."
+ },
+ "για:": {
+  "de": "für:",
+  "en": "for:",
+  "fr": "pour :",
+  "it": "per:"
+ },
+ "γραμμές": {
+  "de": "Zeilen",
+  "en": "rows",
+  "fr": "lignes",
+  "it": "righe"
+ },
+ "δεν έχει κληρωθεί, οπότε δεν υπάρχει σειρά για να αντιστραφεί.": {
+  "de": "wurde nicht ausgelost, es gibt also keine Reihenfolge umzukehren.",
+  "en": "has not been drawn, so there is no order to reverse.",
+  "fr": "n'a pas été tirée, il n'y a donc aucun ordre à inverser.",
+  "it": "non è stata sorteggiata, quindi non c'è un ordine da invertire."
+ },
+ "διαδρομές": {
+  "de": "Gänge",
+  "en": "runs",
+  "fr": "parcours",
+  "it": "turni"
+ },
+ "είναι στη μπάρα πάνω δεξιά, δίπλα στα Στατιστικά, και φαίνονται σε κάθε οθόνη. Εδώ μένουν μόνο τα δύο ειδικά.": {
+  "de": "stehen in der Leiste oben rechts, neben der Statistik, und erscheinen auf jedem Bildschirm. Hier bleiben nur die beiden Sonderfälle.",
+  "en": "are in the bar top right, next to Statistics, and show on every screen. Only the two special ones stay here.",
+  "fr": "se trouvent dans la barre en haut à droite, à côté des Statistiques, et apparaissent sur chaque écran. Seuls les deux cas particuliers restent ici.",
+  "it": "sono nella barra in alto a destra, accanto alle Statistiche, e compaiono su ogni schermata. Qui restano solo i due casi particolari."
+ },
+ "εκκρεμεί": {
+  "de": "offen",
+  "en": "pending",
+  "fr": "en attente",
+  "it": "in attesa"
+ },
+ "ενημερώνονται με βάση το Κ.Ο.Κ. ή το όνομα.": {
+  "de": "werden anhand der Zuchtbuchnummer oder des Namens aktualisiert.",
+  "en": "are updated by stud book number or by name.",
+  "fr": "sont mis à jour d'après le numéro au livre des origines ou le nom.",
+  "it": "vengono aggiornati in base al numero del libro genealogico o al nome."
+ },
+ "επιλεγμένοι.": {
+  "de": "ausgewählt.",
+  "en": "selected.",
+  "fr": "sélectionnés.",
+  "it": "selezionati."
+ },
+ "εφαρμογή": {
+  "de": "App-Speicher",
+  "en": "app storage",
+  "fr": "stockage de l'application",
+  "it": "archivio dell'app"
+ },
+ "ζεύγη": {
+  "de": "Paare",
+  "en": "braces",
+  "fr": "couples",
+  "it": "coppie"
+ },
+ "ζεύγη. Χρειάζονται τουλάχιστον 3 (Άρθρο 40).": {
+  "de": "Paare. Mindestens 3 sind erforderlich (Artikel 40).",
+  "en": "braces. At least 3 are required (Article 40).",
+  "fr": "couples. Il en faut au moins 3 (Article 40).",
+  "it": "coppie. Ne servono almeno 3 (Articolo 40)."
+ },
+ "ζεύγος": {
+  "de": "Paar",
+  "en": "brace",
+  "fr": "couple",
+  "it": "coppia"
+ },
+ "ζεύγος/η με τον ίδιο κυναγωγό — δεν υπάρχει άλλη δυνατή διάταξη με τους σκύλους αυτού του τερέν.": {
+  "de": "Paar(e) mit demselben Führer — mit den Hunden dieses Geländes ist keine andere Anordnung möglich.",
+  "en": "brace(s) with the same handler — there is no other possible arrangement with the dogs of this terrain.",
+  "fr": "couple(s) avec le même conducteur — aucune autre disposition n'est possible avec les chiens de ce terrain.",
+  "it": "coppia/e con lo stesso conduttore — non esiste altra disposizione possibile con i cani di questo terreno."
+ },
+ "ημέρες": {
+  "de": "Tage",
+  "en": "days",
+  "fr": "journées",
+  "it": "giornate"
+ },
+ "ημερομηνίες από σειριακό αριθμό Excel.": {
+  "de": "Datumsangaben aus einer Excel-Seriennummer.",
+  "en": "dates from an Excel serial number.",
+  "fr": "dates issues d'un numéro de série Excel.",
+  "it": "date da numero seriale Excel."
+ },
+ "θα πάρει τη θέση του σκύλου που θα επιλέξετε και εκείνος τη δική του. Και τα δύο ζεύγη σημειώνονται ως χειροκίνητη αλλαγή και η σήμανση τυπώνεται στη λίστα.": {
+  "de": "nimmt den Platz des Hundes ein, den Sie wählen, und dieser seinen. Beide Paare werden als manuelle Änderung gekennzeichnet, und der Vermerk wird auf der Liste gedruckt.",
+  "en": "will take the place of the dog you choose, and that dog his. Both braces are marked as a manual change and the mark is printed on the list.",
+  "fr": "prendra la place du chien que vous choisirez, et celui-ci la sienne. Les deux couples sont signalés comme modification manuelle et la mention est imprimée sur la liste.",
+  "it": "prenderà il posto del cane che sceglierete, e quello il suo. Entrambe le coppie sono segnate come modifica manuale e la nota viene stampata sulla lista."
+ },
+ "θηλυκός": {
+  "de": "Hündin",
+  "en": "female",
+  "fr": "femelle",
+  "it": "femmina"
+ },
+ "και": {
+  "de": "und",
+  "en": "and",
+  "fr": "et",
+  "it": "e"
+ },
+ "και κρίνονται μαζί. Κάθε ένας κρατά δικό του φύλλο σημειώσεων.": {
+  "de": "und werden zusammen gerichtet. Jeder führt ein eigenes Notizblatt.",
+  "en": "and are judged together. Each keeps a note sheet of his own.",
+  "fr": "et sont jugés ensemble. Chacun tient sa propre feuille de notes.",
+  "it": "e vengono giudicati insieme. Ciascuno tiene un proprio foglio note."
+ },
+ "και στείλτε το αρχείο στο κινητό.": {
+  "de": "und schicken Sie die Datei aufs Telefon.",
+  "en": "and send the file to the phone.",
+  "fr": "et envoyez le fichier sur le téléphone.",
+  "it": "e mandate il file al telefono."
+ },
+ "καμία": {
+  "de": "keine",
+  "en": "none",
+  "fr": "aucun",
+  "it": "nessuna"
+ },
+ "κανένα": {
+  "de": "keines",
+  "en": "none",
+  "fr": "aucun",
+  "it": "nessuno"
+ },
+ "κλειδωμένοι· βγάλτε τους από εκεί πρώτα.": {
+  "de": "gesperrt; nehmen Sie sie zuerst dort heraus.",
+  "en": "locked; take them out of there first.",
+  "fr": "verrouillés ; sortez-les de là d'abord.",
+  "it": "bloccati; toglieteli prima da lì."
+ },
+ "κρατά ό,τι υπάρχει ήδη και προσθέτει ή ενημερώνει·": {
+  "de": "behält das bereits Vorhandene und ergänzt oder aktualisiert;",
+  "en": "keeps what is already there and adds or updates;",
+  "fr": "garde ce qui existe déjà et ajoute ou met à jour ;",
+  "it": "conserva quel che c'è già e aggiunge o aggiorna;"
+ },
+ "κριτές": {
+  "de": "Richter",
+  "en": "judges",
+  "fr": "juges",
+  "it": "giudici"
+ },
+ "κριτές,": {
+  "de": "Richter,",
+  "en": "judges,",
+  "fr": "juges,",
+  "it": "giudici,"
+ },
+ "κριτής": {
+  "de": "Richter",
+  "en": "judge",
+  "fr": "juge",
+  "it": "giudice"
+ },
+ "κυναγωγοί": {
+  "de": "Führer",
+  "en": "handlers",
+  "fr": "conducteurs",
+  "it": "conduttori"
+ },
+ "κυναγωγοί,": {
+  "de": "Führer,",
+  "en": "handlers,",
+  "fr": "conducteurs,",
+  "it": "conduttori,"
+ },
+ "κυναγωγούς": {
+  "de": "Führern",
+  "en": "handlers",
+  "fr": "conducteurs",
+  "it": "conduttori"
+ },
+ "κυναγωγό": {
+  "de": "Führer",
+  "en": "handler",
+  "fr": "conducteur",
+  "it": "conduttore"
+ },
+ "κυναγωγός": {
+  "de": "Führer",
+  "en": "handler",
+  "fr": "conducteur",
+  "it": "conduttore"
+ },
+ "κυπριακής εκτροφής": {
+  "de": "zyprische Zucht",
+  "en": "Cyprus-bred",
+  "fr": "élevage chypriote",
+  "it": "allevamento cipriota"
+ },
+ "κωδικός": {
+  "de": "Code",
+  "en": "seed",
+  "fr": "code",
+  "it": "codice"
+ },
+ "μέλος": {
+  "de": "Mitglied",
+  "en": "member",
+  "fr": "membre",
+  "it": "socio"
+ },
+ "μαζί": {
+  "de": "zusammen",
+  "en": "together",
+  "fr": "ensemble",
+  "it": "insieme"
+ },
+ "νέοι,": {
+  "de": "neu,",
+  "en": "new,",
+  "fr": "nouveaux,",
+  "it": "nuovi,"
+ },
+ "να φύγουν": {
+  "de": "zu senden",
+  "en": "to go out",
+  "fr": "à partir",
+  "it": "da inviare"
+ },
+ "ο κριτής έχει δικό του σκύλο (Άρθρο 49):": {
+  "de": "der Richter hat einen eigenen Hund (Artikel 49):",
+  "en": "the judge has a dog of his own (Article 49):",
+  "fr": "le juge a son propre chien (Article 49) :",
+  "it": "il giudice ha un proprio cane (Articolo 49):"
+ },
+ "π.χ.": {
+  "de": "z. B.",
+  "en": "e.g.",
+  "fr": "p. ex.",
+  "it": "per es."
+ },
+ "πάνω δεξιά για αρχείο που σας έστειλαν από άλλη συσκευή.": {
+  "de": "oben rechts für eine Datei, die Ihnen von einem anderen Gerät geschickt wurde.",
+  "en": "top right for a file someone sent you from another device.",
+  "fr": "en haut à droite pour un fichier qu'on vous a envoyé depuis un autre appareil.",
+  "it": "in alto a destra per un file che vi hanno mandato da un altro dispositivo."
+ },
+ "πάνω σε άλλο για να αλλάξουν θέσεις. Η αρίθμηση ακολουθεί τη θέση· κάθε μετακίνηση καταγράφεται ως χειροκίνητη αλλαγή και τυπώνεται (Άρθρο 16).": {
+  "de": "auf ein anderes, um die Plätze zu tauschen. Die Nummerierung folgt der Position; jede Verschiebung wird als manuelle Änderung festgehalten und gedruckt (Artikel 16).",
+  "en": "onto another to swap their places. The numbering follows the position; every move is recorded as a manual change and is printed (Article 16).",
+  "fr": "sur un autre pour échanger leurs places. La numérotation suit la position ; chaque déplacement est consigné comme modification manuelle et imprimé (Article 16).",
+  "it": "su un altro per scambiarne il posto. La numerazione segue la posizione; ogni spostamento è registrato come modifica manuale e viene stampato (Articolo 16)."
+ },
+ "πάνω σε άλλο για να αλλάξουν θέσεις. Καταγράφεται ως χειροκίνητη αλλαγή (Άρθρο 16).": {
+  "de": "auf ein anderes, um die Plätze zu tauschen. Es wird als manuelle Änderung festgehalten (Artikel 16).",
+  "en": "onto another to swap their places. It is recorded as a manual change (Article 16).",
+  "fr": "sur un autre pour échanger leurs places. C'est consigné comme modification manuelle (Article 16).",
+  "it": "su un altro per scambiarne il posto. Viene registrato come modifica manuale (Articolo 16)."
+ },
+ "περιμένει μόνος του στην επανάκληση, ζεύγος": {
+  "de": "wartet allein im Recall, Paar",
+  "en": "is waiting alone in the recall, brace",
+  "fr": "attend seul au rappel, couple",
+  "it": "aspetta da solo nel richiamo, coppia"
+ },
+ "πληρ.": {
+  "de": "bez.",
+  "en": "paid",
+  "fr": "payé",
+  "it": "pag."
+ },
+ "πληρωμένες": {
+  "de": "bezahlt",
+  "en": "paid",
+  "fr": "payés",
+  "it": "pagate"
+ },
+ "που μόλις κατέβηκε.": {
+  "de": "die soeben heruntergeladen wurde.",
+  "en": "that has just been downloaded.",
+  "fr": "qui vient d'être téléchargé.",
+  "it": "appena scaricato."
+ },
+ "πόντοι": {
+  "de": "Punkte",
+  "en": "points",
+  "fr": "points",
+  "it": "punti"
+ },
+ "πόντοι ·": {
+  "de": "Punkte ·",
+  "en": "points ·",
+  "fr": "points ·",
+  "it": "punti ·"
+ },
+ "πόντοι. Ανοίγει κανονικά για ανάγνωση, εκτύπωση και εξαγωγή.": {
+  "de": "Punkte. Sie lässt sich wie gewohnt lesen, drucken und exportieren.",
+  "en": "points. It opens as usual for reading, printing and export.",
+  "fr": "points. Elle s'ouvre normalement pour la lecture, l'impression et l'export.",
+  "it": "punti. Si apre normalmente per lettura, stampa ed esportazione."
+ },
+ "σβήνει τα πάντα. Κινηθείτε προς μία κατεύθυνση κάθε φορά: αν ο ίδιος αγώνας αλλάξει και στις δύο συσκευές, υπερισχύει το αρχείο που φορτώθηκε τελευταίο. Το SMS δεν μπορεί να μεταφέρει τα δεδομένα — χρειάζεται αρχείο.": {
+  "de": "löscht alles. Bewegen Sie sich immer nur in eine Richtung: wird dieselbe Prüfung auf beiden Geräten geändert, gilt die zuletzt geladene Datei. Die SMS kann die Daten nicht tragen — dafür braucht es eine Datei.",
+  "en": "wipes everything. Move in one direction at a time: if the same trial is changed on both devices, the file loaded last wins. SMS cannot carry the data — a file is needed.",
+  "fr": "efface tout. Déplacez-vous dans un seul sens à la fois : si la même épreuve est modifiée sur les deux appareils, c'est le fichier chargé en dernier qui l'emporte. Le SMS ne peut pas transporter les données — il faut un fichier.",
+  "it": "cancella tutto. Muovetevi in una sola direzione per volta: se la stessa prova cambia su entrambi i dispositivi, prevale il file caricato per ultimo. L'SMS non può trasportare i dati — serve un file."
+ },
+ "σε εξέλιξη": {
+  "de": "laufend",
+  "en": "in progress",
+  "fr": "en cours",
+  "it": "in corso"
+ },
+ "σκύλοι": {
+  "de": "Hunde",
+  "en": "dogs",
+  "fr": "chiens",
+  "it": "cani"
+ },
+ "σκύλοι ·": {
+  "de": "Hunde ·",
+  "en": "dogs ·",
+  "fr": "chiens ·",
+  "it": "cani ·"
+ },
+ "σκύλοι έχουν ανατεθεί χειροκίνητα σε τερέν.": {
+  "de": "Hunde wurden von Hand Geländen zugeteilt.",
+  "en": "dogs have been assigned to terrains by hand.",
+  "fr": "chiens ont été affectés à des terrains à la main.",
+  "it": "cani sono stati assegnati ai terreni a mano."
+ },
+ "σκύλοι έχουν βαθμολογία.": {
+  "de": "Hunde haben eine Bewertung.",
+  "en": "dogs have a qualification.",
+  "fr": "chiens ont une qualification.",
+  "it": "cani hanno una qualifica."
+ },
+ "σκύλοι δίνουν": {
+  "de": "Hunde ergeben",
+  "en": "dogs give",
+  "fr": "chiens donnent",
+  "it": "cani danno"
+ },
+ "σκύλοι δεν είχαν φυλή και καταχωρήθηκαν ως «": {
+  "de": "Hunde hatten keine Rasse und wurden erfasst als „",
+  "en": "dogs had no breed and were recorded as \"",
+  "fr": "chiens n'avaient pas de race et ont été enregistrés comme « ",
+  "it": "cani non avevano razza e sono stati registrati come «"
+ },
+ "σκύλοι σε": {
+  "de": "Hunde auf",
+  "en": "dogs on",
+  "fr": "chiens sur",
+  "it": "cani su"
+ },
+ "σκύλοι,": {
+  "de": "Hunde,",
+  "en": "dogs,",
+  "fr": "chiens,",
+  "it": "cani,"
+ },
+ "σκύλος": {
+  "de": "Hund",
+  "en": "dog",
+  "fr": "chien",
+  "it": "cane"
+ },
+ "σκύλου μεγάλης αξίας — προστίθεται νέα διαδρομή στο τέλος του τερέν με δικές της σημειώσεις. Σε μονό αριθμό σκύλων μπορεί να προστεθεί": {
+  "de": "eines Hundes von hohem Wert — am Ende des Geländes wird ein neuer Gang mit eigenen Notizen angefügt. Bei ungerader Hundezahl kann ein",
+  "en": "of a dog of high merit — a new run is added at the end of the terrain, with notes of its own. Where the number of dogs is odd, there may be added a",
+  "fr": "d'un chien de grande valeur — un nouveau parcours est ajouté en fin de terrain, avec ses propres notes. Si le nombre de chiens est impair, on peut ajouter un",
+  "it": "di un cane di grande valore — viene aggiunto un nuovo turno alla fine del terreno, con note proprie. Con un numero dispari di cani si può aggiungere un"
+ },
+ "σκύλων": {
+  "de": "Hunde",
+  "en": "dogs",
+  "fr": "chiens",
+  "it": "cani"
+ },
+ "στάλθηκαν": {
+  "de": "gesendet",
+  "en": "sent",
+  "fr": "envoyés",
+  "it": "inviati"
+ },
+ "στέλνει ένα κοινό μήνυμα — τη σειρά της ημέρας χωρίς σημάδι για τον καθένα. Το «Έναν-έναν» στέλνει σε κάθε άνθρωπο τις δικές του διαδρομές.": {
+  "de": "sendet eine gemeinsame Nachricht — die Reihenfolge des Tages, ohne für jeden etwas zu markieren. „Einzeln“ schickt jedem seine eigenen Gänge.",
+  "en": "sends one message to all — the day's running order, with nothing marked for each man. \"One by one\" sends each person his own runs.",
+  "fr": "envoie un message commun — l'ordre de la journée, sans rien de signalé pour chacun. « Un par un » envoie à chaque personne ses propres parcours.",
+  "it": "invia un messaggio unico — l'ordine della giornata, senza nulla segnato per ciascuno. «Uno per uno» manda a ogni persona i propri turni."
+ },
+ "στη μπάρα πάνω δεξιά. Τα δύο κουμπιά είναι σε κάθε οθόνη.": {
+  "de": "in der Leiste oben rechts. Die beiden Schaltflächen sind auf jedem Bildschirm.",
+  "en": "in the bar top right. The two buttons are on every screen.",
+  "fr": "dans la barre en haut à droite. Les deux boutons sont sur chaque écran.",
+  "it": "nella barra in alto a destra. I due pulsanti sono su ogni schermata."
+ },
+ "στη μπάρα πάνω → Συγχώνευση. Κινηθείτε προς μία κατεύθυνση κάθε φορά: αν ο ίδιος αγώνας αλλάξει και στις δύο συσκευές, υπερισχύει το αρχείο που φορτώθηκε τελευταίο.": {
+  "de": "in der Leiste oben → Zusammenführen. Bewegen Sie sich immer nur in eine Richtung: wird dieselbe Prüfung auf beiden Geräten geändert, gilt die zuletzt geladene Datei.",
+  "en": "in the bar above → Merge. Move in one direction at a time: if the same trial is changed on both devices, the file loaded last wins.",
+  "fr": "dans la barre ci-dessus → Fusionner. Déplacez-vous dans un seul sens à la fois : si la même épreuve est modifiée sur les deux appareils, c'est le fichier chargé en dernier qui l'emporte.",
+  "it": "nella barra qui sopra → Unisci. Muovetevi in una sola direzione per volta: se la stessa prova cambia su entrambi i dispositivi, prevale il file caricato per ultimo."
+ },
+ "στο WhatsApp ή στο Viber πατήστε το αρχείο → Κοινή χρήση → Αποθήκευση στα Αρχεία. Μετά εδώ: ↑ Φόρτωση → Αναζήτηση → βρείτε το.": {
+  "de": "in WhatsApp oder Viber die Datei antippen → Teilen → In Dateien sichern. Dann hier: ↑ Laden → Durchsuchen → sie suchen.",
+  "en": "in WhatsApp or Viber tap the file → Share → Save to Files. Then here: ↑ Load → Browse → find it.",
+  "fr": "dans WhatsApp ou Viber, touchez le fichier → Partager → Enregistrer dans Fichiers. Puis ici : ↑ Charger → Parcourir → retrouvez-le.",
+  "it": "in WhatsApp o Viber toccate il file → Condividi → Salva su File. Poi qui: ↑ Carica → Sfoglia → trovatelo."
+ },
+ "στο ιστορικό": {
+  "de": "in der Historie",
+  "en": "in the history",
+  "fr": "dans l'historique",
+  "it": "nello storico"
+ },
+ "στον πίνακα ·": {
+  "de": "auf der Tafel ·",
+  "en": "on the board ·",
+  "fr": "au tableau ·",
+  "it": "in tabella ·"
+ },
+ "συμμετοχές": {
+  "de": "Meldungen",
+  "en": "entries",
+  "fr": "engagements",
+  "it": "iscrizioni"
+ },
+ "συμμετοχή": {
+  "de": "Meldung",
+  "en": "entry",
+  "fr": "engagement",
+  "it": "iscrizione"
+ },
+ "συμπληρωματικός": {
+  "de": "Ergänzungshund",
+  "en": "supplementary",
+  "fr": "supplémentaire",
+  "it": "supplementare"
+ },
+ "τερέν": {
+  "de": "Gelände",
+  "en": "terrains",
+  "fr": "terrains",
+  "it": "terreni"
+ },
+ "τερέν ·": {
+  "de": "Gelände ·",
+  "en": "terrains ·",
+  "fr": "terrains ·",
+  "it": "terreni ·"
+ },
+ "της επιτροπής": {
+  "de": "des Richterkollegiums",
+  "en": "of the jury",
+  "fr": "du jury",
+  "it": "della giuria"
+ },
+ "της επιτροπής · κυναγωγός": {
+  "de": "des Richterkollegiums · Führer",
+  "en": "of the jury · handler",
+  "fr": "du jury · conducteur",
+  "it": "della giuria · conduttore"
+ },
+ "τμ.": {
+  "de": "Segm.",
+  "en": "seg.",
+  "fr": "seg.",
+  "it": "segm."
+ },
+ "τμήματα": {
+  "de": "Segmente",
+  "en": "segments",
+  "fr": "segments",
+  "it": "segmenti"
+ },
+ "το αρχείο κατεβαίνει στις Λήψεις. ↑ Φόρτωση → Λήψεις.": {
+  "de": "die Datei landet in den Downloads. ↑ Laden → Downloads.",
+  "en": "the file lands in Downloads. ↑ Load → Downloads.",
+  "fr": "le fichier arrive dans Téléchargements. ↑ Charger → Téléchargements.",
+  "it": "il file arriva in Download. ↑ Carica → Download."
+ },
+ "τοπική αποθήκευση": {
+  "de": "lokaler Speicher",
+  "en": "local storage",
+  "fr": "stockage local",
+  "it": "archivio locale"
+ },
+ "χωρίς αναγνωρίσιμη φυλή καταχωρούνται ως": {
+  "de": "ohne erkennbare Rasse werden erfasst als",
+  "en": "with no recognisable breed are recorded as",
+  "fr": "sans race reconnaissable sont enregistrés comme",
+  "it": "senza razza riconoscibile sono registrati come"
+ },
+ "χωρίς βαθμολογία": {
+  "de": "ohne Bewertung",
+  "en": "with no qualification",
+  "fr": "sans qualification",
+  "it": "senza qualifica"
+ },
+ "χωρίς κυναγωγό": {
+  "de": "ohne Führer",
+  "en": "with no handler",
+  "fr": "sans conducteur",
+  "it": "senza conduttore"
+ },
+ "όλοι": {
+  "de": "alle",
+  "en": "all",
+  "fr": "tous",
+  "it": "tutti"
+ },
+ "όνομα σκύλου": {
+  "de": "Name des Hundes",
+  "en": "dog's name",
+  "fr": "nom du chien",
+  "it": "nome del cane"
+ },
+ "όροι": {
+  "de": "Begriffe",
+  "en": "terms",
+  "fr": "termes",
+  "it": "termini"
+ },
+ "όροι κρίσης σε πέντε γλώσσες. Κανένας δεν μεταφράστηκε: ο καθένας στέκει αυτούσιος μέσα στον κανονισμό που αναφέρεται από κάτω του.": {
+  "de": "Begriffe der Beurteilung in fünf Sprachen. Keiner wurde übersetzt: jeder steht wortgetreu in der darunter genannten Ordnung.",
+  "en": "judging terms in five languages. None was translated: each one stands word for word inside the regulation cited beneath it.",
+  "fr": "termes de jugement en cinq langues. Aucun n'a été traduit : chacun figure mot pour mot dans le règlement cité en dessous.",
+  "it": "termini di giudizio in cinque lingue. Nessuno è stato tradotto: ciascuno figura alla lettera nel regolamento citato sotto."
+ },
+ "ώρα": {
+  "de": "um",
+  "en": "at",
+  "fr": "à",
+  "it": "ore"
+ },
+ "— επανάκληση, ζεύγος": {
+  "de": "— Recall, Paar",
+  "en": "— recall, brace",
+  "fr": "— rappel, couple",
+  "it": "— richiamo, coppia"
+ },
+ "— επιλέξτε κυναγωγό —": {
+  "de": "— Führer wählen —",
+  "en": "— choose a handler —",
+  "fr": "— choisir un conducteur —",
+  "it": "— scegliete un conduttore —"
+ },
+ "— επιλέξτε σκύλο —": {
+  "de": "— Hund wählen —",
+  "en": "— choose a dog —",
+  "fr": "— choisir un chien —",
+  "it": "— scegliete un cane —"
+ },
+ "— και ανεβαίνει σε οποιονδήποτε δωρεάν χώρο φιλοξενίας. Ο κώδικας ανήκει στον όμιλο· κατεβάστε τον, κρατήστε αντίγραφο, στήστε τον αλλού αν χρειαστεί.": {
+  "de": "— und sie lässt sich auf jedem kostenlosen Hosting ablegen. Der Code gehört dem Verein; laden Sie ihn herunter, behalten Sie eine Kopie, stellen Sie ihn nötigenfalls anderswo auf.",
+  "en": "— and it goes up on any free hosting. The code belongs to the club; download it, keep a copy, put it somewhere else if the need arises.",
+  "fr": "— et elle se met en ligne sur n'importe quel hébergement gratuit. Le code appartient au club ; téléchargez-le, gardez-en une copie, installez-le ailleurs au besoin.",
+  "it": "— e si carica su qualunque hosting gratuito. Il codice appartiene al club; scaricatelo, tenetene una copia, mettetelo altrove se serve."
+ },
+ "— κανένας —": {
+  "de": "— keiner —",
+  "en": "— none —",
+  "fr": "— aucun —",
+  "it": "— nessuno —"
+ },
+ "— μόνο στο μητρώο —": {
+  "de": "— nur ins Register —",
+  "en": "— register only —",
+  "fr": "— registre seulement —",
+  "it": "— solo nel registro —"
+ },
+ "— σειρά ζευγών": {
+  "de": "— Reihenfolge der Paare",
+  "en": "— order of braces",
+  "fr": "— ordre des couples",
+  "it": "— ordine delle coppie"
+ },
+ "— φορτώστε το αρχείο στην εφαρμογή.": {
+  "de": "— laden Sie die Datei in die Anwendung.",
+  "en": "— load the file into the app.",
+  "fr": "— chargez le fichier dans l'application.",
+  "it": "— caricate il file nell'applicazione."
+ },
+ "— χωρίς κυναγωγό —": {
+  "de": "— ohne Führer —",
+  "en": "— with no handler —",
+  "fr": "— sans conducteur —",
+  "it": "— senza conduttore —"
+ },
+ "‹ Μητρώο": {
+  "de": "‹ Register",
+  "en": "‹ Register",
+  "fr": "‹ Registre",
+  "it": "‹ Registro"
+ },
+ "↑ Φόρτωση": {
+  "de": "↑ Laden",
+  "en": "↑ Load",
+  "fr": "↑ Charger",
+  "it": "↑ Carica"
+ },
+ "↑ Φόρτωση, ή σύρετε το αρχείο πάνω στη σελίδα.": {
+  "de": "↑ Laden, oder ziehen Sie die Datei auf die Seite.",
+  "en": "↑ Load, or drag the file onto the page.",
+  "fr": "↑ Charger, ou faites glisser le fichier sur la page.",
+  "it": "↑ Carica, oppure trascinate il file sulla pagina."
+ },
+ "↓ Λήψη": {
+  "de": "↓ Sichern",
+  "en": "↓ Download",
+  "fr": "↓ Télécharger",
+  "it": "↓ Scarica"
+ }
+}
