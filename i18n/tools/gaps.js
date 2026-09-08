@@ -16,7 +16,8 @@ const fs = require('fs'), path = require('path');
      περνούν ως μεταβλητή τα προσθέτει πιο κάτω η ίδια η σελίδα. */
   const src = fs.readFileSync(APP.replace('file://', ''), 'utf8');
   const lits = [...new Set([...src.matchAll(/\btx\(\s*"((?:[^"\\]|\\.)*)"\s*\)/g)]
-    .map(m => m[1].replace(/\\"/g, '"').replace(/\\\\/g, '\\')))];
+    .map(m => m[1].replace(/\\n/g, '\n').replace(/\\t/g, '\t')
+                  .replace(/\\"/g, '"').replace(/\\\\/g, '\\')))];
   const out = await p.evaluate(ks => {
     const all = new Set(ks);
     Object.keys(STR.en || {}).forEach(k => all.add(k));
