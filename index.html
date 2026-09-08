@@ -1157,7 +1157,7 @@ const UI_STR = {
   "Επεξεργασία στοιχείων": "Edit the details",
   "Επεξεργασία συμμετοχής": "Edit entry",
   "Επεξεργασία τερέν": "Edit terrain",
-  "Επικεφαλίδα — πεδία {ΑΓΩΝΑΣ} {ΗΜΕΡΟΜΗΝΙΑ} {ΤΟΠΟΘΕΣΙΑ} {ΩΡΑ}": "Heading — fields {ΑΓΩΝΑΣ} {ΗΜΕΡΟΜΗΝΙΑ} {ΤΟΠΟΘΕΣΙΑ} {ΩΡΑ}",
+  "Επικεφαλίδα — πεδία": "Heading — fields",
   "Επικολλήστε πρώτα το περιεχόμενο": "Paste the content first",
   "Επικόλληση": "Paste",
   "Επικόλληση αντιγράφου": "Paste a backup",
@@ -1945,7 +1945,7 @@ const UI_STR = {
   "Επεξεργασία στοιχείων": "Modifier les données",
   "Επεξεργασία συμμετοχής": "Modifier l'engagement",
   "Επεξεργασία τερέν": "Modifier le terrain",
-  "Επικεφαλίδα — πεδία {ΑΓΩΝΑΣ} {ΗΜΕΡΟΜΗΝΙΑ} {ΤΟΠΟΘΕΣΙΑ} {ΩΡΑ}": "En-tête — champs {ΑΓΩΝΑΣ} {ΗΜΕΡΟΜΗΝΙΑ} {ΤΟΠΟΘΕΣΙΑ} {ΩΡΑ}",
+  "Επικεφαλίδα — πεδία": "En-tête — champs",
   "Επικολλήστε πρώτα το περιεχόμενο": "Collez d'abord le contenu",
   "Επικόλληση": "Coller",
   "Επικόλληση αντιγράφου": "Coller une sauvegarde",
@@ -2733,7 +2733,7 @@ const UI_STR = {
   "Επεξεργασία στοιχείων": "Angaben bearbeiten",
   "Επεξεργασία συμμετοχής": "Meldung bearbeiten",
   "Επεξεργασία τερέν": "Gelände bearbeiten",
-  "Επικεφαλίδα — πεδία {ΑΓΩΝΑΣ} {ΗΜΕΡΟΜΗΝΙΑ} {ΤΟΠΟΘΕΣΙΑ} {ΩΡΑ}": "Kopfzeile — Felder {ΑΓΩΝΑΣ} {ΗΜΕΡΟΜΗΝΙΑ} {ΤΟΠΟΘΕΣΙΑ} {ΩΡΑ}",
+  "Επικεφαλίδα — πεδία": "Kopfzeile — Felder",
   "Επικολλήστε πρώτα το περιεχόμενο": "Fügen Sie zuerst den Inhalt ein",
   "Επικόλληση": "Einfügen",
   "Επικόλληση αντιγράφου": "Sicherung einfügen",
@@ -3521,7 +3521,7 @@ const UI_STR = {
   "Επεξεργασία στοιχείων": "Modifica i dati",
   "Επεξεργασία συμμετοχής": "Modifica l'iscrizione",
   "Επεξεργασία τερέν": "Modifica il terreno",
-  "Επικεφαλίδα — πεδία {ΑΓΩΝΑΣ} {ΗΜΕΡΟΜΗΝΙΑ} {ΤΟΠΟΘΕΣΙΑ} {ΩΡΑ}": "Intestazione — campi {ΑΓΩΝΑΣ} {ΗΜΕΡΟΜΗΝΙΑ} {ΤΟΠΟΘΕΣΙΑ} {ΩΡΑ}",
+  "Επικεφαλίδα — πεδία": "Intestazione — campi",
   "Επικολλήστε πρώτα το περιεχόμενο": "Incollate prima il contenuto",
   "Επικόλληση": "Incolla",
   "Επικόλληση αντιγράφου": "Incolla una copia",
@@ -5824,6 +5824,32 @@ function myRuns(t, handlerId){
    της οθόνης — αλλιώς ένας Ιταλός γραμματέας βλέπει ελληνικά σε ένα πεδίο που
    υποτίθεται πως συμπληρώνει ο ίδιος. Τα πεδία {ΑΓΩΝΑΣ} {ΗΜΕΡΟΜΗΝΙΑ}
    {ΤΟΠΟΘΕΣΙΑ} {ΩΡΑ} μένουν ελληνικά σε κάθε γλώσσα: είναι κλειδιά, όχι κείμενο. */
+/* Τα πεδία του προτύπου ήταν ελληνικά σε κάθε γλώσσα, γιατί είναι κλειδιά
+   αντικατάστασης. Ένας Ιταλός γραμματέας όμως πρέπει να τα διαβάζει για να τα
+   βάλει στη θέση τους. Λύση ίδια με το θήραμα: διαβάζονται στη γλώσσα της
+   οθόνης, γράφονται ελληνικά στη βάση. Η αντικατάσταση δέχεται και τις δύο
+   μορφές, ώστε ένα πρότυπο γραμμένο στα ιταλικά να δουλεύει και σε ελληνικό
+   κινητό μετά από συγχώνευση. */
+const SMS_FIELDS = [
+  ["{ΑΓΩΝΑΣ}",     {en:"{TRIAL}", fr:"{EPREUVE}", de:"{PRUEFUNG}", it:"{PROVA}"}],
+  ["{ΗΜΕΡΟΜΗΝΙΑ}", {en:"{DATE}",  fr:"{DATE}",    de:"{DATUM}",    it:"{DATA}"}],
+  ["{ΤΟΠΟΘΕΣΙΑ}",  {en:"{PLACE}", fr:"{LIEU}",    de:"{ORT}",      it:"{LUOGO}"}],
+  ["{ΩΡΑ}",        {en:"{TIME}",  fr:"{HEURE}",   de:"{ZEIT}",     it:"{ORA}"}]
+];
+const smsLang = () => (DB && DB.settings && DB.settings.lang) || "el";
+/* ελληνικά → γλώσσα οθόνης, για να διαβαστεί */
+function fieldsOut(t){
+  const L = smsLang();
+  if(L === "el") return t;
+  SMS_FIELDS.forEach(([gr, m]) => { if(m[L]) t = t.split(gr).join(m[L]); });
+  return t;
+}
+/* οποιαδήποτε γλώσσα → ελληνικά, για να γραφτεί και να αντικατασταθεί */
+function fieldsIn(t){
+  SMS_FIELDS.forEach(([gr, m]) => Object.keys(m).forEach(L =>
+    { t = t.split(m[L]).join(gr); }));
+  return t;
+}
 const smsTpl  = () => { const v = DB.settings.sms;
   return !v || v === DEFAULT_SMS ? tx(DEFAULT_SMS) : v; };
 const smsFootTxt = () => { const v = DB.settings.smsFoot;
@@ -5832,7 +5858,7 @@ const smsFootTxt = () => { const v = DB.settings.smsFoot;
    τύπος και δεν μεταφέρεται. Ο αριθμός μένει αριθμός σε κάθε γλώσσα. */
 const braceNo = n => n + ((DB && DB.settings && DB.settings.lang || "el") === "el" ? "ο" : "");
 function smsHead(t, day){
-  const tpl = smsTpl();
+  const tpl = fieldsIn(smsTpl());
   const val = { "{ΑΓΩΝΑΣ}": t.title || "",
                 "{ΗΜΕΡΟΜΗΝΙΑ}": fmtDate((day||{}).date || t.dateStart),
                 "{ΤΟΠΟΘΕΣΙΑ}": t.place || "",
@@ -6601,8 +6627,8 @@ function vSettings(){
   <div class="eyebrow">${tx("Ρυθμίσεις")}</div><h1>${tx("Μήνυμα, πόντοι, μεταφορά")}</h1>
   <div class="card"><h3>${tx("Μήνυμα SMS")}</h3>
     <p class="tiny">${tx("Το μήνυμα συντίθεται αυτόματα: επικεφαλίδα, οι διαδρομές του κυναγωγού, ολόκληρη η σειρά της ημέρας με τα δικά του ζεύγη σημειωμένα, και κατακλείδα.")}</p>
-    <label>${tx("Επικεφαλίδα — πεδία {ΑΓΩΝΑΣ} {ΗΜΕΡΟΜΗΝΙΑ} {ΤΟΠΟΘΕΣΙΑ} {ΩΡΑ}")}</label>
-    <textarea id="smsTpl" style="min-height:74px">${esc(smsTpl())}</textarea>
+    <label>${tx("Επικεφαλίδα — πεδία")} ${SMS_FIELDS.map(([g])=>fieldsOut(g)).join(" ")}</label>
+    <textarea id="smsTpl" style="min-height:74px">${esc(fieldsOut(smsTpl()))}</textarea>
     <p class="tiny" style="margin-top:6px">${tx("Η τοποθεσία και η ώρα προσέλευσης έρχονται από τον αγώνα (Επεξεργασία αγώνα). Αν δεν τις βάλετε στην επικεφαλίδα, μπαίνουν μόνες τους σε δική τους γραμμή — κανένα μήνυμα δεν φεύγει χωρίς πού και πότε.")}</p>
     ${(()=>{ const t = DB.trials.slice().sort((a,b)=>
         (b.dateStart||"").localeCompare(a.dateStart||""))[0];
@@ -8582,8 +8608,11 @@ const ACT = {
     save(); render();
   },
 
-  saveSms: ()=>{ DB.settings.sms = el("smsTpl").value;
-    DB.settings.smsFoot = el("smsFoot").value; save(); toast(tx("Αποθηκεύτηκε")); },
+  saveSms: ()=>{
+    const asDefault = (v, def) => v.trim() === tx(def).trim() ? def : v;
+    DB.settings.sms  = asDefault(fieldsIn(el("smsTpl").value), DEFAULT_SMS);
+    DB.settings.smsFoot = asDefault(el("smsFoot").value, DEFAULT_SMS_FOOT);
+    save(); toast(tx("Αποθηκεύτηκε")); },
   savePoints: ()=>{ document.querySelectorAll("[data-pt]").forEach(i=>{
       if(i.dataset.pt && i.type==="number") DB.settings.points[i.dataset.pt] = +i.value||0; });
     save(); toast(tx("Ο πίνακας βαθμών αποθηκεύτηκε")); },

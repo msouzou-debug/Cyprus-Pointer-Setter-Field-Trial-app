@@ -1535,11 +1535,11 @@
   "fr": "Modifier le terrain",
   "it": "Modifica il terreno"
  },
- "Επικεφαλίδα — πεδία {ΑΓΩΝΑΣ} {ΗΜΕΡΟΜΗΝΙΑ} {ΤΟΠΟΘΕΣΙΑ} {ΩΡΑ}": {
-  "de": "Kopfzeile — Felder {ΑΓΩΝΑΣ} {ΗΜΕΡΟΜΗΝΙΑ} {ΤΟΠΟΘΕΣΙΑ} {ΩΡΑ}",
-  "en": "Heading — fields {ΑΓΩΝΑΣ} {ΗΜΕΡΟΜΗΝΙΑ} {ΤΟΠΟΘΕΣΙΑ} {ΩΡΑ}",
-  "fr": "En-tête — champs {ΑΓΩΝΑΣ} {ΗΜΕΡΟΜΗΝΙΑ} {ΤΟΠΟΘΕΣΙΑ} {ΩΡΑ}",
-  "it": "Intestazione — campi {ΑΓΩΝΑΣ} {ΗΜΕΡΟΜΗΝΙΑ} {ΤΟΠΟΘΕΣΙΑ} {ΩΡΑ}"
+ "Επικεφαλίδα — πεδία": {
+  "de": "Kopfzeile — Felder",
+  "en": "Heading — fields",
+  "fr": "En-tête — champs",
+  "it": "Intestazione — campi"
  },
  "Επικολλήστε πρώτα το περιεχόμενο": {
   "de": "Fügen Sie zuerst den Inhalt ein",
