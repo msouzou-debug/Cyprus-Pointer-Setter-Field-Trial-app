@@ -30,9 +30,9 @@ const CLUB = /Κ\.Ο\.Α\.Δ\.|ΚΥΠΡΙΑΚΟΣ ΟΜΙΛΟΣ|Κυπριακό�
      «φέρμα» δίπλα στα Ελληνικά */
 const ON_PURPOSE = [/Α, Β, Γ, Δ/, /\{ΑΓΩΝΑΣ\}|\{ΗΜΕΡΟΜΗΝΙΑ\}|\{ΤΟΠΟΘΕΣΙΑ\}|\{ΩΡΑ\}/,
   /^Η σειρά είναι ενδεικτική \(Άρθρο 16\)\. Να είστε στη διάθεση των κριτών\.$/,
-  /^Ελληνικά$/, /^ΕΛ$/, /^φέρμα$/];
+  /^Ελληνικά$/, /^ΕΛ$/, /^φέρμα$/, /^Cyprus Pointer Setter Club/];
 /* Οι όροι που το γλωσσάρι δηλώνει κενούς σε κάποια γλώσσα. */
-const GLOSSARY_GAPS = { de: [/επανάκληση/i], it: [/οίστρος/i], en: [], fr: [] };
+const GLOSSARY_GAPS = { de: [/επανάκληση/i], it: [/οίστρος/i], en: [], fr: [], es: [] };
 const EVERY = [/Θηραματοφοβία/, /Κλαφούνισμα/, /Προσπέρασμα/];
 
 (async () => {
@@ -40,7 +40,7 @@ const EVERY = [/Θηραματοφοβία/, /Κλαφούνισμα/, /Προσ
     args: ['--no-sandbox', '--disable-dev-shm-usage'] });
   let bad = 0;
   const report = {};
-  for (const L of ['en', 'fr', 'de', 'it']) {
+  for (const L of ['en', 'fr', 'de', 'it', 'es']) {
     const page = await (await b.newContext({ viewport: { width: 1180, height: 2200 } })).newPage();
     page.setDefaultTimeout(6000);
     const errs = [];
@@ -71,6 +71,6 @@ const EVERY = [/Θηραματοφοβία/, /Κλαφούνισμα/, /Προσ
   }
   await b.close();
   fs.writeFileSync(__dirname + '/i18n-left.json', JSON.stringify(report, null, 1));
-  console.log(bad ? '\n' + bad + ' συνολικά' : '\nκάθε οθόνη γυρίζει, και στις τέσσερις γλώσσες');
+  console.log(bad ? '\n' + bad + ' συνολικά' : '\nκάθε οθόνη γυρίζει, και στις πέντε γλώσσες');
   process.exit(bad ? 1 : 0);
 })();

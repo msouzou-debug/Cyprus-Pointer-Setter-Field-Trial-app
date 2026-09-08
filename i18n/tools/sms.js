@@ -11,7 +11,8 @@ const APP = 'file://' + (process.env.KOAD_INDEX || path0.resolve(__dirname, '../
     catch(e){ console.log('FAIL ' + n + ' — ' + e.message); bad++; } };
 
   for (const [L, want, at] of [['it','{PROVA}','ore'], ['fr','{EPREUVE}','à'],
-                               ['de','{PRUEFUNG}','um'], ['en','{TRIAL}','at']]) {
+                               ['de','{PRUEFUNG}','um'], ['en','{TRIAL}','at'],
+                               ['es','{PRUEBA}','a las']]) {
     const p = await (await b.newContext({viewport:{width:900,height:1400}})).newPage();
     p.on('pageerror', e => { console.log('PAGEERROR ' + L + ': ' + e.message); bad++; });
     await p.goto(APP,{waitUntil:'domcontentloaded'});
