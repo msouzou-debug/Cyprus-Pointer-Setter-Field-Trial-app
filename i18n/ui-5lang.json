@@ -1511,13 +1511,6 @@
   "fr": "QUÊTE",
   "it": "CERCA"
  },
- "ΕΣΕΙΣ": {
-  "de": "SIE",
-  "en": "YOU",
-  "es": "USTED",
-  "fr": "VOUS",
-  "it": "VOI"
- },
  "ΕΣΤΑΛΗ": {
   "de": "GESENDET",
   "en": "SENT",
@@ -2036,13 +2029,6 @@
   "fr": "Le parcours a été prolongé à ",
   "it": "Il turno è stato prolungato a "
  },
- "Η διαδρομή σας:": {
-  "de": "Ihr Gang:",
-  "en": "Your run:",
-  "es": "Su turno:",
-  "fr": "Votre parcours :",
-  "it": "Il vostro turno:"
- },
  "Η ενέργεια καταγράφεται στο φύλλο του κριτή. Επιβεβαίωση αποκλεισμού;": {
   "de": "Die Handlung wird auf dem Blatt des Richters festgehalten. Ausschluss bestätigen?",
   "en": "The action is recorded on the judge's sheet. Confirm the elimination?",
@@ -2350,6 +2336,13 @@
   "es": "El sitio web del club",
   "fr": "Le site du club",
   "it": "Il sito del club"
+ },
+ "Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}\n{ΗΜΕΡΟΜΗΝΙΑ} · {ΤΟΠΟΘΕΣΙΑ} · προσέλευση {ΩΡΑ}": {
+  "de": "Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}\n{ΗΜΕΡΟΜΗΝΙΑ} · {ΤΟΠΟΘΕΣΙΑ} · Antreten {ΩΡΑ}",
+  "en": "Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}\n{ΗΜΕΡΟΜΗΝΙΑ} · {ΤΟΠΟΘΕΣΙΑ} · arrive {ΩΡΑ}",
+  "es": "Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}\n{ΗΜΕΡΟΜΗΝΙΑ} · {ΤΟΠΟΘΕΣΙΑ} · presentarse {ΩΡΑ}",
+  "fr": "Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}\n{ΗΜΕΡΟΜΗΝΙΑ} · {ΤΟΠΟΘΕΣΙΑ} · présence {ΩΡΑ}",
+  "it": "Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}\n{ΗΜΕΡΟΜΗΝΙΑ} · {ΤΟΠΟΘΕΣΙΑ} · presentarsi {ΩΡΑ}"
  },
  "Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}\n{ΤΟΠΟΘΕΣΙΑ} · ώρα {ΩΡΑ}": {
   "de": "Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}\n{ΤΟΠΟΘΕΣΙΑ} · um {ΩΡΑ}",
@@ -2876,6 +2869,13 @@
   "fr": "Un faux arrêt n'empêche pas le CAC (Article 27).",
   "it": "Una ferma a vuoto non impedisce il CAC (Articolo 27)."
  },
+ "Μαζί:": {
+  "de": "Mit:",
+  "en": "With:",
+  "es": "Con:",
+  "fr": "Avec :",
+  "it": "Con:"
+ },
  "Με στήριξη": {
   "de": "Mit Unterstützung",
   "en": "With support",
@@ -3323,13 +3323,6 @@
   "es": "Perras en celo, las últimas",
   "fr": "Chiennes en chaleurs en dernier",
   "it": "Femmine in calore per ultime"
- },
- "Οι διαδρομές σας:": {
-  "de": "Ihre Gänge:",
-  "en": "Your runs:",
-  "es": "Sus turnos:",
-  "fr": "Vos parcours :",
-  "it": "I vostri turni:"
  },
  "Οι κανονισμοί δεν συμφωνούν: το SC art. 3b δέχεται θηλυκές σε οίστρο στο τέλος του γύρου και μόνο μεταξύ τους· το ACO I.6 τις αποκλείει εντελώς. Δεν είναι θέμα ορολογίας — είναι δύο διαφορετικοί κανόνες, βρετανικός και ηπειρωτικός.": {
   "de": "Die Ordnungen widersprechen sich: SC Art. 3b lässt läufige Hündinnen am Ende des Durchgangs und nur untereinander zu; ACO I.6 schließt sie ganz aus. Das ist keine Frage der Terminologie — es sind zwei verschiedene Regeln, eine britische und eine kontinentale.",
@@ -4031,6 +4024,20 @@
   "fr": "Faites glisser, ou ↑ ↓, pour changer la place du couple",
   "it": "Trascinate, o ↑ ↓, per cambiare il posto della coppia"
  },
+ "ΤΑ ΖΕΥΓΗ ΣΑΣ": {
+  "de": "IHRE PAARE",
+  "en": "YOUR BRACES",
+  "es": "SUS PAREJAS",
+  "fr": "VOS COUPLES",
+  "it": "LE VOSTRE COPPIE"
+ },
+ "ΤΟ ΖΕΥΓΟΣ ΣΑΣ": {
+  "de": "IHR PAAR",
+  "en": "YOUR BRACE",
+  "es": "SU PAREJA",
+  "fr": "VOTRE COUPLE",
+  "it": "LA VOSTRA COPPIA"
+ },
  "ΤΡΕΧΕΙ": {
   "de": "LÄUFT",
   "en": "RUNNING",
@@ -4724,6 +4731,13 @@
   "fr": "sur",
   "it": "su"
  },
+ "αριστερά": {
+  "de": "links",
+  "en": "left",
+  "es": "izquierda",
+  "fr": "gauche",
+  "it": "sinistra"
+ },
  "αρσενικός": {
   "de": "Rüde",
   "en": "male",
@@ -4793,6 +4807,20 @@
   "es": "no se ha sorteado, así que no hay orden que invertir.",
   "fr": "n'a pas été tirée, il n'y a donc aucun ordre à inverser.",
   "it": "non è stata sorteggiata, quindi non c'è un ordine da invertire."
+ },
+ "δεξιά": {
+  "de": "rechts",
+  "en": "right",
+  "es": "derecha",
+  "fr": "droite",
+  "it": "destra"
+ },
+ "δεξιά/αριστερά ως προς την επιτροπή": {
+  "de": "rechts/links vom Richtergespann aus",
+  "en": "right/left as seen from the jury",
+  "es": "derecha/izquierda respecto al jurado",
+  "fr": "droite/gauche par rapport au jury",
+  "it": "destra/sinistra rispetto alla giuria"
  },
  "διαδρομές": {
   "de": "Gänge",
@@ -4940,6 +4968,13 @@
   "es": "ninguno",
   "fr": "aucun",
   "it": "nessuno"
+ },
+ "κεντρικός κριτής": {
+  "de": "Obmann",
+  "en": "head judge",
+  "es": "juez principal",
+  "fr": "juge principal",
+  "it": "giudice capo"
  },
  "κλειδωμένοι· βγάλτε τους από εκεί πρώτα.": {
   "de": "gesperrt; nehmen Sie sie zuerst dort heraus.",
@@ -5130,6 +5165,13 @@
   "fr": "qui vient d'être téléchargé.",
   "it": "appena scaricato."
  },
+ "προσέλευση": {
+  "de": "Antreten",
+  "en": "arrive",
+  "es": "presentarse",
+  "fr": "présence",
+  "it": "presentarsi"
+ },
  "πόντοι": {
   "de": "Punkte",
   "en": "points",
@@ -5311,6 +5353,13 @@
   "es": "suplementario",
   "fr": "supplémentaire",
   "it": "supplementare"
+ },
+ "τα δικά σας ζεύγη": {
+  "de": "Ihre Paare",
+  "en": "your braces",
+  "es": "sus parejas",
+  "fr": "vos couples",
+  "it": "le vostre coppie"
  },
  "τερέν": {
   "de": "Gelände",

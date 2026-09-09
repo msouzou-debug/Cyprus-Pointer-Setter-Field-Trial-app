@@ -793,8 +793,12 @@ const FAULTS = ["Συνειδητό ξεσήκωμα","Κουτούλημα","Π
   "Άρνηση πονταρίσματος","Πτώση ρυθμού"];
 /* Τα πρότυπα των SMS είναι δεδομένα, όχι κείμενο της διεπαφής: γράφονται στις
    Ρυθμίσεις, ο γραμματέας τα αλλάζει, και μένουν στη γλώσσα της λέσχης. */
-const DEFAULT_SMS = `Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}
-{ΤΟΠΟΘΕΣΙΑ} · ώρα {ΩΡΑ}`;
+const DEFAULT_SMS = `Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}
+{ΗΜΕΡΟΜΗΝΙΑ} · {ΤΟΠΟΘΕΣΙΑ} · προσέλευση {ΩΡΑ}`;
+/* Ό,τι ήταν κάποτε προεπιλογή μένει προεπιλογή. Αλλιώς η επικεφαλίδα του
+   περσινού αντιγράφου παγώνει ως «γραμμένη από τον γραμματέα» και δεν παίρνει
+   ποτέ τη διόρθωση — ενώ κανείς δεν την έγραψε ποτέ. */
+const SMS_WAS = [`Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}\n{ΤΟΠΟΘΕΣΙΑ} · ώρα {ΩΡΑ}`];
 const DEFAULT_SMS_FOOT = `Η σειρά είναι ενδεικτική (Άρθρο 16). Να είστε στη διάθεση των κριτών.`;
 const DEFAULT_SETTINGS = { sms:DEFAULT_SMS, smsFoot:DEFAULT_SMS_FOOT, smsMode:"full", appUrl:"",
   smsJudges:true, points:{...DEFAULT_POINTS}, lang:"el",
@@ -1149,7 +1153,6 @@ const UI_STR = {
   "ΕΠΙΣΗΜΟΣ": "FULL",
   "ΕΠΙΣΚΕΠΤΗΣ": "VISITOR",
   "ΕΡΕΥΝΑ": "QUEST",
-  "ΕΣΕΙΣ": "YOU",
   "ΕΣΤΑΛΗ": "SENT",
   "Είδος": "Type",
   "Είδος αγώνα": "Type of trial",
@@ -1224,7 +1227,6 @@ const UI_STR = {
   "Η γραμμή επικεφαλίδων εντοπίστηκε αυτόματα. Ελέγξτε κάθε στήλη πριν την εισαγωγή· είναι η μόνη ευκαιρία να πιαστεί λάθος στήλη.": "The header row was found automatically. Check every column before importing; it is the only chance to catch a wrong column.",
   "Η διαδρομή": "The run",
   "Η διαδρομή επεκτάθηκε σε ": "The run was extended to ",
-  "Η διαδρομή σας:": "Your run:",
   "Η ενέργεια καταγράφεται στο φύλλο του κριτή. Επιβεβαίωση αποκλεισμού;": "The action is recorded on the judge's sheet. Confirm the elimination?",
   "Η εφαρμογή άνοιξε από αρχείο, όχι από διεύθυνση.": "The app was opened from a file, not from an address.",
   "Η εφαρμογή δεν άνοιξε από διεύθυνση, οπότε δεν υπάρχει ενημέρωση να ελεγχθεί.": "The app was not opened from an address, so there is no update to check for.",
@@ -1269,6 +1271,7 @@ const UI_STR = {
   "Ιστορικό · σεζόν": "History · season",
   "Ιστορικό σκύλου": "The dog's history",
   "Ιστότοπος του ομίλου": "The club's website",
+  "Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}\n{ΗΜΕΡΟΜΗΝΙΑ} · {ΤΟΠΟΘΕΣΙΑ} · προσέλευση {ΩΡΑ}": "Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}\n{ΗΜΕΡΟΜΗΝΙΑ} · {ΤΟΠΟΘΕΣΙΑ} · arrive {ΩΡΑ}",
   "Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}\n{ΤΟΠΟΘΕΣΙΑ} · ώρα {ΩΡΑ}": "Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}\n{ΤΟΠΟΘΕΣΙΑ} · at {ΩΡΑ}",
   "Κ.Ο.Κ.": "Stud book",
   "ΚΛΕΙΔΩΜΕΝΟ": "LOCKED",
@@ -1344,6 +1347,7 @@ const UI_STR = {
   "Μήνυμα SMS": "SMS message",
   "Μήνυμα, πόντοι, μεταφορά": "Message, points, transfer",
   "Μία λευκή δεν εμποδίζει CAC (Άρθρο 27).": "One pointing without result does not bar a CAC (Article 27).",
+  "Μαζί:": "With:",
   "Με στήριξη": "With support",
   "Με τη σύνδεση, η κλήρωση δεν τοποθετεί τον σκύλο του κριτή στο τερέν που κρίνει (Άρθρο 49).": "Once linked, the draw does not place a judge's dog on the terrain he judges (Article 49).",
   "Μείωση": "Decrease",
@@ -1408,7 +1412,6 @@ const UI_STR = {
   "ΟΛΟΚΛΗΡΩΘΗΚΕ": "COMPLETED",
   "ΟΛΟΚΛΗΡΩΜΕΝΟΣ": "COMPLETED",
   "Οίστρος τελευταίες": "Bitches in season last",
-  "Οι διαδρομές σας:": "Your runs:",
   "Οι κανονισμοί δεν συμφωνούν: το SC art. 3b δέχεται θηλυκές σε οίστρο στο τέλος του γύρου και μόνο μεταξύ τους· το ACO I.6 τις αποκλείει εντελώς. Δεν είναι θέμα ορολογίας — είναι δύο διαφορετικοί κανόνες, βρετανικός και ηπειρωτικός.": "The regulations disagree: SC art. 3b accepts bitches in season at the end of the round and only among themselves; ACO I.6 excludes them altogether. This is not a matter of vocabulary — they are two different rules, British and Continental.",
   "Οι ολοκληρωμένοι αγώνες μένουν στο μητρώο και μετρούν στα Στατιστικά. Ανοίγουν κανονικά για ανάγνωση και εκτύπωση.": "Completed trials stay in the register and count in Statistics. They open as usual for reading and printing.",
   "Οι σημειώσεις αποθηκεύτηκαν": "The notes are saved",
@@ -1509,6 +1512,8 @@ const UI_STR = {
   "Σωστό": "Correct",
   "Σύρετε το": "Drag the",
   "Σύρετε, ή ↑ ↓, για να αλλάξετε τη σειρά του ζεύγους": "Drag, or ↑ ↓, to change the brace's place in the order",
+  "ΤΑ ΖΕΥΓΗ ΣΑΣ": "YOUR BRACES",
+  "ΤΟ ΖΕΥΓΟΣ ΣΑΣ": "YOUR BRACE",
   "ΤΡΕΧΕΙ": "RUNNING",
   "Τίποτα σε αναμονή": "Nothing waiting",
   "Τίτλος": "Title",
@@ -1608,6 +1613,7 @@ const UI_STR = {
   "απλήρωτο": "unpaid",
   "αποτύπωμα": "fingerprint",
   "από": "of",
+  "αριστερά": "left",
   "αρσενικός": "male",
   "αρχεία και εκτυπώσεις": "files and printouts",
   "ατομικός": "solo",
@@ -1618,6 +1624,8 @@ const UI_STR = {
   "για:": "for:",
   "γραμμές": "rows",
   "δεν έχει κληρωθεί, οπότε δεν υπάρχει σειρά για να αντιστραφεί.": "has not been drawn, so there is no order to reverse.",
+  "δεξιά": "right",
+  "δεξιά/αριστερά ως προς την επιτροπή": "right/left as seen from the jury",
   "διαδρομές": "runs",
   "είναι στη μπάρα πάνω δεξιά, δίπλα στα Στατιστικά, και φαίνονται σε κάθε οθόνη. Εδώ μένουν μόνο τα δύο ειδικά.": "are in the bar top right, next to Statistics, and show on every screen. Only the two special ones stay here.",
   "εκκρεμεί": "pending",
@@ -1639,6 +1647,7 @@ const UI_STR = {
   "και στείλτε το αρχείο στο κινητό.": "and send the file to the phone.",
   "καμία": "none",
   "κανένα": "none",
+  "κεντρικός κριτής": "head judge",
   "κλειδωμένοι· βγάλτε τους από εκεί πρώτα.": "locked; take them out of there first.",
   "κρατά ό,τι υπάρχει ήδη και προσθέτει ή ενημερώνει·": "keeps what is already there and adds or updates;",
   "κριτές": "judges",
@@ -1666,6 +1675,7 @@ const UI_STR = {
   "πληρ.": "paid",
   "πληρωμένες": "paid",
   "που μόλις κατέβηκε.": "that has just been downloaded.",
+  "προσέλευση": "arrive",
   "πόντοι": "points",
   "πόντοι ·": "points ·",
   "πόντοι. Ανοίγει κανονικά για ανάγνωση, εκτύπωση και εξαγωγή.": "points. It opens as usual for reading, printing and export.",
@@ -1692,6 +1702,7 @@ const UI_STR = {
   "συμμετοχές": "entries",
   "συμμετοχή": "entry",
   "συμπληρωματικός": "supplementary",
+  "τα δικά σας ζεύγη": "your braces",
   "τερέν": "terrains",
   "τερέν ·": "terrains ·",
   "τερέν. Συνέχεια;": "terrains. Continue?",
@@ -1940,7 +1951,6 @@ const UI_STR = {
   "ΕΠΙΣΗΜΟΣ": "TITULAIRE",
   "ΕΠΙΣΚΕΠΤΗΣ": "VISITEUR",
   "ΕΡΕΥΝΑ": "QUÊTE",
-  "ΕΣΕΙΣ": "VOUS",
   "ΕΣΤΑΛΗ": "ENVOYÉ",
   "Είδος": "Type",
   "Είδος αγώνα": "Type d'épreuve",
@@ -2015,7 +2025,6 @@ const UI_STR = {
   "Η γραμμή επικεφαλίδων εντοπίστηκε αυτόματα. Ελέγξτε κάθε στήλη πριν την εισαγωγή· είναι η μόνη ευκαιρία να πιαστεί λάθος στήλη.": "La ligne d'en-têtes a été repérée automatiquement. Vérifiez chaque colonne avant l'importation ; c'est la seule occasion de rattraper une mauvaise colonne.",
   "Η διαδρομή": "Le parcours",
   "Η διαδρομή επεκτάθηκε σε ": "Le parcours a été prolongé à ",
-  "Η διαδρομή σας:": "Votre parcours :",
   "Η ενέργεια καταγράφεται στο φύλλο του κριτή. Επιβεβαίωση αποκλεισμού;": "L'action est consignée sur la feuille du juge. Confirmer l'élimination ?",
   "Η εφαρμογή άνοιξε από αρχείο, όχι από διεύθυνση.": "L'application a été ouverte depuis un fichier, non depuis une adresse.",
   "Η εφαρμογή δεν άνοιξε από διεύθυνση, οπότε δεν υπάρχει ενημέρωση να ελεγχθεί.": "L'application n'a pas été ouverte depuis une adresse, il n'y a donc pas de mise à jour à vérifier.",
@@ -2060,6 +2069,7 @@ const UI_STR = {
   "Ιστορικό · σεζόν": "Historique · saison",
   "Ιστορικό σκύλου": "Historique du chien",
   "Ιστότοπος του ομίλου": "Le site du club",
+  "Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}\n{ΗΜΕΡΟΜΗΝΙΑ} · {ΤΟΠΟΘΕΣΙΑ} · προσέλευση {ΩΡΑ}": "Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}\n{ΗΜΕΡΟΜΗΝΙΑ} · {ΤΟΠΟΘΕΣΙΑ} · présence {ΩΡΑ}",
   "Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}\n{ΤΟΠΟΘΕΣΙΑ} · ώρα {ΩΡΑ}": "Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}\n{ΤΟΠΟΘΕΣΙΑ} · à {ΩΡΑ}",
   "Κ.Ο.Κ.": "Livre des origines",
   "ΚΛΕΙΔΩΜΕΝΟ": "VERROUILLÉ",
@@ -2135,6 +2145,7 @@ const UI_STR = {
   "Μήνυμα SMS": "Message SMS",
   "Μήνυμα, πόντοι, μεταφορά": "Message, points, transfert",
   "Μία λευκή δεν εμποδίζει CAC (Άρθρο 27).": "Un faux arrêt n'empêche pas le CAC (Article 27).",
+  "Μαζί:": "Avec :",
   "Με στήριξη": "Avec soutien",
   "Με τη σύνδεση, η κλήρωση δεν τοποθετεί τον σκύλο του κριτή στο τερέν που κρίνει (Άρθρο 49).": "Une fois relié, le tirage ne place pas le chien du juge sur le terrain qu'il juge (Article 49).",
   "Μείωση": "Diminuer",
@@ -2199,7 +2210,6 @@ const UI_STR = {
   "ΟΛΟΚΛΗΡΩΘΗΚΕ": "TERMINÉE",
   "ΟΛΟΚΛΗΡΩΜΕΝΟΣ": "TERMINÉE",
   "Οίστρος τελευταίες": "Chiennes en chaleurs en dernier",
-  "Οι διαδρομές σας:": "Vos parcours :",
   "Οι κανονισμοί δεν συμφωνούν: το SC art. 3b δέχεται θηλυκές σε οίστρο στο τέλος του γύρου και μόνο μεταξύ τους· το ACO I.6 τις αποκλείει εντελώς. Δεν είναι θέμα ορολογίας — είναι δύο διαφορετικοί κανόνες, βρετανικός και ηπειρωτικός.": "Les règlements divergent : SC art. 3b accepte les chiennes en chaleurs en fin de tour et seulement entre elles ; ACO I.6 les exclut totalement. Ce n'est pas une question de terminologie — ce sont deux règles différentes, britannique et continentale.",
   "Οι ολοκληρωμένοι αγώνες μένουν στο μητρώο και μετρούν στα Στατιστικά. Ανοίγουν κανονικά για ανάγνωση και εκτύπωση.": "Les épreuves terminées restent au registre et comptent dans les Statistiques. Elles s'ouvrent normalement pour la lecture et l'impression.",
   "Οι σημειώσεις αποθηκεύτηκαν": "Les notes sont enregistrées",
@@ -2300,6 +2310,8 @@ const UI_STR = {
   "Σωστό": "Correct",
   "Σύρετε το": "Faites glisser le",
   "Σύρετε, ή ↑ ↓, για να αλλάξετε τη σειρά του ζεύγους": "Faites glisser, ou ↑ ↓, pour changer la place du couple",
+  "ΤΑ ΖΕΥΓΗ ΣΑΣ": "VOS COUPLES",
+  "ΤΟ ΖΕΥΓΟΣ ΣΑΣ": "VOTRE COUPLE",
   "ΤΡΕΧΕΙ": "EN PISTE",
   "Τίποτα σε αναμονή": "Rien en attente",
   "Τίτλος": "Titre",
@@ -2399,6 +2411,7 @@ const UI_STR = {
   "απλήρωτο": "impayé",
   "αποτύπωμα": "empreinte",
   "από": "sur",
+  "αριστερά": "gauche",
   "αρσενικός": "mâle",
   "αρχεία και εκτυπώσεις": "fichiers et impressions",
   "ατομικός": "individuel",
@@ -2409,6 +2422,8 @@ const UI_STR = {
   "για:": "pour :",
   "γραμμές": "lignes",
   "δεν έχει κληρωθεί, οπότε δεν υπάρχει σειρά για να αντιστραφεί.": "n'a pas été tirée, il n'y a donc aucun ordre à inverser.",
+  "δεξιά": "droite",
+  "δεξιά/αριστερά ως προς την επιτροπή": "droite/gauche par rapport au jury",
   "διαδρομές": "parcours",
   "είναι στη μπάρα πάνω δεξιά, δίπλα στα Στατιστικά, και φαίνονται σε κάθε οθόνη. Εδώ μένουν μόνο τα δύο ειδικά.": "se trouvent dans la barre en haut à droite, à côté des Statistiques, et apparaissent sur chaque écran. Seuls les deux cas particuliers restent ici.",
   "εκκρεμεί": "en attente",
@@ -2430,6 +2445,7 @@ const UI_STR = {
   "και στείλτε το αρχείο στο κινητό.": "et envoyez le fichier sur le téléphone.",
   "καμία": "aucun",
   "κανένα": "aucun",
+  "κεντρικός κριτής": "juge principal",
   "κλειδωμένοι· βγάλτε τους από εκεί πρώτα.": "verrouillés ; sortez-les de là d'abord.",
   "κρατά ό,τι υπάρχει ήδη και προσθέτει ή ενημερώνει·": "garde ce qui existe déjà et ajoute ou met à jour ;",
   "κριτές": "juges",
@@ -2457,6 +2473,7 @@ const UI_STR = {
   "πληρ.": "payé",
   "πληρωμένες": "payés",
   "που μόλις κατέβηκε.": "qui vient d'être téléchargé.",
+  "προσέλευση": "présence",
   "πόντοι": "points",
   "πόντοι ·": "points ·",
   "πόντοι. Ανοίγει κανονικά για ανάγνωση, εκτύπωση και εξαγωγή.": "points. Elle s'ouvre normalement pour la lecture, l'impression et l'export.",
@@ -2483,6 +2500,7 @@ const UI_STR = {
   "συμμετοχές": "engagements",
   "συμμετοχή": "engagement",
   "συμπληρωματικός": "supplémentaire",
+  "τα δικά σας ζεύγη": "vos couples",
   "τερέν": "terrains",
   "τερέν ·": "terrains ·",
   "τερέν. Συνέχεια;": "terrains. Continuer ?",
@@ -2731,7 +2749,6 @@ const UI_STR = {
   "ΕΠΙΣΗΜΟΣ": "ORDENTLICH",
   "ΕΠΙΣΚΕΠΤΗΣ": "GAST",
   "ΕΡΕΥΝΑ": "SUCHE",
-  "ΕΣΕΙΣ": "SIE",
   "ΕΣΤΑΛΗ": "GESENDET",
   "Είδος": "Art",
   "Είδος αγώνα": "Art der Prüfung",
@@ -2806,7 +2823,6 @@ const UI_STR = {
   "Η γραμμή επικεφαλίδων εντοπίστηκε αυτόματα. Ελέγξτε κάθε στήλη πριν την εισαγωγή· είναι η μόνη ευκαιρία να πιαστεί λάθος στήλη.": "Die Kopfzeile wurde automatisch erkannt. Prüfen Sie jede Spalte vor dem Import; es ist die einzige Gelegenheit, eine falsche Spalte zu bemerken.",
   "Η διαδρομή": "Der Gang",
   "Η διαδρομή επεκτάθηκε σε ": "Der Gang wurde verlängert auf ",
-  "Η διαδρομή σας:": "Ihr Gang:",
   "Η ενέργεια καταγράφεται στο φύλλο του κριτή. Επιβεβαίωση αποκλεισμού;": "Die Handlung wird auf dem Blatt des Richters festgehalten. Ausschluss bestätigen?",
   "Η εφαρμογή άνοιξε από αρχείο, όχι από διεύθυνση.": "Die Anwendung wurde aus einer Datei geöffnet, nicht über eine Adresse.",
   "Η εφαρμογή δεν άνοιξε από διεύθυνση, οπότε δεν υπάρχει ενημέρωση να ελεγχθεί.": "Die Anwendung wurde nicht über eine Adresse geöffnet, es gibt also keine Aktualisierung zu prüfen.",
@@ -2851,6 +2867,7 @@ const UI_STR = {
   "Ιστορικό · σεζόν": "Historie · Saison",
   "Ιστορικό σκύλου": "Historie des Hundes",
   "Ιστότοπος του ομίλου": "Website des Klubs",
+  "Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}\n{ΗΜΕΡΟΜΗΝΙΑ} · {ΤΟΠΟΘΕΣΙΑ} · προσέλευση {ΩΡΑ}": "Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}\n{ΗΜΕΡΟΜΗΝΙΑ} · {ΤΟΠΟΘΕΣΙΑ} · Antreten {ΩΡΑ}",
   "Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}\n{ΤΟΠΟΘΕΣΙΑ} · ώρα {ΩΡΑ}": "Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}\n{ΤΟΠΟΘΕΣΙΑ} · um {ΩΡΑ}",
   "Κ.Ο.Κ.": "Zuchtbuch",
   "ΚΛΕΙΔΩΜΕΝΟ": "GESPERRT",
@@ -2926,6 +2943,7 @@ const UI_STR = {
   "Μήνυμα SMS": "SMS-Nachricht",
   "Μήνυμα, πόντοι, μεταφορά": "Nachricht, Punkte, Übertragung",
   "Μία λευκή δεν εμποδίζει CAC (Άρθρο 27).": "Ein leeres Vorstehen schließt das CAC nicht aus (Artikel 27).",
+  "Μαζί:": "Mit:",
   "Με στήριξη": "Mit Unterstützung",
   "Με τη σύνδεση, η κλήρωση δεν τοποθετεί τον σκύλο του κριτή στο τερέν που κρίνει (Άρθρο 49).": "Ist die Verknüpfung gesetzt, stellt die Auslosung den Hund des Richters nicht auf das Gelände, das er richtet (Artikel 49).",
   "Μείωση": "Verringern",
@@ -2990,7 +3008,6 @@ const UI_STR = {
   "ΟΛΟΚΛΗΡΩΘΗΚΕ": "ABGESCHLOSSEN",
   "ΟΛΟΚΛΗΡΩΜΕΝΟΣ": "ABGESCHLOSSEN",
   "Οίστρος τελευταίες": "Läufige Hündin zuletzt",
-  "Οι διαδρομές σας:": "Ihre Gänge:",
   "Οι κανονισμοί δεν συμφωνούν: το SC art. 3b δέχεται θηλυκές σε οίστρο στο τέλος του γύρου και μόνο μεταξύ τους· το ACO I.6 τις αποκλείει εντελώς. Δεν είναι θέμα ορολογίας — είναι δύο διαφορετικοί κανόνες, βρετανικός και ηπειρωτικός.": "Die Ordnungen widersprechen sich: SC Art. 3b lässt läufige Hündinnen am Ende des Durchgangs und nur untereinander zu; ACO I.6 schließt sie ganz aus. Das ist keine Frage der Terminologie — es sind zwei verschiedene Regeln, eine britische und eine kontinentale.",
   "Οι ολοκληρωμένοι αγώνες μένουν στο μητρώο και μετρούν στα Στατιστικά. Ανοίγουν κανονικά για ανάγνωση και εκτύπωση.": "Abgeschlossene Prüfungen bleiben im Register und zählen in der Statistik. Sie lassen sich wie gewohnt lesen und drucken.",
   "Οι σημειώσεις αποθηκεύτηκαν": "Die Notizen sind gespeichert",
@@ -3091,6 +3108,8 @@ const UI_STR = {
   "Σωστό": "Korrekt",
   "Σύρετε το": "Ziehen Sie das",
   "Σύρετε, ή ↑ ↓, για να αλλάξετε τη σειρά του ζεύγους": "Ziehen, oder ↑ ↓, um die Stelle des Paares zu ändern",
+  "ΤΑ ΖΕΥΓΗ ΣΑΣ": "IHRE PAARE",
+  "ΤΟ ΖΕΥΓΟΣ ΣΑΣ": "IHR PAAR",
   "ΤΡΕΧΕΙ": "LÄUFT",
   "Τίποτα σε αναμονή": "Nichts offen",
   "Τίτλος": "Titel",
@@ -3190,6 +3209,7 @@ const UI_STR = {
   "απλήρωτο": "unbezahlt",
   "αποτύπωμα": "Prüfsumme",
   "από": "von",
+  "αριστερά": "links",
   "αρσενικός": "Rüde",
   "αρχεία και εκτυπώσεις": "Dateien und Ausdrucke",
   "ατομικός": "Einzeln",
@@ -3200,6 +3220,8 @@ const UI_STR = {
   "για:": "für:",
   "γραμμές": "Zeilen",
   "δεν έχει κληρωθεί, οπότε δεν υπάρχει σειρά για να αντιστραφεί.": "wurde nicht ausgelost, es gibt also keine Reihenfolge umzukehren.",
+  "δεξιά": "rechts",
+  "δεξιά/αριστερά ως προς την επιτροπή": "rechts/links vom Richtergespann aus",
   "διαδρομές": "Gänge",
   "είναι στη μπάρα πάνω δεξιά, δίπλα στα Στατιστικά, και φαίνονται σε κάθε οθόνη. Εδώ μένουν μόνο τα δύο ειδικά.": "stehen in der Leiste oben rechts, neben der Statistik, und erscheinen auf jedem Bildschirm. Hier bleiben nur die beiden Sonderfälle.",
   "εκκρεμεί": "offen",
@@ -3221,6 +3243,7 @@ const UI_STR = {
   "και στείλτε το αρχείο στο κινητό.": "und schicken Sie die Datei aufs Telefon.",
   "καμία": "keine",
   "κανένα": "keines",
+  "κεντρικός κριτής": "Obmann",
   "κλειδωμένοι· βγάλτε τους από εκεί πρώτα.": "gesperrt; nehmen Sie sie zuerst dort heraus.",
   "κρατά ό,τι υπάρχει ήδη και προσθέτει ή ενημερώνει·": "behält das bereits Vorhandene und ergänzt oder aktualisiert;",
   "κριτές": "Richter",
@@ -3248,6 +3271,7 @@ const UI_STR = {
   "πληρ.": "bez.",
   "πληρωμένες": "bezahlt",
   "που μόλις κατέβηκε.": "die soeben heruntergeladen wurde.",
+  "προσέλευση": "Antreten",
   "πόντοι": "Punkte",
   "πόντοι ·": "Punkte ·",
   "πόντοι. Ανοίγει κανονικά για ανάγνωση, εκτύπωση και εξαγωγή.": "Punkte. Sie lässt sich wie gewohnt lesen, drucken und exportieren.",
@@ -3274,6 +3298,7 @@ const UI_STR = {
   "συμμετοχές": "Meldungen",
   "συμμετοχή": "Meldung",
   "συμπληρωματικός": "Ergänzungshund",
+  "τα δικά σας ζεύγη": "Ihre Paare",
   "τερέν": "Gelände",
   "τερέν ·": "Gelände ·",
   "τερέν. Συνέχεια;": "Gelände. Fortfahren?",
@@ -3522,7 +3547,6 @@ const UI_STR = {
   "ΕΠΙΣΗΜΟΣ": "EFFETTIVO",
   "ΕΠΙΣΚΕΠΤΗΣ": "OSPITE",
   "ΕΡΕΥΝΑ": "CERCA",
-  "ΕΣΕΙΣ": "VOI",
   "ΕΣΤΑΛΗ": "INVIATO",
   "Είδος": "Tipo",
   "Είδος αγώνα": "Tipo di prova",
@@ -3597,7 +3621,6 @@ const UI_STR = {
   "Η γραμμή επικεφαλίδων εντοπίστηκε αυτόματα. Ελέγξτε κάθε στήλη πριν την εισαγωγή· είναι η μόνη ευκαιρία να πιαστεί λάθος στήλη.": "La riga di intestazione è stata individuata automaticamente. Controllate ogni colonna prima dell'importazione; è l'unica occasione per accorgersi di una colonna sbagliata.",
   "Η διαδρομή": "Il turno",
   "Η διαδρομή επεκτάθηκε σε ": "Il turno è stato prolungato a ",
-  "Η διαδρομή σας:": "Il vostro turno:",
   "Η ενέργεια καταγράφεται στο φύλλο του κριτή. Επιβεβαίωση αποκλεισμού;": "L'azione viene registrata sul foglio del giudice. Confermare l'eliminazione?",
   "Η εφαρμογή άνοιξε από αρχείο, όχι από διεύθυνση.": "L'applicazione è stata aperta da un file, non da un indirizzo.",
   "Η εφαρμογή δεν άνοιξε από διεύθυνση, οπότε δεν υπάρχει ενημέρωση να ελεγχθεί.": "L'applicazione non è stata aperta da un indirizzo, quindi non c'è alcun aggiornamento da controllare.",
@@ -3642,6 +3665,7 @@ const UI_STR = {
   "Ιστορικό · σεζόν": "Storico · stagione",
   "Ιστορικό σκύλου": "Storico del cane",
   "Ιστότοπος του ομίλου": "Il sito del club",
+  "Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}\n{ΗΜΕΡΟΜΗΝΙΑ} · {ΤΟΠΟΘΕΣΙΑ} · προσέλευση {ΩΡΑ}": "Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}\n{ΗΜΕΡΟΜΗΝΙΑ} · {ΤΟΠΟΘΕΣΙΑ} · presentarsi {ΩΡΑ}",
   "Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}\n{ΤΟΠΟΘΕΣΙΑ} · ώρα {ΩΡΑ}": "Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}\n{ΤΟΠΟΘΕΣΙΑ} · ore {ΩΡΑ}",
   "Κ.Ο.Κ.": "Libro genealogico",
   "ΚΛΕΙΔΩΜΕΝΟ": "BLOCCATO",
@@ -3717,6 +3741,7 @@ const UI_STR = {
   "Μήνυμα SMS": "Messaggio SMS",
   "Μήνυμα, πόντοι, μεταφορά": "Messaggio, punti, trasferimento",
   "Μία λευκή δεν εμποδίζει CAC (Άρθρο 27).": "Una ferma a vuoto non impedisce il CAC (Articolo 27).",
+  "Μαζί:": "Con:",
   "Με στήριξη": "Con sostegno",
   "Με τη σύνδεση, η κλήρωση δεν τοποθετεί τον σκύλο του κριτή στο τερέν που κρίνει (Άρθρο 49).": "Con il collegamento, il sorteggio non mette il cane del giudice sul terreno che egli giudica (Articolo 49).",
   "Μείωση": "Diminuisci",
@@ -3781,7 +3806,6 @@ const UI_STR = {
   "ΟΛΟΚΛΗΡΩΘΗΚΕ": "CONCLUSA",
   "ΟΛΟΚΛΗΡΩΜΕΝΟΣ": "CONCLUSA",
   "Οίστρος τελευταίες": "Femmine in calore per ultime",
-  "Οι διαδρομές σας:": "I vostri turni:",
   "Οι κανονισμοί δεν συμφωνούν: το SC art. 3b δέχεται θηλυκές σε οίστρο στο τέλος του γύρου και μόνο μεταξύ τους· το ACO I.6 τις αποκλείει εντελώς. Δεν είναι θέμα ορολογίας — είναι δύο διαφορετικοί κανόνες, βρετανικός και ηπειρωτικός.": "I regolamenti non concordano: SC art. 3b ammette le femmine in calore alla fine del turno e solo fra loro; ACO I.6 le esclude del tutto. Non è questione di terminologia — sono due regole diverse, britannica e continentale.",
   "Οι ολοκληρωμένοι αγώνες μένουν στο μητρώο και μετρούν στα Στατιστικά. Ανοίγουν κανονικά για ανάγνωση και εκτύπωση.": "Le prove concluse restano nel registro e contano nelle Statistiche. Si aprono normalmente per la lettura e la stampa.",
   "Οι σημειώσεις αποθηκεύτηκαν": "Le note sono salvate",
@@ -3882,6 +3906,8 @@ const UI_STR = {
   "Σωστό": "Corretto",
   "Σύρετε το": "Trascinate il",
   "Σύρετε, ή ↑ ↓, για να αλλάξετε τη σειρά του ζεύγους": "Trascinate, o ↑ ↓, per cambiare il posto della coppia",
+  "ΤΑ ΖΕΥΓΗ ΣΑΣ": "LE VOSTRE COPPIE",
+  "ΤΟ ΖΕΥΓΟΣ ΣΑΣ": "LA VOSTRA COPPIA",
   "ΤΡΕΧΕΙ": "IN CORSO",
   "Τίποτα σε αναμονή": "Nulla in attesa",
   "Τίτλος": "Titolo",
@@ -3981,6 +4007,7 @@ const UI_STR = {
   "απλήρωτο": "non pagato",
   "αποτύπωμα": "impronta",
   "από": "su",
+  "αριστερά": "sinistra",
   "αρσενικός": "maschio",
   "αρχεία και εκτυπώσεις": "file e stampe",
   "ατομικός": "individuale",
@@ -3991,6 +4018,8 @@ const UI_STR = {
   "για:": "per:",
   "γραμμές": "righe",
   "δεν έχει κληρωθεί, οπότε δεν υπάρχει σειρά για να αντιστραφεί.": "non è stata sorteggiata, quindi non c'è un ordine da invertire.",
+  "δεξιά": "destra",
+  "δεξιά/αριστερά ως προς την επιτροπή": "destra/sinistra rispetto alla giuria",
   "διαδρομές": "turni",
   "είναι στη μπάρα πάνω δεξιά, δίπλα στα Στατιστικά, και φαίνονται σε κάθε οθόνη. Εδώ μένουν μόνο τα δύο ειδικά.": "sono nella barra in alto a destra, accanto alle Statistiche, e compaiono su ogni schermata. Qui restano solo i due casi particolari.",
   "εκκρεμεί": "in attesa",
@@ -4012,6 +4041,7 @@ const UI_STR = {
   "και στείλτε το αρχείο στο κινητό.": "e mandate il file al telefono.",
   "καμία": "nessuna",
   "κανένα": "nessuno",
+  "κεντρικός κριτής": "giudice capo",
   "κλειδωμένοι· βγάλτε τους από εκεί πρώτα.": "bloccati; toglieteli prima da lì.",
   "κρατά ό,τι υπάρχει ήδη και προσθέτει ή ενημερώνει·": "conserva quel che c'è già e aggiunge o aggiorna;",
   "κριτές": "giudici",
@@ -4039,6 +4069,7 @@ const UI_STR = {
   "πληρ.": "pag.",
   "πληρωμένες": "pagate",
   "που μόλις κατέβηκε.": "appena scaricato.",
+  "προσέλευση": "presentarsi",
   "πόντοι": "punti",
   "πόντοι ·": "punti ·",
   "πόντοι. Ανοίγει κανονικά για ανάγνωση, εκτύπωση και εξαγωγή.": "punti. Si apre normalmente per lettura, stampa ed esportazione.",
@@ -4065,6 +4096,7 @@ const UI_STR = {
   "συμμετοχές": "iscrizioni",
   "συμμετοχή": "iscrizione",
   "συμπληρωματικός": "supplementare",
+  "τα δικά σας ζεύγη": "le vostre coppie",
   "τερέν": "terreni",
   "τερέν ·": "terreni ·",
   "τερέν. Συνέχεια;": "terreni. Continuare?",
@@ -4313,7 +4345,6 @@ const UI_STR = {
   "ΕΠΙΣΗΜΟΣ": "TITULAR",
   "ΕΠΙΣΚΕΠΤΗΣ": "VISITANTE",
   "ΕΡΕΥΝΑ": "BUSCA",
-  "ΕΣΕΙΣ": "USTED",
   "ΕΣΤΑΛΗ": "ENVIADO",
   "Είδος": "Tipo",
   "Είδος αγώνα": "Tipo de prueba",
@@ -4388,7 +4419,6 @@ const UI_STR = {
   "Η γραμμή επικεφαλίδων εντοπίστηκε αυτόματα. Ελέγξτε κάθε στήλη πριν την εισαγωγή· είναι η μόνη ευκαιρία να πιαστεί λάθος στήλη.": "La fila de encabezados se ha detectado automáticamente. Compruebe cada columna antes de importar; es la única ocasión de descubrir una columna equivocada.",
   "Η διαδρομή": "El turno",
   "Η διαδρομή επεκτάθηκε σε ": "El turno se prolongó a ",
-  "Η διαδρομή σας:": "Su turno:",
   "Η ενέργεια καταγράφεται στο φύλλο του κριτή. Επιβεβαίωση αποκλεισμού;": "La acción queda registrada en la hoja del juez. ¿Confirma la eliminación?",
   "Η εφαρμογή άνοιξε από αρχείο, όχι από διεύθυνση.": "La aplicación se abrió desde un archivo, no desde una dirección.",
   "Η εφαρμογή δεν άνοιξε από διεύθυνση, οπότε δεν υπάρχει ενημέρωση να ελεγχθεί.": "La aplicación no se abrió desde una dirección, así que no hay actualización que comprobar.",
@@ -4433,6 +4463,7 @@ const UI_STR = {
   "Ιστορικό · σεζόν": "Historial · temporada",
   "Ιστορικό σκύλου": "Historial del perro",
   "Ιστότοπος του ομίλου": "El sitio web del club",
+  "Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}\n{ΗΜΕΡΟΜΗΝΙΑ} · {ΤΟΠΟΘΕΣΙΑ} · προσέλευση {ΩΡΑ}": "Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}\n{ΗΜΕΡΟΜΗΝΙΑ} · {ΤΟΠΟΘΕΣΙΑ} · presentarse {ΩΡΑ}",
   "Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}\n{ΤΟΠΟΘΕΣΙΑ} · ώρα {ΩΡΑ}": "Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}\n{ΤΟΠΟΘΕΣΙΑ} · a las {ΩΡΑ}",
   "Κ.Ο.Κ.": "L.O.",
   "ΚΛΕΙΔΩΜΕΝΟ": "BLOQUEADO",
@@ -4508,6 +4539,7 @@ const UI_STR = {
   "Μήνυμα SMS": "Mensaje SMS",
   "Μήνυμα, πόντοι, μεταφορά": "Mensaje, puntos, transferencia",
   "Μία λευκή δεν εμποδίζει CAC (Άρθρο 27).": "Una muestra en vacío no impide el CAC (Artículo 27).",
+  "Μαζί:": "Con:",
   "Με στήριξη": "Con apoyo",
   "Με τη σύνδεση, η κλήρωση δεν τοποθετεί τον σκύλο του κριτή στο τερέν που κρίνει (Άρθρο 49).": "Una vez vinculado, el sorteo no coloca el perro de un juez en el terreno que él juzga (Artículo 49).",
   "Μείωση": "Disminuir",
@@ -4572,7 +4604,6 @@ const UI_STR = {
   "ΟΛΟΚΛΗΡΩΘΗΚΕ": "COMPLETADA",
   "ΟΛΟΚΛΗΡΩΜΕΝΟΣ": "COMPLETADO",
   "Οίστρος τελευταίες": "Perras en celo, las últimas",
-  "Οι διαδρομές σας:": "Sus turnos:",
   "Οι κανονισμοί δεν συμφωνούν: το SC art. 3b δέχεται θηλυκές σε οίστρο στο τέλος του γύρου και μόνο μεταξύ τους· το ACO I.6 τις αποκλείει εντελώς. Δεν είναι θέμα ορολογίας — είναι δύο διαφορετικοί κανόνες, βρετανικός και ηπειρωτικός.": "Los reglamentos no coinciden: el SC art. 3b admite perras en celo al final de la vuelta y sólo entre ellas; el ACO I.6 las excluye del todo. No es cuestión de terminología — son dos reglas distintas, la británica y la continental.",
   "Οι ολοκληρωμένοι αγώνες μένουν στο μητρώο και μετρούν στα Στατιστικά. Ανοίγουν κανονικά για ανάγνωση και εκτύπωση.": "Las pruebas terminadas quedan en el registro y cuentan en las Estadísticas. Se abren con normalidad para leerlas e imprimirlas.",
   "Οι σημειώσεις αποθηκεύτηκαν": "Las notas están guardadas",
@@ -4673,6 +4704,8 @@ const UI_STR = {
   "Σωστό": "Correcto",
   "Σύρετε το": "Arrastre el",
   "Σύρετε, ή ↑ ↓, για να αλλάξετε τη σειρά του ζεύγους": "Arrastre, o ↑ ↓, para cambiar el puesto de la pareja en el orden",
+  "ΤΑ ΖΕΥΓΗ ΣΑΣ": "SUS PAREJAS",
+  "ΤΟ ΖΕΥΓΟΣ ΣΑΣ": "SU PAREJA",
   "ΤΡΕΧΕΙ": "CORRIENDO",
   "Τίποτα σε αναμονή": "Nada esperando",
   "Τίτλος": "Título",
@@ -4772,6 +4805,7 @@ const UI_STR = {
   "απλήρωτο": "impagado",
   "αποτύπωμα": "huella",
   "από": "de",
+  "αριστερά": "izquierda",
   "αρσενικός": "macho",
   "αρχεία και εκτυπώσεις": "archivos e impresiones",
   "ατομικός": "individual",
@@ -4782,6 +4816,8 @@ const UI_STR = {
   "για:": "para:",
   "γραμμές": "filas",
   "δεν έχει κληρωθεί, οπότε δεν υπάρχει σειρά για να αντιστραφεί.": "no se ha sorteado, así que no hay orden que invertir.",
+  "δεξιά": "derecha",
+  "δεξιά/αριστερά ως προς την επιτροπή": "derecha/izquierda respecto al jurado",
   "διαδρομές": "turnos",
   "είναι στη μπάρα πάνω δεξιά, δίπλα στα Στατιστικά, και φαίνονται σε κάθε οθόνη. Εδώ μένουν μόνο τα δύο ειδικά.": "están en la barra de arriba a la derecha, junto a Estadísticas, y aparecen en todas las pantallas. Aquí sólo quedan los dos especiales.",
   "εκκρεμεί": "pendiente",
@@ -4803,6 +4839,7 @@ const UI_STR = {
   "και στείλτε το αρχείο στο κινητό.": "y envíe el archivo al teléfono.",
   "καμία": "ninguna",
   "κανένα": "ninguno",
+  "κεντρικός κριτής": "juez principal",
   "κλειδωμένοι· βγάλτε τους από εκεί πρώτα.": "bloqueados; sáquelos de ahí primero.",
   "κρατά ό,τι υπάρχει ήδη και προσθέτει ή ενημερώνει·": "conserva lo que ya hay y añade o actualiza;",
   "κριτές": "jueces",
@@ -4830,6 +4867,7 @@ const UI_STR = {
   "πληρ.": "pag.",
   "πληρωμένες": "pagadas",
   "που μόλις κατέβηκε.": "que se acaba de descargar.",
+  "προσέλευση": "presentarse",
   "πόντοι": "puntos",
   "πόντοι ·": "puntos ·",
   "πόντοι. Ανοίγει κανονικά για ανάγνωση, εκτύπωση και εξαγωγή.": "puntos. Se abre con normalidad para leerla, imprimirla y exportarla.",
@@ -4856,6 +4894,7 @@ const UI_STR = {
   "συμμετοχές": "inscripciones",
   "συμμετοχή": "inscripción",
   "συμπληρωματικός": "suplementario",
+  "τα δικά σας ζεύγη": "sus parejas",
   "τερέν": "terrenos",
   "τερέν ·": "terrenos ·",
   "τερέν. Συνέχεια;": "terrenos. ¿Continuar?",
@@ -6693,14 +6732,15 @@ function printHead(t, day, terrain){
 function orderText(t, handlerId, withJudges){
   const day = t.days[S.day], L = [];
   (day.terrains||[]).forEach(tr=>{
-    L.push("▸ " + tr.name + (withJudges && tr.judgeIds.length
-      ? " (" + tr.judgeIds.map(j=>(judById(j)||{}).name).filter(Boolean).join(", ") + ")" : ""));
+    L.push(tr.name + (withJudges && tr.judgeIds.length
+      ? " — " + tr.judgeIds.map(j=>(judById(j)||{}).name).filter(Boolean).join(", ") : ""));
     (tr.braces||[]).forEach(b=>{
       const a = t.entries.find(e=>e.id===b.a), c = t.entries.find(e=>e.id===b.b);
       const mine = handlerId && ((a && a.handlerId===handlerId) || (c && c.handlerId===handlerId));
-      L.push((mine ? ">> " : "") + b.no + ". " + (a?dogName(a.dogId):"—") + " / " + (c?dogName(c.dogId):tx("ΜΟΝΟΣ"))
-        + (b.recall ? " (" + txOne("επανάκληση") + ")" : "") + (b.trailer ? " (trailer)" : "")
-        + (mine ? "  <-- " + tx("ΕΣΕΙΣ") : ""));
+      /* Ένα σύμβολο σε όλο το μήνυμα, και σημαδεύει μία φορά. Το κενό μπροστά
+         στις υπόλοιπες γραμμές κρατά τους αριθμούς στην ίδια στήλη. */
+      L.push((mine ? "▸ " : "  ") + b.no + ". " + (a?dogName(a.dogId):"—") + " / " + (c?dogName(c.dogId):tx("ΜΟΝΟΣ"))
+        + (b.recall ? " (" + txOne("επανάκληση") + ")" : "") + (b.trailer ? " (trailer)" : ""));
     });
   });
   return L.join("\n");
@@ -6709,7 +6749,8 @@ function myRuns(t, handlerId){
   const out = [];
   (t.days[S.day].terrains||[]).forEach(tr=>(tr.braces||[]).forEach(b=>{
     [b.a,b.b].forEach(id=>{ const e = t.entries.find(x=>x.id===id);
-      if(e && e.handlerId===handlerId) out.push({dog:dogName(e.dogId), ter:tr.name, no:b.no, recall:b.recall}); });
+      if(e && e.handlerId===handlerId) out.push({dog:dogName(e.dogId), ter:tr.name, no:b.no,
+        recall:b.recall, side: id===b.a ? "δεξιά" : "αριστερά"}); });
   }));
   return out;
 }
@@ -6747,18 +6788,28 @@ function fieldsIn(t){
     { t = t.split(m[L]).join(gr); }));
   return t;
 }
+const isDefaultSms = v => !v || v === DEFAULT_SMS || SMS_WAS.includes(v);
 const smsTpl  = () => { const v = DB.settings.sms;
-  return !v || v === DEFAULT_SMS ? tx(DEFAULT_SMS) : v; };
+  return isDefaultSms(v) ? tx(DEFAULT_SMS) : v; };
 const smsFootTxt = () => { const v = DB.settings.smsFoot;
   return !v || v === DEFAULT_SMS_FOOT ? tx(DEFAULT_SMS_FOOT) : v; };
 /* «ζεύγος 1ο» στα ελληνικά, «coppia 1» στις άλλες: το τακτικό είναι ελληνικός
    τύπος και δεν μεταφέρεται. Ο αριθμός μένει αριθμός σε κάθε γλώσσα. */
+/* «1ο ζεύγος» είναι ελληνική σειρά. Στα ιταλικά το ίδιο σχήμα βγάζει «1 coppia»,
+   που δεν είναι γλώσσα — εκεί ο αριθμός πάει πίσω: «coppia 1». */
+const braceLabel = n => ((DB && DB.settings && DB.settings.lang) || "el") === "el"
+  ? braceNo(n) + " " + txOne("ζεύγος")
+  : txCap("ζεύγος") + " " + n;
 const braceNo = n => n + ((DB && DB.settings && DB.settings.lang || "el") === "el" ? "ο" : "");
 function smsHead(t, day){
   const tpl = fieldsIn(smsTpl());
+  /* Οι μισοί αγώνες παίρνουν το όνομα του τόπου τους. Τότε η τοποθεσία δεν
+     προσθέτει τίποτα και βγαίνει — μια επικεφαλίδα που λέει δύο φορές «Κάτω
+     Μονή» διαβάζεται ως λάθος, όχι ως έμφαση. */
+  const same = (a,b) => String(a||"").trim().toLowerCase() === String(b||"").trim().toLowerCase();
   const val = { "{ΑΓΩΝΑΣ}": t.title || "",
                 "{ΗΜΕΡΟΜΗΝΙΑ}": fmtDate((day||{}).date || t.dateStart),
-                "{ΤΟΠΟΘΕΣΙΑ}": t.place || "",
+                "{ΤΟΠΟΘΕΣΙΑ}": same(t.place, t.title) ? "" : (t.place || ""),
                 "{ΩΡΑ}": t.time || "" };
   /* A segment goes away whole when its field is empty: «{ΤΟΠΟΘΕΣΙΑ} · ώρα {ΩΡΑ}»
      with no ώρα set must not go out reading «Κάτω Μονή · ώρα». */
@@ -6773,24 +6824,36 @@ function smsHead(t, day){
     .filter(Boolean);
   if(!/\{ΤΟΠΟΘΕΣΙΑ\}|\{ΩΡΑ\}/.test(tpl)){
     const bits = [];
-    if(t.place) bits.push(t.place);
-    if(t.time)  bits.push("ώρα " + t.time);
+    if(val["{ΤΟΠΟΘΕΣΙΑ}"]) bits.push(val["{ΤΟΠΟΘΕΣΙΑ}"]);
+    if(t.time)  bits.push(tx("προσέλευση") + " " + t.time);
     if(bits.length) lines.push(bits.join(" · "));
   }
   return lines.join("\n");
 }
+/* Ο κυναγωγός διαβάζει αυτό στις έξι το πρωί, όρθιος, με το ένα χέρι. Τρεις
+   ερωτήσεις έχει και με αυτή τη σειρά: πού πάω, πότε τρέχω, ποιος είναι μπροστά
+   μου. Άρα τρία μπλοκ, ένα σύμβολο, καμία λέξη δύο φορές — και μια λεζάντα στο
+   τέλος αντί για επεξήγηση σε κάθε γραμμή, γιατί το μήνυμα πληρώνεται ανά 67
+   χαρακτήρες και ο όμιλος το πληρώνει σαράντα φορές. */
 function smsBody(t, entry){
   const st = DB.settings;
   const head = smsHead(t, t.days[S.day]);
   const mine = myRuns(t, entry.handlerId);
   const L = [head, ""];
-  L.push(tx(mine.length===1 ? "Η διαδρομή σας:" : "Οι διαδρομές σας:"));
-  mine.forEach(m=>L.push("• " + m.dog + " — " + m.ter + ", " + txOne("ζεύγος") + " " + braceNo(m.no)
-    + (m.recall ? " (" + txOne("επανάκληση") + ")" : "")));
+  L.push(tx(mine.length === 1 ? "ΤΟ ΖΕΥΓΟΣ ΣΑΣ" : "ΤΑ ΖΕΥΓΗ ΣΑΣ"));
+  /* Πρώτα ο αριθμός του ζεύγους, γιατί με αυτόν βρίσκει τη γραμμή του πιο κάτω
+     και με αυτόν τον φωνάζουν. Μετά ο σκύλος, το τερέν, η πλευρά. */
+  mine.forEach(m=>L.push(braceLabel(m.no) + " · " + m.dog
+    + " · " + m.ter + " · " + tx(m.side)
+    + (m.recall ? " · " + txOne("επανάκληση") : "")));
   if(st.smsMode !== "own"){
     L.push("", tx("ΣΕΙΡΑ ΤΗΣ ΗΜΕΡΑΣ"), orderText(t, entry.handlerId, st.smsJudges));
+    L.push("", "▸ " + tx("τα δικά σας ζεύγη") + " · "
+             + tx("δεξιά/αριστερά ως προς την επιτροπή"));
+  } else {
+    L.push("", tx("δεξιά/αριστερά ως προς την επιτροπή"));
   }
-  L.push("", smsFootTxt());
+  L.push(smsFootTxt());
   return L.join("\n");
 }
 /* Greek text is sent as UCS-2: 70 characters in one segment, 67 per segment
@@ -6810,16 +6873,18 @@ function judgeSmsBody(t, judge){
   const L = [head, ""];
   (day.terrains||[]).forEach(tr=>{
     if(!(tr.judgeIds||[]).includes(judge.id)) return;
-    const seat = tr.headJudgeId === judge.id ? "κεντρικός κριτής"
-      : "κριτής " + Math.max(1, (tr.slots||tr.judgeIds||[]).indexOf(judge.id));
-    L.push("▸ " + tr.name + " — " + seat);
+    const seat = tr.headJudgeId === judge.id ? tx("κεντρικός κριτής")
+      : tx("κριτής") + " " + Math.max(1, (tr.slots||tr.judgeIds||[]).indexOf(judge.id));
+    /* Όχι κεφαλαία: στα ελληνικά ο τόνος πέφτει στα κεφαλαία και το
+       toUpperCase() δεν το ξέρει — «Τερέν» γίνεται «ΤΕΡΈΝ». */
+    L.push(tr.name + " — " + seat);
     const with_ = (tr.judgeIds||[]).filter(j=>j!==judge.id)
       .map(j=>(judById(j)||{}).name).filter(Boolean);
-    if(with_.length) L.push("Μαζί: " + with_.join(", "));
+    if(with_.length) L.push(tx("Μαζί:") + " " + with_.join(", "));
     (tr.braces||[]).forEach(b=>{
       const a = t.entries.find(e=>e.id===b.a), c = t.entries.find(e=>e.id===b.b);
-      L.push(b.no + ". " + (a?dogName(a.dogId):"—") + " / " + (c?dogName(c.dogId):tx("ΜΟΝΟΣ"))
-        + (b.recall ? " (επανάκληση)" : "") + (b.trailer ? " (trailer)" : ""));
+      L.push("  " + b.no + ". " + (a?dogName(a.dogId):"—") + " / " + (c?dogName(c.dogId):tx("ΜΟΝΟΣ"))
+        + (b.recall ? " (" + txOne("επανάκληση") + ")" : "") + (b.trailer ? " (trailer)" : ""));
     });
     L.push("");
   });

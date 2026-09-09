@@ -10,9 +10,11 @@ const APP = 'file://' + (process.env.KOAD_INDEX || path0.resolve(__dirname, '../
   const step = async (n, f) => { try { const x = await f(); console.log('ok   ' + n + (x?' — '+x:'')); }
     catch(e){ console.log('FAIL ' + n + ' — ' + e.message); bad++; } };
 
-  for (const [L, want, at] of [['it','{PROVA}','ore'], ['fr','{EPREUVE}','à'],
-                               ['de','{PRUEFUNG}','um'], ['en','{TRIAL}','at'],
-                               ['es','{PRUEBA}','a las']]) {
+  /* Το τρίτο στοιχείο είναι η λέξη του προτύπου που ΠΡΕΠΕΙ να γυρίσει: αν μείνει
+     ελληνική, ο γραμματέας βλέπει ελληνικά σε πεδίο που συμπληρώνει ο ίδιος. */
+  for (const [L, want, at] of [['it','{PROVA}','presentarsi'], ['fr','{EPREUVE}','présence'],
+                               ['de','{PRUEFUNG}','Antreten'], ['en','{TRIAL}','arrive'],
+                               ['es','{PRUEBA}','presentarse']]) {
     const p = await (await b.newContext({viewport:{width:900,height:1400}})).newPage();
     p.on('pageerror', e => { console.log('PAGEERROR ' + L + ': ' + e.message); bad++; });
     await p.goto(APP,{waitUntil:'domcontentloaded'});
