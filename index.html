@@ -801,6 +801,7 @@ const DEFAULT_SMS = `Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}
 const SMS_WAS = [`Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}\n{ΤΟΠΟΘΕΣΙΑ} · ώρα {ΩΡΑ}`];
 const DEFAULT_SMS_FOOT = `Η σειρά είναι ενδεικτική (Άρθρο 16). Να είστε στη διάθεση των κριτών.`;
 const DEFAULT_SETTINGS = { sms:DEFAULT_SMS, smsFoot:DEFAULT_SMS_FOOT, smsMode:"full", appUrl:"",
+  nextUp:true,
   smsJudges:true, points:{...DEFAULT_POINTS}, lang:"el",
   avoidOwner:true, avoidKennel:true, seasonLast:true, channel:"sms" };
 
@@ -1043,6 +1044,7 @@ const UI_STR = {
   "Αδύναμη": "Weak",
   "Αθλοθέτηση": "Award on offer",
   "Ακινησία": "Steadiness",
+  "Ακολουθεί το": "Next up:",
   "Ακούσιο ξεσήκωμα. Δεν μετρά στο πρώτο πέρασμα με τον άνεμο, δεξιά και αριστερά (ACO II.8· ENCI art. 11).": "An unintentional flush. It does not count on the first pass with the wind, right and left (ACO II.8; ENCI art. 11).",
   "Ακούω…": "Listening…",
   "Αλλάξτε ή καθαρίστε τα φίλτρα.": "Change or clear the filters.",
@@ -1075,6 +1077,7 @@ const UI_STR = {
   "Αποθηκεύτηκε": "Saved",
   "Αποκλεισμός σκύλου": "Eliminate dog",
   "Αποκλεισμός του": "Elimination of",
+  "Αποστολή": "Send",
   "Αποστολή αγώνα": "Send trial",
   "Αποστολή προς": "Will be sent to",
   "Αποστολή σε όλους": "Send to all",
@@ -1158,6 +1161,7 @@ const UI_STR = {
   "Είδος αγώνα": "Type of trial",
   "Εγκατάσταση": "Install",
   "Εγκατάσταση στο τηλέφωνο": "Install on the phone",
+  "Ειδοποίηση «σειρά σας»": "\"You are next\" alert",
   "Εικονίδιο εγκατάστασης στη γραμμή διευθύνσεων.": "Install icon in the address bar.",
   "Εισαγωγή": "Import",
   "Εισαγωγή αρχείου": "Import a file",
@@ -1273,6 +1277,7 @@ const UI_STR = {
   "Ιστότοπος του ομίλου": "The club's website",
   "Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}\n{ΗΜΕΡΟΜΗΝΙΑ} · {ΤΟΠΟΘΕΣΙΑ} · προσέλευση {ΩΡΑ}": "Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}\n{ΗΜΕΡΟΜΗΝΙΑ} · {ΤΟΠΟΘΕΣΙΑ} · arrive {ΩΡΑ}",
   "Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}\n{ΤΟΠΟΘΕΣΙΑ} · ώρα {ΩΡΑ}": "Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}\n{ΤΟΠΟΘΕΣΙΑ} · at {ΩΡΑ}",
+  "Κ.Ο.Α.Δ. — σειρά σας.": "Κ.Ο.Α.Δ. — you are next.",
   "Κ.Ο.Κ.": "Stud book",
   "ΚΛΕΙΔΩΜΕΝΟ": "LOCKED",
   "ΚΛΗΡΩΜΕΝΟΣ": "DRAWN",
@@ -1301,6 +1306,7 @@ const UI_STR = {
   "Κανένας επιλεγμένος με τηλέφωνο": "Nobody selected has a phone number",
   "Κανένας κριτής ακόμη. Συνδέστε κάθε κριτή με τον κυναγωγό του ίδιου ονόματος, ώστε η κλήρωση να μην βάζει τον σκύλο του στο τερέν που κρίνει (Άρθρο 49).": "No judge yet. Link each judge to the handler of the same name, so the draw does not put his dog on the terrain he judges (Article 49).",
   "Κανένας κυναγωγός ακόμη. Καταχωρήστε πρώτα τον κυναγωγό και μετά τους σκύλους του, ή εισαγάγετε αρχείο από την καρτέλα Σκύλοι.": "No handler yet. Record the handler first and then his dogs, or import a file from the Dogs tab.",
+  "Κανένας κυναγωγός με τηλέφωνο στο επόμενο ζεύγος.": "No handler in the next brace has a phone number.",
   "Κανένας πόντος καταγεγραμμένος.": "No point recorded.",
   "Κανένας σκύλος με αυτή τη φυλή. Αλλάξτε ή καθαρίστε το φίλτρο.": "No dog of this breed. Change or clear the filter.",
   "Κανένας σκύλος στο μητρώο. Εισαγάγετε αρχείο Excel ή προσθέστε σκύλο.": "No dog in the register. Import an Excel file or add a dog.",
@@ -1349,6 +1355,7 @@ const UI_STR = {
   "Μία λευκή δεν εμποδίζει CAC (Άρθρο 27).": "One pointing without result does not bar a CAC (Article 27).",
   "Μαζί:": "With:",
   "Με στήριξη": "With support",
+  "Με τη «Λήξη» ενός ζεύγους, η εφαρμογή ετοιμάζει ένα σύντομο μήνυμα για τους δύο κυναγωγούς του επόμενου και ανοίγει την εφαρμογή μηνυμάτων. Την αποστολή τη δίνετε εσείς — η εφαρμογή δεν στέλνει τίποτα μόνη της, ούτε εδώ ούτε πουθενά αλλού.": "When a brace is ended, the app makes ready a short message for the two handlers of the next one and opens the messaging app. You are the one who sends it — the app sends nothing by itself, here or anywhere else.",
   "Με τη σύνδεση, η κλήρωση δεν τοποθετεί τον σκύλο του κριτή στο τερέν που κρίνει (Άρθρο 49).": "Once linked, the draw does not place a judge's dog on the terrain he judges (Article 49).",
   "Μείωση": "Decrease",
   "Μεγάλη Έρευνα": "Grande Quête",
@@ -1381,6 +1388,7 @@ const UI_STR = {
   "Νέος σκύλος": "New dog",
   "Ναι": "Yes",
   "Νοέμβριος": "November",
+  "Ξανά": "Again",
   "Ξεκλείδωμα": "Unlock",
   "Ξεκλειδώθηκε· η αιτιολογία καταγράφηκε": "Unlocked; the reason is recorded",
   "Ξεκλειδώματα": "Unlocks",
@@ -1541,6 +1549,7 @@ const UI_STR = {
   "Το ζεύγος μετακινήθηκε": "The brace was moved",
   "Το ζεύγος πήγε στη θέση ": "The brace went to place ",
   "Το κοινό μήνυμα αντιγράφηκε — επικολλήστε το σε ομάδα, ή στείλτε έναν-έναν.": "The common message is copied — paste it into a group, or send one by one.",
+  "Το μήνυμα ανοίγει στην εφαρμογή μηνυμάτων του τηλεφώνου· την αποστολή τη δίνετε εσείς. Η εφαρμογή δεν στέλνει τίποτα μόνη της.": "The message opens in the phone's messaging app; you are the one who sends it. The app sends nothing by itself.",
   "Το μήνυμα συντίθεται αυτόματα: επικεφαλίδα, οι διαδρομές του κυναγωγού, ολόκληρη η σειρά της ημέρας με τα δικά του ζεύγη σημειωμένα, και κατακλείδα.": "The message is built automatically: heading, the handler's own runs, the whole running order of the day with his braces marked, and a closing line.",
   "Το μητρώο είναι άδειο. Καταχωρήστε πρώτα κυναγωγούς και σκύλους, ή εισαγάγετε αρχείο.": "The register is empty. Record handlers and dogs first, or import a file.",
   "Το μητρώο σκύλων μπορεί να γεμίσει πρώτο, από το Μητρώο ή με εισαγωγή αρχείου Excel.": "The dog register can be filled first, from the Register or by importing an Excel file.",
@@ -1596,6 +1605,7 @@ const UI_STR = {
   "Χωρίς ζεύγη σε αυτό το τερέν.": "No braces on this terrain.",
   "Χωρίς ζεύγη.": "No braces.",
   "Χωρίς σύνδεση με το μητρώο κυναγωγών:": "Not linked to the handlers' register:",
+  "Χωρίς τηλέφωνο": "No phone number",
   "Χώρα": "Country",
   "Χώρα εκτροφής": "Country of breeding",
   "άγριο θήραμα": "wild game",
@@ -1841,6 +1851,7 @@ const UI_STR = {
   "Αδύναμη": "Faible",
   "Αθλοθέτηση": "Récompense mise en jeu",
   "Ακινησία": "Sagesse",
+  "Ακολουθεί το": "Ensuite :",
   "Ακούσιο ξεσήκωμα. Δεν μετρά στο πρώτο πέρασμα με τον άνεμο, δεξιά και αριστερά (ACO II.8· ENCI art. 11).": "Une mise à l'envol involontaire. Elle ne compte pas au premier passage avec le vent, à droite et à gauche (ACO II.8 ; ENCI art. 11).",
   "Ακούω…": "J'écoute…",
   "Αλλάξτε ή καθαρίστε τα φίλτρα.": "Modifiez ou effacez les filtres.",
@@ -1873,6 +1884,7 @@ const UI_STR = {
   "Αποθηκεύτηκε": "Enregistré",
   "Αποκλεισμός σκύλου": "Éliminer le chien",
   "Αποκλεισμός του": "Élimination de",
+  "Αποστολή": "Envoyer",
   "Αποστολή αγώνα": "Envoyer l'épreuve",
   "Αποστολή προς": "Sera envoyé à",
   "Αποστολή σε όλους": "Envoyer à tous",
@@ -1956,6 +1968,7 @@ const UI_STR = {
   "Είδος αγώνα": "Type d'épreuve",
   "Εγκατάσταση": "Installation",
   "Εγκατάσταση στο τηλέφωνο": "Installer sur le téléphone",
+  "Ειδοποίηση «σειρά σας»": "Alerte « c'est à vous »",
   "Εικονίδιο εγκατάστασης στη γραμμή διευθύνσεων.": "Icône d'installation dans la barre d'adresse.",
   "Εισαγωγή": "Importer",
   "Εισαγωγή αρχείου": "Importer un fichier",
@@ -2071,6 +2084,7 @@ const UI_STR = {
   "Ιστότοπος του ομίλου": "Le site du club",
   "Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}\n{ΗΜΕΡΟΜΗΝΙΑ} · {ΤΟΠΟΘΕΣΙΑ} · προσέλευση {ΩΡΑ}": "Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}\n{ΗΜΕΡΟΜΗΝΙΑ} · {ΤΟΠΟΘΕΣΙΑ} · présence {ΩΡΑ}",
   "Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}\n{ΤΟΠΟΘΕΣΙΑ} · ώρα {ΩΡΑ}": "Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}\n{ΤΟΠΟΘΕΣΙΑ} · à {ΩΡΑ}",
+  "Κ.Ο.Α.Δ. — σειρά σας.": "Κ.Ο.Α.Δ. — c'est à vous.",
   "Κ.Ο.Κ.": "Livre des origines",
   "ΚΛΕΙΔΩΜΕΝΟ": "VERROUILLÉ",
   "ΚΛΗΡΩΜΕΝΟΣ": "TIRÉ",
@@ -2099,6 +2113,7 @@ const UI_STR = {
   "Κανένας επιλεγμένος με τηλέφωνο": "Aucun sélectionné n'a de numéro",
   "Κανένας κριτής ακόμη. Συνδέστε κάθε κριτή με τον κυναγωγό του ίδιου ονόματος, ώστε η κλήρωση να μην βάζει τον σκύλο του στο τερέν που κρίνει (Άρθρο 49).": "Aucun juge pour l'instant. Reliez chaque juge au conducteur du même nom, afin que le tirage ne place pas son chien sur le terrain qu'il juge (Article 49).",
   "Κανένας κυναγωγός ακόμη. Καταχωρήστε πρώτα τον κυναγωγό και μετά τους σκύλους του, ή εισαγάγετε αρχείο από την καρτέλα Σκύλοι.": "Aucun conducteur pour l'instant. Enregistrez d'abord le conducteur puis ses chiens, ou importez un fichier depuis l'onglet Chiens.",
+  "Κανένας κυναγωγός με τηλέφωνο στο επόμενο ζεύγος.": "Aucun conducteur du couple suivant n'a de téléphone.",
   "Κανένας πόντος καταγεγραμμένος.": "Aucun point consigné.",
   "Κανένας σκύλος με αυτή τη φυλή. Αλλάξτε ή καθαρίστε το φίλτρο.": "Aucun chien de cette race. Modifiez ou effacez le filtre.",
   "Κανένας σκύλος στο μητρώο. Εισαγάγετε αρχείο Excel ή προσθέστε σκύλο.": "Aucun chien au registre. Importez un fichier Excel ou ajoutez un chien.",
@@ -2147,6 +2162,7 @@ const UI_STR = {
   "Μία λευκή δεν εμποδίζει CAC (Άρθρο 27).": "Un faux arrêt n'empêche pas le CAC (Article 27).",
   "Μαζί:": "Avec :",
   "Με στήριξη": "Avec soutien",
+  "Με τη «Λήξη» ενός ζεύγους, η εφαρμογή ετοιμάζει ένα σύντομο μήνυμα για τους δύο κυναγωγούς του επόμενου και ανοίγει την εφαρμογή μηνυμάτων. Την αποστολή τη δίνετε εσείς — η εφαρμογή δεν στέλνει τίποτα μόνη της, ούτε εδώ ούτε πουθενά αλλού.": "À la fin d'un couple, l'application prépare un court message pour les deux conducteurs du suivant et ouvre l'application de messagerie. C'est vous qui l'envoyez — l'application n'envoie rien d'elle-même, ni ici ni ailleurs.",
   "Με τη σύνδεση, η κλήρωση δεν τοποθετεί τον σκύλο του κριτή στο τερέν που κρίνει (Άρθρο 49).": "Une fois relié, le tirage ne place pas le chien du juge sur le terrain qu'il juge (Article 49).",
   "Μείωση": "Diminuer",
   "Μεγάλη Έρευνα": "Grande Quête",
@@ -2179,6 +2195,7 @@ const UI_STR = {
   "Νέος σκύλος": "Nouveau chien",
   "Ναι": "Oui",
   "Νοέμβριος": "Novembre",
+  "Ξανά": "À nouveau",
   "Ξεκλείδωμα": "Déverrouiller",
   "Ξεκλειδώθηκε· η αιτιολογία καταγράφηκε": "Déverrouillé ; le motif est consigné",
   "Ξεκλειδώματα": "Déverrouillages",
@@ -2339,6 +2356,7 @@ const UI_STR = {
   "Το ζεύγος μετακινήθηκε": "Le couple a été déplacé",
   "Το ζεύγος πήγε στη θέση ": "Le couple est passé à la place ",
   "Το κοινό μήνυμα αντιγράφηκε — επικολλήστε το σε ομάδα, ή στείλτε έναν-έναν.": "Le message commun est copié — collez-le dans un groupe, ou envoyez un par un.",
+  "Το μήνυμα ανοίγει στην εφαρμογή μηνυμάτων του τηλεφώνου· την αποστολή τη δίνετε εσείς. Η εφαρμογή δεν στέλνει τίποτα μόνη της.": "Le message s'ouvre dans l'application de messagerie du téléphone ; c'est vous qui l'envoyez. L'application n'envoie rien d'elle-même.",
   "Το μήνυμα συντίθεται αυτόματα: επικεφαλίδα, οι διαδρομές του κυναγωγού, ολόκληρη η σειρά της ημέρας με τα δικά του ζεύγη σημειωμένα, και κατακλείδα.": "Le message se compose automatiquement : en-tête, les parcours du conducteur, tout l'ordre de la journée avec ses couples signalés, et une formule de fin.",
   "Το μητρώο είναι άδειο. Καταχωρήστε πρώτα κυναγωγούς και σκύλους, ή εισαγάγετε αρχείο.": "Le registre est vide. Enregistrez d'abord conducteurs et chiens, ou importez un fichier.",
   "Το μητρώο σκύλων μπορεί να γεμίσει πρώτο, από το Μητρώο ή με εισαγωγή αρχείου Excel.": "Le registre des chiens peut se remplir d'abord, depuis le Registre ou par importation d'un fichier Excel.",
@@ -2394,6 +2412,7 @@ const UI_STR = {
   "Χωρίς ζεύγη σε αυτό το τερέν.": "Aucun couple sur ce terrain.",
   "Χωρίς ζεύγη.": "Aucun couple.",
   "Χωρίς σύνδεση με το μητρώο κυναγωγών:": "Sans lien avec le registre des conducteurs :",
+  "Χωρίς τηλέφωνο": "Sans téléphone",
   "Χώρα": "Pays",
   "Χώρα εκτροφής": "Pays d'élevage",
   "άγριο θήραμα": "gibier sauvage",
@@ -2639,6 +2658,7 @@ const UI_STR = {
   "Αδύναμη": "Schwach",
   "Αθλοθέτηση": "Ausgeschriebene Auszeichnung",
   "Ακινησία": "Ruhe",
+  "Ακολουθεί το": "Als Nächstes:",
   "Ακούσιο ξεσήκωμα. Δεν μετρά στο πρώτο πέρασμα με τον άνεμο, δεξιά και αριστερά (ACO II.8· ENCI art. 11).": "Ein unabsichtliches Herausstoßen. Beim ersten Zug mit dem Wind, rechts und links, zählt es nicht (ACO II.8; ENCI Art. 11).",
   "Ακούω…": "Ich höre zu…",
   "Αλλάξτε ή καθαρίστε τα φίλτρα.": "Ändern oder löschen Sie die Filter.",
@@ -2671,6 +2691,7 @@ const UI_STR = {
   "Αποθηκεύτηκε": "Gespeichert",
   "Αποκλεισμός σκύλου": "Hund ausschließen",
   "Αποκλεισμός του": "Ausschluss von",
+  "Αποστολή": "Senden",
   "Αποστολή αγώνα": "Prüfung senden",
   "Αποστολή προς": "Wird gesendet an",
   "Αποστολή σε όλους": "An alle senden",
@@ -2754,6 +2775,7 @@ const UI_STR = {
   "Είδος αγώνα": "Art der Prüfung",
   "Εγκατάσταση": "Installation",
   "Εγκατάσταση στο τηλέφωνο": "Auf dem Telefon installieren",
+  "Ειδοποίηση «σειρά σας»": "Hinweis «Sie sind dran»",
   "Εικονίδιο εγκατάστασης στη γραμμή διευθύνσεων.": "Installationssymbol in der Adressleiste.",
   "Εισαγωγή": "Import",
   "Εισαγωγή αρχείου": "Datei importieren",
@@ -2869,6 +2891,7 @@ const UI_STR = {
   "Ιστότοπος του ομίλου": "Website des Klubs",
   "Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}\n{ΗΜΕΡΟΜΗΝΙΑ} · {ΤΟΠΟΘΕΣΙΑ} · προσέλευση {ΩΡΑ}": "Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}\n{ΗΜΕΡΟΜΗΝΙΑ} · {ΤΟΠΟΘΕΣΙΑ} · Antreten {ΩΡΑ}",
   "Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}\n{ΤΟΠΟΘΕΣΙΑ} · ώρα {ΩΡΑ}": "Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}\n{ΤΟΠΟΘΕΣΙΑ} · um {ΩΡΑ}",
+  "Κ.Ο.Α.Δ. — σειρά σας.": "Κ.Ο.Α.Δ. — Sie sind dran.",
   "Κ.Ο.Κ.": "Zuchtbuch",
   "ΚΛΕΙΔΩΜΕΝΟ": "GESPERRT",
   "ΚΛΗΡΩΜΕΝΟΣ": "AUSGELOST",
@@ -2897,6 +2920,7 @@ const UI_STR = {
   "Κανένας επιλεγμένος με τηλέφωνο": "Keiner der Ausgewählten hat eine Nummer",
   "Κανένας κριτής ακόμη. Συνδέστε κάθε κριτή με τον κυναγωγό του ίδιου ονόματος, ώστε η κλήρωση να μην βάζει τον σκύλο του στο τερέν που κρίνει (Άρθρο 49).": "Noch kein Richter. Verknüpfen Sie jeden Richter mit dem gleichnamigen Führer, damit die Auslosung seinen Hund nicht auf das Gelände stellt, das er richtet (Artikel 49).",
   "Κανένας κυναγωγός ακόμη. Καταχωρήστε πρώτα τον κυναγωγό και μετά τους σκύλους του, ή εισαγάγετε αρχείο από την καρτέλα Σκύλοι.": "Noch kein Führer. Erfassen Sie zuerst den Führer und dann seine Hunde, oder importieren Sie eine Datei über den Reiter Hunde.",
+  "Κανένας κυναγωγός με τηλέφωνο στο επόμενο ζεύγος.": "Kein Führer des nächsten Paares hat eine Telefonnummer.",
   "Κανένας πόντος καταγεγραμμένος.": "Kein Punkt vermerkt.",
   "Κανένας σκύλος με αυτή τη φυλή. Αλλάξτε ή καθαρίστε το φίλτρο.": "Kein Hund dieser Rasse. Ändern oder löschen Sie den Filter.",
   "Κανένας σκύλος στο μητρώο. Εισαγάγετε αρχείο Excel ή προσθέστε σκύλο.": "Kein Hund im Register. Importieren Sie eine Excel-Datei oder legen Sie einen Hund an.",
@@ -2945,6 +2969,7 @@ const UI_STR = {
   "Μία λευκή δεν εμποδίζει CAC (Άρθρο 27).": "Ein leeres Vorstehen schließt das CAC nicht aus (Artikel 27).",
   "Μαζί:": "Mit:",
   "Με στήριξη": "Mit Unterstützung",
+  "Με τη «Λήξη» ενός ζεύγους, η εφαρμογή ετοιμάζει ένα σύντομο μήνυμα για τους δύο κυναγωγούς του επόμενου και ανοίγει την εφαρμογή μηνυμάτων. Την αποστολή τη δίνετε εσείς — η εφαρμογή δεν στέλνει τίποτα μόνη της, ούτε εδώ ούτε πουθενά αλλού.": "Beim Beenden eines Paares hält die Anwendung eine kurze Nachricht für die beiden Führer des nächsten bereit und öffnet die Nachrichten-App. Abgeschickt wird sie von Ihnen — die Anwendung verschickt nichts von selbst, hier so wenig wie anderswo.",
   "Με τη σύνδεση, η κλήρωση δεν τοποθετεί τον σκύλο του κριτή στο τερέν που κρίνει (Άρθρο 49).": "Ist die Verknüpfung gesetzt, stellt die Auslosung den Hund des Richters nicht auf das Gelände, das er richtet (Artikel 49).",
   "Μείωση": "Verringern",
   "Μεγάλη Έρευνα": "Grande Quête",
@@ -2977,6 +3002,7 @@ const UI_STR = {
   "Νέος σκύλος": "Neuer Hund",
   "Ναι": "Ja",
   "Νοέμβριος": "November",
+  "Ξανά": "Erneut",
   "Ξεκλείδωμα": "Entsperren",
   "Ξεκλειδώθηκε· η αιτιολογία καταγράφηκε": "Entsperrt; die Begründung ist festgehalten",
   "Ξεκλειδώματα": "Entsperrungen",
@@ -3137,6 +3163,7 @@ const UI_STR = {
   "Το ζεύγος μετακινήθηκε": "Das Paar wurde verschoben",
   "Το ζεύγος πήγε στη θέση ": "Das Paar ging auf Platz ",
   "Το κοινό μήνυμα αντιγράφηκε — επικολλήστε το σε ομάδα, ή στείλτε έναν-έναν.": "Die gemeinsame Nachricht ist kopiert — fügen Sie sie in eine Gruppe ein oder senden Sie einzeln.",
+  "Το μήνυμα ανοίγει στην εφαρμογή μηνυμάτων του τηλεφώνου· την αποστολή τη δίνετε εσείς. Η εφαρμογή δεν στέλνει τίποτα μόνη της.": "Die Nachricht öffnet sich in der Nachrichten-App des Telefons; abgeschickt wird sie von Ihnen. Die Anwendung verschickt nichts von selbst.",
   "Το μήνυμα συντίθεται αυτόματα: επικεφαλίδα, οι διαδρομές του κυναγωγού, ολόκληρη η σειρά της ημέρας με τα δικά του ζεύγη σημειωμένα, και κατακλείδα.": "Die Nachricht entsteht automatisch: Kopfzeile, die Gänge des Führers, die gesamte Reihenfolge des Tages mit seinen markierten Paaren und eine Schlusszeile.",
   "Το μητρώο είναι άδειο. Καταχωρήστε πρώτα κυναγωγούς και σκύλους, ή εισαγάγετε αρχείο.": "Das Register ist leer. Erfassen Sie zuerst Führer und Hunde, oder importieren Sie eine Datei.",
   "Το μητρώο σκύλων μπορεί να γεμίσει πρώτο, από το Μητρώο ή με εισαγωγή αρχείου Excel.": "Das Hunderegister lässt sich zuerst füllen, über das Register oder durch Import einer Excel-Datei.",
@@ -3192,6 +3219,7 @@ const UI_STR = {
   "Χωρίς ζεύγη σε αυτό το τερέν.": "Keine Paare auf diesem Gelände.",
   "Χωρίς ζεύγη.": "Keine Paare.",
   "Χωρίς σύνδεση με το μητρώο κυναγωγών:": "Ohne Verknüpfung zum Führerregister:",
+  "Χωρίς τηλέφωνο": "Ohne Telefonnummer",
   "Χώρα": "Land",
   "Χώρα εκτροφής": "Zuchtland",
   "άγριο θήραμα": "Wildwild",
@@ -3437,6 +3465,7 @@ const UI_STR = {
   "Αδύναμη": "Debole",
   "Αθλοθέτηση": "Premio in palio",
   "Ακινησία": "Immobilità",
+  "Ακολουθεί το": "Segue:",
   "Ακούσιο ξεσήκωμα. Δεν μετρά στο πρώτο πέρασμα με τον άνεμο, δεξιά και αριστερά (ACO II.8· ENCI art. 11).": "Sfrullo involontario. Non conta al primo passaggio col vento, a destra e a sinistra (ACO II.8; ENCI art. 11).",
   "Ακούω…": "In ascolto…",
   "Αλλάξτε ή καθαρίστε τα φίλτρα.": "Cambiate o azzerate i filtri.",
@@ -3469,6 +3498,7 @@ const UI_STR = {
   "Αποθηκεύτηκε": "Salvato",
   "Αποκλεισμός σκύλου": "Elimina il cane",
   "Αποκλεισμός του": "Eliminazione di",
+  "Αποστολή": "Invia",
   "Αποστολή αγώνα": "Invia la prova",
   "Αποστολή προς": "Verrà inviato a",
   "Αποστολή σε όλους": "Invia a tutti",
@@ -3552,6 +3582,7 @@ const UI_STR = {
   "Είδος αγώνα": "Tipo di prova",
   "Εγκατάσταση": "Installazione",
   "Εγκατάσταση στο τηλέφωνο": "Installa sul telefono",
+  "Ειδοποίηση «σειρά σας»": "Avviso «tocca a voi»",
   "Εικονίδιο εγκατάστασης στη γραμμή διευθύνσεων.": "Icona di installazione nella barra degli indirizzi.",
   "Εισαγωγή": "Importa",
   "Εισαγωγή αρχείου": "Importa un file",
@@ -3667,6 +3698,7 @@ const UI_STR = {
   "Ιστότοπος του ομίλου": "Il sito del club",
   "Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}\n{ΗΜΕΡΟΜΗΝΙΑ} · {ΤΟΠΟΘΕΣΙΑ} · προσέλευση {ΩΡΑ}": "Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}\n{ΗΜΕΡΟΜΗΝΙΑ} · {ΤΟΠΟΘΕΣΙΑ} · presentarsi {ΩΡΑ}",
   "Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}\n{ΤΟΠΟΘΕΣΙΑ} · ώρα {ΩΡΑ}": "Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}\n{ΤΟΠΟΘΕΣΙΑ} · ore {ΩΡΑ}",
+  "Κ.Ο.Α.Δ. — σειρά σας.": "Κ.Ο.Α.Δ. — tocca a voi.",
   "Κ.Ο.Κ.": "Libro genealogico",
   "ΚΛΕΙΔΩΜΕΝΟ": "BLOCCATO",
   "ΚΛΗΡΩΜΕΝΟΣ": "SORTEGGIATO",
@@ -3695,6 +3727,7 @@ const UI_STR = {
   "Κανένας επιλεγμένος με τηλέφωνο": "Nessuno dei selezionati ha un numero",
   "Κανένας κριτής ακόμη. Συνδέστε κάθε κριτή με τον κυναγωγό του ίδιου ονόματος, ώστε η κλήρωση να μην βάζει τον σκύλο του στο τερέν που κρίνει (Άρθρο 49).": "Ancora nessun giudice. Collegate ogni giudice al conduttore con lo stesso nome, così il sorteggio non mette il suo cane sul terreno che giudica (Articolo 49).",
   "Κανένας κυναγωγός ακόμη. Καταχωρήστε πρώτα τον κυναγωγό και μετά τους σκύλους του, ή εισαγάγετε αρχείο από την καρτέλα Σκύλοι.": "Ancora nessun conduttore. Registrate prima il conduttore e poi i suoi cani, oppure importate un file dalla scheda Cani.",
+  "Κανένας κυναγωγός με τηλέφωνο στο επόμενο ζεύγος.": "Nessun conduttore della coppia successiva ha un telefono.",
   "Κανένας πόντος καταγεγραμμένος.": "Nessun punto registrato.",
   "Κανένας σκύλος με αυτή τη φυλή. Αλλάξτε ή καθαρίστε το φίλτρο.": "Nessun cane di questa razza. Cambiate o azzerate il filtro.",
   "Κανένας σκύλος στο μητρώο. Εισαγάγετε αρχείο Excel ή προσθέστε σκύλο.": "Nessun cane nel registro. Importate un file Excel o aggiungete un cane.",
@@ -3743,6 +3776,7 @@ const UI_STR = {
   "Μία λευκή δεν εμποδίζει CAC (Άρθρο 27).": "Una ferma a vuoto non impedisce il CAC (Articolo 27).",
   "Μαζί:": "Con:",
   "Με στήριξη": "Con sostegno",
+  "Με τη «Λήξη» ενός ζεύγους, η εφαρμογή ετοιμάζει ένα σύντομο μήνυμα για τους δύο κυναγωγούς του επόμενου και ανοίγει την εφαρμογή μηνυμάτων. Την αποστολή τη δίνετε εσείς — η εφαρμογή δεν στέλνει τίποτα μόνη της, ούτε εδώ ούτε πουθενά αλλού.": "Alla chiusura di una coppia, l'applicazione prepara un breve messaggio per i due conduttori della successiva e apre l'applicazione di messaggi. A inviarlo siete voi — l'applicazione non invia nulla da sola, né qui né altrove.",
   "Με τη σύνδεση, η κλήρωση δεν τοποθετεί τον σκύλο του κριτή στο τερέν που κρίνει (Άρθρο 49).": "Con il collegamento, il sorteggio non mette il cane del giudice sul terreno che egli giudica (Articolo 49).",
   "Μείωση": "Diminuisci",
   "Μεγάλη Έρευνα": "Grande Quête",
@@ -3775,6 +3809,7 @@ const UI_STR = {
   "Νέος σκύλος": "Nuovo cane",
   "Ναι": "Sì",
   "Νοέμβριος": "Novembre",
+  "Ξανά": "Di nuovo",
   "Ξεκλείδωμα": "Sblocca",
   "Ξεκλειδώθηκε· η αιτιολογία καταγράφηκε": "Sbloccato; la motivazione è registrata",
   "Ξεκλειδώματα": "Sblocchi",
@@ -3935,6 +3970,7 @@ const UI_STR = {
   "Το ζεύγος μετακινήθηκε": "La coppia è stata spostata",
   "Το ζεύγος πήγε στη θέση ": "La coppia è passata al posto ",
   "Το κοινό μήνυμα αντιγράφηκε — επικολλήστε το σε ομάδα, ή στείλτε έναν-έναν.": "Il messaggio comune è copiato — incollatelo in un gruppo, o inviate uno per uno.",
+  "Το μήνυμα ανοίγει στην εφαρμογή μηνυμάτων του τηλεφώνου· την αποστολή τη δίνετε εσείς. Η εφαρμογή δεν στέλνει τίποτα μόνη της.": "Il messaggio si apre nell'applicazione di messaggi del telefono; a inviarlo siete voi. L'applicazione non invia nulla da sola.",
   "Το μήνυμα συντίθεται αυτόματα: επικεφαλίδα, οι διαδρομές του κυναγωγού, ολόκληρη η σειρά της ημέρας με τα δικά του ζεύγη σημειωμένα, και κατακλείδα.": "Il messaggio si compone da solo: intestazione, i turni del conduttore, tutto l'ordine della giornata con le sue coppie segnalate, e una chiusura.",
   "Το μητρώο είναι άδειο. Καταχωρήστε πρώτα κυναγωγούς και σκύλους, ή εισαγάγετε αρχείο.": "Il registro è vuoto. Registrate prima conduttori e cani, oppure importate un file.",
   "Το μητρώο σκύλων μπορεί να γεμίσει πρώτο, από το Μητρώο ή με εισαγωγή αρχείου Excel.": "Il registro dei cani si può riempire per primo, dal Registro o importando un file Excel.",
@@ -3990,6 +4026,7 @@ const UI_STR = {
   "Χωρίς ζεύγη σε αυτό το τερέν.": "Nessuna coppia su questo terreno.",
   "Χωρίς ζεύγη.": "Nessuna coppia.",
   "Χωρίς σύνδεση με το μητρώο κυναγωγών:": "Senza collegamento al registro dei conduttori:",
+  "Χωρίς τηλέφωνο": "Senza telefono",
   "Χώρα": "Paese",
   "Χώρα εκτροφής": "Paese di allevamento",
   "άγριο θήραμα": "selvaggina selvatica",
@@ -4235,6 +4272,7 @@ const UI_STR = {
   "Αδύναμη": "Débil",
   "Αθλοθέτηση": "Premio en juego",
   "Ακινησία": "Inmovilidad",
+  "Ακολουθεί το": "A continuación:",
   "Ακούσιο ξεσήκωμα. Δεν μετρά στο πρώτο πέρασμα με τον άνεμο, δεξιά και αριστερά (ACO II.8· ENCI art. 11).": "Levantamiento involuntario. No cuenta en la primera pasada con el viento, a derecha e izquierda (ACO II.8; ENCI art. 11).",
   "Ακούω…": "Escuchando…",
   "Αλλάξτε ή καθαρίστε τα φίλτρα.": "Cambie o borre los filtros.",
@@ -4267,6 +4305,7 @@ const UI_STR = {
   "Αποθηκεύτηκε": "Guardado",
   "Αποκλεισμός σκύλου": "Eliminar perro",
   "Αποκλεισμός του": "Eliminación de",
+  "Αποστολή": "Enviar",
   "Αποστολή αγώνα": "Enviar prueba",
   "Αποστολή προς": "Se enviará a",
   "Αποστολή σε όλους": "Enviar a todos",
@@ -4350,6 +4389,7 @@ const UI_STR = {
   "Είδος αγώνα": "Tipo de prueba",
   "Εγκατάσταση": "Instalación",
   "Εγκατάσταση στο τηλέφωνο": "Instalar en el teléfono",
+  "Ειδοποίηση «σειρά σας»": "Aviso «les toca»",
   "Εικονίδιο εγκατάστασης στη γραμμή διευθύνσεων.": "Icono de instalación en la barra de direcciones.",
   "Εισαγωγή": "Importar",
   "Εισαγωγή αρχείου": "Importar un archivo",
@@ -4465,6 +4505,7 @@ const UI_STR = {
   "Ιστότοπος του ομίλου": "El sitio web del club",
   "Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}\n{ΗΜΕΡΟΜΗΝΙΑ} · {ΤΟΠΟΘΕΣΙΑ} · προσέλευση {ΩΡΑ}": "Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}\n{ΗΜΕΡΟΜΗΝΙΑ} · {ΤΟΠΟΘΕΣΙΑ} · presentarse {ΩΡΑ}",
   "Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}\n{ΤΟΠΟΘΕΣΙΑ} · ώρα {ΩΡΑ}": "Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}\n{ΤΟΠΟΘΕΣΙΑ} · a las {ΩΡΑ}",
+  "Κ.Ο.Α.Δ. — σειρά σας.": "Κ.Ο.Α.Δ. — les toca a ustedes.",
   "Κ.Ο.Κ.": "L.O.",
   "ΚΛΕΙΔΩΜΕΝΟ": "BLOQUEADO",
   "ΚΛΗΡΩΜΕΝΟΣ": "SORTEADO",
@@ -4493,6 +4534,7 @@ const UI_STR = {
   "Κανένας επιλεγμένος με τηλέφωνο": "Ninguno de los seleccionados tiene teléfono",
   "Κανένας κριτής ακόμη. Συνδέστε κάθε κριτή με τον κυναγωγό του ίδιου ονόματος, ώστε η κλήρωση να μην βάζει τον σκύλο του στο τερέν που κρίνει (Άρθρο 49).": "Todavía no hay jueces. Vincule cada juez con el conductor del mismo nombre, para que el sorteo no ponga su perro en el terreno que él juzga (Artículo 49).",
   "Κανένας κυναγωγός ακόμη. Καταχωρήστε πρώτα τον κυναγωγό και μετά τους σκύλους του, ή εισαγάγετε αρχείο από την καρτέλα Σκύλοι.": "Todavía no hay conductores. Registre primero al conductor y después sus perros, o importe un archivo desde la pestaña Perros.",
+  "Κανένας κυναγωγός με τηλέφωνο στο επόμενο ζεύγος.": "Ningún conductor de la pareja siguiente tiene teléfono.",
   "Κανένας πόντος καταγεγραμμένος.": "Ningún punto registrado.",
   "Κανένας σκύλος με αυτή τη φυλή. Αλλάξτε ή καθαρίστε το φίλτρο.": "Ningún perro de esta raza. Cambie o borre el filtro.",
   "Κανένας σκύλος στο μητρώο. Εισαγάγετε αρχείο Excel ή προσθέστε σκύλο.": "Ningún perro en el registro. Importe un archivo Excel o añada un perro.",
@@ -4541,6 +4583,7 @@ const UI_STR = {
   "Μία λευκή δεν εμποδίζει CAC (Άρθρο 27).": "Una muestra en vacío no impide el CAC (Artículo 27).",
   "Μαζί:": "Con:",
   "Με στήριξη": "Con apoyo",
+  "Με τη «Λήξη» ενός ζεύγους, η εφαρμογή ετοιμάζει ένα σύντομο μήνυμα για τους δύο κυναγωγούς του επόμενου και ανοίγει την εφαρμογή μηνυμάτων. Την αποστολή τη δίνετε εσείς — η εφαρμογή δεν στέλνει τίποτα μόνη της, ούτε εδώ ούτε πουθενά αλλού.": "Al cerrar una pareja, la aplicación prepara un mensaje breve para los dos conductores de la siguiente y abre la aplicación de mensajes. El envío lo da usted — la aplicación no envía nada por sí sola, ni aquí ni en ningún otro sitio.",
   "Με τη σύνδεση, η κλήρωση δεν τοποθετεί τον σκύλο του κριτή στο τερέν που κρίνει (Άρθρο 49).": "Una vez vinculado, el sorteo no coloca el perro de un juez en el terreno que él juzga (Artículo 49).",
   "Μείωση": "Disminuir",
   "Μεγάλη Έρευνα": "Gran Busca",
@@ -4573,6 +4616,7 @@ const UI_STR = {
   "Νέος σκύλος": "Perro nuevo",
   "Ναι": "Sí",
   "Νοέμβριος": "Noviembre",
+  "Ξανά": "De nuevo",
   "Ξεκλείδωμα": "Desbloquear",
   "Ξεκλειδώθηκε· η αιτιολογία καταγράφηκε": "Desbloqueado; el motivo queda registrado",
   "Ξεκλειδώματα": "Desbloqueos",
@@ -4733,6 +4777,7 @@ const UI_STR = {
   "Το ζεύγος μετακινήθηκε": "La pareja se ha movido",
   "Το ζεύγος πήγε στη θέση ": "La pareja pasó al puesto ",
   "Το κοινό μήνυμα αντιγράφηκε — επικολλήστε το σε ομάδα, ή στείλτε έναν-έναν.": "El mensaje común está copiado — péguelo en un grupo, o envíelo uno a uno.",
+  "Το μήνυμα ανοίγει στην εφαρμογή μηνυμάτων του τηλεφώνου· την αποστολή τη δίνετε εσείς. Η εφαρμογή δεν στέλνει τίποτα μόνη της.": "El mensaje se abre en la aplicación de mensajes del teléfono; el envío lo da usted. La aplicación no envía nada por sí sola.",
   "Το μήνυμα συντίθεται αυτόματα: επικεφαλίδα, οι διαδρομές του κυναγωγού, ολόκληρη η σειρά της ημέρας με τα δικά του ζεύγη σημειωμένα, και κατακλείδα.": "El mensaje se compone automáticamente: encabezado, los turnos del propio conductor, todo el orden del día con sus parejas marcadas, y una línea de cierre.",
   "Το μητρώο είναι άδειο. Καταχωρήστε πρώτα κυναγωγούς και σκύλους, ή εισαγάγετε αρχείο.": "El registro está vacío. Registre primero conductores y perros, o importe un archivo.",
   "Το μητρώο σκύλων μπορεί να γεμίσει πρώτο, από το Μητρώο ή με εισαγωγή αρχείου Excel.": "El registro de perros se puede llenar primero, desde el Registro o importando un archivo Excel.",
@@ -4788,6 +4833,7 @@ const UI_STR = {
   "Χωρίς ζεύγη σε αυτό το τερέν.": "Sin parejas en este terreno.",
   "Χωρίς ζεύγη.": "Sin parejas.",
   "Χωρίς σύνδεση με το μητρώο κυναγωγών:": "Sin vínculo con el registro de conductores:",
+  "Χωρίς τηλέφωνο": "Sin teléfono",
   "Χώρα": "País",
   "Χώρα εκτροφής": "País de cría",
   "άγριο θήραμα": "caza silvestre",
@@ -5660,8 +5706,12 @@ function fabFor(){
     }
     if(S.tab==="braces"){
       const live = liveBrace(t);
+      const up = DB.settings.nextUp !== false && nextUpTarget(t);
+      const upBtn = up && nextUpQueue(t, up.tr, up.b).some(x=>x.phone)
+        ? `<button data-act="nextUpFab" style="flex:0 0 auto"
+             title="${tx("Ειδοποίηση «σειρά σας»")}">SMS ${up.b.no}</button>` : "";
       if(live) return `<button data-act="pauseBrace" style="flex:0 0 auto">${live.b.startedAt?"Παύση":"Συνέχεια"}</button>
-        <button data-act="extendBrace" style="flex:0 0 auto">+5′</button>
+        <button data-act="extendBrace" style="flex:0 0 auto">+5′</button>${upBtn}
         <button class="b-act" data-act="nextBrace">${tx("Επόμενο ζεύγος")}</button>`;
       const next = nextPending(t);
       return next ? `<button class="b-act" data-act="nextBrace">${tx("Έναρξη ζεύγους")} ${next.b.no}</button>` : "";
@@ -5673,6 +5723,14 @@ function fabFor(){
     return "";
   }
   return "";
+}
+/* Ποιους αφορά το «σειρά σας»: το πρώτο εκκρεμές ζεύγος μετά από αυτό που
+   τρέχει. Αν δεν τρέχει τίποτα, το πρώτο εκκρεμές της ημέρας. */
+function nextUpTarget(t){
+  const live = liveBrace(t);
+  if(live){ const nb = nextUpBrace(live.tr, live.b); if(nb) return {tr:live.tr, b:nb}; }
+  const n = nextPending(t);
+  return n && (!live || n.b !== live.b) ? {tr:n.tr, b:n.b} : null;
 }
 /* the brace on the ground right now, and the one after it */
 function liveBrace(t){
@@ -6218,6 +6276,10 @@ function braceCard(t, tr, b, opts){
   });
   if(opts.actions && !opts.big && b.trailer)
     extra.push(`<button class="b-sm b-warn" data-untrailer="${tr.id}|${b.id}">${tx("Αφαίρεση συμπληρωματικού")}</button>`);
+  /* Το ίδιο μήνυμα, χωρίς να περιμένεις να κλείσει το προηγούμενο ζεύγος: ο
+     κριτής βλέπει ότι το τερέν προχωρά γρήγορα και τους καλεί νωρίτερα. */
+  if(opts.actions && !opts.big && b.status === "ΕΚΚΡΕΜΕΙ" && nextUpQueue(t, tr, b).some(x=>x.phone))
+    extra.push(`<button class="b-sm" data-nextup="${tr.id}|${b.id}">${tx("Ειδοποίηση «σειρά σας»")}</button>`);
 
   /* the state, said once, in the top right */
   let state;
@@ -7605,6 +7667,10 @@ function vSettings(){
       <button class="tog ${DB.settings.smsMode==="own"?"on":""}" data-set="smsModeOwn">${tx("Μόνο τα δικά του ζεύγη")}</button>
       <button class="tog ${DB.settings.smsJudges?"on":""}" data-set="smsJudges">${tx("Ονόματα κριτών")}</button>
     </div>
+    <div class="row tight" style="margin-top:10px">
+      <button class="tog ${DB.settings.nextUp!==false?"on":""}" data-set="nextUp">${tx("Ειδοποίηση «σειρά σας»")}</button>
+    </div>
+    <p class="tiny" style="margin-top:8px">${tx("Με τη «Λήξη» ενός ζεύγους, η εφαρμογή ετοιμάζει ένα σύντομο μήνυμα για τους δύο κυναγωγούς του επόμενου και ανοίγει την εφαρμογή μηνυμάτων. Την αποστολή τη δίνετε εσείς — η εφαρμογή δεν στέλνει τίποτα μόνη της, ούτε εδώ ούτε πουθενά αλλού.")}</p>
     <p class="tiny" style="margin-top:8px">${tx("Τα ελληνικά SMS χωρούν 70 χαρακτήρες στο πρώτο τμήμα και 67 σε κάθε επόμενο. Η πλήρης σειρά με 40 σκύλους βγάζει περίπου 15–20 τμήματα ανά μήνυμα. Ο πραγματικός αριθμός φαίνεται στην καρτέλα SMS του αγώνα.")}</p>
     <button class="b-sm b-pri" style="margin-top:8px" data-act="saveSms">${tx("Αποθήκευση")}</button></div>
 
@@ -8642,7 +8708,7 @@ function exportTrialDoc(t){
 
 /* ---------- 15. Actions -------------------------------------------------- */
 document.addEventListener("click", ev=>{
-  const el2 = ev.target.closest("[data-nav],[data-tab],[data-day],[data-act],[data-open],[data-dog],[data-editdog],[data-edithandler],[data-newdogfor],[data-btick],[data-batch],[data-ftick],[data-fall],[data-nterrain],[data-smspick],[data-chan],[data-editjudge],[data-editterrain],[data-editentry],[data-note],[data-res],[data-bstat],[data-trailer],[data-untrailer],[data-recall],[data-recallgo],[data-sms],[data-copy],[data-wa],[data-smsdone],[data-set],[data-nstep],[data-nwidth],[data-nfault],[data-delpt],[data-nset],[data-ptset],[data-openbrace],[data-swap],[data-swapwith],[data-regtab],[data-bsec],[data-regbsec],[data-setlang],[data-assign],[data-autoassign],[data-pick],[data-signoff],[data-unlock]");
+  const el2 = ev.target.closest("[data-nav],[data-tab],[data-day],[data-act],[data-open],[data-dog],[data-editdog],[data-edithandler],[data-newdogfor],[data-btick],[data-batch],[data-ftick],[data-fall],[data-nterrain],[data-smspick],[data-chan],[data-editjudge],[data-editterrain],[data-editentry],[data-note],[data-res],[data-bstat],[data-trailer],[data-untrailer],[data-recall],[data-recallgo],[data-sms],[data-copy],[data-wa],[data-smsdone],[data-set],[data-nstep],[data-nwidth],[data-nfault],[data-delpt],[data-nset],[data-ptset],[data-openbrace],[data-nextup],[data-nextsend],[data-swap],[data-swapwith],[data-regtab],[data-bsec],[data-regbsec],[data-setlang],[data-assign],[data-autoassign],[data-pick],[data-signoff],[data-unlock]");
   if(!el2) return;
   const d = el2.dataset;
   const t = trialById(S.trialId);
@@ -8706,9 +8772,23 @@ document.addEventListener("click", ev=>{
   if(d.bstat){ const [tid,bid] = d.bstat.split("|");
     const tr = t.days[S.day].terrains.find(x=>x.id===tid);
     const b = tr.braces.find(x=>x.id===bid);
-    if(b){ setBraceStatus(b, b.status==="ΕΚΚΡΕΜΕΙ" ? "ΤΡΕΧΕΙ"
+    if(b){ const closing = b.status==="ΤΡΕΧΕΙ";
+      setBraceStatus(b, b.status==="ΕΚΚΡΕΜΕΙ" ? "ΤΡΕΧΕΙ"
       : b.status==="ΤΡΕΧΕΙ" ? "ΟΛΟΚΛΗΡΩΘΗΚΕ" : "ΕΚΚΡΕΜΕΙ");
-      save(); render(); }
+      save(); render();
+      /* Μόνο στη Λήξη, και μόνο αν υπάρχει επόμενο ζεύγος με τηλέφωνο. Η
+         «Επαναφορά» δεν ξαναρωτά — ο κριτής διορθώνει, δεν ειδοποιεί. */
+      if(closing && DB.settings.nextUp !== false){
+        const nb = nextUpBrace(tr, b);
+        if(nb && nextUpQueue(t, tr, nb).some(x=>x.phone)) dlgNextUp(t, tr.id, nb.id);
+      } }
+    return; }
+  if(d.nextup){ const [tid,bid] = d.nextup.split("|"); dlgNextUp(t, tid, bid); return; }
+  if(d.nextsend){ const [tid,bid,i] = d.nextsend.split("|");
+    const tr = t.days[S.day].terrains.find(x=>x.id===tid);
+    const b = tr && (tr.braces||[]).find(x=>x.id===bid);
+    const x = b && nextUpQueue(t, tr, b)[+i];
+    if(x) sendOne(t, x);
     return; }
 
   /* Άρθρο 16 says the drawn order is an indication, so the head judge may
@@ -8895,6 +8975,74 @@ function autosaveNote(){
   const s = el("noteSaved");
   if(s){ s.textContent = "Αποθηκεύτηκε";
     clearTimeout(saveTick); saveTick = setTimeout(()=>{ if(el("noteSaved")) el("noteSaved").textContent = ""; }, 2500); }
+}
+
+
+/* --- «σειρά σας» — Άρθρο 24 τελειώνει ένα ζεύγος, δύο άνθρωποι πρέπει να
+   ξεκινήσουν να έρχονται -------------------------------------------------
+   Ο κριτής πατά «Λήξη» και οι επόμενοι δύο κυναγωγοί στέκουν στα αυτοκίνητά
+   τους, μισό χιλιόμετρο πιο πέρα. Μέχρι να τους βρει κάποιος, το τερέν
+   περιμένει.
+
+   Η εφαρμογή ΔΕΝ στέλνει μόνη της. Δεν υπάρχει διακομιστής και δεν υπήρξε
+   ποτέ: κάθε μήνυμα εδώ ανοίγει την εφαρμογή μηνυμάτων του τηλεφώνου με τον
+   αριθμό και το κείμενο μέσα, και το «αποστολή» το πατά άνθρωπος. Αυτό που
+   αλλάζει είναι ότι δεν χρειάζεται να θυμηθεί κανείς να το κάνει, ούτε να
+   γράψει τίποτα: με το που κλείνει το ζεύγος, το μήνυμα είναι έτοιμο. */
+/* Όχι «nextPending»: αυτό το όνομα το κρατά ήδη η κάτω μπάρα, με άλλη υπογραφή
+   και άλλο νόημα (το επόμενο ζεύγος ΟΛΗΣ της ημέρας). Δύο συναρτήσεις με το ίδιο
+   όνομα σε ένα αρχείο σημαίνει ότι η δεύτερη σβήνει σιωπηλά την πρώτη. */
+function nextUpBrace(tr, after){
+  return (tr.braces||[]).slice().sort((x,y)=>x.no-y.no)
+    .find(x => x.no > after.no && x.status === "ΕΚΚΡΕΜΕΙ") || null;
+}
+/* Σύντομο επίτηδες: ο κυναγωγός ξέρει ήδη πού είναι και τι τρέχει — του λείπει
+   μόνο το «τώρα». Ένα τμήμα, όχι έξι. */
+function nextUpBody(t, tr, b, e){
+  const d = dogById(e.dogId) || {};
+  return tx("Κ.Ο.Α.Δ. — σειρά σας.") + "\n"
+       + braceLabel(b.no) + " · " + (d.name || "—") + " · " + tr.name
+       + " · " + tx(e.id === b.a ? "δεξιά" : "αριστερά");
+}
+function nextUpQueue(t, tr, b){
+  const out = [], seen = new Set();
+  [b.a, b.b].forEach(id=>{
+    const e = t.entries.find(x=>x.id===id); if(!e) return;
+    if(b.trailer && id === b.b) return;   /* δεν αγωνίζεται, Άρθρο 40 */
+    const h = e.handlerId || e.id;
+    if(seen.has(h)) return; seen.add(h);
+    const p = perById(e.handlerId) || {};
+    out.push({ key:"next:" + b.id + ":" + e.id, name:perName(e.handlerId),
+               phone:phoneE164(p.phone, p.country), body:nextUpBody(t, tr, b, e) });
+  });
+  return out;
+}
+/* Ανοίγει μόνο του στη Λήξη, και ξανά από το κουμπί του ζεύγους όταν ο κριτής
+   το θέλει νωρίτερα. Ποτέ δεν στέλνει χωρίς πάτημα. */
+function dlgNextUp(t, tid, bid){
+  const tr = (t.days[S.day].terrains||[]).find(x=>x.id===tid); if(!tr) return;
+  const b = (tr.braces||[]).find(x=>x.id===bid); if(!b) return;
+  const q = nextUpQueue(t, tr, b);
+  const rows = q.map((x,i)=>{
+    const sent = t.sms[x.key] === "ΕΣΤΑΛΗ";
+    return `<div class="card" style="margin:0">
+      <div class="row" style="align-items:center;gap:10px">
+        <div class="grow" style="min-width:0">
+          <b style="font:600 16px/1.2 var(--f-b)">${esc(x.name)}</b>
+          <div class="tiny">${x.phone ? esc(x.phone) : tx("Χωρίς τηλέφωνο")}
+            · ${smsSegments(x.body)} ${tx("τμ.")}</div>
+        </div>
+        ${x.phone ? `<button class="b-sm ${sent?"":"b-pri"}" data-nextsend="${esc(tid)}|${esc(bid)}|${i}">${
+          sent ? tx("Ξανά") : tx("Αποστολή")}</button>` : ""}
+      </div>
+      <div class="note" style="margin-top:10px;white-space:pre-wrap">${esc(x.body)}</div>
+    </div>`; }).join("");
+  dlg(`<h2>${tx("Ακολουθεί το")} ${braceLabel(b.no)}</h2>
+  <p class="tiny">${tx("Το μήνυμα ανοίγει στην εφαρμογή μηνυμάτων του τηλεφώνου· την αποστολή τη δίνετε εσείς. Η εφαρμογή δεν στέλνει τίποτα μόνη της.")}</p>
+  <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px">${
+    rows || `<div class="empty">${tx("Κανένας κυναγωγός με τηλέφωνο στο επόμενο ζεύγος.")}</div>`}</div>
+  <div class="row tight" style="margin-top:14px">
+    <button class="grow" data-act="close">${tx("Κλείσιμο")}</button></div>`);
 }
 
 /* Άρθρο 24 — the clock starts when the brace starts and stops when it ends */
@@ -9089,6 +9237,14 @@ const ACT = {
     S.openBrace = null;
     save(); render();
     toast(next ? "Ζεύγος " + next.b.no : "Δεν απομένει άλλο ζεύγος");
+  },
+  /* Η κάτω μπάρα πατιέται με κρύα χέρια και πρέπει να προχωρά τον αγώνα με ένα
+     πάτημα· διάλογος που πέφτει μπροστά της είναι λάθος σχεδίασης, όχι
+     χαρακτηριστικό. Άρα εκεί το μήνυμα δεν επιβάλλεται — στέκει δίπλα, δικό του
+     κουμπί, και το ανοίγει όποιος κρατά το τηλέφωνο με τους αριθμούς. */
+  nextUpFab: (btn, t)=>{
+    const up = nextUpTarget(t); if(!up) return;
+    dlgNextUp(t, up.tr.id, up.b.id);
   },
   extendBrace: (btn, t)=>{
     const live = liveBrace(t); if(!live) return;

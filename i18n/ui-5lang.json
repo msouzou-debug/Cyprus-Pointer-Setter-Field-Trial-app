@@ -741,6 +741,13 @@
   "fr": "Sagesse",
   "it": "Immobilità"
  },
+ "Ακολουθεί το": {
+  "de": "Als Nächstes:",
+  "en": "Next up:",
+  "es": "A continuación:",
+  "fr": "Ensuite :",
+  "it": "Segue:"
+ },
  "Ακούσιο ξεσήκωμα. Δεν μετρά στο πρώτο πέρασμα με τον άνεμο, δεξιά και αριστερά (ACO II.8· ENCI art. 11).": {
   "de": "Ein unabsichtliches Herausstoßen. Beim ersten Zug mit dem Wind, rechts und links, zählt es nicht (ACO II.8; ENCI Art. 11).",
   "en": "An unintentional flush. It does not count on the first pass with the wind, right and left (ACO II.8; ENCI art. 11).",
@@ -964,6 +971,13 @@
   "es": "Eliminación de",
   "fr": "Élimination de",
   "it": "Eliminazione di"
+ },
+ "Αποστολή": {
+  "de": "Senden",
+  "en": "Send",
+  "es": "Enviar",
+  "fr": "Envoyer",
+  "it": "Invia"
  },
  "Αποστολή αγώνα": {
   "de": "Prüfung senden",
@@ -1545,6 +1559,13 @@
   "es": "Instalar en el teléfono",
   "fr": "Installer sur le téléphone",
   "it": "Installa sul telefono"
+ },
+ "Ειδοποίηση «σειρά σας»": {
+  "de": "Hinweis «Sie sind dran»",
+  "en": "\"You are next\" alert",
+  "es": "Aviso «les toca»",
+  "fr": "Alerte « c'est à vous »",
+  "it": "Avviso «tocca a voi»"
  },
  "Εικονίδιο εγκατάστασης στη γραμμή διευθύνσεων.": {
   "de": "Installationssymbol in der Adressleiste.",
@@ -2351,6 +2372,13 @@
   "fr": "Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}\n{ΤΟΠΟΘΕΣΙΑ} · à {ΩΡΑ}",
   "it": "Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}\n{ΤΟΠΟΘΕΣΙΑ} · ore {ΩΡΑ}"
  },
+ "Κ.Ο.Α.Δ. — σειρά σας.": {
+  "de": "Κ.Ο.Α.Δ. — Sie sind dran.",
+  "en": "Κ.Ο.Α.Δ. — you are next.",
+  "es": "Κ.Ο.Α.Δ. — les toca a ustedes.",
+  "fr": "Κ.Ο.Α.Δ. — c'est à vous.",
+  "it": "Κ.Ο.Α.Δ. — tocca a voi."
+ },
  "Κ.Ο.Κ.": {
   "de": "Zuchtbuch",
   "en": "Stud book",
@@ -2546,6 +2574,13 @@
   "es": "Todavía no hay conductores. Registre primero al conductor y después sus perros, o importe un archivo desde la pestaña Perros.",
   "fr": "Aucun conducteur pour l'instant. Enregistrez d'abord le conducteur puis ses chiens, ou importez un fichier depuis l'onglet Chiens.",
   "it": "Ancora nessun conduttore. Registrate prima il conduttore e poi i suoi cani, oppure importate un file dalla scheda Cani."
+ },
+ "Κανένας κυναγωγός με τηλέφωνο στο επόμενο ζεύγος.": {
+  "de": "Kein Führer des nächsten Paares hat eine Telefonnummer.",
+  "en": "No handler in the next brace has a phone number.",
+  "es": "Ningún conductor de la pareja siguiente tiene teléfono.",
+  "fr": "Aucun conducteur du couple suivant n'a de téléphone.",
+  "it": "Nessun conduttore della coppia successiva ha un telefono."
  },
  "Κανένας πόντος καταγεγραμμένος.": {
   "de": "Kein Punkt vermerkt.",
@@ -2883,6 +2918,13 @@
   "fr": "Avec soutien",
   "it": "Con sostegno"
  },
+ "Με τη «Λήξη» ενός ζεύγους, η εφαρμογή ετοιμάζει ένα σύντομο μήνυμα για τους δύο κυναγωγούς του επόμενου και ανοίγει την εφαρμογή μηνυμάτων. Την αποστολή τη δίνετε εσείς — η εφαρμογή δεν στέλνει τίποτα μόνη της, ούτε εδώ ούτε πουθενά αλλού.": {
+  "de": "Beim Beenden eines Paares hält die Anwendung eine kurze Nachricht für die beiden Führer des nächsten bereit und öffnet die Nachrichten-App. Abgeschickt wird sie von Ihnen — die Anwendung verschickt nichts von selbst, hier so wenig wie anderswo.",
+  "en": "When a brace is ended, the app makes ready a short message for the two handlers of the next one and opens the messaging app. You are the one who sends it — the app sends nothing by itself, here or anywhere else.",
+  "es": "Al cerrar una pareja, la aplicación prepara un mensaje breve para los dos conductores de la siguiente y abre la aplicación de mensajes. El envío lo da usted — la aplicación no envía nada por sí sola, ni aquí ni en ningún otro sitio.",
+  "fr": "À la fin d'un couple, l'application prépare un court message pour les deux conducteurs du suivant et ouvre l'application de messagerie. C'est vous qui l'envoyez — l'application n'envoie rien d'elle-même, ni ici ni ailleurs.",
+  "it": "Alla chiusura di una coppia, l'applicazione prepara un breve messaggio per i due conduttori della successiva e apre l'applicazione di messaggi. A inviarlo siete voi — l'applicazione non invia nulla da sola, né qui né altrove."
+ },
  "Με τη σύνδεση, η κλήρωση δεν τοποθετεί τον σκύλο του κριτή στο τερέν που κρίνει (Άρθρο 49).": {
   "de": "Ist die Verknüpfung gesetzt, stellt die Auslosung den Hund des Richters nicht auf das Gelände, das er richtet (Artikel 49).",
   "en": "Once linked, the draw does not place a judge's dog on the terrain he judges (Article 49).",
@@ -3106,6 +3148,13 @@
   "es": "Noviembre",
   "fr": "Novembre",
   "it": "Novembre"
+ },
+ "Ξανά": {
+  "de": "Erneut",
+  "en": "Again",
+  "es": "De nuevo",
+  "fr": "À nouveau",
+  "it": "Di nuovo"
  },
  "Ξεκλείδωμα": {
   "de": "Entsperren",
@@ -4227,6 +4276,13 @@
   "fr": "Le message commun est copié — collez-le dans un groupe, ou envoyez un par un.",
   "it": "Il messaggio comune è copiato — incollatelo in un gruppo, o inviate uno per uno."
  },
+ "Το μήνυμα ανοίγει στην εφαρμογή μηνυμάτων του τηλεφώνου· την αποστολή τη δίνετε εσείς. Η εφαρμογή δεν στέλνει τίποτα μόνη της.": {
+  "de": "Die Nachricht öffnet sich in der Nachrichten-App des Telefons; abgeschickt wird sie von Ihnen. Die Anwendung verschickt nichts von selbst.",
+  "en": "The message opens in the phone's messaging app; you are the one who sends it. The app sends nothing by itself.",
+  "es": "El mensaje se abre en la aplicación de mensajes del teléfono; el envío lo da usted. La aplicación no envía nada por sí sola.",
+  "fr": "Le message s'ouvre dans l'application de messagerie du téléphone ; c'est vous qui l'envoyez. L'application n'envoie rien d'elle-même.",
+  "it": "Il messaggio si apre nell'applicazione di messaggi del telefono; a inviarlo siete voi. L'applicazione non invia nulla da sola."
+ },
  "Το μήνυμα συντίθεται αυτόματα: επικεφαλίδα, οι διαδρομές του κυναγωγού, ολόκληρη η σειρά της ημέρας με τα δικά του ζεύγη σημειωμένα, και κατακλείδα.": {
   "de": "Die Nachricht entsteht automatisch: Kopfzeile, die Gänge des Führers, die gesamte Reihenfolge des Tages mit seinen markierten Paaren und eine Schlusszeile.",
   "en": "The message is built automatically: heading, the handler's own runs, the whole running order of the day with his braces marked, and a closing line.",
@@ -4611,6 +4667,13 @@
   "es": "Sin vínculo con el registro de conductores:",
   "fr": "Sans lien avec le registre des conducteurs :",
   "it": "Senza collegamento al registro dei conduttori:"
+ },
+ "Χωρίς τηλέφωνο": {
+  "de": "Ohne Telefonnummer",
+  "en": "No phone number",
+  "es": "Sin teléfono",
+  "fr": "Sans téléphone",
+  "it": "Senza telefono"
  },
  "Χώρα": {
   "de": "Land",
