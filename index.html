@@ -1493,6 +1493,7 @@ const UI_STR = {
   "Σαρώστε με την κάμερα": "Scan with the camera",
   "Σε εξέλιξη": "In progress",
   "Σε οίστρο (Άρθρο 9)": "Bitch in season (Article 9)",
+  "Σε παρένθεση, η εθνική ομάδα που εκπροσωπεί ο σκύλος.": "In brackets, the national team the dog represents.",
   "Σεπτέμβριος": "September",
   "Σημειώσεις": "Notes",
   "Σημειώσεις κριτών": "Judges' notes",
@@ -2302,6 +2303,7 @@ const UI_STR = {
   "Σαρώστε με την κάμερα": "Scannez avec l'appareil photo",
   "Σε εξέλιξη": "En cours",
   "Σε οίστρο (Άρθρο 9)": "Chienne en chaleurs (Article 9)",
+  "Σε παρένθεση, η εθνική ομάδα που εκπροσωπεί ο σκύλος.": "Entre parenthèses, l'équipe nationale que le chien représente.",
   "Σεπτέμβριος": "Septembre",
   "Σημειώσεις": "Notes",
   "Σημειώσεις κριτών": "Notes des juges",
@@ -3111,6 +3113,7 @@ const UI_STR = {
   "Σαρώστε με την κάμερα": "Mit der Kamera scannen",
   "Σε εξέλιξη": "Laufend",
   "Σε οίστρο (Άρθρο 9)": "Läufige Hündin (Artikel 9)",
+  "Σε παρένθεση, η εθνική ομάδα που εκπροσωπεί ο σκύλος.": "In Klammern die Nationalmannschaft, die der Hund vertritt.",
   "Σεπτέμβριος": "September",
   "Σημειώσεις": "Notizen",
   "Σημειώσεις κριτών": "Notizen der Richter",
@@ -3920,6 +3923,7 @@ const UI_STR = {
   "Σαρώστε με την κάμερα": "Inquadrate con la fotocamera",
   "Σε εξέλιξη": "In corso",
   "Σε οίστρο (Άρθρο 9)": "Femmina in calore (Articolo 9)",
+  "Σε παρένθεση, η εθνική ομάδα που εκπροσωπεί ο σκύλος.": "Fra parentesi, la squadra nazionale che il cane rappresenta.",
   "Σεπτέμβριος": "Settembre",
   "Σημειώσεις": "Note",
   "Σημειώσεις κριτών": "Note dei giudici",
@@ -4729,6 +4733,7 @@ const UI_STR = {
   "Σαρώστε με την κάμερα": "Escanee con la cámara",
   "Σε εξέλιξη": "En curso",
   "Σε οίστρο (Άρθρο 9)": "Perra en celo (Artículo 9)",
+  "Σε παρένθεση, η εθνική ομάδα που εκπροσωπεί ο σκύλος.": "Entre paréntesis, la selección nacional que representa el perro.",
   "Σεπτέμβριος": "Septiembre",
   "Σημειώσεις": "Notas",
   "Σημειώσεις κριτών": "Notas de los jueces",
@@ -6682,7 +6687,12 @@ function revealBraces(){
 function drawSheet(t, day, tr){
   const rows = (tr.braces||[]).map(b=>{
     const ea = t.entries.find(e=>e.id===b.a), eb = t.entries.find(e=>e.id===b.b);
-    const cell = e => e ? `${esc(dogName(e.dogId))} — ${esc(perName(e.handlerId))}` : tx("ΜΟΝΟΣ");
+    /* Ολόκληρο το όνομα της χώρας, όχι κωδικός: το φύλλο διαβάζεται από
+       απόσταση και καρφιτσώνεται, και δεν έχουμε τριγράμματους κωδικούς της
+       F.C.I. στο αποθετήριο για να τους γράψουμε σωστά. */
+    const nat = e => { const d = dogById(e.dogId) || {};
+      return d.natTeam ? ` (${esc(countryName(d.natTeam))})` : ""; };
+    const cell = e => e ? `${esc(dogName(e.dogId))}${nat(e)} — ${esc(perName(e.handlerId))}` : tx("ΜΟΝΟΣ");
     const marks = [b.recall && "επανάκληση", b.trailer && "συμπληρωματικός",
                    b.manual && "χειροκίνητη αλλαγή"].filter(Boolean);
     return `<tr>
@@ -6694,6 +6704,9 @@ function drawSheet(t, day, tr){
   }).join("");
   const judges = (tr.judgeIds||[]).map(j=>esc((judById(j)||{}).name||"?")).join(", ");
   const manual = (tr.braces||[]).filter(b=>b.manual).map(b=>b.no);
+  const anyNat = (tr.braces||[]).some(b=>[b.a,b.b].some(id=>{
+    const e = t.entries.find(x=>x.id===id);
+    return e && (dogById(e.dogId)||{}).natTeam; }));
   return `<div class="sheet">
     <div class="print-hd" style="display:flex">
       <img src="${BADGE}" alt="">
@@ -6709,7 +6722,8 @@ function drawSheet(t, day, tr){
     </table>
     <p style="font:400 9pt/1.4 var(--f-b);margin-top:10px;border-top:1px solid #000;padding-top:8px">
       ${tx("Η σειρά είναι ενδεικτική — Άρθρο 16.")}${manual.length
-        ? ` ${tx("Χειροκίνητη αλλαγή στο")} ${tx(manual.length===1?"ζεύγος":"ζεύγη")} ${manual.join(", ")}.` : ""}</p>
+        ? ` ${tx("Χειροκίνητη αλλαγή στο")} ${tx(manual.length===1?"ζεύγος":"ζεύγη")} ${manual.join(", ")}.` : ""}${
+        anyNat ? ` ${tx("Σε παρένθεση, η εθνική ομάδα που εκπροσωπεί ο σκύλος.")}` : ""}</p>
   </div>`;
 }
 
@@ -6752,6 +6766,7 @@ function noteSheet(t, day, tr, b, e, d, note, judgeName){
       ${fld("Κυναγωγός", perName(e.handlerId))}
       ${fld("Κ.Ο.Κ.", d.reg)}
       ${fld("Φυλή / φύλο", breedName(d.breed) + (d.sex?" · "+d.sex:""))}
+      ${d.natTeam ? fld("Εθνική ομάδα", countryName(d.natTeam)) : ""}
       ${fld("Κριτής", judgeName || "")}
     </div>
     <h4>${tx("ΕΡΕΥΝΑ")}</h4>
@@ -8699,7 +8714,8 @@ function exportTrialDoc(t){
     }).join("");
     blocks.push(`<div style="margin:0 0 14pt">
       <p style="margin:0"><b>${esc(dogName(e.dogId))}</b> — ${esc(breedName(d.breed))}${d.sex?" · "+d.sex:""}
-        ${d.reg?" · Κ.Ο.Κ. "+esc(d.reg):""}</p>
+        ${d.reg?" · Κ.Ο.Κ. "+esc(d.reg):""}${
+        d.natTeam?" · "+tx("Εθνική ομάδα")+" "+esc(countryName(d.natTeam)):""}</p>
       <p style="margin:0;font-size:9pt">${esc(tr.name)} ${tx("· ζεύγος")} ${b.no}${b.recall?" · επανάκληση (Άρθρο 30)":""}
         · ${b.a===e.id?"δεξιά":"αριστερά"} ${tx("της επιτροπής · κυναγωγός")} ${esc(perName(e.handlerId))}
         ${tx("· βαθμολογία")} ${esc(r.qual||"-")}${r.award&&r.award!=="-"?" · "+esc(r.award):""}
