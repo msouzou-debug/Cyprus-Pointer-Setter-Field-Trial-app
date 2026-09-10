@@ -2918,6 +2918,13 @@
   "fr": "Avec :",
   "it": "Con:"
  },
+ "Με γλώσσα της εφαρμογής": {
+  "de": "Sprachen der Anwendung",
+  "en": "Languages the app speaks",
+  "es": "Lenguas de la aplicación",
+  "fr": "Langues de l'application",
+  "it": "Lingue dell'applicazione"
+ },
  "Με στήριξη": {
   "de": "Mit Unterstützung",
   "en": "With support",
@@ -4492,6 +4499,13 @@
   "es": "Ordenador:",
   "fr": "Ordinateur :",
   "it": "Computer:"
+ },
+ "Υπόλοιπος κόσμος": {
+  "de": "Übrige Welt",
+  "en": "Rest of the world",
+  "es": "Resto del mundo",
+  "fr": "Reste du monde",
+  "it": "Resto del mondo"
  },
  "ΦΥΛΛΟ ΣΗΜΕΙΩΣΕΩΝ ΚΡΙΤΗ": {
   "de": "NOTIZBLATT DES RICHTERS",
