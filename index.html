@@ -5318,6 +5318,14 @@ const HOME_COUNTRY = "CY";
    η γλώσσα των επισκεπτών κάθε εθνικότητας, όχι μιας χώρας, και η λέσχη είναι
    κυπριακή. Αυτό ορίζει μόνο την ΠΡΟΕΠΙΛΟΓΗ — αλλάζει με ένα πάτημα. */
 const LANG_COUNTRY = { el:"CY", en:"CY", fr:"FR", de:"DE", it:"IT", es:"ES" };
+/* Η σημαία δεν είναι πίνακας που συντηρούμε: βγαίνει από τον ίδιο τον κωδικό,
+   δύο γράμματα σε δύο regional indicators. Κρατάμε και τα γράμματα δίπλα της
+   επίτηδες — σε Windows, σε ασπρόμαυρη φωτοτυπία και σε παλιό τηλέφωνο η
+   σημαία μπορεί να μη βγει, τα «IT» βγαίνουν πάντα. */
+const flagOf = c => /^[A-Za-z]{2}$/.test(c || "")
+  ? String.fromCodePoint(...[...c.toUpperCase()].map(ch => 0x1F1E6 + ch.charCodeAt(0) - 65))
+  : "";
+const natTag = c => c ? (flagOf(c) + " " + String(c).toUpperCase()).trim() : "";
 const defaultCountry = () =>
   LANG_COUNTRY[(DB && DB.settings && DB.settings.lang) || "el"] || HOME_COUNTRY;
 /* Τα ονόματα των χωρών δεν μεταφράζονται εδώ. Ο ίδιος ο περιηγητής κουβαλάει το
@@ -6691,7 +6699,7 @@ function drawSheet(t, day, tr){
        απόσταση και καρφιτσώνεται, και δεν έχουμε τριγράμματους κωδικούς της
        F.C.I. στο αποθετήριο για να τους γράψουμε σωστά. */
     const nat = e => { const d = dogById(e.dogId) || {};
-      return d.natTeam ? ` (${esc(countryName(d.natTeam))})` : ""; };
+      return d.natTeam ? ` (${esc(natTag(d.natTeam))})` : ""; };
     const cell = e => e ? `${esc(dogName(e.dogId))}${nat(e)} — ${esc(perName(e.handlerId))}` : tx("ΜΟΝΟΣ");
     const marks = [b.recall && "επανάκληση", b.trailer && "συμπληρωματικός",
                    b.manual && "χειροκίνητη αλλαγή"].filter(Boolean);
@@ -6766,7 +6774,7 @@ function noteSheet(t, day, tr, b, e, d, note, judgeName){
       ${fld("Κυναγωγός", perName(e.handlerId))}
       ${fld("Κ.Ο.Κ.", d.reg)}
       ${fld("Φυλή / φύλο", breedName(d.breed) + (d.sex?" · "+d.sex:""))}
-      ${d.natTeam ? fld("Εθνική ομάδα", countryName(d.natTeam)) : ""}
+      ${d.natTeam ? fld("Εθνική ομάδα", natTag(d.natTeam)) : ""}
       ${fld("Κριτής", judgeName || "")}
     </div>
     <h4>${tx("ΕΡΕΥΝΑ")}</h4>
@@ -7419,7 +7427,7 @@ function vRegistry(){
           <td><b>${esc(d.name)}</b>${d.guest?`<span class="chip" style="margin-left:6px">${tx("ΕΠΙΣΚΕΠΤΗΣ")}</span>`:""}${
             /* Λίγοι σκύλοι τρέχουν με εθνική, οπότε σήμα στο όνομα και όχι δική
                της στήλη: μια στήλη με τριάντα παύλες δεν λέει τίποτα. */
-            d.natTeam?`<span class="chip y" style="margin-left:6px">${esc(countryName(d.natTeam))}</span>`:""}${
+            d.natTeam?`<span class="chip y" style="margin-left:6px" title="${esc(countryName(d.natTeam))}">${esc(natTag(d.natTeam))}</span>`:""}${
             d.kennel?`<div class="tiny">${esc(d.kennel)}</div>`:""}</td>
           <td class="num">${esc(d.reg||"—")}</td>
           <td>${esc(sexShort(d.sex)||"—")}</td>
@@ -7504,7 +7512,7 @@ function vDog(){
     <div class="grow" style="min-width:200px">
       <div class="eyebrow">${tx("Ιστορικό σκύλου")}</div>
       <h1>${esc(d.name)}${d.natTeam
-        ? ` <span class="chip y" style="vertical-align:middle">${tx("Εθνική ομάδα")} ${esc(countryName(d.natTeam))}</span>`
+        ? ` <span class="chip y" style="vertical-align:middle" title="${esc(countryName(d.natTeam))}">${tx("Εθνική ομάδα")} ${esc(natTag(d.natTeam))}</span>`
         : ""}</h1>
       <div class="meta num">${esc(breedName(d.breed))}${d.sex?" · "+(d.sex==="Θ"?tx("Θηλυκό"):tx("Αρσενικό")):""}${d.dob?" · "+fmtDate(d.dob):""}${d.reg?" · Κ.Ο.Κ. "+esc(d.reg):""}${d.country?" · "+esc(d.country===HOME_COUNTRY?tx("κυπριακής εκτροφής"):countryName(d.country)):""}
         <br>${tx("Κυναγωγός")} ${esc(perName(d.ownerId))}${d.kennel?" · εκτροφείο «"+esc(d.kennel)+"»":""}</div>
@@ -8715,7 +8723,7 @@ function exportTrialDoc(t){
     blocks.push(`<div style="margin:0 0 14pt">
       <p style="margin:0"><b>${esc(dogName(e.dogId))}</b> — ${esc(breedName(d.breed))}${d.sex?" · "+d.sex:""}
         ${d.reg?" · Κ.Ο.Κ. "+esc(d.reg):""}${
-        d.natTeam?" · "+tx("Εθνική ομάδα")+" "+esc(countryName(d.natTeam)):""}</p>
+        d.natTeam?" · "+tx("Εθνική ομάδα")+" "+esc(natTag(d.natTeam)):""}</p>
       <p style="margin:0;font-size:9pt">${esc(tr.name)} ${tx("· ζεύγος")} ${b.no}${b.recall?" · επανάκληση (Άρθρο 30)":""}
         · ${b.a===e.id?"δεξιά":"αριστερά"} ${tx("της επιτροπής · κυναγωγός")} ${esc(perName(e.handlerId))}
         ${tx("· βαθμολογία")} ${esc(r.qual||"-")}${r.award&&r.award!=="-"?" · "+esc(r.award):""}
