@@ -7827,8 +7827,12 @@ function countryPicker(id, val, label, noDial){
   /* undefined is a record that predates the field, or a new one — Κύπρος.
      An empty string is a deliberate "not stated" and stays that way. */
   const cur = val === undefined ? defaultCountry() : val;
+  /* Η σημαία μπροστά, το όνομα από πίσω — και η ΣΕΙΡΑ μένει στο όνομα: αν
+     ταξινομούσαμε το κείμενο όπως φαίνεται, θα ταξινομούσαμε τις σημαίες.
+     Όπου η σημαία δεν αποδίδεται (Windows) μένει το όνομα, που είναι και η
+     πληροφορία. */
   const opt = c => `<option value="${esc(c[0])}" ${String(cur)===String(c[0])?"selected":""}>${
-    esc(noDial ? c[1] : c[1] + " +" + c[2])}</option>`;
+    esc([flagOf(c[0]), noDial ? c[1] : c[1] + " +" + c[2]].filter(Boolean).join(" "))}</option>`;
   const group = (lbl, list) => list.length
     ? `<optgroup label="${esc(tx(lbl))}">${list.map(opt).join("")}</optgroup>` : "";
   return `<div class="grow"><label>${esc(tx(label || "Χώρα"))}</label>
