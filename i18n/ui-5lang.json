@@ -2316,6 +2316,13 @@
   "fr": "Janvier",
   "it": "Gennaio"
  },
+ "Ιδιοκτήτης": {
+  "de": "Eigentümer",
+  "en": "Owner",
+  "es": "Propietario",
+  "fr": "Propriétaire",
+  "it": "Proprietario"
+ },
  "Ιδιότητα": {
   "de": "Funktion",
   "en": "Capacity",
@@ -3253,6 +3260,13 @@
   "es": "El término alemán figura en el ACO II.7 como «beim erneuten Aufrufen»; no hay un sustantivo de una sola palabra en los textos que tenemos.",
   "fr": "Le terme allemand figure dans ACO II.7 sous la forme « beim erneuten Aufrufen » ; il n'existe pas de substantif en un mot dans les textes dont nous disposons.",
   "it": "Il termine tedesco figura in ACO II.7 come «beim erneuten Aufrufen»; nei testi in nostro possesso non esiste un sostantivo di una sola parola."
+ },
+ "Ο ιδιοκτήτης του σκύλου, όταν δεν είναι ο ίδιος ο κυναγωγός — που είναι και το συνηθισμένο. Μπαίνει σκέτο όνομα: δεν παίρνει τηλέφωνο και δεν λαμβάνει μηνύματα, γιατί τα SMS της σειράς πάνε στον κυναγωγό.": {
+  "de": "Der Eigentümer des Hundes, wenn er nicht selbst der Führer ist — was der Normalfall ist. Es kommt ein bloßer Name hinein: er bekommt keine Telefonnummer und keine Nachrichten, denn die SMS zur Startordnung gehen an den Führer.",
+  "en": "The dog's owner, where he is not the handler himself — which is the usual case. A plain name goes in: he takes no phone number and receives no messages, because the running-order SMS go to the handler.",
+  "es": "El propietario del perro, cuando no es el propio conductor — que es lo habitual. Se pone un nombre a secas: no lleva teléfono ni recibe mensajes, porque los SMS del orden van al conductor.",
+  "fr": "Le propriétaire du chien, lorsqu'il n'est pas le conducteur lui-même — ce qui est le cas courant. On met un simple nom : il ne prend pas de téléphone et ne reçoit pas de messages, car les SMS de l'ordre de passage vont au conducteur.",
+  "it": "Il proprietario del cane, quando non è lui stesso il conduttore — che è il caso abituale. Va messo un semplice nome: non prende telefono e non riceve messaggi, perché gli SMS dell'ordine vanno al conduttore."
  },
  "Ο κεντρικός κριτής και οι κριτές 1 και 2 ορίζονται στην κάρτα του τερέν.": {
   "de": "Obmann sowie Richter 1 und 2 werden auf der Karte des Geländes festgelegt.",
@@ -5031,6 +5045,13 @@
   "es": "propia",
   "fr": "propre",
   "it": "propria"
+ },
+ "ιδιοκτήτης": {
+  "de": "Eigentümer",
+  "en": "owner",
+  "es": "propietario",
+  "fr": "propriétaire",
+  "it": "proprietario"
  },
  "και": {
   "de": "und",
