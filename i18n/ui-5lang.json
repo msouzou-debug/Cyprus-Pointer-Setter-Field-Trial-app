@@ -1560,6 +1560,13 @@
   "fr": "Installer sur le téléphone",
   "it": "Installa sul telefono"
  },
+ "Εθνική ομάδα": {
+  "de": "Nationalmannschaft",
+  "en": "National team",
+  "es": "Selección nacional",
+  "fr": "Équipe nationale",
+  "it": "Squadra nazionale"
+ },
  "Ειδοποίηση «σειρά σας»": {
   "de": "Hinweis «Sie sind dran»",
   "en": "\"You are next\" alert",
@@ -4016,6 +4023,13 @@
   "es": "Inscripciones del conductor",
   "fr": "Engagements du conducteur",
   "it": "Iscrizioni del conduttore"
+ },
+ "Συμπληρώνεται μόνο όταν ο σκύλος τρέχει ως αθλητής εθνικής ομάδας. Δεν είναι η χώρα εκτροφής ούτε του κυναγωγού: είναι η ομάδα που εκπροσωπεί στον αγώνα. Αφήστε το «—» για τους υπόλοιπους.": {
+  "de": "Nur auszufüllen, wenn der Hund als Athlet einer Nationalmannschaft läuft. Es ist weder das Zuchtland noch das des Führers: es ist die Mannschaft, die er auf der Prüfung vertritt. Für alle anderen bei „—“ belassen.",
+  "en": "Filled in only when the dog runs as an athlete of a national team. It is neither the country of breeding nor the handler's: it is the team he represents at the trial. Leave it at \"—\" for everyone else.",
+  "es": "Se rellena sólo cuando el perro corre como atleta de una selección nacional. No es el país de cría ni el del conductor: es el equipo que representa en la prueba. Para los demás, déjelo en «—».",
+  "fr": "À remplir seulement quand le chien court comme athlète d'une équipe nationale. Ce n'est ni le pays d'élevage ni celui du conducteur : c'est l'équipe qu'il représente à l'épreuve. Laissez « — » pour tous les autres.",
+  "it": "Si compila solo quando il cane corre come atleta di una squadra nazionale. Non è il paese di allevamento né quello del conduttore: è la squadra che rappresenta alla prova. Per tutti gli altri lasciate «—»."
  },
  "Συνδεδεμένο": {
   "de": "Online",
