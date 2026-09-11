@@ -2,7 +2,11 @@
 <html lang="el">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- interactive-widget: όταν ανοίγει το πληκτρολόγιο στο Android, το κάδρο
+     πρέπει να μικραίνει μαζί του. Χωρίς αυτό ο διάλογος μένει ψηλός όσο ήταν,
+     το κάτω μισό του κάθεται πίσω από τα πλήκτρα, και η Αποθήκευση δεν φτάνει
+     πουθενά — το έντυπο μοιάζει κολλημένο. -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="theme-color" content="#1E2B4D">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -561,11 +565,28 @@ body:not([data-field]) .fab{display:none}
 .fab:empty{display:none}
 .fab button{flex:1;min-height:60px;font-size:19px;box-shadow:0 6px 20px #00000038}
 .fab .b-act{font:800 21px/1 var(--f-d)}
+/* Το ύψος και η κύλιση γράφονται εδώ και δεν αφήνονται στο φυλλομετρητή: ένα
+   μακρύ έντυπο σε κινητό είναι ο κανόνας, όχι η εξαίρεση. */
 dialog{border:0;border-radius:var(--r);padding:0;max-width:640px;width:calc(100% - 20px);
+  max-height:calc(100dvh - 40px);overflow:auto;overscroll-behavior:contain;
   box-shadow:0 20px 60px #00000059;color:var(--ink);background:var(--card)}
 dialog::backdrop{background:#000000a6}
 .dlg{padding:var(--s4) var(--s4) var(--s5)}
 .dlg h2{margin-bottom:var(--s3)}
+/* Αποθήκευση και Άκυρο μένουν στο κάτω μέρος του παραθύρου, όσο μακρύ κι αν
+   είναι το έντυπο. Στο τερέν συμπληρώνεις ένα πεδίο και σώζεις· δεν κατεβαίνεις
+   δύο οθόνες με το πληκτρολόγιο ανοιχτό για να βρεις το κουμπί. */
+.dlg > .row:last-child:has(> .b-pri){position:sticky;bottom:0;z-index:2;flex-wrap:nowrap;
+  margin:0 calc(-1 * var(--s4)) calc(-1 * var(--s5));
+  padding:12px var(--s4) calc(12px + env(safe-area-inset-bottom));
+  background:var(--card);border-top:1px solid var(--line-f)}
+.dlg > .row:last-child:has(> .b-pri) button{padding-inline:12px;min-width:0}
+/* Με ανοιχτό πληκτρολόγιο μένει ελάχιστο κάδρο· η μπάρα χαμηλώνει ώστε να μη
+   φάει το μισό έντυπο, χωρίς να πέσει κάτω από τα 44px του δαχτύλου. */
+@media(max-height:560px){
+  .dlg > .row:last-child:has(> .b-pri){padding-block:8px}
+  .dlg > .row:last-child:has(> .b-pri) button{min-height:44px;padding-block:11px;font-size:16px}
+}
 /* stacked fields in a dialog: leave room for the focus ring so it never
    crosses the label of the field below */
 .dlg .row{margin-bottom:8px}
@@ -5279,6 +5300,11 @@ const judById = id => DB.judges.find(j=>j.id===id);
 const trialById = id => DB.trials.find(t=>t.id===id);
 const dogName = id => (dogById(id)||{}).name || "—";
 const perName = id => (perById(id)||{}).name || "—";
+/* Αλφαβητικά, και χωρίς να σκάει σε εγγραφή χωρίς όνομα. Τέτοια εγγραφή δεν
+   φτιάχνει η εφαρμογή — μπορεί όμως να έρθει από παλιό αντίγραφο ή από φύλλο
+   που κάποιος πείραξε στο χέρι, και ένα κενό όνομα δεν είναι λόγος να μην
+   ανοίγει το έντυπο. */
+const byName = (a,b) => String((a||{}).name || "").localeCompare(String((b||{}).name || ""), "el");
 const fmtDate = d => d ? d.split("-").reverse().join("/") : "—";
 const today = () => new Date().toISOString().slice(0,10);
 
@@ -6002,7 +6028,7 @@ function tTerrains(t){
     const bad = tr.judgeIds.length < want;
     const conflicts = t.entries.filter(e=>e.status==="ΔΗΛΩΜΕΝΟΣ" && (tr.entryIds||[]).includes(e.id)
                        && judgeConflict(tr,e,t)).map(e=>dogName(e.dogId));
-    const byName = DB.judges.slice().sort((a,b)=>a.name.localeCompare(b.name,"el"));
+    const judges = DB.judges.slice().sort(byName);
     /* One seat per row, named the way the committee is named: the κεντρικός and
        then Κριτής 1, Κριτής 2. A man cannot hold two seats on the same terrain,
        so choosing him for one clears the other. */
@@ -6016,7 +6042,7 @@ function tTerrains(t){
       <label>${i===0?tx("Κεντρικός κριτής"):tx("Κριτής")+" "+i}</label>
       <select data-judgeslot="${tr.id}|${i}">
         <option value="">${tx("— κανένας —")}</option>
-        ${byName.filter(j=>!elsewhere.has(j.id) || jid===j.id)
+        ${judges.filter(j=>!elsewhere.has(j.id) || jid===j.id)
           .map(j=>`<option value="${j.id}" ${jid===j.id?"selected":""}>${esc(j.name)}${
             j.me?" · Μ.Ε.":""}</option>`).join("")}
       </select></div>`;
@@ -7426,7 +7452,7 @@ function closeCard(t){
    register in the middle. */
 function vRegistry(){
   const tab = S.regTab || "handlers";
-  const dogs = DB.dogs.slice().sort((a,b)=>a.name.localeCompare(b.name,"el"));
+  const dogs = DB.dogs.slice().sort(byName);
   const byBreed = {};
   DB.dogs.forEach(d=>{ byBreed[d.breed||"—"] = (byBreed[d.breed||"—"]||0)+1; });
 
@@ -7490,9 +7516,9 @@ function vRegistry(){
         </div></div>`;
     };
 
-    const people = DB.people.slice().sort((a,b)=>a.name.localeCompare(b.name,"el"));
+    const people = DB.people.slice().sort(byName);
     const cards = people.map(p=>{
-      const mine = (dogsOf.get(p.id)||[]).slice().sort((a,b)=>a.name.localeCompare(b.name,"el"));
+      const mine = (dogsOf.get(p.id)||[]).slice().sort(byName);
       const bits = [phoneE164(p.phone, p.country) || p.phone,
         p.country && p.country !== HOME_COUNTRY ? countryName(p.country) : "",
         p.member ? tx("μέλος")+" "+p.member : ""].filter(Boolean).join(" · ");
@@ -7511,7 +7537,7 @@ function vRegistry(){
         </div></div>`;
     }).join("");
 
-    const orphans = (dogsOf.get("")||[]).slice().sort((a,b)=>a.name.localeCompare(b.name,"el"));
+    const orphans = (dogsOf.get("")||[]).slice().sort(byName);
     const loose = orphans.length ? `<div class="card handler" data-group="χωρίς κυναγωγό">
       <div class="row" style="align-items:baseline;gap:10px">
         <h3 class="grow" style="margin:0">${tx("— χωρίς κυναγωγό —")}</h3>
@@ -8058,7 +8084,7 @@ function dlgDog(d){
   <div class="tiny">${tx("Συμπληρώνεται μόνο όταν ο σκύλος τρέχει ως αθλητής εθνικής ομάδας. Δεν είναι η χώρα εκτροφής ούτε του κυναγωγού: είναι η ομάδα που εκπροσωπεί στον αγώνα. Αφήστε το «—» για τους υπόλοιπους.")}</div>
   <hr><h3>${tx("Κυναγωγός")}</h3>
   <div class="row">${sel("d_owner","Επιλογή από το μητρώο",
-      [["","+ Νέος κυναγωγός"]].concat(DB.people.slice().sort((a,b)=>a.name.localeCompare(b.name,"el"))
+      [["","+ Νέος κυναγωγός"]].concat(DB.people.slice().sort(byName)
         .map(p=>[p.id,p.name])),d.ownerId)}</div>
   <div class="row">${fld("d_ownerName","Ονοματεπώνυμο",(perById(d.ownerId)||{}).name)}
     ${countryPicker("d_ownerCountry",(perById(d.ownerId)||{}).country)}</div>
@@ -8093,7 +8119,7 @@ function dlgJudge(j){
   <div class="row">${sel("j_lic","Ιδιότητα",["ΕΠΙΣΗΜΟΣ","ΔΟΚΙΜΟΣ"],j.licence||"ΕΠΙΣΗΜΟΣ")}
     ${sel("j_me","Κριτής Μεγάλης Έρευνας",[["1","Ναι"],["0","Όχι"]],j.me?"1":"0")}</div>
   <div class="row">${sel("j_person","Ο ίδιος στο μητρώο κυναγωγών (Άρθρο 49)",
-      [["","—"]].concat(DB.people.slice().sort((a,b)=>a.name.localeCompare(b.name,"el"))
+      [["","—"]].concat(DB.people.slice().sort(byName)
         .map(p=>[p.id,p.name])),j.personId)}</div>
   <div class="tiny">${tx("Με τη σύνδεση, η κλήρωση δεν τοποθετεί τον σκύλο του κριτή στο τερέν που κρίνει (Άρθρο 49).")}</div>
   <div class="row"><button class="b-pri grow" data-act="saveJudge" data-id="${j.id||""}">${tx("Αποθήκευση")}</button>
@@ -8192,7 +8218,6 @@ function femaleEntry(e){
    handler first and lets him narrow the list, rather than making the head
    judge find a dog among a hundred and hope the owner comes out right. */
 function dogsForHandler(hid){
-  const byName = (a,b)=>a.name.localeCompare(b.name,"el");
   if(!hid) return { own: [], rest: DB.dogs.filter(d=>!d.guest).sort(byName) };
   const handled = new Set();
   DB.trials.forEach(t=>t.entries.forEach(en=>{ if(en.handlerId === hid) handled.add(en.dogId); }));
@@ -8253,7 +8278,6 @@ function fieldList(t){
     if(drawn.has(e.id) || (r && r.qual && r.qual !== "-")) locked.add(e.dogId);
   });
 
-  const byName = (a,b)=>a.name.localeCompare(b.name,"el");
   const dogsOf = new Map();
   /* a guest came in only to fill somebody's brace, so he is not on offer here */
   DB.dogs.filter(d=>!d.guest).forEach(d=>{ const k = d.ownerId||"";
@@ -8319,7 +8343,7 @@ function dlgHandlerEntries(t, hid){
     <div class="grow"><label>${tx("Κυναγωγός")}</label>
       <select id="b_handler">
         <option value="">${tx("— επιλέξτε κυναγωγό —")}</option>
-        ${DB.people.slice().sort((a,b)=>a.name.localeCompare(b.name,"el"))
+        ${DB.people.slice().sort(byName)
           .map(p=>`<option value="${p.id}" ${hid===p.id?"selected":""}>${esc(p.name)}</option>`).join("")}
       </select></div>
     <button class="b-sm" style="align-self:flex-end" data-act="newHandlerForBatch">${tx("+ Νέος")}</button></div>
@@ -8386,7 +8410,7 @@ function dlgEntry(t, e){
     <div class="grow"><label>${tx("Κυναγωγός")}</label>
       <select id="e_handler">
         <option value="">${tx("— επιλέξτε κυναγωγό —")}</option>
-        ${DB.people.slice().sort((a,b)=>a.name.localeCompare(b.name,"el"))
+        ${DB.people.slice().sort(byName)
           .map(p=>`<option value="${p.id}" ${hid===p.id?"selected":""}>${esc(p.name)}</option>`).join("")}
       </select></div>
     <button class="b-sm" style="align-self:flex-end" data-act="newHandlerForEntry">${tx("+ Νέος")}</button></div>
@@ -8407,7 +8431,7 @@ function dlgEntry(t, e){
 function dlgTrailer(t, terrainId, braceId){
   const drawn = new Set();
   t.days[S.day].terrains.forEach(tr=>(tr.braces||[]).forEach(b=>{ drawn.add(b.a); if(b.b) drawn.add(b.b); }));
-  const opts = DB.dogs.slice().sort((a,b)=>a.name.localeCompare(b.name,"el"))
+  const opts = DB.dogs.slice().sort(byName)
     .map(d=>{ const e = t.entries.find(x=>x.dogId===d.id);
       const used = e && drawn.has(e.id);
       return [d.id, d.name + " (" + breedName(d.breed) + ")" + (used ? " — τρέχει ήδη" : e ? " — δηλωμένος" : "")]; });
@@ -8416,7 +8440,7 @@ function dlgTrailer(t, terrainId, braceId){
   <div class="row">${sel("tl_dog","Σκύλος από το μητρώο",
     [["","— εκτός μητρώου —"]].concat(opts))}</div>
   <div class="row">${sel("tl_handler","Κυναγωγός",
-    [["","—"]].concat(DB.people.slice().sort((a,b)=>a.name.localeCompare(b.name,"el"))
+    [["","—"]].concat(DB.people.slice().sort(byName)
       .map(p=>[p.id,p.name])))}</div>
   <hr><div class="tiny">${tx("Ένας σκύλος που δεν είναι στο μητρώο ούτε δηλωμένος σήμερα μπορεί να τρέξει ως συμπληρωματικός. Γράψτε το όνομά του εδώ και αφήστε το πεδίο πιο πάνω κενό.")}</div>
   <div class="row" style="margin-top:10px">${fld("tl_name","Όνομα σκύλου εκτός μητρώου")}
@@ -9991,7 +10015,7 @@ function parseCsv(text){
 }
 function ensurePerson(name, phone, country){
   if(!name) return "";
-  let p = DB.people.find(x=>x.name.toLowerCase()===name.toLowerCase());
+  let p = DB.people.find(x=>String(x.name||"").toLowerCase()===name.toLowerCase());
   if(!p){ p = {id:uid(), name, phone:phone||"", country:country||HOME_COUNTRY, member:""};
           DB.people.push(p); }
   else { if(phone && !p.phone) p.phone = phone;
@@ -10005,7 +10029,7 @@ function ensurePerson(name, phone, country){
    Matched by name, like people are; an existing judge only gains a phone. */
 function ensureJudge(name, phone){
   if(!name) return "";
-  let j = DB.judges.find(x=>x.name.toLowerCase()===name.toLowerCase());
+  let j = DB.judges.find(x=>String(x.name||"").toLowerCase()===name.toLowerCase());
   if(!j){ j = {id:uid(), name, phone:phone||"", licence:"ΕΠΙΣΗΜΟΣ", me:false, personId:""};
           DB.judges.push(j); return j.id; }
   if(phone && !j.phone) j.phone = phone;
