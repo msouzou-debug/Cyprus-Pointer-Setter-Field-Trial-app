@@ -6465,10 +6465,19 @@ function edgeScroll(onTick){
       ax = clientX; ay = clientY;
       const nav = document.querySelector("nav");
       const top = (nav ? nav.getBoundingClientRect().bottom : 0) + 16;
-      /* Η κάτω ζώνη πιο στενή από την πάνω: πάνω την τρώει ούτως ή άλλως η
-         σταθερή επικεφαλίδα, ενώ κάτω κάθε pixel της ζώνης είναι ένα pixel όπου
-         δεν μπορείς να αφήσεις τον σκύλο χωρίς να φύγει η λίστα. */
-      const bot = window.innerHeight - 72;
+      /* Η κάτω ζώνη ΔΕΝ μετριέται από το κάτω χείλος της οθόνης. Εκεί κάθεται η
+         σταθερή μπάρα ενεργειών — 72px με το «Επόμενο ζεύγος» — και από κάτω της
+         η γραμμή χειρονομιών του Android. Μια ζώνη μετρημένη από το χείλος
+         πέφτει ολόκληρη κάτω από τη μπάρα: το δάχτυλο δεν φτάνει ποτέ εκεί χωρίς
+         να πατήσει κουμπί, και η κύλιση δεν ξεκινά ποτέ. Μετριέται από την
+         κορυφή της μπάρας, όπως η πάνω ζώνη μετριέται από τη βάση του nav. */
+      /* Όχι offsetParent για τον έλεγχο ορατότητας: σε position:fixed στοιχείο
+         είναι πάντα null, και ο έλεγχος θα έκοβε τη μπάρα ακριβώς όταν υπάρχει.
+         Το ύψος του ορθογωνίου λέει την αλήθεια — άδεια μπάρα έχει ύψος 0. */
+      const fab = document.querySelector(".fab");
+      const fr = fab ? fab.getBoundingClientRect() : null;
+      const floor = fr && fr.height > 0 ? fr.top : window.innerHeight;
+      const bot = floor - 72;
       const z = 72;
       vy = clientY < top + z ? -Math.max(4, Math.ceil((top + z - clientY) / 5))
          : clientY > bot     ?  Math.max(4, Math.ceil((clientY - bot) / 5)) : 0;
