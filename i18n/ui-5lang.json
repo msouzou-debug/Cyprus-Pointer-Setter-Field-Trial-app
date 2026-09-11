@@ -3912,6 +3912,13 @@
   "fr": "Entre parenthèses, l'équipe nationale que le chien représente.",
   "it": "Fra parentesi, la squadra nazionale che il cane rappresenta."
  },
+ "Σε πολλά τηλέφωνα το SMS φτάνει μόνο στον πρώτο παραλήπτη. Ελέγξτε τη λίστα μέσα στην εφαρμογή μηνυμάτων πριν στείλετε.": {
+  "de": "Auf vielen Telefonen erreicht eine SMS nur den ersten Empfänger. Prüfen Sie die Liste in der Nachrichten-App, bevor Sie senden.",
+  "en": "On many phones an SMS reaches only the first recipient. Check the list inside the messaging app before you send.",
+  "es": "En muchos teléfonos un SMS llega sólo al primer destinatario. Compruebe la lista dentro de la aplicación de mensajes antes de enviar.",
+  "fr": "Sur beaucoup de téléphones, un SMS n'atteint que le premier destinataire. Vérifiez la liste dans l'application de messagerie avant d'envoyer.",
+  "it": "Su molti telefoni un SMS raggiunge solo il primo destinatario. Controllate l'elenco dentro l'applicazione di messaggi prima di inviare."
+ },
  "Σεπτέμβριος": {
   "de": "September",
   "en": "September",
@@ -4059,6 +4066,13 @@
   "fr": "À remplir seulement quand le chien court comme athlète d'une équipe nationale. Ce n'est ni le pays d'élevage ni celui du conducteur : c'est l'équipe qu'il représente à l'épreuve. Laissez « — » pour tous les autres.",
   "it": "Si compila solo quando il cane corre come atleta di una squadra nazionale. Non è il paese di allevamento né quello del conduttore: è la squadra che rappresenta alla prova. Per tutti gli altri lasciate «—»."
  },
+ "Συνέχεια;": {
+  "de": "Fortfahren?",
+  "en": "Continue?",
+  "es": "¿Continuar?",
+  "fr": "Continuer ?",
+  "it": "Continuare?"
+ },
  "Συνδεδεμένο": {
   "de": "Online",
   "en": "Online",
@@ -4191,6 +4205,13 @@
   "es": "Los terrenos se llaman Α, Β, Γ, Δ. Puede cambiarlo desde Editar. Los perros se reparten entre ellos en el sorteo.",
   "fr": "Les terrains sont nommés Α, Β, Γ, Δ. Vous pouvez le changer depuis Modifier. La répartition des chiens se fait au tirage.",
   "it": "I terreni prendono nome Α, Β, Γ, Δ. Potete cambiarlo da Modifica. La distribuzione dei cani avviene al sorteggio."
+ },
+ "Την αποστολή τη δίνετε εσείς από εκεί. Η εφαρμογή δεν στέλνει τίποτα μόνη της και δεν βλέπει αν πατήσατε αποστολή — οπότε μόλις ανοίξει, τους σημαίνει όλους ως εσταλμένους. Η «Σήμανση» κάθε γραμμής το αναιρεί.": {
+  "de": "Abgeschickt wird sie von Ihnen dort. Die Anwendung verschickt nichts von selbst und sieht nicht, ob Sie auf Senden gedrückt haben — sobald die Nachrichten-App öffnet, markiert sie daher alle als gesendet. Die Schaltfläche „Markieren“ in jeder Zeile hebt das wieder auf.",
+  "en": "You are the one who sends it from there. The app sends nothing by itself and cannot see whether you pressed send — so once the messaging app opens, it marks them all as sent. The “Mark” button on each row undoes that.",
+  "es": "El envío lo da usted desde allí. La aplicación no envía nada por sí sola y no ve si ha pulsado enviar — así que en cuanto se abre la aplicación de mensajes los marca a todos como enviados. El botón «Marcar» de cada fila lo deshace.",
+  "fr": "C'est vous qui l'envoyez depuis là. L'application n'envoie rien d'elle-même et ne voit pas si vous avez appuyé sur envoyer — dès que la messagerie s'ouvre, elle les marque donc tous comme envoyés. Le bouton « Marquer » de chaque ligne annule cela.",
+  "it": "A inviarlo siete voi da lì. L'applicazione non invia nulla da sola e non vede se avete premuto invia — perciò appena si apre l'applicazione di messaggi li segna tutti come inviati. Il pulsante «Segna» di ogni riga lo annulla."
  },
  "Το": {
   "de": "Das",
@@ -5255,6 +5276,13 @@
   "es": "sobre otro para que intercambien puestos. Queda registrado como cambio manual (Artículo 16).",
   "fr": "sur un autre pour échanger leurs places. C'est consigné comme modification manuelle (Article 16).",
   "it": "su un altro per scambiarne il posto. Viene registrato come modifica manuale (Articolo 16)."
+ },
+ "παραλήπτες. Ανοίγει η εφαρμογή μηνυμάτων με ένα κοινό μήνυμα.": {
+  "de": "Empfänger. Die Nachrichten-App öffnet sich mit einer gemeinsamen Nachricht.",
+  "en": "recipients. The messaging app opens with one common message.",
+  "es": "destinatarios. Se abre la aplicación de mensajes con un mensaje común.",
+  "fr": "destinataires. L'application de messagerie s'ouvre avec un message commun.",
+  "it": "destinatari. Si apre l'applicazione di messaggi con un messaggio comune."
  },
  "περιμένει μόνος του στην επανάκληση, ζεύγος": {
   "de": "wartet allein im Recall, Paar",
