@@ -152,7 +152,28 @@ nav button{background:none;border:0;color:#ffffff8c;font:400 16px/1 var(--f-b);
 nav button.on{color:#fff;font-weight:600;border-bottom-color:var(--setter)}
 nav .tools button{color:#fff;font-size:14px;padding:14px 12px;display:flex;align-items:center;gap:6px}
 nav .tools button b{font:700 15px/1 var(--f-b)}
-@media(max-width:520px){ nav .tools button{padding:14px 10px;font-size:13px} }
+/* Σε τηλέφωνο τα δύο κουμπιά μεταφοράς έτρωγαν 173 από τα 412 pixel της μπάρας
+   και άφηναν 238 για έξι καρτέλες. Το δάχτυλο έπεφτε στο δεξί μισό, που δεν
+   κυλά, και η λωρίδα έμοιαζε κολλημένη. Μένουν στη θέση τους — αυτό ήταν και
+   είναι το ζητούμενο — αλλά σκέτα βέλη: το νόημα το κρατούν το title και το
+   aria-label, και οι καρτέλες παίρνουν πίσω 90 pixel. */
+@media(max-width:520px){
+  nav .tools button{padding:14px 12px;font-size:13px}
+  /* Όχι display:none — η λέξη φεύγει από την οθόνη, όχι από το προσβάσιμο
+     όνομα του κουμπιού. Ένα σκέτο «↓» δεν λέει τίποτα σε αναγνώστη οθόνης. */
+  nav .tools button{position:relative}
+  nav .tools button span{position:absolute;width:1px;height:1px;overflow:hidden;
+    clip-path:inset(50%);white-space:nowrap}
+  nav .tools button b{font-size:19px}
+}
+/* Χωρίς μπάρα κύλισης τίποτα δεν λέει ότι η λωρίδα συνεχίζει. Ένα σβήσιμο στην
+   άκρη το λέει, και μόνο προς τη μεριά που πράγματι υπάρχει κι άλλο. */
+nav .tabs.fade-r{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 34px),transparent);
+  mask-image:linear-gradient(90deg,#000 calc(100% - 34px),transparent)}
+nav .tabs.fade-l{-webkit-mask-image:linear-gradient(90deg,transparent,#000 34px);
+  mask-image:linear-gradient(90deg,transparent,#000 34px)}
+nav .tabs.fade-lr{-webkit-mask-image:linear-gradient(90deg,transparent,#000 34px,#000 calc(100% - 34px),transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 34px,#000 calc(100% - 34px),transparent)}
 
 main{padding:var(--s4);max-width:1240px;margin:0 auto}
 
@@ -5655,7 +5676,22 @@ function nav(){
      one into view instead of leaving it half under the transfer buttons */
   const strip = el("nav").querySelector(".tabs"), on = strip.querySelector("button.on");
   if(on) strip.scrollLeft = Math.max(0, on.offsetLeft - (strip.clientWidth - on.offsetWidth) / 2);
+  navFade();
+  strip.addEventListener("scroll", navFade, {passive:true});
 }
+/* Ποια άκρη σβήνει: μόνο εκείνη που έχει πράγματι συνέχεια. Σε οθόνη όπου οι
+   έξι καρτέλες χωρούν, δεν σβήνει καμία. */
+function navFade(){
+  const t = document.querySelector("nav .tabs"); if(!t) return;
+  const more = t.scrollWidth - t.clientWidth;
+  const l = more > 2 && t.scrollLeft > 4;
+  const r = more > 2 && t.scrollLeft < more - 4;
+  t.classList.toggle("fade-l",  l && !r);
+  t.classList.toggle("fade-r",  r && !l);
+  t.classList.toggle("fade-lr", l && r);
+}
+addEventListener("resize", navFade);
+addEventListener("orientationchange", ()=>setTimeout(navFade, 150));
 
 /* The storage bar. It sits under the navigation, it does not scroll away and it
    cannot be dismissed. Losing a day of results is worse than an ugly bar. */
