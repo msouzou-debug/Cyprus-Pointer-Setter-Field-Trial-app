@@ -4101,6 +4101,13 @@
   "fr": "Correct",
   "it": "Corretto"
  },
+ "Σύμπτυξη ζεύγους": {
+  "de": "Paar einklappen",
+  "en": "Collapse brace",
+  "es": "Plegar la pareja",
+  "fr": "Replier le couple",
+  "it": "Riduci la coppia"
+ },
  "Σύρετε το": {
   "de": "Ziehen Sie das",
   "en": "Drag the",

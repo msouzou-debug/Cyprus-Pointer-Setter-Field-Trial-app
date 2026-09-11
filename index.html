@@ -261,6 +261,16 @@ hr{border:0;border-top:1px solid var(--line);margin:var(--s4) 0}
 .bhead{display:flex;align-items:center;gap:10px;padding:12px var(--s4) 8px;flex-wrap:wrap}
 .bno{font:800 48px/1 var(--f-d);letter-spacing:-.03em;color:var(--ink);
   font-variant-numeric:tabular-nums;flex:none}
+/* An opened ζεύγος folds back on its own number: the collapsed row opens on
+   the number, so the open card closes on it, same digit, same place. The card
+   that is running has no such button — it stays open until it is finished. */
+button.bno{background:none;border:0;padding:0 4px 0 0;cursor:pointer;
+  display:inline-flex;align-items:center;gap:9px}
+button.bno .fold{font:400 15px/1 var(--f-b);color:var(--slate);
+  border:1px solid var(--line);border-radius:50%;width:26px;height:26px;
+  display:inline-flex;align-items:center;justify-content:center}
+button.bno:active .fold{background:var(--stone)}
+.brace.done button.bno .fold{color:var(--dim)}
 .bstate{font:600 13px/1 var(--f-b);letter-spacing:.1em;color:var(--slate);margin-left:auto}
 .bhead .b-sm{margin-left:auto}
 .bhead .chip + .b-sm{margin-left:0}
@@ -1550,6 +1560,7 @@ const UI_STR = {
   "Σφάλματα αποκλεισμού (Άρθρο 33):": "Eliminating faults (Article 33):",
   "Σφάλματα αποκλεισμού:": "Eliminating faults:",
   "Σωστό": "Correct",
+  "Σύμπτυξη ζεύγους": "Collapse brace",
   "Σύρετε το": "Drag the",
   "Σύρετε, ή ↑ ↓, για να αλλάξετε τη σειρά του ζεύγους": "Drag, or ↑ ↓, to change the brace's place in the order",
   "ΤΑ ΖΕΥΓΗ ΣΑΣ": "YOUR BRACES",
@@ -1563,7 +1574,6 @@ const UI_STR = {
   "Τα ελληνικά SMS χωρούν 70 χαρακτήρες στο πρώτο τμήμα και 67 σε κάθε επόμενο. Η πλήρης σειρά με 40 σκύλους βγάζει περίπου 15–20 τμήματα ανά μήνυμα. Ο πραγματικός αριθμός φαίνεται στην καρτέλα SMS του αγώνα.": "Greek SMS hold 70 characters in the first segment and 67 in each one after. The full order with 40 dogs comes to roughly 15–20 segments per message. The real number is shown on the trial's SMS tab.",
   "Τα τερέν παίρνουν όνομα Α, Β, Γ, Δ. Μπορείτε να το αλλάξετε από την Επεξεργασία. Η κατανομή των σκύλων γίνεται στην κλήρωση.": "The terrains are named Α, Β, Γ, Δ. You can change that from Edit. The dogs are spread across them at the draw.",
   "Το": "The",
-  "Το ": "",
   "Το Excel περιέχει φύλλο «Παράμετροι» με τον πίνακα πόντων. Όλοι οι πόντοι υπολογίζονται με τύπους VLOOKUP/SUMIFS που δείχνουν εκεί — καμία σταθερή τιμή μέσα σε τύπο, ώστε όποιος ανοίξει το αρχείο να μπορεί να ελέγξει την αριθμητική. Ανοίγει σε Excel και LibreOffice. Η εκτύπωση είναι ασπρόμαυρη, για φωτοτυπία.": "The Excel file holds a \"Parameters\" sheet with the points table. Every points figure is worked out by VLOOKUP/SUMIFS formulas pointing at it — no fixed value inside a formula, so whoever opens the file can check the arithmetic. It opens in Excel and LibreOffice. Printing is black and white, for photocopying.",
   "Το Messenger δεν μπορεί να δεχτεί μήνυμα από αριθμό τηλεφώνου, γι' αυτό δεν υπάρχει εδώ.": "Messenger cannot take a message addressed to a phone number, which is why it is not here.",
   "Το SMS θέλει τηλέφωνο· από υπολογιστή φεύγει WhatsApp.": "SMS needs a phone; from a computer it goes by WhatsApp.",
@@ -2365,6 +2375,7 @@ const UI_STR = {
   "Σφάλματα αποκλεισμού (Άρθρο 33):": "Fautes éliminatoires (Article 33) :",
   "Σφάλματα αποκλεισμού:": "Fautes éliminatoires :",
   "Σωστό": "Correct",
+  "Σύμπτυξη ζεύγους": "Replier le couple",
   "Σύρετε το": "Faites glisser le",
   "Σύρετε, ή ↑ ↓, για να αλλάξετε τη σειρά του ζεύγους": "Faites glisser, ou ↑ ↓, pour changer la place du couple",
   "ΤΑ ΖΕΥΓΗ ΣΑΣ": "VOS COUPLES",
@@ -2378,7 +2389,6 @@ const UI_STR = {
   "Τα ελληνικά SMS χωρούν 70 χαρακτήρες στο πρώτο τμήμα και 67 σε κάθε επόμενο. Η πλήρης σειρά με 40 σκύλους βγάζει περίπου 15–20 τμήματα ανά μήνυμα. Ο πραγματικός αριθμός φαίνεται στην καρτέλα SMS του αγώνα.": "Les SMS en grec contiennent 70 caractères dans le premier segment et 67 dans chacun des suivants. L'ordre complet avec 40 chiens fait environ 15 à 20 segments par message. Le nombre réel s'affiche dans l'onglet SMS de l'épreuve.",
   "Τα τερέν παίρνουν όνομα Α, Β, Γ, Δ. Μπορείτε να το αλλάξετε από την Επεξεργασία. Η κατανομή των σκύλων γίνεται στην κλήρωση.": "Les terrains sont nommés Α, Β, Γ, Δ. Vous pouvez le changer depuis Modifier. La répartition des chiens se fait au tirage.",
   "Το": "Le",
-  "Το ": "",
   "Το Excel περιέχει φύλλο «Παράμετροι» με τον πίνακα πόντων. Όλοι οι πόντοι υπολογίζονται με τύπους VLOOKUP/SUMIFS που δείχνουν εκεί — καμία σταθερή τιμή μέσα σε τύπο, ώστε όποιος ανοίξει το αρχείο να μπορεί να ελέγξει την αριθμητική. Ανοίγει σε Excel και LibreOffice. Η εκτύπωση είναι ασπρόμαυρη, για φωτοτυπία.": "Le fichier Excel contient une feuille « Paramètres » avec le barème de points. Tous les points sont calculés par des formules VLOOKUP/SUMIFS qui y renvoient — aucune valeur fixe dans une formule, afin que celui qui ouvre le fichier puisse vérifier le calcul. Il s'ouvre dans Excel et LibreOffice. L'impression est en noir et blanc, pour la photocopie.",
   "Το Messenger δεν μπορεί να δεχτεί μήνυμα από αριθμό τηλεφώνου, γι' αυτό δεν υπάρχει εδώ.": "Messenger ne peut pas recevoir un message adressé à un numéro de téléphone, c'est pourquoi il n'est pas ici.",
   "Το SMS θέλει τηλέφωνο· από υπολογιστή φεύγει WhatsApp.": "Le SMS demande un téléphone ; depuis un ordinateur cela part par WhatsApp.",
@@ -3180,6 +3190,7 @@ const UI_STR = {
   "Σφάλματα αποκλεισμού (Άρθρο 33):": "Ausschließende Fehler (Artikel 33):",
   "Σφάλματα αποκλεισμού:": "Ausschließende Fehler:",
   "Σωστό": "Korrekt",
+  "Σύμπτυξη ζεύγους": "Paar einklappen",
   "Σύρετε το": "Ziehen Sie das",
   "Σύρετε, ή ↑ ↓, για να αλλάξετε τη σειρά του ζεύγους": "Ziehen, oder ↑ ↓, um die Stelle des Paares zu ändern",
   "ΤΑ ΖΕΥΓΗ ΣΑΣ": "IHRE PAARE",
@@ -3193,7 +3204,6 @@ const UI_STR = {
   "Τα ελληνικά SMS χωρούν 70 χαρακτήρες στο πρώτο τμήμα και 67 σε κάθε επόμενο. Η πλήρης σειρά με 40 σκύλους βγάζει περίπου 15–20 τμήματα ανά μήνυμα. Ο πραγματικός αριθμός φαίνεται στην καρτέλα SMS του αγώνα.": "Griechische SMS fassen 70 Zeichen im ersten Segment und 67 in jedem weiteren. Die vollständige Reihenfolge mit 40 Hunden ergibt etwa 15–20 Segmente je Nachricht. Die tatsächliche Zahl steht im SMS-Reiter der Prüfung.",
   "Τα τερέν παίρνουν όνομα Α, Β, Γ, Δ. Μπορείτε να το αλλάξετε από την Επεξεργασία. Η κατανομή των σκύλων γίνεται στην κλήρωση.": "Die Gelände heißen Α, Β, Γ, Δ. Über Bearbeiten lässt sich das ändern. Die Verteilung der Hunde erfolgt bei der Auslosung.",
   "Το": "Das",
-  "Το ": "",
   "Το Excel περιέχει φύλλο «Παράμετροι» με τον πίνακα πόντων. Όλοι οι πόντοι υπολογίζονται με τύπους VLOOKUP/SUMIFS που δείχνουν εκεί — καμία σταθερή τιμή μέσα σε τύπο, ώστε όποιος ανοίξει το αρχείο να μπορεί να ελέγξει την αριθμητική. Ανοίγει σε Excel και LibreOffice. Η εκτύπωση είναι ασπρόμαυρη, για φωτοτυπία.": "Die Excel-Datei enthält ein Blatt „Parameter“ mit der Punktetabelle. Alle Punkte werden über VLOOKUP/SUMIFS-Formeln berechnet, die dorthin verweisen — kein fester Wert in einer Formel, damit jeder, der die Datei öffnet, die Rechnung prüfen kann. Sie öffnet sich in Excel und LibreOffice. Der Druck ist schwarzweiß, zum Fotokopieren.",
   "Το Messenger δεν μπορεί να δεχτεί μήνυμα από αριθμό τηλεφώνου, γι' αυτό δεν υπάρχει εδώ.": "Messenger kann keine an eine Telefonnummer gerichtete Nachricht annehmen, deshalb fehlt er hier.",
   "Το SMS θέλει τηλέφωνο· από υπολογιστή φεύγει WhatsApp.": "Für SMS braucht es ein Telefon; vom Rechner geht es über WhatsApp.",
@@ -3995,6 +4005,7 @@ const UI_STR = {
   "Σφάλματα αποκλεισμού (Άρθρο 33):": "Mancanze eliminatorie (Articolo 33):",
   "Σφάλματα αποκλεισμού:": "Mancanze eliminatorie:",
   "Σωστό": "Corretto",
+  "Σύμπτυξη ζεύγους": "Riduci la coppia",
   "Σύρετε το": "Trascinate il",
   "Σύρετε, ή ↑ ↓, για να αλλάξετε τη σειρά του ζεύγους": "Trascinate, o ↑ ↓, per cambiare il posto della coppia",
   "ΤΑ ΖΕΥΓΗ ΣΑΣ": "LE VOSTRE COPPIE",
@@ -4008,7 +4019,6 @@ const UI_STR = {
   "Τα ελληνικά SMS χωρούν 70 χαρακτήρες στο πρώτο τμήμα και 67 σε κάθε επόμενο. Η πλήρης σειρά με 40 σκύλους βγάζει περίπου 15–20 τμήματα ανά μήνυμα. Ο πραγματικός αριθμός φαίνεται στην καρτέλα SMS του αγώνα.": "Gli SMS in greco contengono 70 caratteri nel primo segmento e 67 in ciascuno successivo. L'ordine completo con 40 cani fa circa 15–20 segmenti per messaggio. Il numero reale si vede nella scheda SMS della prova.",
   "Τα τερέν παίρνουν όνομα Α, Β, Γ, Δ. Μπορείτε να το αλλάξετε από την Επεξεργασία. Η κατανομή των σκύλων γίνεται στην κλήρωση.": "I terreni prendono nome Α, Β, Γ, Δ. Potete cambiarlo da Modifica. La distribuzione dei cani avviene al sorteggio.",
   "Το": "Il",
-  "Το ": "",
   "Το Excel περιέχει φύλλο «Παράμετροι» με τον πίνακα πόντων. Όλοι οι πόντοι υπολογίζονται με τύπους VLOOKUP/SUMIFS που δείχνουν εκεί — καμία σταθερή τιμή μέσα σε τύπο, ώστε όποιος ανοίξει το αρχείο να μπορεί να ελέγξει την αριθμητική. Ανοίγει σε Excel και LibreOffice. Η εκτύπωση είναι ασπρόμαυρη, για φωτοτυπία.": "Il file Excel contiene un foglio «Parametri» con la tabella dei punti. Tutti i punti sono calcolati con formule VLOOKUP/SUMIFS che vi rimandano — nessun valore fisso dentro una formula, così chi apre il file può verificare i conti. Si apre in Excel e LibreOffice. La stampa è in bianco e nero, per la fotocopia.",
   "Το Messenger δεν μπορεί να δεχτεί μήνυμα από αριθμό τηλεφώνου, γι' αυτό δεν υπάρχει εδώ.": "Messenger non può ricevere un messaggio indirizzato a un numero di telefono, per questo non c'è.",
   "Το SMS θέλει τηλέφωνο· από υπολογιστή φεύγει WhatsApp.": "L'SMS richiede un telefono; da un computer parte via WhatsApp.",
@@ -4810,6 +4820,7 @@ const UI_STR = {
   "Σφάλματα αποκλεισμού (Άρθρο 33):": "Fallos eliminatorios (Artículo 33):",
   "Σφάλματα αποκλεισμού:": "Fallos eliminatorios:",
   "Σωστό": "Correcto",
+  "Σύμπτυξη ζεύγους": "Plegar la pareja",
   "Σύρετε το": "Arrastre el",
   "Σύρετε, ή ↑ ↓, για να αλλάξετε τη σειρά του ζεύγους": "Arrastre, o ↑ ↓, para cambiar el puesto de la pareja en el orden",
   "ΤΑ ΖΕΥΓΗ ΣΑΣ": "SUS PAREJAS",
@@ -4823,7 +4834,6 @@ const UI_STR = {
   "Τα ελληνικά SMS χωρούν 70 χαρακτήρες στο πρώτο τμήμα και 67 σε κάθε επόμενο. Η πλήρης σειρά με 40 σκύλους βγάζει περίπου 15–20 τμήματα ανά μήνυμα. Ο πραγματικός αριθμός φαίνεται στην καρτέλα SMS του αγώνα.": "Los SMS en griego caben en 70 caracteres en el primer segmento y 67 en cada uno siguiente. El orden completo con 40 perros sale a unos 15–20 segmentos por mensaje. El número real se ve en la pestaña SMS de la prueba.",
   "Τα τερέν παίρνουν όνομα Α, Β, Γ, Δ. Μπορείτε να το αλλάξετε από την Επεξεργασία. Η κατανομή των σκύλων γίνεται στην κλήρωση.": "Los terrenos se llaman Α, Β, Γ, Δ. Puede cambiarlo desde Editar. Los perros se reparten entre ellos en el sorteo.",
   "Το": "El",
-  "Το ": "",
   "Το Excel περιέχει φύλλο «Παράμετροι» με τον πίνακα πόντων. Όλοι οι πόντοι υπολογίζονται με τύπους VLOOKUP/SUMIFS που δείχνουν εκεί — καμία σταθερή τιμή μέσα σε τύπο, ώστε όποιος ανοίξει το αρχείο να μπορεί να ελέγξει την αριθμητική. Ανοίγει σε Excel και LibreOffice. Η εκτύπωση είναι ασπρόμαυρη, για φωτοτυπία.": "El archivo Excel lleva una hoja «Parámetros» con la tabla de puntos. Todos los puntos se calculan con fórmulas VLOOKUP/SUMIFS que apuntan allí — ningún valor fijo dentro de una fórmula, para que quien abra el archivo pueda comprobar la aritmética. Se abre en Excel y en LibreOffice. La impresión es en blanco y negro, para fotocopiar.",
   "Το Messenger δεν μπορεί να δεχτεί μήνυμα από αριθμό τηλεφώνου, γι' αυτό δεν υπάρχει εδώ.": "Messenger no puede recibir un mensaje dirigido a un número de teléfono, por eso no está aquí.",
   "Το SMS θέλει τηλέφωνο· από υπολογιστή φεύγει WhatsApp.": "El SMS necesita un teléfono; desde un ordenador sale por WhatsApp.",
@@ -6393,7 +6403,10 @@ function braceCard(t, tr, b, opts){
       <button class="grip noprint" data-drag="${tr.id}|${b.id}"
         title="${tx("Σύρετε, ή ↑ ↓, για να αλλάξετε τη σειρά του ζεύγους")}"
         aria-label="${tx("Μετακίνηση ζεύγους")} ${b.no}">⠿</button>
-      <div class="bno">${b.no}</div>
+      ${opts.fold
+        ? `<button class="bno" data-openbrace="${b.id}"
+             aria-label="${tx("Σύμπτυξη ζεύγους")} ${b.no}">${b.no}<span class="fold noprint">▴</span></button>`
+        : `<div class="bno">${b.no}</div>`}
       ${opts.big&&running?`<div style="margin-left:auto;text-align:right">
           ${state}${clockEl(b,true,t)}
           <div class="tiny" style="color:#ffffffcc;margin-top:4px">${tx("από")} ${clockText(runSecs(t,b))} ${tx("(Άρθρο 24)")}</div></div>`
@@ -6724,7 +6737,11 @@ function tBraces(t){
     </div>
     ${braces.length ? braces.map(b=>{
             const open = b===live || S.openBrace===b.id;
-            return open ? braceCard(t,tr,b,{big:b===live, actions:true}) : braceBrief(t,tr,b);
+            /* It opened on its number, so it closes on its number. The one that
+               is running stays open — that is the screen, not a choice. */
+            return open ? braceCard(t,tr,b,
+                     {big:b===live, actions:true, fold:b!==live && S.openBrace===b.id})
+                   : braceBrief(t,tr,b);
           }).join("")
       : `<div class="empty">${tx("Χωρίς ζεύγη σε αυτό το τερέν.")}</div>`}`;
   }).join("")}
