@@ -392,6 +392,11 @@ body.dropping::after{content:"Αφήστε το αρχείο για φόρτωσ
    box never leaves the ground. Selection off, and the drag is ours. */
 .dogbox{touch-action:none;cursor:grab;border-radius:8px;
   user-select:none;-webkit-user-select:none;-webkit-user-drag:none}
+/* Το κουτί ήταν ψηλό όσο το γράμμα του — 19px — και το δάχτυλο έπρεπε να το
+   βρει ακριβώς· ο ⠿ δίπλα του έχει 44. Σε inline στοιχείο το padding μεγαλώνει
+   την περιοχή αφής χωρίς να στοιβάξει τη γραμμή, οπότε τίποτα δεν μετακινείται
+   και ο στόχος τριπλασιάζεται. */
+.briefrow .dogbox{padding:11px 8px}
 .dogbox:hover{background:var(--sand)}
 .dog.dogbox:hover{background:none;outline:1px solid var(--line-s);outline-offset:-1px}
 .dogbox.lifting{opacity:.45}
@@ -6439,6 +6444,40 @@ function swapEntries(t, eid, other){
    row it would land on is marked. Everything else on the row is a button and
    stays one: a drag that started anywhere on the row meant a tap on Σημειώσεις
    moved the brace instead. */
+/* Ένα ζεύγος έξω από το κάδρο ήταν απλησίαστο: το δάχτυλο έφτανε στην άκρη της
+   οθόνης και η σελίδα δεν ακολουθούσε, οπότε ο σκύλος δεν πήγαινε ποτέ πιο κάτω
+   από ό,τι χωρούσε. Τώρα η σελίδα κυλά όσο το δάχτυλο κρατιέται στην άκρη, και
+   σταματά μόλις φύγει. Η πάνω ζώνη ξεκινά κάτω από την επικεφαλίδα και τη μπάρα:
+   πιο ψηλά το δάχτυλο είναι πάνω στα σταθερά στοιχεία, όχι στη λίστα. */
+function edgeScroll(onTick){
+  let vy = 0, raf = 0, ax = 0, ay = 0;
+  const tick = ()=>{
+    if(!vy){ raf = 0; return; }
+    const before = window.scrollY;
+    window.scrollBy(0, vy);
+    /* Με το δάχτυλο ακίνητο στην άκρη δεν έρχεται άλλο pointermove, οπότε ο
+       στόχος θα πάγωνε ενώ η λίστα κυλά από κάτω του. Τον ξαναϋπολογίζουμε. */
+    if(window.scrollY !== before && onTick) onTick(ax, ay);
+    raf = requestAnimationFrame(tick);
+  };
+  return {
+    move(clientX, clientY){
+      ax = clientX; ay = clientY;
+      const nav = document.querySelector("nav");
+      const top = (nav ? nav.getBoundingClientRect().bottom : 0) + 16;
+      /* Η κάτω ζώνη πιο στενή από την πάνω: πάνω την τρώει ούτως ή άλλως η
+         σταθερή επικεφαλίδα, ενώ κάτω κάθε pixel της ζώνης είναι ένα pixel όπου
+         δεν μπορείς να αφήσεις τον σκύλο χωρίς να φύγει η λίστα. */
+      const bot = window.innerHeight - 72;
+      const z = 72;
+      vy = clientY < top + z ? -Math.max(4, Math.ceil((top + z - clientY) / 5))
+         : clientY > bot     ?  Math.max(4, Math.ceil((clientY - bot) / 5)) : 0;
+      if(vy && !raf) raf = requestAnimationFrame(tick);
+    },
+    stop(){ vy = 0; if(raf) cancelAnimationFrame(raf); raf = 0; }
+  };
+}
+
 function dragReorder(ev){
   const grip = ev.target.closest("[data-drag]");
   if(!grip) return;
@@ -6449,13 +6488,17 @@ function dragReorder(ev){
   const rows = [...document.querySelectorAll("[data-brow]")]
     .filter(r => r.dataset.brow.split("|")[0] === tid);
   const from = rows.indexOf(row); if(from < 0) return;
-  const startY = ev.clientY;
+  /* Η μετατόπιση μετριέται στο έγγραφο, όχι στην οθόνη: όταν η σελίδα κυλά
+     μόνη της στην άκρη, η γραμμή δεν πρέπει να ξεφύγει από το δάχτυλο. */
+  const startY = ev.clientY, startScroll = window.scrollY;
   let moved = false, to = from, mark = null;
+  const es = edgeScroll((x, y)=>onMove({clientX:x, clientY:y, preventDefault(){}}));
 
   const clear = ()=>{ if(mark) mark.classList.remove("dropto","below"); mark = null; };
   const onMove = e=>{
-    const dy = e.clientY - startY;
+    const dy = (e.clientY + window.scrollY) - (startY + startScroll);
     if(!moved && Math.abs(dy) < 6) return;
+    if(moved) es.move(e.clientX, e.clientY);
     if(!moved){ moved = true; row.classList.add("dragging");
                 grip.setPointerCapture && grip.setPointerCapture(e.pointerId);
                 document.body.style.userSelect = "none"; }
@@ -6488,6 +6531,7 @@ function dragReorder(ev){
     } else to = from;
   };
   const onUp = ()=>{
+    es.stop();
     document.removeEventListener("pointermove", onMove);
     document.removeEventListener("pointerup", onUp);
     document.removeEventListener("pointercancel", onUp);
@@ -6548,6 +6592,7 @@ function dragDogBox(ev){
   const offX = ev.clientX - r.left, offY = ev.clientY - r.top;
   const boxes = [...document.querySelectorAll("[data-dogbox]")];
   let moved = false, ghost = null, over = null;
+  const es = edgeScroll((x, y)=>onMove({clientX:x, clientY:y, preventDefault(){}}));
 
   const onMove = e=>{
     if(!moved && Math.abs(e.clientX-ev.clientX) < 6 && Math.abs(e.clientY-ev.clientY) < 6) return;
@@ -6566,6 +6611,7 @@ function dragDogBox(ev){
          events arriving at all, so the drag froze after the first few pixels. */
     }
     e.preventDefault();
+    es.move(e.clientX, e.clientY);
     ghost.style.transform = "translate(" + (e.clientX-offX) + "px," + (e.clientY-offY) + "px)";
     /* measured, not hit-tested — same reason as the row drag: the fixed action
        bar sits over the bottom of the screen and would take the drop */
@@ -6582,6 +6628,7 @@ function dragDogBox(ev){
     if(over) over.classList.add("target");
   };
   const onUp = ()=>{
+    es.stop();
     document.removeEventListener("pointermove", onMove);
     document.removeEventListener("pointerup", onUp);
     document.removeEventListener("pointercancel", onUp);
