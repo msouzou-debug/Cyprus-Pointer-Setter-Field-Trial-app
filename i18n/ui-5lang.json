@@ -216,6 +216,13 @@
   "fr": "2e Excellent",
   "it": "2° Eccellente"
  },
+ "3ος ΕΞΑΙΡΕΤΟΣ": {
+  "de": "3. Hervorragend",
+  "en": "3rd EXCELLENT",
+  "es": "3º EXCELENTE",
+  "fr": "3e Excellent",
+  "it": "3° Eccellente"
+ },
  "ACO II.13: κανένα βραβείο σε σκύλο χωρίς έναν τουλάχιστον ολοκληρωμένο πόντο.": {
   "de": "ACO II.13: keine Auszeichnung für einen Hund ohne mindestens einen vollständigen Punkt.",
   "en": "ACO II.13: no award to a dog without at least one completed point.",
@@ -271,6 +278,20 @@
   "es": "Excel de pagos",
   "fr": "Excel des paiements",
   "it": "Excel dei pagamenti"
+ },
+ "RCACT 2ος": {
+  "de": "RCACT 2.",
+  "en": "RCACT 2nd",
+  "es": "RCACT 2º",
+  "fr": "RCACT 2e",
+  "it": "RCACT 2°"
+ },
+ "RCACT 3ος": {
+  "de": "RCACT 3.",
+  "en": "RCACT 3rd",
+  "es": "RCACT 3º",
+  "fr": "RCACT 3e",
+  "it": "RCACT 3°"
  },
  "Safari → Κοινή χρήση → Προσθήκη στην οθόνη Αφετηρίας.": {
   "de": "Safari → Teilen → Zum Home-Bildschirm.",
@@ -642,6 +663,13 @@
   "es": "No",
   "fr": "Non",
   "it": "No"
+ },
+ "Όχι — ατομική κατάταξη μόνο": {
+  "de": "Nein — nur Einzelwertung",
+  "en": "No — individual classification only",
+  "es": "No — sólo clasificación individual",
+  "fr": "Non — classement individuel seulement",
+  "it": "No — solo classifica individuale"
  },
  "Ώρα": {
   "de": "Uhrzeit",
@@ -1139,6 +1167,13 @@
   "es": "Calificación",
   "fr": "Notation",
   "it": "Valutazione"
+ },
+ "Βαθμολογημένοι": {
+  "de": "Gewertet",
+  "en": "Classified",
+  "es": "Clasificados",
+  "fr": "Classés",
+  "it": "Classificati"
  },
  "Βασικοί βαθμοί ανά βαθμολογία/τίτλο. Πολλαπλασιάζονται με τον συντελεστή του αγώνα (×2 ζεύγη, ×3 ή ×4 σε άγριο θήραμα για ΕΚ/ΠΚ).": {
   "de": "Grundpunkte je Bewertung/Titel. Sie werden mit dem Koeffizienten der Prüfung multipliziert (×2 im Paar, ×3 oder ×4 auf Wildwild für Jagdsuche / Praktische Jagd).",
@@ -2281,6 +2316,13 @@
   "fr": "Continentales — F.C.I. Section 1",
   "it": "Continentali — F.C.I. Sezione 1"
  },
+ "Θέση": {
+  "de": "Platz",
+  "en": "Place",
+  "es": "Puesto",
+  "fr": "Place",
+  "it": "Posto"
+ },
  "Θήραμα": {
   "de": "Wild",
   "en": "Game",
@@ -2470,6 +2512,13 @@
   "fr": "Faites d'abord le tirage. Les messages sont composés à partir de l'ordre du jour.",
   "it": "Fate prima il sorteggio. I messaggi si compongono dall'ordine della giornata."
  },
+ "Κάτω από το κατώφλι των": {
+  "de": "Unter der Schwelle von",
+  "en": "Below the threshold of",
+  "es": "Por debajo del umbral de",
+  "fr": "Sous le seuil de",
+  "it": "Sotto la soglia di"
+ },
  "Καθαρισμός": {
   "de": "Zurücksetzen",
   "en": "Clear",
@@ -2645,6 +2694,13 @@
   "fr": "État",
   "it": "Stato"
  },
+ "Κατάταξη ανά χώρα": {
+  "de": "Wertung nach Ländern",
+  "en": "Classification per country",
+  "es": "Clasificación por país",
+  "fr": "Classement par pays",
+  "it": "Classifica per paese"
+ },
  "Κατακλείδα": {
   "de": "Schlusszeile",
   "en": "Closing line",
@@ -2798,6 +2854,20 @@
   "es": "Semilla del sorteo",
   "fr": "Code du tirage",
   "it": "Codice del sorteggio"
+ },
+ "Κύπελλο": {
+  "de": "Cup",
+  "en": "Cup",
+  "es": "Copa",
+  "fr": "Coupe",
+  "it": "Coppa"
+ },
+ "Κύπελλο: οι πόντοι είναι αυτοί του πίνακα, χωρίς συντελεστή. Ο κανονισμός δίνει απόλυτη κλίμακα και πάνω της μετριέται το κατώφλι της ομάδας.": {
+  "de": "Ein Cup: die Punkte sind die der Tabelle, ohne Koeffizient. Das Reglement gibt eine absolute Skala vor, und auf ihr wird die Schwelle der Mannschaft gemessen.",
+  "en": "A Cup: the points are the ones in the table, with no coefficient. The regulation gives an absolute scale and the team threshold is measured on it.",
+  "es": "Una Copa: los puntos son los de la tabla, sin coeficiente. El reglamento da una escala absoluta y sobre ella se mide el umbral del equipo.",
+  "fr": "Une Coupe : les points sont ceux du barème, sans coefficient. Le règlement donne une échelle absolue et c'est sur elle que se mesure le seuil de l'équipe.",
+  "it": "Una Coppa: i punti sono quelli della tabella, senza coefficiente. Il regolamento dà una scala assoluta ed è su quella che si misura la soglia della squadra."
  },
  "Λήψη": {
   "de": "Sichern",
@@ -3030,6 +3100,13 @@
   "fr": "Registre",
   "it": "Registro"
  },
+ "Μια ομάδα κατατάσσεται με δύο τουλάχιστον σκύλους βαθμολογημένους και": {
+  "de": "Eine Mannschaft wird gewertet mit mindestens zwei gewerteten Hunden und",
+  "en": "A team is placed with at least two dogs classified and",
+  "es": "Un equipo se clasifica con al menos dos perros clasificados y",
+  "fr": "Une équipe est classée avec au moins deux chiens classés et",
+  "it": "Una squadra è classificata con almeno due cani classificati e"
+ },
  "Μορφή": {
   "de": "Form",
   "en": "Form",
@@ -3162,6 +3239,13 @@
   "es": "Sí",
   "fr": "Oui",
   "it": "Sì"
+ },
+ "Ναι — κατάταξη και ανά χώρα": {
+  "de": "Ja — auch eine Wertung nach Ländern",
+  "en": "Yes — also a classification per country",
+  "es": "Sí — también una clasificación por país",
+  "fr": "Oui — également un classement par pays",
+  "it": "Sì — anche una classifica per paese"
  },
  "Νοέμβριος": {
   "de": "November",
@@ -3324,6 +3408,13 @@
   "fr": "Le tableau se remplit dès que la première épreuve est notée.",
   "it": "La tabella si riempie appena la prima prova è valutata."
  },
+ "Ο πίνακας πόντων είναι δεδομένα και αλλάζει από τις Ρυθμίσεις. Ο κριτής αποφασίζει τη βαθμολογία· οι υποδείξεις της εφαρμογής είναι ενδεικτικές.": {
+  "de": "Die Punktetabelle ist Datenbestand und wird in den Einstellungen geändert. Der Richter entscheidet die Bewertung; was die Anwendung vorschlägt, ist nur ein Hinweis.",
+  "en": "The points table is data and is changed in Settings. The judge decides the qualification; what the app suggests is indicative only.",
+  "es": "La tabla de puntos es un dato y se cambia en los Ajustes. El juez decide la calificación; lo que sugiere la aplicación es sólo indicativo.",
+  "fr": "Le barème de points est une donnée et se modifie dans les Réglages. C'est le juge qui décide la qualification ; ce que l'application suggère n'est qu'indicatif.",
+  "it": "La tabella dei punti è un dato e si cambia dalle Impostazioni. È il giudice a decidere la qualifica; quanto suggerisce l'applicazione è solo indicativo."
+ },
  "Ο περιηγητής μπλόκαρε το παράθυρο. Το κείμενο αντιγράφηκε.": {
   "de": "Der Browser hat das Fenster blockiert. Der Text wurde kopiert.",
   "en": "The browser blocked the window. The text has been copied.",
@@ -3463,6 +3554,27 @@
   "es": "Terminada",
   "fr": "Terminée",
   "it": "Conclusa"
+ },
+ "Ομαδικός αγώνας, αλλά κανένας σκύλος δεν έχει εθνική ομάδα στο μητρώο. Συμπληρώστε το πεδίο «Εθνική ομάδα» στην καρτέλα κάθε σκύλου.": {
+  "de": "Eine Mannschaftsprüfung, aber kein Hund hat im Register eine Nationalmannschaft. Füllen Sie das Feld „Nationalmannschaft“ bei jedem Hund aus.",
+  "en": "A team event, but no dog has a national team in the register. Fill in the “National team” field on each dog's record.",
+  "es": "Prueba por equipos, pero ningún perro tiene equipo nacional en el registro. Rellene el campo «Equipo nacional» en la ficha de cada perro.",
+  "fr": "Épreuve par équipes, mais aucun chien n'a d'équipe nationale au registre. Renseignez le champ « Équipe nationale » sur la fiche de chaque chien.",
+  "it": "Prova a squadre, ma nessun cane ha una squadra nazionale nel registro. Compilate il campo «Squadra nazionale» nella scheda di ogni cane."
+ },
+ "Ομαδικός με εθνικές ομάδες": {
+  "de": "Mannschaftsprüfung mit Nationalmannschaften",
+  "en": "Team event with national teams",
+  "es": "Prueba por equipos nacionales",
+  "fr": "Épreuve par équipes nationales",
+  "it": "Prova a squadre nazionali"
+ },
+ "Ομαδικός σημαίνει Κύπελλο: η εθνική ομάδα κάθε σκύλου μπαίνει στο μητρώο, η κλήρωση δεν βάζει δύο σκύλους της ίδιας ομάδας στο ίδιο ζεύγος, και η Βαθμολογία βγάζει και κατάταξη ανά χώρα. Μια ομάδα κατατάσσεται με δύο τουλάχιστον σκύλους βαθμολογημένους και τους πόντους που ορίζετε εδώ (F.C.I. CDE-GQ: 9).": {
+  "de": "Eine Mannschaftsprüfung heißt Cup: die Nationalmannschaft jedes Hundes steht im Register, die Auslosung setzt nie zwei Hunde derselben Mannschaft in ein Paar, und die Bewertung erstellt auch eine Wertung nach Ländern. Eine Mannschaft wird gewertet mit mindestens zwei gewerteten Hunden und den Punkten, die Sie hier festlegen (F.C.I. CDE-GQ: 9).",
+  "en": "A team event means a Cup: each dog's national team is entered in the register, the draw never puts two dogs of the same team in one brace, and Scoring also produces a classification per country. A team is placed with at least two dogs classified and the points you set here (F.C.I. CDE-GQ: 9).",
+  "es": "Prueba por equipos quiere decir Copa: el equipo nacional de cada perro va en el registro, el sorteo nunca pone dos perros del mismo equipo en la misma pareja, y la Calificación produce también una clasificación por país. Un equipo se clasifica con al menos dos perros clasificados y los puntos que fije aquí (F.C.I. CDE-GQ: 9).",
+  "fr": "Une épreuve par équipes veut dire une Coupe : l'équipe nationale de chaque chien est inscrite au registre, le tirage ne met jamais deux chiens de la même équipe dans un couple, et la Notation produit aussi un classement par pays. Une équipe est classée avec au moins deux chiens classés et les points que vous fixez ici (F.C.I. CDE-GQ : 9).",
+  "it": "Prova a squadre vuol dire Coppa: la squadra nazionale di ogni cane va nel registro, il sorteggio non mette mai due cani della stessa squadra nella stessa coppia, e la Valutazione produce anche una classifica per paese. Una squadra è classificata con almeno due cani classificati e i punti che fissate qui (F.C.I. CDE-GQ: 9)."
  },
  "Ονοματεπώνυμο": {
   "de": "Vor- und Nachname",
@@ -3778,6 +3890,13 @@
   "es": "Puntos = puntos base × coeficiente",
   "fr": "Points = points de base × coefficient",
   "it": "Punti = punti base × coefficiente"
+ },
+ "Πόντοι για να καταταγεί ομάδα": {
+  "de": "Punkte, damit eine Mannschaft gewertet wird",
+  "en": "Points for a team to be placed",
+  "es": "Puntos para que un equipo sea clasificado",
+  "fr": "Points pour qu'une équipe soit classée",
+  "it": "Punti perché una squadra sia classificata"
  },
  "Πόντοι κατά Αξιολόγηση. Ζεύγη ×2, άγριο θήραμα ×2. Ο πίνακας πόντων είναι δεδομένα και αλλάζει από τον όμιλο (Ρυθμίσεις).": {
   "de": "Punkte nach Bewertung. Paare ×2, Wildwild ×2. Die Punktetabelle ist eine Angabe und wird vom Verein geändert (Einstellungen).",
@@ -4682,6 +4801,13 @@
   "fr": "Il faut",
   "it": "Servono"
  },
+ "Χρειάζονται δύο σκύλοι βαθμολογημένοι· έχει": {
+  "de": "Zwei gewertete Hunde sind nötig; sie hat",
+  "en": "Two classified dogs are needed; it has",
+  "es": "Hacen falta dos perros clasificados; tiene",
+  "fr": "Il faut deux chiens classés ; elle en a",
+  "it": "Servono due cani classificati; ne ha"
+ },
  "Χρειάζονται τουλάχιστον": {
   "de": "Erforderlich sind mindestens",
   "en": "There must be at least",
@@ -5025,6 +5151,13 @@
   "fr": "couple",
   "it": "coppia"
  },
+ "ζεύγος/η με δύο σκύλους της ίδιας εθνικής ομάδας. Ο κανονισμός του Κυπέλλου δεν το επιτρέπει — χρειάζονται περισσότερες ομάδες στο τερέν ή χειροκίνητη ανταλλαγή.": {
+  "de": "Paar(e) mit zwei Hunden derselben Nationalmannschaft. Das Cup-Reglement lässt das nicht zu — das Gelände braucht mehr Mannschaften, oder einen Tausch von Hand.",
+  "en": "brace(s) with two dogs of the same national team. The Cup regulation does not allow it — the terrain needs more teams, or a manual swap.",
+  "es": "pareja(s) con dos perros del mismo equipo nacional. El reglamento de la Copa no lo permite — hacen falta más equipos en el terreno, o un cambio manual.",
+  "fr": "couple(s) avec deux chiens de la même équipe nationale. Le règlement de la Coupe ne l'autorise pas — il faut plus d'équipes sur le terrain, ou un échange manuel.",
+  "it": "coppia/e con due cani della stessa squadra nazionale. Il regolamento della Coppa non lo consente — servono più squadre sul terreno, o uno scambio manuale."
+ },
  "ζεύγος/η με τον ίδιο κυναγωγό — δεν υπάρχει άλλη δυνατή διάταξη με τους σκύλους αυτού του τερέν.": {
   "de": "Paar(e) mit demselben Führer — mit den Hunden dieses Geländes ist keine andere Anordnung möglich.",
   "en": "brace(s) with the same handler — there is no other possible arrangement with the dogs of this terrain.",
@@ -5346,6 +5479,13 @@
   "es": "puntos. Se abre con normalidad para leerla, imprimirla y exportarla.",
   "fr": "points. Elle s'ouvre normalement pour la lecture, l'impression et l'export.",
   "it": "punti. Si apre normalmente per lettura, stampa ed esportazione."
+ },
+ "πόντους (F.C.I. CDE-GQ · ACO VIII.11.4). Όσες δεν τους έχουν μένουν εκτός κατάταξης.": {
+  "de": "Punkte (F.C.I. CDE-GQ · ACO VIII.11.4). Wer sie nicht hat, bleibt außerhalb der Wertung.",
+  "en": "points (F.C.I. CDE-GQ · ACO VIII.11.4). Those without them stay out of the classification.",
+  "es": "puntos (F.C.I. CDE-GQ · ACO VIII.11.4). Las que no los tienen quedan fuera de la clasificación.",
+  "fr": "points (F.C.I. CDE-GQ · ACO VIII.11.4). Celles qui ne les ont pas restent hors classement.",
+  "it": "punti (F.C.I. CDE-GQ · ACO VIII.11.4). Quelle che non li hanno restano fuori classifica."
  },
  "σβήνει τα πάντα. Κινηθείτε προς μία κατεύθυνση κάθε φορά: αν ο ίδιος αγώνας αλλάξει και στις δύο συσκευές, υπερισχύει το αρχείο που φορτώθηκε τελευταίο. Το SMS δεν μπορεί να μεταφέρει τα δεδομένα — χρειάζεται αρχείο.": {
   "de": "löscht alles. Bewegen Sie sich immer nur in eine Richtung: wird dieselbe Prüfung auf beiden Geräten geändert, gilt die zuletzt geladene Datei. Die SMS kann die Daten nicht tragen — dafür braucht es eine Datei.",

@@ -4,7 +4,10 @@ Uploaded 5 September 2026 as 25 files. Ten distinct documents; the other fifteen
 **byte-identical** re-downloads of the same file, so nothing had to be judged between versions —
 every set of duplicates had one identical SHA-256. They were removed. Four more arrived on
 7 September — the S.C.C. and Verein für Pointer und Setter regulations, the ENCI breed
-nomenclature, and the current ENCI trial regulation — and the set is now complete.
+nomenclature, and the current ENCI trial regulation. One more on 12 September: the **European
+Cup Grande Quête** regulation, the one that governs the club's own breeds in a team competition
+and was the single document missing. Four files arrived with it and were byte-identical to copies
+already here, so nothing was replaced.
 
 ## F.C.I. — the international baseline
 
@@ -12,6 +15,7 @@ nomenclature, and the current ENCI trial regulation — and the set is now compl
 |---|---|---|---|
 | `FCI-ABR-REG-S-C-en.pdf` | International Field Trial Regulations for **Individual and Paired** events for British Pointing Dogs | 6 | — |
 | `FCI-ABR-REG-GQU-en.pdf` | International Regulations of **Grande Quête** field trials for British Pointing Dogs | 2 | — |
+| `FCI-ABR-REG-GQU-CDE-en.pdf` | Regulations of the **European Cup Grande Quête** field trials for British Pointing Dogs | 4 | amendments approved by the F.C.I. General Committee, online meeting September 2020; in force 1 January 2021 |
 | `FCI-ACO-REG-en-2019.pdf` | Official Rules and Bylaws, **Continental Pointers** | 42 | ratified June 1999, Mexico City; §VIII amended Como, September 2019 |
 | `FCI-ACO-REG-de-2019.pdf` | the same, German | 41 | §VII amended Como, September 2019 |
 | `FCI-ACO-REG-fr-2011.pdf` | the same, French | 41 | **older edition** — bold text approved Paris, July 2011 |
@@ -19,6 +23,40 @@ nomenclature, and the current ENCI trial regulation — and the set is now compl
 | `FCI-ABR-REG-S-C-da.pdf` | the Individual and Paired regulations, **in Danish** | 6 | — |
 
 The first two are the ones that govern what Κ.Ο.Α.Δ. runs.
+
+### The European Cup, and which one it is
+
+There are two, and they are different documents with different numbers.
+
+- **British breeds — `FCI-ABR-REG-GQU-CDE-en.pdf`.** The *European Cup Grande Quête*, created in
+  1950 by France, Belgium, Italy and Switzerland. This is the one that concerns Κ.Ο.Α.Δ.'s own
+  breeds. Teams of **one to four dogs plus two substitutes**, run **in couple**, and a rule the
+  ordinary draw does not have: *"dogs belonging to the same team may not run together"*. Even when
+  held over two days it produces **one ranking**. Three judges — a chief judge and two wings.
+  Bitches in heat may compete provided their partner is also female. The English text is the
+  authentic one; it says so itself.
+- **Continental breeds — `FCI-ACO-REG-en-2019.pdf`, Section VIII.** The *Spring European Cup*,
+  created 1985. Teams of **two to four plus one substitute**, run **solo over two days**, groups of
+  at most 14, and a bonus of 4 or 2 points for a team of four or three different breeds.
+
+Both place a team the same way: **at least two dogs classified and a minimum of 9 points**
+(CDE-GQ *Classification* · ACO VIII.11.4). Their points tables are not the same table — the
+CDE-GQ scale runs 12 / 11 / 10 / 9 / 8 / 7 / 4 / 2 down from *EXC.CAC and FCI-CACIT*, and gives the
+third Excellent its own row, which is why the app's qualification list has a **3ος ΕΞΑΙΡΕΤΟΣ**.
+
+Two places where the same word carries a different rule, worth reading before anything is treated
+as common:
+
+- **The handler.** Under CDE-GQ he *may* run for more than one country, and *"the dogs composing
+  his team represent the country of their owner"*. Under ACO VIII.5.3 and IX.13 he may **not**.
+  The app therefore takes the team from the dog's own record, never from its handler.
+- **Bitches in season.** CDE-GQ admits them if the partner is a female. `FCI-ABR-REG-S-C` art. 3b
+  puts them at the end of the round and only with each other. ACO I.6 excludes them outright.
+
+`FCI-ACO-REG-en-2019.pdf` Section IX is a third team competition, the **World Championship of
+Practical Hunting**, and it is the only one of the three open to British *and* Continental teams at
+once. It scores **the two days added together** (IX.29, IX.33) — which the app cannot yet do, since
+it keeps one result per dog per trial.
 
 ## National
 
