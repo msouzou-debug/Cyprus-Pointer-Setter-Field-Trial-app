@@ -1273,6 +1273,13 @@
   "fr": "Notation",
   "it": "Valutazione"
  },
+ "Βαθμολογία του ομίλου, όχι τίτλος της F.C.I.": {
+  "de": "Eine Bewertung des Vereins, kein F.C.I.-Titel.",
+  "en": "A club grading, not an F.C.I. title.",
+  "es": "Una calificación del club, no un título de la F.C.I.",
+  "fr": "Une qualification du club, non un titre F.C.I.",
+  "it": "Una qualifica del club, non un titolo F.C.I."
+ },
  "Βαθμολογημένοι": {
   "de": "Gewertet",
   "en": "Classified",
@@ -1489,6 +1496,13 @@
   "es": "No figura como término en los textos de la F.C.I., la S.C.C. ni la ENCI. Sólo el examen alemán tiene un capítulo propio sobre el comportamiento ante la caza que el perro ve.",
   "fr": "Il ne figure pas comme terme dans les textes de la F.C.I., de la S.C.C. ou de l'ENCI. Seul l'examen allemand consacre un chapitre au comportement devant un gibier que le chien voit.",
   "it": "Non figura come termine nei testi della F.C.I., della S.C.C. o dell'ENCI. Solo l'esame tedesco ha un capitolo a sé sul comportamento davanti alla selvaggina che il cane vede."
+ },
+ "Δεν στέκουν σε κανέναν κανονισμό της F.C.I. Το ακρωνύμιο μένει το ίδιο σε κάθε γλώσσα· η ανάπτυξή του είναι επαγγελματική, μη επίσημη μετάφραση.": {
+  "de": "Keines steht in einem Reglement der F.C.I. Das Kürzel bleibt in jeder Sprache gleich; seine Auflösung ist eine professionelle, nicht offizielle Übersetzung.",
+  "en": "None of these stands in any F.C.I. regulation. The acronym is the same in every language; what it stands for is a professional, non-official translation.",
+  "es": "Ninguna figura en un reglamento de la F.C.I. La sigla es la misma en cada idioma; su desarrollo es una traducción profesional, no oficial.",
+  "fr": "Aucune ne figure dans un règlement de la F.C.I. Le sigle reste le même dans chaque langue ; son développé est une traduction professionnelle, non officielle.",
+  "it": "Nessuna compare in un regolamento della F.C.I. La sigla resta la stessa in ogni lingua; il suo scioglimento è una traduzione professionale, non ufficiale."
  },
  "Δεν υπάρχει άλλος κληρωμένος σκύλος για ανταλλαγή.": {
   "de": "Es gibt keinen anderen ausgelosten Hund zum Tauschen.",
@@ -1910,12 +1924,40 @@
   "fr": "Incomplet",
   "it": "Incompleto"
  },
+ "Ενδεικτική σειρά (Άρθρο 16).": {
+  "de": "Reihenfolge unverbindlich (Artikel 16).",
+  "en": "Indicative order (Article 16).",
+  "es": "Orden indicativo (Artículo 16).",
+  "fr": "Ordre indicatif (Article 16).",
+  "it": "Ordine indicativo (Articolo 16)."
+ },
  "Ενημερώθηκαν:": {
   "de": "Aktualisiert:",
   "en": "Updated:",
   "es": "Actualizados:",
   "fr": "Mis à jour :",
   "it": "Aggiornati:"
+ },
+ "Εξέταση Κυνηγετικής Ικανότητας": {
+  "de": "Jagdeignungsprüfung",
+  "en": "Hunting Aptitude Test",
+  "es": "Prueba de aptitud de caza",
+  "fr": "Test d'aptitude à la chasse",
+  "it": "Prova di attitudine alla caccia"
+ },
+ "Εξέταση Φυσικών Υπαρχόντων Προσόντων": {
+  "de": "Prüfung der natürlichen Anlagen",
+  "en": "Natural Qualities Test",
+  "es": "Prueba de cualidades naturales",
+  "fr": "Test des qualités naturelles",
+  "it": "Prova delle qualità naturali"
+ },
+ "Εξέταση του ομίλου. Δεν είναι το Π.Φ.Π. (CQN) της F.C.I., που είναι πιστοποιητικό και απονέμεται μέσα σε αγώνα.": {
+  "de": "Eine Prüfung des Vereins. Nicht das CQN der F.C.I., das eine in der Prüfung verliehene Bescheinigung ist.",
+  "en": "A club test. It is not the F.C.I.'s CQN, which is a certificate awarded during a trial.",
+  "es": "Una prueba del club. No es el CQN de la F.C.I., que es un certificado otorgado en prueba.",
+  "fr": "Un test du club. Ce n'est pas le CQN de la F.C.I., qui est un certificat attribué en épreuve.",
+  "it": "Una prova del club. Non è il CQN della F.C.I., che è un certificato assegnato in prova."
  },
  "Εξαίρετη ένδειξη": {
   "de": "Hervorragende Anzeige",
@@ -4766,6 +4808,13 @@
   "fr": "Coefficient",
   "it": "Coefficiente"
  },
+ "Συντομογραφίες του ομίλου": {
+  "de": "Die Kürzel des Vereins",
+  "en": "The club's abbreviations",
+  "es": "Las siglas del club",
+  "fr": "Les abréviations du club",
+  "it": "Le sigle del club"
+ },
  "Σφάλμα Άρθρου 33 καταγεγραμμένο:": {
   "de": "Fehler nach Artikel 33 vermerkt:",
   "en": "Article 33 fault recorded:",
@@ -5150,6 +5199,13 @@
   "es": "Tres en direcciones distintas: eliminación (Artículo 27).",
   "fr": "Trois dans des directions différentes : élimination (Article 27).",
   "it": "Tre in direzioni diverse: eliminazione (Articolo 27)."
+ },
+ "Τρόπαιο Μεγάλης Έρευνας": {
+  "de": "Trophäe der Grande Quête",
+  "en": "Grande Quête Trophy",
+  "es": "Trofeo de Gran Busca",
+  "fr": "Trophée de la Grande Quête",
+  "it": "Trofeo della Grande Quête"
  },
  "Τρόπος": {
   "de": "Verfahren",

@@ -1054,7 +1054,13 @@ const DEFAULT_SMS = `Κ.Ο.Α.Δ. · {ΑΓΩΝΑΣ}
    περσινού αντιγράφου παγώνει ως «γραμμένη από τον γραμματέα» και δεν παίρνει
    ποτέ τη διόρθωση — ενώ κανείς δεν την έγραψε ποτέ. */
 const SMS_WAS = [`Κ.Ο.Α.Δ. – {ΑΓΩΝΑΣ}, {ΗΜΕΡΟΜΗΝΙΑ}\n{ΤΟΠΟΘΕΣΙΑ} · ώρα {ΩΡΑ}`];
-const DEFAULT_SMS_FOOT = `Η σειρά είναι ενδεικτική (Άρθρο 16). Να είστε στη διάθεση των κριτών.`;
+/* Η λεζάντα κόστιζε 69 χαρακτήρες σε μήνυμα που χρεώνεται ανά 67, δηλαδή ένα
+   ολόκληρο τμήμα παραπάνω, σαράντα φορές τον αγώνα. Είκοσι οκτώ χαρακτήρες
+   λένε το ίδιο και κρατούν την παραπομπή στο άρθρο. Η παλιά μορφή μένει στο
+   SMS_FOOT_WAS: όποιος δεν την είχε αλλάξει παίρνει τη νέα, όποιος έγραψε
+   δική του κρατά τη δική του. */
+const DEFAULT_SMS_FOOT = `Ενδεικτική σειρά (Άρθρο 16).`;
+const SMS_FOOT_WAS = [`Η σειρά είναι ενδεικτική (Άρθρο 16). Να είστε στη διάθεση των κριτών.`];
 const DEFAULT_SETTINGS = { sms:DEFAULT_SMS, smsFoot:DEFAULT_SMS_FOOT, smsMode:"full", appUrl:"",
   nextUp:true,
   smsJudges:true, points:{...DEFAULT_POINTS}, lang:"el",
@@ -1378,6 +1384,7 @@ const UI_STR = {
   "Αύξηση": "Increase",
   "ΒΑΣΗ": "MAIN",
   "Βαθμολογία": "Scoring",
+  "Βαθμολογία του ομίλου, όχι τίτλος της F.C.I.": "A club grading, not an F.C.I. title.",
   "Βαθμολογημένοι": "Classified",
   "Βαθμολογημένοι για να καταταγεί ομάδα": "Dogs classified for a team to be placed",
   "Βασικοί βαθμοί ανά βαθμολογία/τίτλο. Πολλαπλασιάζονται με τον συντελεστή του αγώνα (×2 ζεύγη, ×3 ή ×4 σε άγριο θήραμα για ΕΚ/ΠΚ).": "Base points per qualification/title. They are multiplied by the trial's coefficient (×2 braces, ×3 or ×4 on wild game for Hunting Research / Practical Hunting).",
@@ -1409,6 +1416,7 @@ const UI_STR = {
   "Δεν πληρούνται τα ελάχιστα.": "The minimums are not met.",
   "Δεν προέκυψε": "Did not arise",
   "Δεν στέκει ως όρος στα κείμενα της F.C.I., της S.C.C. ή της ENCI. Μόνο η γερμανική εξέταση έχει ξεχωριστό κεφάλαιο για τη συμπεριφορά μπροστά σε θήραμα που ο σκύλος βλέπει.": "It does not stand as a term in the F.C.I., S.C.C. or ENCI texts. Only the German examination has a chapter of its own on behaviour in front of game the dog can see.",
+  "Δεν στέκουν σε κανέναν κανονισμό της F.C.I. Το ακρωνύμιο μένει το ίδιο σε κάθε γλώσσα· η ανάπτυξή του είναι επαγγελματική, μη επίσημη μετάφραση.": "None of these stands in any F.C.I. regulation. The acronym is the same in every language; what it stands for is a professional, non-official translation.",
   "Δεν υπάρχει άλλος κληρωμένος σκύλος για ανταλλαγή.": "There is no other drawn dog to swap with.",
   "Δεν υπάρχει διακομιστής, οπότε αυτή είναι η μόνη συγχρόνιση. Η διαδρομή έχει τρία βήματα:": "There is no server, so this is the only synchronisation. The route has three steps:",
   "Δεν υπάρχει εγκατεστημένος service worker σε αυτή τη συσκευή.": "No service worker is installed on this device.",
@@ -1469,7 +1477,11 @@ const UI_STR = {
   "Ελεύθερο σχόλιο": "Free comment",
   "Ελληνικά (UCS-2), 70 χαρακτήρες στο πρώτο τμήμα και 67 σε κάθε επόμενο. Πληρώνονται από το δικό σας τηλέφωνο.": "Greek (UCS-2), 70 characters in the first segment and 67 in each one after. They are paid for from your own phone.",
   "Ελλιπές": "Incomplete",
+  "Ενδεικτική σειρά (Άρθρο 16).": "Indicative order (Article 16).",
   "Ενημερώθηκαν:": "Updated:",
+  "Εξέταση Κυνηγετικής Ικανότητας": "Hunting Aptitude Test",
+  "Εξέταση Φυσικών Υπαρχόντων Προσόντων": "Natural Qualities Test",
+  "Εξέταση του ομίλου. Δεν είναι το Π.Φ.Π. (CQN) της F.C.I., που είναι πιστοποιητικό και απονέμεται μέσα σε αγώνα.": "A club test. It is not the F.C.I.'s CQN, which is a certificate awarded during a trial.",
   "Εξαίρετη ένδειξη": "Outstanding indication",
   "Εξαγωγές": "Exports",
   "Εξαγωγές αγώνα": "Trial exports",
@@ -1877,6 +1889,7 @@ const UI_STR = {
   "Συνέχεια;": "Continue?",
   "Συνδεδεμένο": "Online",
   "Συντελεστής": "Coefficient",
+  "Συντομογραφίες του ομίλου": "The club's abbreviations",
   "Σφάλμα Άρθρου 33 καταγεγραμμένο:": "Article 33 fault recorded:",
   "Σφάλματα αποκλεισμού": "Eliminating faults",
   "Σφάλματα αποκλεισμού (Άρθρο 33):": "Eliminating faults (Article 33):",
@@ -1931,6 +1944,7 @@ const UI_STR = {
   "Τοπικός αριθμός· θα σταλεί ως": "Local number; it will be sent as",
   "Τοποθεσία": "Place",
   "Τρεις λευκές σε διαφορετικές κατευθύνσεις: αποκλεισμός (Άρθρο 27).": "Three in different directions: elimination (Article 27).",
+  "Τρόπαιο Μεγάλης Έρευνας": "Grande Quête Trophy",
   "Τρόπος": "Method",
   "Τσιπ / δερματοστιξία": "Chip / tattoo",
   "Υπάρχει ήδη κλήρωση για την ημέρα αυτή. Θα ακυρωθεί και θα γίνει νέα με": "A draw already exists for this day. It will be cancelled and a new one made with",
@@ -2365,6 +2379,7 @@ const UI_STR = {
   "Αύξηση": "Augmenter",
   "ΒΑΣΗ": "TITULAIRE",
   "Βαθμολογία": "Notation",
+  "Βαθμολογία του ομίλου, όχι τίτλος της F.C.I.": "Une qualification du club, non un titre F.C.I.",
   "Βαθμολογημένοι": "Classés",
   "Βαθμολογημένοι για να καταταγεί ομάδα": "Chiens classés pour qu'une équipe soit classée",
   "Βασικοί βαθμοί ανά βαθμολογία/τίτλο. Πολλαπλασιάζονται με τον συντελεστή του αγώνα (×2 ζεύγη, ×3 ή ×4 σε άγριο θήραμα για ΕΚ/ΠΚ).": "Points de base par qualification/titre. Ils sont multipliés par le coefficient de l'épreuve (×2 en couple, ×3 ou ×4 sur gibier sauvage pour Recherche de chasse / Chasse pratique).",
@@ -2396,6 +2411,7 @@ const UI_STR = {
   "Δεν πληρούνται τα ελάχιστα.": "Les minimums ne sont pas atteints.",
   "Δεν προέκυψε": "Ne s'est pas présenté",
   "Δεν στέκει ως όρος στα κείμενα της F.C.I., της S.C.C. ή της ENCI. Μόνο η γερμανική εξέταση έχει ξεχωριστό κεφάλαιο για τη συμπεριφορά μπροστά σε θήραμα που ο σκύλος βλέπει.": "Il ne figure pas comme terme dans les textes de la F.C.I., de la S.C.C. ou de l'ENCI. Seul l'examen allemand consacre un chapitre au comportement devant un gibier que le chien voit.",
+  "Δεν στέκουν σε κανέναν κανονισμό της F.C.I. Το ακρωνύμιο μένει το ίδιο σε κάθε γλώσσα· η ανάπτυξή του είναι επαγγελματική, μη επίσημη μετάφραση.": "Aucune ne figure dans un règlement de la F.C.I. Le sigle reste le même dans chaque langue ; son développé est une traduction professionnelle, non officielle.",
   "Δεν υπάρχει άλλος κληρωμένος σκύλος για ανταλλαγή.": "Il n'y a pas d'autre chien tiré au sort pour l'échange.",
   "Δεν υπάρχει διακομιστής, οπότε αυτή είναι η μόνη συγχρόνιση. Η διαδρομή έχει τρία βήματα:": "Il n'y a pas de serveur, c'est donc la seule synchronisation. Le trajet comporte trois étapes :",
   "Δεν υπάρχει εγκατεστημένος service worker σε αυτή τη συσκευή.": "Aucun service worker n'est installé sur cet appareil.",
@@ -2456,7 +2472,11 @@ const UI_STR = {
   "Ελεύθερο σχόλιο": "Commentaire libre",
   "Ελληνικά (UCS-2), 70 χαρακτήρες στο πρώτο τμήμα και 67 σε κάθε επόμενο. Πληρώνονται από το δικό σας τηλέφωνο.": "Grec (UCS-2), 70 caractères dans le premier segment et 67 dans chacun des suivants. Ils sont payés depuis votre propre téléphone.",
   "Ελλιπές": "Incomplet",
+  "Ενδεικτική σειρά (Άρθρο 16).": "Ordre indicatif (Article 16).",
   "Ενημερώθηκαν:": "Mis à jour :",
+  "Εξέταση Κυνηγετικής Ικανότητας": "Test d'aptitude à la chasse",
+  "Εξέταση Φυσικών Υπαρχόντων Προσόντων": "Test des qualités naturelles",
+  "Εξέταση του ομίλου. Δεν είναι το Π.Φ.Π. (CQN) της F.C.I., που είναι πιστοποιητικό και απονέμεται μέσα σε αγώνα.": "Un test du club. Ce n'est pas le CQN de la F.C.I., qui est un certificat attribué en épreuve.",
   "Εξαίρετη ένδειξη": "Indication remarquable",
   "Εξαγωγές": "Exports",
   "Εξαγωγές αγώνα": "Exports de l'épreuve",
@@ -2864,6 +2884,7 @@ const UI_STR = {
   "Συνέχεια;": "Continuer ?",
   "Συνδεδεμένο": "En ligne",
   "Συντελεστής": "Coefficient",
+  "Συντομογραφίες του ομίλου": "Les abréviations du club",
   "Σφάλμα Άρθρου 33 καταγεγραμμένο:": "Faute de l'Article 33 consignée :",
   "Σφάλματα αποκλεισμού": "Fautes éliminatoires",
   "Σφάλματα αποκλεισμού (Άρθρο 33):": "Fautes éliminatoires (Article 33) :",
@@ -2918,6 +2939,7 @@ const UI_STR = {
   "Τοπικός αριθμός· θα σταλεί ως": "Numéro local ; il sera envoyé comme",
   "Τοποθεσία": "Lieu",
   "Τρεις λευκές σε διαφορετικές κατευθύνσεις: αποκλεισμός (Άρθρο 27).": "Trois dans des directions différentes : élimination (Article 27).",
+  "Τρόπαιο Μεγάλης Έρευνας": "Trophée de la Grande Quête",
   "Τρόπος": "Méthode",
   "Τσιπ / δερματοστιξία": "Puce / tatouage",
   "Υπάρχει ήδη κλήρωση για την ημέρα αυτή. Θα ακυρωθεί και θα γίνει νέα με": "Un tirage existe déjà pour cette journée. Il sera annulé et refait avec",
@@ -3352,6 +3374,7 @@ const UI_STR = {
   "Αύξηση": "Erhöhen",
   "ΒΑΣΗ": "STAMM",
   "Βαθμολογία": "Bewertung",
+  "Βαθμολογία του ομίλου, όχι τίτλος της F.C.I.": "Eine Bewertung des Vereins, kein F.C.I.-Titel.",
   "Βαθμολογημένοι": "Gewertet",
   "Βαθμολογημένοι για να καταταγεί ομάδα": "Gewertete Hunde, damit eine Mannschaft gewertet wird",
   "Βασικοί βαθμοί ανά βαθμολογία/τίτλο. Πολλαπλασιάζονται με τον συντελεστή του αγώνα (×2 ζεύγη, ×3 ή ×4 σε άγριο θήραμα για ΕΚ/ΠΚ).": "Grundpunkte je Bewertung/Titel. Sie werden mit dem Koeffizienten der Prüfung multipliziert (×2 im Paar, ×3 oder ×4 auf Wildwild für Jagdsuche / Praktische Jagd).",
@@ -3383,6 +3406,7 @@ const UI_STR = {
   "Δεν πληρούνται τα ελάχιστα.": "Die Mindestzahlen sind nicht erfüllt.",
   "Δεν προέκυψε": "Kam nicht vor",
   "Δεν στέκει ως όρος στα κείμενα της F.C.I., της S.C.C. ή της ENCI. Μόνο η γερμανική εξέταση έχει ξεχωριστό κεφάλαιο για τη συμπεριφορά μπροστά σε θήραμα που ο σκύλος βλέπει.": "Er steht in den Texten der F.C.I., der S.C.C. oder der ENCI nicht als Begriff. Nur die deutsche Prüfung hat ein eigenes Kapitel zum Verhalten vor sichtigem Wild.",
+  "Δεν στέκουν σε κανέναν κανονισμό της F.C.I. Το ακρωνύμιο μένει το ίδιο σε κάθε γλώσσα· η ανάπτυξή του είναι επαγγελματική, μη επίσημη μετάφραση.": "Keines steht in einem Reglement der F.C.I. Das Kürzel bleibt in jeder Sprache gleich; seine Auflösung ist eine professionelle, nicht offizielle Übersetzung.",
   "Δεν υπάρχει άλλος κληρωμένος σκύλος για ανταλλαγή.": "Es gibt keinen anderen ausgelosten Hund zum Tauschen.",
   "Δεν υπάρχει διακομιστής, οπότε αυτή είναι η μόνη συγχρόνιση. Η διαδρομή έχει τρία βήματα:": "Es gibt keinen Server, dies ist also der einzige Abgleich. Der Weg hat drei Schritte:",
   "Δεν υπάρχει εγκατεστημένος service worker σε αυτή τη συσκευή.": "Auf diesem Gerät ist kein Service Worker installiert.",
@@ -3443,7 +3467,11 @@ const UI_STR = {
   "Ελεύθερο σχόλιο": "Freier Kommentar",
   "Ελληνικά (UCS-2), 70 χαρακτήρες στο πρώτο τμήμα και 67 σε κάθε επόμενο. Πληρώνονται από το δικό σας τηλέφωνο.": "Griechisch (UCS-2), 70 Zeichen im ersten Segment und 67 in jedem weiteren. Bezahlt werden sie von Ihrem eigenen Telefon.",
   "Ελλιπές": "Unvollständig",
+  "Ενδεικτική σειρά (Άρθρο 16).": "Reihenfolge unverbindlich (Artikel 16).",
   "Ενημερώθηκαν:": "Aktualisiert:",
+  "Εξέταση Κυνηγετικής Ικανότητας": "Jagdeignungsprüfung",
+  "Εξέταση Φυσικών Υπαρχόντων Προσόντων": "Prüfung der natürlichen Anlagen",
+  "Εξέταση του ομίλου. Δεν είναι το Π.Φ.Π. (CQN) της F.C.I., που είναι πιστοποιητικό και απονέμεται μέσα σε αγώνα.": "Eine Prüfung des Vereins. Nicht das CQN der F.C.I., das eine in der Prüfung verliehene Bescheinigung ist.",
   "Εξαίρετη ένδειξη": "Hervorragende Anzeige",
   "Εξαγωγές": "Exporte",
   "Εξαγωγές αγώνα": "Exporte der Prüfung",
@@ -3851,6 +3879,7 @@ const UI_STR = {
   "Συνέχεια;": "Fortfahren?",
   "Συνδεδεμένο": "Online",
   "Συντελεστής": "Koeffizient",
+  "Συντομογραφίες του ομίλου": "Die Kürzel des Vereins",
   "Σφάλμα Άρθρου 33 καταγεγραμμένο:": "Fehler nach Artikel 33 vermerkt:",
   "Σφάλματα αποκλεισμού": "Ausschließende Fehler",
   "Σφάλματα αποκλεισμού (Άρθρο 33):": "Ausschließende Fehler (Artikel 33):",
@@ -3905,6 +3934,7 @@ const UI_STR = {
   "Τοπικός αριθμός· θα σταλεί ως": "Örtliche Nummer; gesendet wird sie als",
   "Τοποθεσία": "Ort",
   "Τρεις λευκές σε διαφορετικές κατευθύνσεις: αποκλεισμός (Άρθρο 27).": "Drei in verschiedenen Richtungen: Ausschluss (Artikel 27).",
+  "Τρόπαιο Μεγάλης Έρευνας": "Trophäe der Grande Quête",
   "Τρόπος": "Verfahren",
   "Τσιπ / δερματοστιξία": "Chip / Tätowierung",
   "Υπάρχει ήδη κλήρωση για την ημέρα αυτή. Θα ακυρωθεί και θα γίνει νέα με": "Für diesen Tag besteht bereits eine Auslosung. Sie wird aufgehoben und neu gemacht mit",
@@ -4339,6 +4369,7 @@ const UI_STR = {
   "Αύξηση": "Aumenta",
   "ΒΑΣΗ": "TITOLARE",
   "Βαθμολογία": "Valutazione",
+  "Βαθμολογία του ομίλου, όχι τίτλος της F.C.I.": "Una qualifica del club, non un titolo F.C.I.",
   "Βαθμολογημένοι": "Classificati",
   "Βαθμολογημένοι για να καταταγεί ομάδα": "Cani classificati perché una squadra sia classificata",
   "Βασικοί βαθμοί ανά βαθμολογία/τίτλο. Πολλαπλασιάζονται με τον συντελεστή του αγώνα (×2 ζεύγη, ×3 ή ×4 σε άγριο θήραμα για ΕΚ/ΠΚ).": "Punti base per qualifica/titolo. Vengono moltiplicati per il coefficiente della prova (×2 in batteria, ×3 o ×4 su selvaggina selvatica per Ricerca di caccia / Caccia pratica).",
@@ -4370,6 +4401,7 @@ const UI_STR = {
   "Δεν πληρούνται τα ελάχιστα.": "I minimi non sono raggiunti.",
   "Δεν προέκυψε": "Non si è presentato",
   "Δεν στέκει ως όρος στα κείμενα της F.C.I., της S.C.C. ή της ENCI. Μόνο η γερμανική εξέταση έχει ξεχωριστό κεφάλαιο για τη συμπεριφορά μπροστά σε θήραμα που ο σκύλος βλέπει.": "Non figura come termine nei testi della F.C.I., della S.C.C. o dell'ENCI. Solo l'esame tedesco ha un capitolo a sé sul comportamento davanti alla selvaggina che il cane vede.",
+  "Δεν στέκουν σε κανέναν κανονισμό της F.C.I. Το ακρωνύμιο μένει το ίδιο σε κάθε γλώσσα· η ανάπτυξή του είναι επαγγελματική, μη επίσημη μετάφραση.": "Nessuna compare in un regolamento della F.C.I. La sigla resta la stessa in ogni lingua; il suo scioglimento è una traduzione professionale, non ufficiale.",
   "Δεν υπάρχει άλλος κληρωμένος σκύλος για ανταλλαγή.": "Non c'è un altro cane sorteggiato con cui scambiare.",
   "Δεν υπάρχει διακομιστής, οπότε αυτή είναι η μόνη συγχρόνιση. Η διαδρομή έχει τρία βήματα:": "Non c'è un server, quindi questa è l'unica sincronizzazione. Il percorso ha tre passaggi:",
   "Δεν υπάρχει εγκατεστημένος service worker σε αυτή τη συσκευή.": "Su questo dispositivo non è installato alcun service worker.",
@@ -4430,7 +4462,11 @@ const UI_STR = {
   "Ελεύθερο σχόλιο": "Commento libero",
   "Ελληνικά (UCS-2), 70 χαρακτήρες στο πρώτο τμήμα και 67 σε κάθε επόμενο. Πληρώνονται από το δικό σας τηλέφωνο.": "Greco (UCS-2), 70 caratteri nel primo segmento e 67 in ciascuno successivo. Si pagano dal vostro telefono.",
   "Ελλιπές": "Incompleto",
+  "Ενδεικτική σειρά (Άρθρο 16).": "Ordine indicativo (Articolo 16).",
   "Ενημερώθηκαν:": "Aggiornati:",
+  "Εξέταση Κυνηγετικής Ικανότητας": "Prova di attitudine alla caccia",
+  "Εξέταση Φυσικών Υπαρχόντων Προσόντων": "Prova delle qualità naturali",
+  "Εξέταση του ομίλου. Δεν είναι το Π.Φ.Π. (CQN) της F.C.I., που είναι πιστοποιητικό και απονέμεται μέσα σε αγώνα.": "Una prova del club. Non è il CQN della F.C.I., che è un certificato assegnato in prova.",
   "Εξαίρετη ένδειξη": "Indicazione eccellente",
   "Εξαγωγές": "Esportazioni",
   "Εξαγωγές αγώνα": "Esportazioni della prova",
@@ -4838,6 +4874,7 @@ const UI_STR = {
   "Συνέχεια;": "Continuare?",
   "Συνδεδεμένο": "In linea",
   "Συντελεστής": "Coefficiente",
+  "Συντομογραφίες του ομίλου": "Le sigle del club",
   "Σφάλμα Άρθρου 33 καταγεγραμμένο:": "Mancanza dell'Articolo 33 registrata:",
   "Σφάλματα αποκλεισμού": "Mancanze eliminatorie",
   "Σφάλματα αποκλεισμού (Άρθρο 33):": "Mancanze eliminatorie (Articolo 33):",
@@ -4892,6 +4929,7 @@ const UI_STR = {
   "Τοπικός αριθμός· θα σταλεί ως": "Numero locale; verrà inviato come",
   "Τοποθεσία": "Luogo",
   "Τρεις λευκές σε διαφορετικές κατευθύνσεις: αποκλεισμός (Άρθρο 27).": "Tre in direzioni diverse: eliminazione (Articolo 27).",
+  "Τρόπαιο Μεγάλης Έρευνας": "Trofeo della Grande Quête",
   "Τρόπος": "Modo",
   "Τσιπ / δερματοστιξία": "Microchip / tatuaggio",
   "Υπάρχει ήδη κλήρωση για την ημέρα αυτή. Θα ακυρωθεί και θα γίνει νέα με": "Per questa giornata esiste già un sorteggio. Verrà annullato e rifatto con",
@@ -5326,6 +5364,7 @@ const UI_STR = {
   "Αύξηση": "Aumentar",
   "ΒΑΣΗ": "TITULAR",
   "Βαθμολογία": "Calificación",
+  "Βαθμολογία του ομίλου, όχι τίτλος της F.C.I.": "Una calificación del club, no un título de la F.C.I.",
   "Βαθμολογημένοι": "Clasificados",
   "Βαθμολογημένοι για να καταταγεί ομάδα": "Perros clasificados para que un equipo sea clasificado",
   "Βασικοί βαθμοί ανά βαθμολογία/τίτλο. Πολλαπλασιάζονται με τον συντελεστή του αγώνα (×2 ζεύγη, ×3 ή ×4 σε άγριο θήραμα για ΕΚ/ΠΚ).": "Puntos base por calificación/título. Se multiplican por el coeficiente de la prueba (×2 parejas, ×3 o ×4 sobre caza silvestre para I.C./C.P.).",
@@ -5357,6 +5396,7 @@ const UI_STR = {
   "Δεν πληρούνται τα ελάχιστα.": "No se cumplen los mínimos.",
   "Δεν προέκυψε": "No se dio",
   "Δεν στέκει ως όρος στα κείμενα της F.C.I., της S.C.C. ή της ENCI. Μόνο η γερμανική εξέταση έχει ξεχωριστό κεφάλαιο για τη συμπεριφορά μπροστά σε θήραμα που ο σκύλος βλέπει.": "No figura como término en los textos de la F.C.I., la S.C.C. ni la ENCI. Sólo el examen alemán tiene un capítulo propio sobre el comportamiento ante la caza que el perro ve.",
+  "Δεν στέκουν σε κανέναν κανονισμό της F.C.I. Το ακρωνύμιο μένει το ίδιο σε κάθε γλώσσα· η ανάπτυξή του είναι επαγγελματική, μη επίσημη μετάφραση.": "Ninguna figura en un reglamento de la F.C.I. La sigla es la misma en cada idioma; su desarrollo es una traducción profesional, no oficial.",
   "Δεν υπάρχει άλλος κληρωμένος σκύλος για ανταλλαγή.": "No hay otro perro sorteado con el que intercambiar.",
   "Δεν υπάρχει διακομιστής, οπότε αυτή είναι η μόνη συγχρόνιση. Η διαδρομή έχει τρία βήματα:": "No hay servidor, así que ésta es la única sincronización. El recorrido tiene tres pasos:",
   "Δεν υπάρχει εγκατεστημένος service worker σε αυτή τη συσκευή.": "No hay ningún service worker instalado en este dispositivo.",
@@ -5417,7 +5457,11 @@ const UI_STR = {
   "Ελεύθερο σχόλιο": "Comentario libre",
   "Ελληνικά (UCS-2), 70 χαρακτήρες στο πρώτο τμήμα και 67 σε κάθε επόμενο. Πληρώνονται από το δικό σας τηλέφωνο.": "Griego (UCS-2), 70 caracteres en el primer segmento y 67 en cada uno siguiente. Se pagan desde su propio teléfono.",
   "Ελλιπές": "Incompleto",
+  "Ενδεικτική σειρά (Άρθρο 16).": "Orden indicativo (Artículo 16).",
   "Ενημερώθηκαν:": "Actualizados:",
+  "Εξέταση Κυνηγετικής Ικανότητας": "Prueba de aptitud de caza",
+  "Εξέταση Φυσικών Υπαρχόντων Προσόντων": "Prueba de cualidades naturales",
+  "Εξέταση του ομίλου. Δεν είναι το Π.Φ.Π. (CQN) της F.C.I., που είναι πιστοποιητικό και απονέμεται μέσα σε αγώνα.": "Una prueba del club. No es el CQN de la F.C.I., que es un certificado otorgado en prueba.",
   "Εξαίρετη ένδειξη": "Indicación excelente",
   "Εξαγωγές": "Exportaciones",
   "Εξαγωγές αγώνα": "Exportaciones de la prueba",
@@ -5825,6 +5869,7 @@ const UI_STR = {
   "Συνέχεια;": "¿Continuar?",
   "Συνδεδεμένο": "Conectado",
   "Συντελεστής": "Coeficiente",
+  "Συντομογραφίες του ομίλου": "Las siglas del club",
   "Σφάλμα Άρθρου 33 καταγεγραμμένο:": "Fallo del Artículo 33 registrado:",
   "Σφάλματα αποκλεισμού": "Fallos eliminatorios",
   "Σφάλματα αποκλεισμού (Άρθρο 33):": "Fallos eliminatorios (Artículo 33):",
@@ -5879,6 +5924,7 @@ const UI_STR = {
   "Τοπικός αριθμός· θα σταλεί ως": "Número local; se enviará como",
   "Τοποθεσία": "Lugar",
   "Τρεις λευκές σε διαφορετικές κατευθύνσεις: αποκλεισμός (Άρθρο 27).": "Tres en direcciones distintas: eliminación (Artículo 27).",
+  "Τρόπαιο Μεγάλης Έρευνας": "Trofeo de Gran Busca",
   "Τρόπος": "Modo",
   "Τσιπ / δερματοστιξία": "Chip / tatuaje",
   "Υπάρχει ήδη κλήρωση για την ημέρα αυτή. Θα ακυρωθεί και θα γίνει νέα με": "Ya hay un sorteo para este día. Se anulará y se hará uno nuevo con",
@@ -8289,8 +8335,9 @@ function fieldsIn(t){
 const isDefaultSms = v => !v || v === DEFAULT_SMS || SMS_WAS.includes(v);
 const smsTpl  = () => { const v = DB.settings.sms;
   return isDefaultSms(v) ? tx(DEFAULT_SMS) : v; };
+const isDefaultFoot = v => !v || v === DEFAULT_SMS_FOOT || SMS_FOOT_WAS.includes(v);
 const smsFootTxt = () => { const v = DB.settings.smsFoot;
-  return !v || v === DEFAULT_SMS_FOOT ? tx(DEFAULT_SMS_FOOT) : v; };
+  return isDefaultFoot(v) ? tx(DEFAULT_SMS_FOOT) : v; };
 /* «ζεύγος 1ο» στα ελληνικά, «coppia 1» στις άλλες: το τακτικό είναι ελληνικός
    τύπος και δεν μεταφέρεται. Ο αριθμός μένει αριθμός σε κάθε γλώσσα. */
 /* «1ο ζεύγος» είναι ελληνική σειρά. Στα ιταλικά το ίδιο σχήμα βγάζει «1 coppia»,
@@ -9495,7 +9542,7 @@ function dlgTrial(t){
   t = t || {};
   dlg(`<h2>${t.id?tx("Επεξεργασία αγώνα"):tx("Νέος αγώνας")}</h2>
   <div class="row">${fld("t_title","Τίτλος αγώνα",t.title)}</div>
-  <div class="row">${sel("t_type","Είδος",TYPES,t.type||"Έρευνας Κυνηγίου")}
+  <div class="row">${sel("t_type","Είδος",TYPES.map(x=>[x, abbrLabel(x)]),t.type||"Έρευνας Κυνηγίου")}
     ${sel("t_format","Μορφή",[["ΖΕΥΓΗ","Ζεύγη"],["ΑΤΟΜΙΚΟΣ","Ατομικός"]],t.format||"ΖΕΥΓΗ")}</div>
   <div class="row">${fld("t_game","Θήραμα",tx(t.game||"Πέρδικα"))}
     ${sel("t_wild","Άγριο θήραμα",[["1","Ναι"],["0","Όχι"]],
@@ -12805,6 +12852,26 @@ function appUrl(){
   return (DB.settings.appUrl || "").trim();
 }
 
+/* Οι τρεις συντομογραφίες του ομίλου. Δεν είναι όροι κανονισμού — δεν στέκουν
+   σε κανένα κείμενο της F.C.I. — οπότε δεν μπαίνουν στο γλωσσάρι σαν να είχαν
+   παραπομπή. Το ακρωνύμιο μένει ακρωνύμιο σε κάθε γλώσσα, όπως και το
+   «Κ.Ο.Α.Δ.»· αυτό που μεταφράζεται είναι η ανάπτυξή του, και είναι
+   επαγγελματική, μη επίσημη μετάφραση όπως το υπόλοιπο κείμενο. */
+const ABBR = [
+  ["Τ.Μ.Ε.",   "Τρόπαιο Μεγάλης Έρευνας", "Βαθμολογία του ομίλου, όχι τίτλος της F.C.I."],
+  ["Ε.Κ.Ι.",   "Εξέταση Κυνηγετικής Ικανότητας", ""],
+  ["Ε.ΦΥ.Π.",  "Εξέταση Φυσικών Υπαρχόντων Προσόντων",
+   "Εξέταση του ομίλου. Δεν είναι το Π.Φ.Π. (CQN) της F.C.I., που είναι πιστοποιητικό και απονέμεται μέσα σε αγώνα."]
+];
+
+/* Στον επιλογέα, το ακρωνύμιο μόνο του δεν λέει τίποτα σε όποιον δεν είναι
+   της λέσχης — και η επιλογή γίνεται εκείνη τη στιγμή, όχι στο γλωσσάρι. Στα
+   ελληνικά μένει σκέτο: εκεί το ξέρουν. Η τιμή που αποθηκεύεται δεν αλλάζει. */
+const abbrLabel = v => {
+  const a = ABBR.find(x=>x[0] === v);
+  return (a && (DB.settings.lang||"el") !== "el") ? v + " — " + tx(a[1]) : v;
+};
+
 /* ---------- Γλωσσάρι -----------------------------------------------------
    Ο κριτής που κρίνει με ξένο συνάδελφο, ή ο κυναγωγός που τρέχει έξω, θέλει τη
    λέξη και όχι τη μετάφρασή της. Κάθε όρος δείχνει την πηγή του: ποιος κανονισμός,
@@ -12832,9 +12899,9 @@ function vTerms(){
         <div class="tiny" style="align-self:flex-end;padding-bottom:12px">${shown.length} ${
           tx("από")} ${TERMS.length}</div>`:""}
     </div>`;
-  if(!shown.length) return head + `<div class="empty">${tx("Κανένας όρος δεν ταιριάζει.")}</div>`;
+  const noneAt = !shown.length;
   const LAB = {en:"English", fr:"Français", de:"Deutsch", it:"Italiano"};
-  const body = TERM_GROUPS.map(([g, gl])=>{
+  const body = noneAt ? "" : TERM_GROUPS.map(([g, gl])=>{
     const rows = shown.filter(t => t[2] === g);
     if(!rows.length) return "";
     return `<div class="eyebrow" style="margin:22px 0 10px">${esc(tx(gl))}</div>
@@ -12858,7 +12925,22 @@ function vTerms(){
         </div>`;
       }).join("")}`;
   }).join("");
-  return head + body + `<div class="tiny" style="margin-top:20px">${tx("Πηγές: οι κανονισμοί της F.C.I. και των εθνικών ομοσπονδιών, στο αποθετήριο της εφαρμογής (")}<b>fci/</b> ${tx("και")}
+  /* Οι συντομογραφίες μπαίνουν από κάτω και ξεχωριστά: δεν έχουν πηγή να
+     δείξουν, και δεν πρέπει να διαβαστούν σαν όροι κανονισμού. */
+  const abbrShown = ABBR.filter(([k, full, note]) =>
+    !q || (k + " " + full + " " + tx(full) + " " + note + " " + tx(note)).toLowerCase().includes(q));
+  const abbr = !abbrShown.length ? "" :
+    `<div class="eyebrow" style="margin:22px 0 10px">${tx("Συντομογραφίες του ομίλου")}</div>
+    <p class="tiny" style="margin:0 0 10px">${tx("Δεν στέκουν σε κανέναν κανονισμό της F.C.I. Το ακρωνύμιο μένει το ίδιο σε κάθε γλώσσα· η ανάπτυξή του είναι επαγγελματική, μη επίσημη μετάφραση.")}</p>
+    ${abbrShown.map(([k, full, note])=>`<div class="card" style="margin-bottom:10px">
+      <div class="row" style="align-items:baseline;gap:10px">
+        <h3 class="grow" style="margin:0">${esc(k)}</h3></div>
+      <div style="font:600 17px/1.3 var(--f-b)">${esc(tx(full))}</div>
+      ${note?`<p class="tiny" style="margin:8px 0 0">${esc(tx(note))}</p>`:""}
+    </div>`).join("")}`;
+  if(noneAt && !abbrShown.length)
+    return head + `<div class="empty">${tx("Κανένας όρος δεν ταιριάζει.")}</div>`;
+  return head + body + abbr + `<div class="tiny" style="margin-top:20px">${tx("Πηγές: οι κανονισμοί της F.C.I. και των εθνικών ομοσπονδιών, στο αποθετήριο της εφαρμογής (")}<b>fci/</b> ${tx("και")}
     <b>national/</b>${tx("). Κενό κελί σημαίνει ότι ο όρος δεν στέκει στα κείμενα εκείνης της γλώσσας — δεν συμπληρώθηκε με εικασία.")}</div>`;
 }
 
