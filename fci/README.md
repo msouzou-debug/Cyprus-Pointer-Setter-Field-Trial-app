@@ -87,6 +87,17 @@ Three consequences worth knowing:
 - **A Cup has no coefficient.** The regulation's table is an absolute scale and the nine points are
   measured on it.
 
+The exports carry all of it. The workbook gains two sheets ahead of the rest — **Ομάδες**, the
+classification per country, and **Συγκρότηση**, every dog with its role and its captain — and the
+`Δεδομένα` sheet gains a team and a role column. The classification is computed *in the file*, by
+`SUMIFS` and `COUNTIFS` over `Δεδομένα` with every threshold read from a block of the regulation's
+own numbers at the foot of the sheet: correct a qualification and the placings re-sort themselves,
+with no app involved. One number is data rather than formula and says so in a comment — the count
+of distinct breeds, which no portable spreadsheet formula expresses legibly; the bonus *rule* is
+still live `IF` logic over that count. Word opens on the team result before the individual one, and
+the drawn order — in the workbook and in the CSV — shows the team on each side of every brace, which
+is where the committee checks that no pair holds two compatriots.
+
 ## National
 
 | File | Document | Pages | Date |

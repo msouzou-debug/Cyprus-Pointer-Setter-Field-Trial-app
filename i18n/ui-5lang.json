@@ -1168,6 +1168,13 @@
   "fr": "Chef d'équipe",
   "it": "Capitano di squadra"
  },
+ "Ατομική κατάταξη": {
+  "de": "Einzelwertung",
+  "en": "Individual classification",
+  "es": "Clasificación individual",
+  "fr": "Classement individuel",
+  "it": "Classifica individuale"
+ },
  "Ατομικός": {
   "de": "Einzeln",
   "en": "Solo",
@@ -3009,6 +3016,13 @@
   "fr": "Coupe d'Europe Grande Quête (chiens d'arrêt britanniques)",
   "it": "Coppa d'Europa Grande Quête (cani da ferma inglesi)"
  },
+ "Κύπελλο.": {
+  "de": "Ein Cup.",
+  "en": "A Cup.",
+  "es": "Una Copa.",
+  "fr": "Une Coupe.",
+  "it": "Una Coppa."
+ },
  "Κύπελλο: οι πόντοι είναι αυτοί του πίνακα, χωρίς συντελεστή. Ο κανονισμός δίνει απόλυτη κλίμακα και πάνω της μετριέται το κατώφλι της ομάδας.": {
   "de": "Ein Cup: die Punkte sind die der Tabelle, ohne Koeffizient. Das Reglement gibt eine absolute Skala vor, und auf ihr wird die Schwelle der Mannschaft gemessen.",
   "en": "A Cup: the points are the ones in the table, with no coefficient. The regulation gives an absolute scale and the team threshold is measured on it.",
@@ -3281,6 +3295,13 @@
   "es": "Becada",
   "fr": "Bécasse",
   "it": "Beccaccia"
+ },
+ "Μπόνους": {
+  "de": "Bonus",
+  "en": "Bonus",
+  "es": "Bonificación",
+  "fr": "Bonus",
+  "it": "Bonus"
  },
  "Μόνο κριτές": {
   "de": "Nur Richter",
@@ -4590,6 +4611,13 @@
   "es": "",
   "fr": "",
   "it": ""
+ },
+ "Το Excel αποκτά δύο φύλλα ακόμη, και μπροστά: «Ομάδες» με την κατάταξη ανά χώρα και «Συγκρότηση» με κάθε σκύλο, τον ρόλο του και τον αρχηγό του. Η κατάταξη υπολογίζεται μέσα στο αρχείο — διορθώνει κανείς μια αξιολόγηση στα Δεδομένα και ξαναβγαίνει μόνη της, με τα κατώφλια του κανονισμού γραμμένα στο τέλος του φύλλου. Το Word ανοίγει με το ομαδικό αποτέλεσμα και η σειρά των ζευγών δείχνει την ομάδα κάθε πλευράς.": {
+  "de": "Die Excel-Datei erhält zwei weitere Blätter, und zwar vorn: „Mannschaften“ mit der Wertung nach Ländern und „Aufstellung“ mit jedem Hund, seiner Rolle und seinem Mannschaftsführer. Die Wertung wird in der Datei selbst gerechnet — korrigiert man eine Bewertung im Blatt Daten, ergibt sie sich von allein neu, mit den Schwellen des Reglements am Fuß des Blattes. Word beginnt mit dem Mannschaftsergebnis, und die Startordnung nennt die Mannschaft auf jeder Seite.",
+  "en": "The Excel file gains two more sheets, ahead of the rest: “Teams” with the classification per country and “Line-up” with every dog, its role and its captain. The classification is worked out inside the file — correct a qualification on the Data sheet and it comes out again by itself, with the regulation's thresholds written at the foot of the sheet. Word opens on the team result, and the drawn order shows the team on each side.",
+  "es": "El archivo Excel gana dos hojas más, y por delante: «Equipos» con la clasificación por país y «Composición» con cada perro, su papel y su jefe de equipo. La clasificación se calcula dentro del archivo — corrija una calificación en la hoja Datos y vuelve a salir sola, con los umbrales del reglamento escritos al pie de la hoja. Word se abre con el resultado por equipos, y el orden del sorteo indica el equipo de cada lado.",
+  "fr": "Le fichier Excel gagne deux feuilles de plus, placées devant : « Équipes » avec le classement par pays et « Composition » avec chaque chien, son rôle et son chef d'équipe. Le classement se calcule dans le fichier — corrigez une qualification sur la feuille Données et il ressort tout seul, les seuils du règlement étant inscrits au bas de la feuille. Word s'ouvre sur le résultat par équipes, et l'ordre du tirage indique l'équipe de chaque côté.",
+  "it": "Il file Excel acquista due fogli in più, e davanti: «Squadre» con la classifica per paese e «Composizione» con ogni cane, il suo ruolo e il suo capitano. La classifica si calcola dentro il file — si corregge una qualifica nel foglio Dati e riesce da sola, con le soglie del regolamento scritte in fondo al foglio. Word si apre con il risultato a squadre, e l'ordine del sorteggio indica la squadra di ogni lato."
  },
  "Το Excel περιέχει φύλλο «Παράμετροι» με τον πίνακα πόντων. Όλοι οι πόντοι υπολογίζονται με τύπους VLOOKUP/SUMIFS που δείχνουν εκεί — καμία σταθερή τιμή μέσα σε τύπο, ώστε όποιος ανοίξει το αρχείο να μπορεί να ελέγξει την αριθμητική. Ανοίγει σε Excel και LibreOffice. Η εκτύπωση είναι ασπρόμαυρη, για φωτοτυπία.": {
   "de": "Die Excel-Datei enthält ein Blatt „Parameter“ mit der Punktetabelle. Alle Punkte werden über VLOOKUP/SUMIFS-Formeln berechnet, die dorthin verweisen — kein fester Wert in einer Formel, damit jeder, der die Datei öffnet, die Rechnung prüfen kann. Sie öffnet sich in Excel und LibreOffice. Der Druck ist schwarzweiß, zum Fotokopieren.",
