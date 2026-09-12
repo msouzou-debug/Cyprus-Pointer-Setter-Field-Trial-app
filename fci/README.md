@@ -58,6 +58,35 @@ Practical Hunting**, and it is the only one of the three open to British *and* C
 once. It scores **the two days added together** (IX.29, IX.33) — which the app cannot yet do, since
 it keeps one result per dog per trial.
 
+### How the app holds all three
+
+A team is a record on the trial, not a label on a dog: country, captain, the dogs in it and the
+named substitutes. A trial that is a Cup carries the numbers of the regulation it is run under, and
+they differ enough that they cannot be one setting:
+
+| | dogs | substitutes | placed with | breed bonus | one handler, one country |
+|---|---|---|---|---|---|
+| **CDE-GQ** (British, European Cup) | 1–4 | 2 | 2 classified, 9 points | no | **no** — he may run for several |
+| **ACO VIII** (Continental, Spring European Cup) | 2–4 | 1 | 2 classified, 9 points | 4 breeds +4, 3 breeds +2 | yes |
+| **ACO IX** (World, Practical Hunting) | 2–4 | 1 | 2 classified | no | yes |
+
+Picking the cup fills those numbers in; a club running something else edits them. The screen then
+reports what does not hold — a team under or over strength, too many substitutes, a dog in two
+teams, a handler running for two countries where that is forbidden, an entered dog in no team — each
+line naming the article that requires it.
+
+Three consequences worth knowing:
+
+- **Membership is the record, never the registry tag.** Once a trial has one team, a dog belongs to
+  the team that holds it or to none; the `Εθνική ομάδα` field on the dog is only the suggestion the
+  *Fill in from the register* button acts on. Before the first team exists the tag is still used, so
+  a trial just declared a Cup is not empty.
+- **The substitute is a member who does not score.** He appears in the team, he is kept out of his
+  compatriot's brace by the draw, and he brings neither points nor a breed to the bonus — *"with the
+  exception of the substitute dog"* (ACO VIII.5.4a).
+- **A Cup has no coefficient.** The regulation's table is an absolute scale and the nine points are
+  measured on it.
+
 ## National
 
 | File | Document | Pages | Date |

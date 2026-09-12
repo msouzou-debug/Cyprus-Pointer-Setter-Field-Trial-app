@@ -1,4 +1,11 @@
 {
+ "(ACO VIII.11.2-3)": {
+  "de": "(ACO VIII.11.2-3)",
+  "en": "(ACO VIII.11.2-3)",
+  "es": "(ACO VIII.11.2-3)",
+  "fr": "(ACO VIII.11.2-3)",
+  "it": "(ACO VIII.11.2-3)"
+ },
  "(Άρθρο 24)": {
   "de": "(Artikel 24)",
   "en": "(Article 24)",
@@ -54,6 +61,13 @@
   "es": "+ Nuevo conductor",
   "fr": "+ Nouveau conducteur",
   "it": "+ Nuovo conduttore"
+ },
+ "+ Ομάδα": {
+  "de": "+ Mannschaft",
+  "en": "+ Team",
+  "es": "+ Equipo",
+  "fr": "+ Équipe",
+  "it": "+ Squadra"
  },
  "+ Προσθήκη τερέν": {
   "de": "+ Gelände hinzufügen",
@@ -405,6 +419,13 @@
   "fr": "Autre",
   "it": "Altro"
  },
+ "Άλλο κύπελλο — δικοί σας αριθμοί": {
+  "de": "Ein anderer Cup — Ihre eigenen Zahlen",
+  "en": "Another cup — your own numbers",
+  "es": "Otra copa — sus propios números",
+  "fr": "Une autre coupe — vos propres nombres",
+  "it": "Un'altra coppa — i vostri numeri"
+ },
  "Άλλοι σκύλοι": {
   "de": "Andere Hunde",
   "en": "Other dogs",
@@ -530,6 +551,13 @@
   "es": "Un perro corre en un solo terreno.",
   "fr": "Un chien ne court que sur un seul terrain.",
   "it": "Un cane corre su un solo terreno."
+ },
+ "Έξω": {
+  "de": "Entfernen",
+  "en": "Remove",
+  "es": "Quitar",
+  "fr": "Retirer",
+  "it": "Togli"
  },
  "Έρευνας Κυνηγίου": {
   "de": "Jagdsuche",
@@ -684,6 +712,13 @@
   "es": "Hora de llegada",
   "fr": "Heure de convocation",
   "it": "Ora di ritrovo"
+ },
+ "ΑΝΑΠΛΗΡΩΜΑΤΙΚΟΣ": {
+  "de": "ERSATZHUND",
+  "en": "SUBSTITUTE",
+  "es": "SUPLENTE",
+  "fr": "REMPLAÇANT",
+  "it": "RISERVA"
  },
  "ΑΝΕΠΑΡΚΗΣ": {
   "de": "UNGENÜGEND",
@@ -866,6 +901,13 @@
   "es": "Buscar un término en cualquier lengua",
   "fr": "Chercher un terme dans n'importe quelle langue",
   "it": "Cerca un termine in qualsiasi lingua"
+ },
+ "Αναπληρωματικοί": {
+  "de": "Ersatzhunde",
+  "en": "Substitutes",
+  "es": "Suplentes",
+  "fr": "Remplaçants",
+  "it": "Riserve"
  },
  "Ανοίξατε το αρχείο απευθείας και ο περιηγητής δεν επιτρέπει αποθήκευση. Ό,τι καταχωρήσετε θα χαθεί μόλις κλείσετε τη σελίδα. Κλείστε το και ανοίξτε την εφαρμογή από τη διεύθυνση του ομίλου, ή κατεβάστε αντίγραφο (Ρυθμίσεις → Μεταφορά) πριν κλείσετε.": {
   "de": "Sie haben die Datei direkt geöffnet, und der Browser lässt kein Speichern zu. Alles, was Sie eingeben, geht beim Schließen der Seite verloren. Schließen Sie sie und öffnen Sie die Anwendung über die Adresse des Vereins, oder laden Sie vor dem Schließen eine Sicherung herunter (Einstellungen → Übertragung).",
@@ -1119,6 +1161,13 @@
   "fr": "Mâle",
   "it": "Maschio"
  },
+ "Αρχηγός ομάδας": {
+  "de": "Mannschaftsführer",
+  "en": "Team captain",
+  "es": "Jefe de equipo",
+  "fr": "Chef d'équipe",
+  "it": "Capitano di squadra"
+ },
  "Ατομικός": {
   "de": "Einzeln",
   "en": "Solo",
@@ -1174,6 +1223,13 @@
   "es": "Clasificados",
   "fr": "Classés",
   "it": "Classificati"
+ },
+ "Βαθμολογημένοι για να καταταγεί ομάδα": {
+  "de": "Gewertete Hunde, damit eine Mannschaft gewertet wird",
+  "en": "Dogs classified for a team to be placed",
+  "es": "Perros clasificados para que un equipo sea clasificado",
+  "fr": "Chiens classés pour qu'une équipe soit classée",
+  "it": "Cani classificati perché una squadra sia classificata"
  },
  "Βασικοί βαθμοί ανά βαθμολογία/τίτλο. Πολλαπλασιάζονται με τον συντελεστή του αγώνα (×2 ζεύγη, ×3 ή ×4 σε άγριο θήραμα για ΕΚ/ΠΚ).": {
   "de": "Grundpunkte je Bewertung/Titel. Sie werden mit dem Koeffizienten der Prüfung multipliziert (×2 im Paar, ×3 oder ×4 auf Wildwild für Jagdsuche / Praktische Jagd).",
@@ -1322,6 +1378,13 @@
   "fr": "Non noté.",
   "it": "Non valutato."
  },
+ "Δεν είναι Κύπελλο": {
+  "de": "Kein Cup",
+  "en": "Not a Cup",
+  "es": "No es una Copa",
+  "fr": "Pas une Coupe",
+  "it": "Non è una Coppa"
+ },
  "Δεν ζητήθηκε": {
   "de": "Nicht verlangt",
   "en": "Not asked",
@@ -1455,6 +1518,13 @@
   "fr": "Supprimer TOUTES les données ? C'est irréversible.",
   "it": "Cancellare TUTTI i dati? Non è reversibile."
  },
+ "Διαγραφή ομάδας": {
+  "de": "Mannschaft löschen",
+  "en": "Delete team",
+  "es": "Eliminar el equipo",
+  "fr": "Supprimer l'équipe",
+  "it": "Elimina la squadra"
+ },
  "Διαγραφή σκύλου από το μητρώο;": {
   "de": "Den Hund aus dem Register löschen?",
   "en": "Delete the dog from the register?",
@@ -1482,6 +1552,27 @@
   "es": "Borrar todo",
   "fr": "Tout supprimer",
   "it": "Elimina tutto"
+ },
+ "Διαλέξτε κύπελλο και οι αριθμοί συμπληρώνονται από τον κανονισμό του· μπορείτε να τους αλλάξετε. Τότε ο αγώνας αποκτά καρτέλα «Ομάδες», η κλήρωση δεν βάζει δύο σκύλους της ίδιας ομάδας στο ίδιο ζεύγος, και η Βαθμολογία βγάζει και κατάταξη ανά χώρα.": {
+  "de": "Wählen Sie einen Cup und die Zahlen werden aus seinem Reglement übernommen; Sie können sie ändern. Die Prüfung erhält dann einen Reiter „Mannschaften“, die Auslosung setzt nie zwei Hunde derselben Mannschaft in ein Paar, und die Bewertung erstellt auch eine Wertung nach Ländern.",
+  "en": "Choose a cup and the numbers are filled in from its regulation; you can change them. The trial then gains a “Teams” tab, the draw never puts two dogs of the same team in one brace, and Scoring also produces a classification per country.",
+  "es": "Elija una copa y los números se rellenan desde su reglamento; puede cambiarlos. La prueba gana entonces una pestaña «Equipos», el sorteo nunca pone dos perros del mismo equipo en la misma pareja, y la Calificación produce también una clasificación por país.",
+  "fr": "Choisissez une coupe et les nombres sont repris de son règlement ; vous pouvez les modifier. L'épreuve gagne alors un onglet « Équipes », le tirage ne met jamais deux chiens de la même équipe dans un couple, et la Notation produit aussi un classement par pays.",
+  "it": "Scegliete una coppa e i numeri vengono presi dal suo regolamento; potete cambiarli. La prova acquista allora una scheda «Squadre», il sorteggio non mette mai due cani della stessa squadra nella stessa coppia, e la Valutazione produce anche una classifica per paese."
+ },
+ "Διαλέξτε χώρα": {
+  "de": "Wählen Sie ein Land",
+  "en": "Choose a country",
+  "es": "Elija un país",
+  "fr": "Choisissez un pays",
+  "it": "Scegliete un paese"
+ },
+ "Διαλέξτε χώρα πιο πάνω και πατήστε «+ Ομάδα». Μετά βάλτε μέσα τις συμμετοχές της.": {
+  "de": "Wählen Sie oben ein Land und drücken Sie „+ Mannschaft“. Setzen Sie dann ihre Meldungen hinein.",
+  "en": "Choose a country above and press “+ Team”. Then put its entries in.",
+  "es": "Elija un país arriba y pulse «+ Equipo». Después meta dentro sus inscripciones.",
+  "fr": "Choisissez un pays ci-dessus et appuyez sur « + Équipe ». Mettez-y ensuite ses engagements.",
+  "it": "Scegliete un paese qui sopra e premete «+ Squadra». Poi metteteci dentro le sue iscrizioni."
  },
  "Διαχείριση Αγώνων · σαρώστε για εγκατάσταση": {
   "de": "Prüfungsverwaltung · zum Installieren scannen",
@@ -1581,6 +1672,13 @@
   "fr": "Type d'épreuve",
   "it": "Tipo di prova"
  },
+ "Εαρινό Κύπελλο Ευρώπης (ηπειρωτικοί δείκτες)": {
+  "de": "Frühjahrs-Europacup (kontinentale Vorstehhunde)",
+  "en": "Spring European Cup (Continental pointers)",
+  "es": "Copa de Europa de primavera (perros de muestra continentales)",
+  "fr": "Coupe d'Europe de printemps (chiens d'arrêt continentaux)",
+  "it": "Coppa Europa di primavera (cani da ferma continentali)"
+ },
  "Εγκατάσταση": {
   "de": "Installation",
   "en": "Install",
@@ -1594,6 +1692,13 @@
   "es": "Instalar en el teléfono",
   "fr": "Installer sur le téléphone",
   "it": "Installa sul telefono"
+ },
+ "Εθνικές ομάδες": {
+  "de": "Nationalmannschaften",
+  "en": "National teams",
+  "es": "Equipos nacionales",
+  "fr": "Équipes nationales",
+  "it": "Squadre nazionali"
  },
  "Εθνική ομάδα": {
   "de": "Nationalmannschaft",
@@ -2015,6 +2120,13 @@
   "fr": "« Envoyer sur le téléphone » envoie l'épreuve avec les couples tirés — chargez-la sur le téléphone (Réglages → Charger un fichier → Fusionner) et continuez de là sur le terrain. Les SMS partent de l'appareil qui détient l'ordre de passage.",
   "it": "«Invia al telefono» manda la prova insieme alle coppie sorteggiate — caricatela sul telefono (Impostazioni → Carica file → Unisci) e proseguite da lì sul terreno. Gli SMS partono dal dispositivo che tiene l'ordine di turno."
  },
+ "Η «Συμπλήρωση από το μητρώο» βάζει κάθε αδιάθετο δηλωμένο σκύλο στην ομάδα της χώρας που γράφει η καρτέλα του. Δεν πειράζει όσους έχουν ήδη τοποθετηθεί.": {
+  "de": "„Aus dem Register auffüllen“ setzt jeden gemeldeten, noch nicht zugeteilten Hund in die Mannschaft des Landes, das auf seiner Karte steht. Bereits zugeteilte bleiben unberührt.",
+  "en": "“Fill in from the register” puts every unplaced entered dog into the team of the country on its own record. It does not touch the ones already placed.",
+  "es": "«Completar desde el registro» pone cada perro inscrito sin asignar en el equipo del país que figura en su ficha. No toca a los ya asignados.",
+  "fr": "« Compléter depuis le registre » place chaque chien engagé non affecté dans l'équipe du pays inscrit sur sa fiche. Cela ne touche pas ceux déjà placés.",
+  "it": "«Completa dal registro» mette ogni cane iscritto non ancora assegnato nella squadra del paese scritto nella sua scheda. Non tocca quelli già assegnati."
+ },
  "Η Μεγάλη Έρευνα γίνεται πάντα σε ζεύγη (Άρ. 4). Για CACIT χρειάζονται 3 κριτές ανά τερέν (Άρ. 48).": {
   "de": "Die Grande Quête wird stets im Paar gelaufen (Art. 4). Für das CACIT sind drei Richter je Gelände erforderlich (Art. 48).",
   "en": "Grande Quête is always run in braces (Art. 4). For CACIT three judges per terrain are required (Art. 48).",
@@ -2231,6 +2343,13 @@
   "es": "El orden es orientativo — Artículo 16. El mensaje se abre en la aplicación de mensajes del teléfono; el envío se hace desde ahí.",
   "fr": "L'ordre est indicatif — Article 16. Le message s'ouvre dans l'application de messagerie du téléphone ; l'envoi se fait de là.",
   "it": "L'ordine è indicativo — Articolo 16. Il messaggio si apre nell'app dei messaggi del telefono; l'invio avviene da lì."
+ },
+ "Η συγκρότηση δεν στέκει ακόμη:": {
+  "de": "Die Aufstellung hält noch nicht:",
+  "en": "The line-up does not hold yet:",
+  "es": "La composición todavía no se sostiene:",
+  "fr": "La composition ne tient pas encore :",
+  "it": "La composizione non regge ancora:"
  },
  "Η συγχώνευση κρατά ό,τι υπάρχει και προσθέτει· η αντικατάσταση σβήνει τη συσκευή. Στο τερέν θέλετε σχεδόν πάντα συγχώνευση.": {
   "de": "Zusammenführen behält das Vorhandene und ergänzt; Ersetzen löscht das Gerät. Im Gelände wollen Sie fast immer Zusammenführen.",
@@ -2575,6 +2694,13 @@
   "fr": "Aucun faux arrêt.",
   "it": "Nessuna ferma a vuoto."
  },
+ "Καμία ομάδα ακόμη": {
+  "de": "Noch keine Mannschaft",
+  "en": "No team yet",
+  "es": "Todavía ningún equipo",
+  "fr": "Aucune équipe pour l'instant",
+  "it": "Nessuna squadra per ora"
+ },
  "Καμία συμμετοχή ακόμη. Ανοίξτε τις «Δηλώσεις ημέρας» και σημειώστε ποιοι τρέχουν, ή εισαγάγετε αρχείο Excel.": {
   "de": "Noch keine Meldungen. Öffnen Sie „Meldungen des Tages“ und haken Sie ab, wer läuft, oder importieren Sie eine Excel-Datei.",
   "en": "No entries yet. Open \"Entries for the day\" and tick who runs, or import an Excel file.",
@@ -2596,6 +2722,13 @@
   "fr": "Aucun engagement enregistré pour ce chien.",
   "it": "Nessuna iscrizione registrata finora per questo cane."
  },
+ "Καμία συμμετοχή σε αυτή την ομάδα ακόμη.": {
+  "de": "Noch keine Meldung in dieser Mannschaft.",
+  "en": "No entry in this team yet.",
+  "es": "Todavía ninguna inscripción en este equipo.",
+  "fr": "Aucun engagement dans cette équipe pour l'instant.",
+  "it": "Nessuna iscrizione in questa squadra per ora."
+ },
  "Κανένα αποτέλεσμα με αυτά τα φίλτρα": {
   "de": "Kein Ergebnis mit diesen Filtern",
   "en": "No result with these filters",
@@ -2616,6 +2749,13 @@
   "es": "Todavía no hay pruebas",
   "fr": "Pas encore d'épreuve",
   "it": "Ancora nessuna prova"
+ },
+ "Κανένας αδιάθετος σκύλος με χώρα στο μητρώο": {
+  "de": "Kein nicht zugeteilter Hund hat im Register ein Land",
+  "en": "No unplaced dog has a country in the register",
+  "es": "Ningún perro sin asignar tiene país en el registro",
+  "fr": "Aucun chien non affecté n'a de pays au registre",
+  "it": "Nessun cane non assegnato ha un paese nel registro"
  },
  "Κανένας επιλεγμένος με τηλέφωνο": {
   "de": "Keiner der Ausgewählten hat eine Nummer",
@@ -2862,6 +3002,13 @@
   "fr": "Coupe",
   "it": "Coppa"
  },
+ "Κύπελλο Ευρώπης Μεγάλης Έρευνας (αγγλικοί δείκτες)": {
+  "de": "Europacup Grande Quête (britische Vorstehhunde)",
+  "en": "European Cup Grande Quête (British pointing dogs)",
+  "es": "Copa de Europa Grande Quête (perros de muestra británicos)",
+  "fr": "Coupe d'Europe Grande Quête (chiens d'arrêt britanniques)",
+  "it": "Coppa d'Europa Grande Quête (cani da ferma inglesi)"
+ },
  "Κύπελλο: οι πόντοι είναι αυτοί του πίνακα, χωρίς συντελεστή. Ο κανονισμός δίνει απόλυτη κλίμακα και πάνω της μετριέται το κατώφλι της ομάδας.": {
   "de": "Ein Cup: die Punkte sind die der Tabelle, ohne Koeffizient. Das Reglement gibt eine absolute Skala vor, und auf ihr wird die Schwelle der Mannschaft gemessen.",
   "en": "A Cup: the points are the ones in the table, with no coefficient. The regulation gives an absolute scale and the team threshold is measured on it.",
@@ -3100,6 +3247,13 @@
   "fr": "Registre",
   "it": "Registro"
  },
+ "Μια ομάδα δεν έχει χώρα.": {
+  "de": "Eine Mannschaft hat kein Land.",
+  "en": "One team has no country.",
+  "es": "Un equipo no tiene país.",
+  "fr": "Une équipe n'a pas de pays.",
+  "it": "Una squadra non ha paese."
+ },
  "Μια ομάδα κατατάσσεται με δύο τουλάχιστον σκύλους βαθμολογημένους και": {
   "de": "Eine Mannschaft wird gewertet mit mindestens zwei gewerteten Hunden und",
   "en": "A team is placed with at least two dogs classified and",
@@ -3169,6 +3323,13 @@
   "es": "Nuevo sorteo — anula el actual",
   "fr": "Nouveau tirage — annule celui en cours",
   "it": "Nuovo sorteggio — annulla quello attuale"
+ },
+ "Νέα ομάδα": {
+  "de": "Neue Mannschaft",
+  "en": "New team",
+  "es": "Nuevo equipo",
+  "fr": "Nouvelle équipe",
+  "it": "Nuova squadra"
  },
  "Νέα συμμετοχή": {
   "de": "Neue Meldung",
@@ -3338,6 +3499,13 @@
   "fr": "Le nombre de chiens est impair. Choisissez un chien pour compléter le dernier couple. Le supplémentaire court pour que le parcours soit complet ; il n'entre pas dans le tirage, ne compte pas dans le minimum de couples et n'est pas noté.",
   "it": "Il numero dei cani è dispari. Scegliete un cane per completare l'ultima coppia. Il supplementare corre perché il turno sia completo; non entra nel sorteggio, non conta per il minimo di coppie e non viene valutato."
  },
+ "Ο αρχηγός δηλώνεται από την ομοσπονδία της χώρας και είναι αυτός που αλλάζει σκύλο με αναπληρωματικό (F.C.I. ACO VIII.5.6, IX.15). Στο CDE-GQ δεν προβλέπεται· αφήστε το κενό.": {
+  "de": "Der Mannschaftsführer wird vom Verband seines Landes benannt und ist derjenige, der einen Hund gegen den Ersatzhund tauscht (F.C.I. ACO VIII.5.6, IX.15). Die CDE-GQ sieht keinen vor; lassen Sie das Feld leer.",
+  "en": "The captain is appointed by the country's federation and is the one who swaps a dog for a substitute (F.C.I. ACO VIII.5.6, IX.15). CDE-GQ does not provide for one; leave it empty.",
+  "es": "El jefe de equipo lo nombra la federación de su país y es quien cambia un perro por el suplente (F.C.I. ACO VIII.5.6, IX.15). La CDE-GQ no lo prevé; déjelo vacío.",
+  "fr": "Le chef d'équipe est désigné par la fédération de son pays et c'est lui qui remplace un chien par un remplaçant (F.C.I. ACO VIII.5.6, IX.15). La CDE-GQ n'en prévoit pas ; laissez vide.",
+  "it": "Il capitano è nominato dalla federazione del suo paese ed è lui a sostituire un cane con la riserva (F.C.I. ACO VIII.5.6, IX.15). La CDE-GQ non lo prevede; lasciate vuoto."
+ },
  "Ο γερμανικός όρος στο ACO II.7 στέκει ως «beim erneuten Aufrufen»· δεν υπάρχει μονολεκτικό ουσιαστικό στα κείμενα που έχουμε.": {
   "de": "Der deutsche Begriff steht in ACO II.7 als „beim erneuten Aufrufen“; ein einwortiges Substantiv gibt es in den vorliegenden Texten nicht.",
   "en": "The German term stands in ACO II.7 as \"beim erneuten Aufrufen\"; there is no single-word noun in the texts we hold.",
@@ -3351,6 +3519,13 @@
   "es": "El propietario del perro, cuando no es el propio conductor — que es lo habitual. Se pone un nombre a secas: no lleva teléfono ni recibe mensajes, porque los SMS del orden van al conductor.",
   "fr": "Le propriétaire du chien, lorsqu'il n'est pas le conducteur lui-même — ce qui est le cas courant. On met un simple nom : il ne prend pas de téléphone et ne reçoit pas de messages, car les SMS de l'ordre de passage vont au conducteur.",
   "it": "Il proprietario del cane, quando non è lui stesso il conduttore — che è il caso abituale. Va messo un semplice nome: non prende telefono e non riceve messaggi, perché gli SMS dell'ordine vanno al conduttore."
+ },
+ "Ο κανονισμός αυτού του Κυπέλλου δεν το επιτρέπει.": {
+  "de": "Das Reglement dieses Cups lässt das nicht zu.",
+  "en": "This Cup's regulation does not allow it.",
+  "es": "El reglamento de esta Copa no lo permite.",
+  "fr": "Le règlement de cette Coupe ne l'autorise pas.",
+  "it": "Il regolamento di questa Coppa non lo consente."
  },
  "Ο κεντρικός κριτής και οι κριτές 1 και 2 ορίζονται στην κάρτα του τερέν.": {
   "de": "Obmann sowie Richter 1 und 2 werden auf der Karte des Geländes festgelegt.",
@@ -3492,6 +3667,13 @@
   "fr": "Chiennes en chaleurs en dernier",
   "it": "Femmine in calore per ultime"
  },
+ "Οι εθνικές ομάδες υπάρχουν μόνο σε ομαδικό αγώνα. Ανοίξτε την Επεξεργασία του αγώνα και επιλέξτε κύπελλο.": {
+  "de": "Nationalmannschaften gibt es nur in einer Mannschaftsprüfung. Öffnen Sie Bearbeiten bei der Prüfung und wählen Sie einen Cup.",
+  "en": "National teams exist only in a team event. Open Edit on the trial and choose a cup.",
+  "es": "Los equipos nacionales sólo existen en una prueba por equipos. Abra Editar en la prueba y elija una copa.",
+  "fr": "Les équipes nationales n'existent que dans une épreuve par équipes. Ouvrez Modifier sur l'épreuve et choisissez une coupe.",
+  "it": "Le squadre nazionali esistono solo in una prova a squadre. Aprite Modifica sulla prova e scegliete una coppa."
+ },
  "Οι κανονισμοί δεν συμφωνούν: το SC art. 3b δέχεται θηλυκές σε οίστρο στο τέλος του γύρου και μόνο μεταξύ τους· το ACO I.6 τις αποκλείει εντελώς. Δεν είναι θέμα ορολογίας — είναι δύο διαφορετικοί κανόνες, βρετανικός και ηπειρωτικός.": {
   "de": "Die Ordnungen widersprechen sich: SC Art. 3b lässt läufige Hündinnen am Ende des Durchgangs und nur untereinander zu; ACO I.6 schließt sie ganz aus. Das ist keine Frage der Terminologie — es sind zwei verschiedene Regeln, eine britische und eine kontinentale.",
   "en": "The regulations disagree: SC art. 3b accepts bitches in season at the end of the round and only among themselves; ACO I.6 excludes them altogether. This is not a matter of vocabulary — they are two different rules, British and Continental.",
@@ -3505,6 +3687,13 @@
   "es": "Las pruebas terminadas quedan en el registro y cuentan en las Estadísticas. Se abren con normalidad para leerlas e imprimirlas.",
   "fr": "Les épreuves terminées restent au registre et comptent dans les Statistiques. Elles s'ouvrent normalement pour la lecture et l'impression.",
   "it": "Le prove concluse restano nel registro e contano nelle Statistiche. Si aprono normalmente per la lettura e la stampa."
+ },
+ "Οι ομάδες στέκουν στον κανονισμό.": {
+  "de": "Die Mannschaften entsprechen dem Reglement.",
+  "en": "The teams hold to the regulation.",
+  "es": "Los equipos se ajustan al reglamento.",
+  "fr": "Les équipes sont conformes au règlement.",
+  "it": "Le squadre sono conformi al regolamento."
  },
  "Οι σημειώσεις αποθηκεύτηκαν": {
   "de": "Die Notizen sind gespeichert",
@@ -3554,6 +3743,20 @@
   "es": "Terminada",
   "fr": "Terminée",
   "it": "Conclusa"
+ },
+ "Ομάδα": {
+  "de": "Mannschaft",
+  "en": "Team",
+  "es": "Equipo",
+  "fr": "Équipe",
+  "it": "Squadra"
+ },
+ "Ομάδες": {
+  "de": "Mannschaften",
+  "en": "Teams",
+  "es": "Equipos",
+  "fr": "Équipes",
+  "it": "Squadre"
  },
  "Ομαδικός αγώνας, αλλά κανένας σκύλος δεν έχει εθνική ομάδα στο μητρώο. Συμπληρώστε το πεδίο «Εθνική ομάδα» στην καρτέλα κάθε σκύλου.": {
   "de": "Eine Mannschaftsprüfung, aber kein Hund hat im Register eine Nationalmannschaft. Füllen Sie das Feld „Nationalmannschaft“ bei jedem Hund aus.",
@@ -3673,6 +3876,13 @@
   "es": "Tabla de la temporada",
   "fr": "Tableau de la saison",
   "it": "Tabella della stagione"
+ },
+ "Παγκόσμιο Πρακτικού Κυνηγίου": {
+  "de": "Weltmeisterschaft der praktischen Jagd",
+  "en": "World Championship of Practical Hunting",
+  "es": "Campeonato del mundo de caza práctica",
+  "fr": "Championnat du monde de chasse pratique",
+  "it": "Campionato del mondo di caccia pratica"
  },
  "Πατήστε το κουμπί Κοινή χρήση, κάτω στη μέση.": {
   "de": "Drücken Sie die Schaltfläche Teilen, unten in der Mitte.",
@@ -3813,6 +4023,13 @@
   "es": "Añadir una rellamada",
   "fr": "Ajouter un rappel",
   "it": "Aggiungi un richiamo"
+ },
+ "Προσθήκη σκύλου": {
+  "de": "Hund hinzufügen",
+  "en": "Add a dog",
+  "es": "Añadir un perro",
+  "fr": "Ajouter un chien",
+  "it": "Aggiungi un cane"
  },
  "Προσθήκη συμπληρωματικού": {
   "de": "Ergänzungshund hinzufügen",
@@ -4073,6 +4290,20 @@
   "fr": "Chiens",
   "it": "Cani"
  },
+ "Σκύλοι ανά ομάδα, το πολύ": {
+  "de": "Hunde je Mannschaft, höchstens",
+  "en": "Dogs per team, at most",
+  "es": "Perros por equipo, como máximo",
+  "fr": "Chiens par équipe, au plus",
+  "it": "Cani per squadra, al massimo"
+ },
+ "Σκύλοι ανά ομάδα, τουλάχιστον": {
+  "de": "Hunde je Mannschaft, mindestens",
+  "en": "Dogs per team, at least",
+  "es": "Perros por equipo, al menos",
+  "fr": "Chiens par équipe, au moins",
+  "it": "Cani per squadra, almeno"
+ },
  "Σκύλος": {
   "de": "Hund",
   "en": "Dog",
@@ -4114,6 +4345,13 @@
   "es": "Estrecha",
   "fr": "Étroite",
   "it": "Stretta"
+ },
+ "Στη βάση": {
+  "de": "In die Mannschaft",
+  "en": "To the team",
+  "es": "Al equipo",
+  "fr": "Dans l'équipe",
+  "it": "In squadra"
  },
  "Στην άλλη συσκευή: ανοίξτε την εφαρμογή, Ρυθμίσεις → Φόρτωση αρχείου → Συγχώνευση.": {
   "de": "Auf dem anderen Gerät: Anwendung öffnen, Einstellungen → Datei laden → Zusammenführen.",
@@ -4177,6 +4415,13 @@
   "es": "Inscripciones del conductor",
   "fr": "Engagements du conducteur",
   "it": "Iscrizioni del conduttore"
+ },
+ "Συμπλήρωση από το μητρώο": {
+  "de": "Aus dem Register auffüllen",
+  "en": "Fill in from the register",
+  "es": "Completar desde el registro",
+  "fr": "Compléter depuis le registre",
+  "it": "Completa dal registro"
  },
  "Συμπληρώνεται μόνο όταν ο σκύλος τρέχει ως αθλητής εθνικής ομάδας. Δεν είναι η χώρα εκτροφής ούτε του κυναγωγού: είναι η ομάδα που εκπροσωπεί στον αγώνα. Αφήστε το «—» για τους υπόλοιπους.": {
   "de": "Nur auszufüllen, wenn der Hund als Athlet einer Nationalmannschaft läuft. Es ist weder das Zuchtland noch das des Führers: es ist die Mannschaft, die er auf der Prüfung vertritt. Für alle anderen bei „—“ belassen.",
@@ -4605,6 +4850,13 @@
   "fr": "Un tirage a déjà eu lieu pour cette journée. Un nouveau tirage l'annule.",
   "it": "Per questa giornata è già stato fatto il sorteggio. Un nuovo sorteggio lo annulla."
  },
+ "Υπάρχει ήδη ομάδα για": {
+  "de": "Es gibt schon eine Mannschaft für",
+  "en": "There is already a team for",
+  "es": "Ya hay un equipo para",
+  "fr": "Il y a déjà une équipe pour",
+  "it": "C'è già una squadra per"
+ },
  "Υπάρχει νέα έκδοση. Επαναφόρτωση τώρα;": {
   "de": "Es gibt eine neue Version. Jetzt neu laden?",
   "en": "There is a new version. Reload now?",
@@ -4906,6 +5158,13 @@
   "fr": "fait",
   "it": "fatto"
  },
+ "ένας κυναγωγός, μία χώρα": {
+  "de": "ein Führer, ein Land",
+  "en": "one handler, one country",
+  "es": "un conductor, un país",
+  "fr": "un conducteur, un pays",
+  "it": "un conduttore, un paese"
+ },
  "έχει": {
   "de": "hat",
   "en": "has",
@@ -4954,6 +5213,34 @@
   "es": "sin asignar",
   "fr": "non attribué",
   "it": "non assegnato"
+ },
+ "αναπληρωματικοί": {
+  "de": "Ersatzhunde",
+  "en": "substitutes",
+  "es": "suplentes",
+  "fr": "remplaçants",
+  "it": "riserve"
+ },
+ "αναπληρωματικοί:": {
+  "de": "Ersatzhunde:",
+  "en": "substitutes:",
+  "es": "suplentes:",
+  "fr": "remplaçants :",
+  "it": "riserve:"
+ },
+ "αναπληρωματικοί· ο κανονισμός επιτρέπει ως": {
+  "de": "Ersatzhunde; das Reglement erlaubt bis zu",
+  "en": "substitutes; the regulation allows up to",
+  "es": "suplentes; el reglamento permite hasta",
+  "fr": "remplaçants ; le règlement en permet jusqu'à",
+  "it": "riserve; il regolamento ne permette fino a"
+ },
+ "αναπληρωματικός": {
+  "de": "Ersatzhund",
+  "en": "substitute",
+  "es": "suplente",
+  "fr": "remplaçant",
+  "it": "riserva"
  },
  "αντεστραμμένα": {
   "de": "vertauschten",
@@ -5032,6 +5319,13 @@
   "fr": "chiens notés,",
   "it": "cani valutati,"
  },
+ "βαθμολογημένους και": {
+  "de": "gewertete und",
+  "en": "classified and",
+  "es": "clasificados y",
+  "fr": "classés et",
+  "it": "classificati e"
+ },
  "για να πάει ένα ζεύγος πάνω ή κάτω μέσα στο τερέν του, ή ένα": {
   "de": "um ein Paar innerhalb seines Geländes nach oben oder unten zu setzen, oder ein",
   "en": "to move a brace up or down within its terrain, or a",
@@ -5088,12 +5382,33 @@
   "fr": "droite/gauche par rapport au jury",
   "it": "destra/sinistra rispetto alla giuria"
  },
+ "δηλωμένοι σκύλοι δεν είναι σε καμία ομάδα:": {
+  "de": "gemeldete Hunde sind in keiner Mannschaft:",
+  "en": "entered dogs are in no team:",
+  "es": "perros inscritos no están en ningún equipo:",
+  "fr": "chiens engagés ne sont dans aucune équipe :",
+  "it": "cani iscritti non sono in nessuna squadra:"
+ },
+ "δηλωμένος σκύλος δεν είναι σε καμία ομάδα:": {
+  "de": "gemeldeter Hund ist in keiner Mannschaft:",
+  "en": "entered dog is in no team:",
+  "es": "perro inscrito no está en ningún equipo:",
+  "fr": "chien engagé n'est dans aucune équipe :",
+  "it": "cane iscritto non è in nessuna squadra:"
+ },
  "διαδρομές": {
   "de": "Gänge",
   "en": "runs",
   "es": "turnos",
   "fr": "parcours",
   "it": "turni"
+ },
+ "είναι σε δύο ομάδες.": {
+  "de": "ist in zwei Mannschaften.",
+  "en": "is in two teams.",
+  "es": "está en dos equipos.",
+  "fr": "est dans deux équipes.",
+  "it": "è in due squadre."
  },
  "είναι στη μπάρα πάνω δεξιά, δίπλα στα Στατιστικά, και φαίνονται σε κάθε οθόνη. Εδώ μένουν μόνο τα δύο ειδικά.": {
   "de": "stehen in der Leiste oben rechts, neben der Statistik, und erscheinen auf jedem Bildschirm. Hier bleiben nur die beiden Sonderfälle.",
@@ -5249,6 +5564,13 @@
   "fr": "aucun",
   "it": "nessuno"
  },
+ "κατατάσσεται με": {
+  "de": "gewertet mit",
+  "en": "placed with",
+  "es": "clasificada con",
+  "fr": "classée avec",
+  "it": "classificata con"
+ },
  "κεντρικός κριτής": {
   "de": "Obmann",
   "en": "head judge",
@@ -5361,6 +5683,20 @@
   "fr": "messages seront marqués comme envoyés, sans l'être. Continuer ?",
   "it": "messaggi verranno segnati come inviati, senza essere inviati. Continuare?"
  },
+ "μπόνους": {
+  "de": "Bonus",
+  "en": "bonus",
+  "es": "bonificación",
+  "fr": "bonus",
+  "it": "bonus"
+ },
+ "μπόνους για": {
+  "de": "Bonus für",
+  "en": "bonus for",
+  "es": "bonificación por",
+  "fr": "bonus pour",
+  "it": "bonus per"
+ },
  "νέοι,": {
   "de": "neu,",
   "en": "new,",
@@ -5381,6 +5717,20 @@
   "es": "el juez tiene un perro propio (Artículo 49):",
   "fr": "le juge a son propre chien (Article 49) :",
   "it": "il giudice ha un proprio cane (Articolo 49):"
+ },
+ "ο κυναγωγός μπορεί να τρέχει για πολλές χώρες": {
+  "de": "ein Führer darf für mehrere Länder starten",
+  "en": "a handler may run for more than one country",
+  "es": "un conductor puede correr para varios países",
+  "fr": "un conducteur peut courir pour plusieurs pays",
+  "it": "un conduttore può correre per più paesi"
+ },
+ "ονοματεπώνυμο": {
+  "de": "Vor- und Nachname",
+  "en": "full name",
+  "es": "nombre y apellidos",
+  "fr": "nom et prénom",
+  "it": "nome e cognome"
  },
  "π.χ.": {
   "de": "z. B.",
@@ -5480,6 +5830,13 @@
   "fr": "points. Elle s'ouvre normalement pour la lecture, l'impression et l'export.",
   "it": "punti. Si apre normalmente per lettura, stampa ed esportazione."
  },
+ "πόντους": {
+  "de": "Punkte",
+  "en": "points",
+  "es": "puntos",
+  "fr": "points",
+  "it": "punti"
+ },
  "πόντους (F.C.I. CDE-GQ · ACO VIII.11.4). Όσες δεν τους έχουν μένουν εκτός κατάταξης.": {
   "de": "Punkte (F.C.I. CDE-GQ · ACO VIII.11.4). Wer sie nicht hat, bleibt außerhalb der Wertung.",
   "en": "points (F.C.I. CDE-GQ · ACO VIII.11.4). Those without them stay out of the classification.",
@@ -5529,6 +5886,20 @@
   "fr": "chiens ont une qualification.",
   "it": "cani hanno una qualifica."
  },
+ "σκύλοι ανά χώρα": {
+  "de": "Hunde je Land",
+  "en": "dogs per country",
+  "es": "perros por país",
+  "fr": "chiens par pays",
+  "it": "cani per paese"
+ },
+ "σκύλοι βαθμολογημένοι· έχει": {
+  "de": "gewertete Hunde; sie hat",
+  "en": "dogs classified; it has",
+  "es": "perros clasificados; tiene",
+  "fr": "chiens classés ; elle en a",
+  "it": "cani classificati; ne ha"
+ },
  "σκύλοι δίνουν": {
   "de": "Hunde ergeben",
   "en": "dogs give",
@@ -5542,6 +5913,20 @@
   "es": "perros no tenían raza y se registraron como «",
   "fr": "chiens n'avaient pas de race et ont été enregistrés comme « ",
   "it": "cani non avevano razza e sono stati registrati come «"
+ },
+ "σκύλοι θα μείνουν δηλωμένοι, χωρίς ομάδα.": {
+  "de": "Hunde bleiben gemeldet, ohne Mannschaft.",
+  "en": "dogs will stay entered, with no team.",
+  "es": "perros seguirán inscritos, sin equipo.",
+  "fr": "chiens resteront engagés, sans équipe.",
+  "it": "cani resteranno iscritti, senza squadra."
+ },
+ "σκύλοι μπήκαν σε ομάδες": {
+  "de": "Hunde kamen in Mannschaften",
+  "en": "dogs went into teams",
+  "es": "perros entraron en equipos",
+  "fr": "chiens sont entrés dans des équipes",
+  "it": "cani sono entrati nelle squadre"
  },
  "σκύλοι σε": {
   "de": "Hunde auf",
@@ -5557,12 +5942,33 @@
   "fr": "chiens,",
   "it": "cani,"
  },
+ "σκύλοι· ο κανονισμός επιτρέπει ως": {
+  "de": "Hunde; das Reglement erlaubt bis zu",
+  "en": "dogs; the regulation allows up to",
+  "es": "perros; el reglamento permite hasta",
+  "fr": "chiens ; le règlement en permet jusqu'à",
+  "it": "cani; il regolamento ne permette fino a"
+ },
+ "σκύλοι· ο κανονισμός θέλει τουλάχιστον": {
+  "de": "Hunde; das Reglement verlangt mindestens",
+  "en": "dogs; the regulation wants at least",
+  "es": "perros; el reglamento exige al menos",
+  "fr": "chiens ; le règlement en demande au moins",
+  "it": "cani; il regolamento ne vuole almeno"
+ },
  "σκύλος": {
   "de": "Hund",
   "en": "dog",
   "es": "perro",
   "fr": "chien",
   "it": "cane"
+ },
+ "σκύλος μπήκε σε ομάδα": {
+  "de": "Hund kam in eine Mannschaft",
+  "en": "dog went into a team",
+  "es": "perro entró en un equipo",
+  "fr": "chien est entré dans une équipe",
+  "it": "cane è entrato in una squadra"
  },
  "σκύλου μεγάλης αξίας — προστίθεται νέα διαδρομή στο τέλος του τερέν με δικές της σημειώσεις. Σε μονό αριθμό σκύλων μπορεί να προστεθεί": {
   "de": "eines Hundes von hohem Wert — am Ende des Geländes wird ein neuer Gang mit eigenen Notizen angefügt. Bei ungerader Hundezahl kann ein",
@@ -5718,6 +6124,34 @@
   "fr": "stockage local",
   "it": "archivio locale"
  },
+ "τρέχει για": {
+  "de": "startet für",
+  "en": "runs for",
+  "es": "corre para",
+  "fr": "court pour",
+  "it": "corre per"
+ },
+ "φυλές (ACO VIII.11.2-3)": {
+  "de": "Rassen (ACO VIII.11.2-3)",
+  "en": "breeds (ACO VIII.11.2-3)",
+  "es": "razas (ACO VIII.11.2-3)",
+  "fr": "races (ACO VIII.11.2-3)",
+  "it": "razze (ACO VIII.11.2-3)"
+ },
+ "φυλές στη βάση": {
+  "de": "Rassen in der Mannschaft",
+  "en": "breeds in the team",
+  "es": "razas en el equipo",
+  "fr": "races dans l'équipe",
+  "it": "razze in squadra"
+ },
+ "φυλή στη βάση": {
+  "de": "Rasse in der Mannschaft",
+  "en": "breed in the team",
+  "es": "raza en el equipo",
+  "fr": "race dans l'équipe",
+  "it": "razza in squadra"
+ },
  "χωρίς αναγνωρίσιμη φυλή καταχωρούνται ως": {
   "de": "ohne erkennbare Rasse werden erfasst als",
   "en": "with no recognisable breed are recorded as",
@@ -5738,6 +6172,41 @@
   "es": "sin conductor",
   "fr": "sans conducteur",
   "it": "senza conduttore"
+ },
+ "χωρίς μπόνους· χρειάζονται 3 ή 4 διαφορετικές": {
+  "de": "kein Bonus; 3 oder 4 verschiedene sind nötig",
+  "en": "no bonus; 3 or 4 different are needed",
+  "es": "sin bonificación; hacen falta 3 o 4 distintas",
+  "fr": "pas de bonus ; il en faut 3 ou 4 différentes",
+  "it": "nessun bonus; ne servono 3 o 4 diverse"
+ },
+ "χωρίς ομάδα:": {
+  "de": "ohne Mannschaft:",
+  "en": "with no team:",
+  "es": "sin equipo:",
+  "fr": "sans équipe :",
+  "it": "senza squadra:"
+ },
+ "χωρίς χώρα": {
+  "de": "ohne Land",
+  "en": "without a country",
+  "es": "sin país",
+  "fr": "sans pays",
+  "it": "senza paese"
+ },
+ "χώρα": {
+  "de": "Land",
+  "en": "country",
+  "es": "país",
+  "fr": "pays",
+  "it": "paese"
+ },
+ "χώρες": {
+  "de": "Länder",
+  "en": "countries",
+  "es": "países",
+  "fr": "pays",
+  "it": "paesi"
  },
  "όλοι": {
   "de": "alle",
@@ -5773,6 +6242,13 @@
   "es": "a las",
   "fr": "à",
   "it": "ore"
+ },
+ "— διαλέξτε —": {
+  "de": "— wählen —",
+  "en": "— choose —",
+  "es": "— elija —",
+  "fr": "— choisir —",
+  "it": "— scegliete —"
  },
  "— επανάκληση, ζεύγος": {
   "de": "— Recall, Paar",
@@ -5837,6 +6313,13 @@
   "fr": "— sans conducteur —",
   "it": "— senza conduttore —"
  },
+ "— χωρίς χώρα —": {
+  "de": "— ohne Land —",
+  "en": "— no country —",
+  "es": "— sin país —",
+  "fr": "— sans pays —",
+  "it": "— senza paese —"
+ },
  "‹ Μητρώο": {
   "de": "‹ Register",
   "en": "‹ Register",
@@ -5857,6 +6340,13 @@
   "es": "↑ Cargar, o arrastre el archivo sobre la página.",
   "fr": "↑ Charger, ou faites glisser le fichier sur la page.",
   "it": "↑ Carica, oppure trascinate il file sulla pagina."
+ },
+ "→ Αναπληρωματικός": {
+  "de": "→ Ersatzhund",
+  "en": "→ Substitute",
+  "es": "→ Suplente",
+  "fr": "→ Remplaçant",
+  "it": "→ Riserva"
  },
  "↓ Λήψη": {
   "de": "↓ Sichern",
