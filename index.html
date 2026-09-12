@@ -1081,6 +1081,11 @@ const CLUB_EN = "Cyprus Pointer Setter Club";
 const clubName = () =>
   ((typeof DB !== "undefined" && DB && DB.settings && DB.settings.lang) || "el") === "el"
     ? CLUB_EL : CLUB_EN;
+/* Τα τυπωμένα φύλλα γράφουν το όνομα κεφαλαία. Το toUpperCase() κρατά τους
+   τόνους («ΚΥΠΡΙΑΚΌΣ»), που δεν είναι ελληνική γραφή — άρα η κεφαλαία μορφή
+   γράφεται ολόκληρη, δεν παράγεται. */
+const CLUB_EL_CAPS = "ΚΥΠΡΙΑΚΟΣ ΟΜΙΛΟΣ ΑΓΓΛΙΚΩΝ ΔΕΙΚΤΩΝ";
+const clubCaps = () => clubName() === CLUB_EL ? CLUB_EL_CAPS : CLUB_EN.toUpperCase();
 const STR = { en: {
   /* πλοήγηση */
   "Αγώνες":"Trials", "Μητρώο":"Register", "Στατιστικά":"Statistics",
@@ -1149,8 +1154,6 @@ const STR = { en: {
   "Π.Φ.Π. (CQN)":"CQN", "ΑΝΕΠΑΡΚΗΣ":"INSUFFICIENT", "ΑΠΟΚΛΕΙΣΜΟΣ":"ELIMINATED",
   "Γλώσσα":
     "Language",
-  "Η γλώσσα αλλάζει μόνο ό,τι βλέπετε. Στη βάση όλα μένουν ελληνικά — η κατάσταση, η βαθμολογία, η μορφή του αγώνα — ώστε ένα αντίγραφο από αγγλικό κινητό να συγχωνεύεται κανονικά σε ελληνικό υπολογιστή και ο πίνακας πόντων να βρίσκει το κλειδί του.":
-    "The language changes what you see and nothing else. Everything is stored in Greek — status, grading, trial format — so that a backup made on an English phone merges into a Greek laptop and the points table still finds its key.",
   "σκύλος":
     "dog",
   "Δημιουργία συμμετοχών σε αγώνα":
@@ -1303,6 +1306,7 @@ const UI_STR = {
   "ΑΡΘΡΟ 49": "ARTICLE 49",
   "ΑΤΟΜΙΚΟΣ": "SOLO",
   "Αγγλικές φυλές": "British breeds",
+  "Αγώνας": "Trial",
   "Αγώνας:": "Trial:",
   "Αγώνες": "Trials",
   "Αδύναμη": "Weak",
@@ -1323,6 +1327,7 @@ const UI_STR = {
   "Αναζήτηση σκύλου ή κυναγωγού": "Search dog or handler",
   "Αναζήτηση όρου σε οποιαδήποτε γλώσσα": "Search a term in any language",
   "Αναπληρωματικοί": "Substitutes",
+  "Αναπληρωματικοί, το πολύ": "Substitutes, at most",
   "Ανοίξατε το αρχείο απευθείας και ο περιηγητής δεν επιτρέπει αποθήκευση. Ό,τι καταχωρήσετε θα χαθεί μόλις κλείσετε τη σελίδα. Κλείστε το και ανοίξτε την εφαρμογή από τη διεύθυνση του ομίλου, ή κατεβάστε αντίγραφο (Ρυθμίσεις → Μεταφορά) πριν κλείσετε.": "You opened the file directly and the browser does not allow saving. Anything you enter will be lost as soon as you close the page. Close it and open the app from the club's address, or download a backup (Settings → Transfer) before you close.",
   "Ανοίξτε τη διεύθυνση στο Chrome.": "Open the address in Chrome.",
   "Ανοίξτε τη διεύθυνση στο Safari.": "Open the address in Safari.",
@@ -1354,11 +1359,14 @@ const UI_STR = {
   "Απρίλιος": "April",
   "Από υπολογιστή δεν στέλνονται SMS.": "SMS cannot be sent from a computer.",
   "Αρ. Κ.Ο.Κ.": "Stud book no.",
+  "Αρ. βιβλιαρίου": "Studbook no.",
   "Αρ. βιβλιαρίου εργασίας": "Working book no.",
   "Αρ. μέλους": "Member no.",
+  "Αριστερά": "Left",
   "Αριστερά της επιτροπής (2ος)": "Left of the jury (2nd)",
   "Αρσενικό": "Male",
   "Αρσενικός": "Male",
+  "Αρχηγός": "Captain",
   "Αρχηγός ομάδας": "Team captain",
   "Ατομική κατάταξη": "Individual classification",
   "Ατομικός": "Solo",
@@ -1368,10 +1376,12 @@ const UI_STR = {
   "Αφαίρεση συμπληρωματικού": "Remove supplementary",
   "Αύγουστος": "August",
   "Αύξηση": "Increase",
+  "ΒΑΣΗ": "MAIN",
   "Βαθμολογία": "Scoring",
   "Βαθμολογημένοι": "Classified",
   "Βαθμολογημένοι για να καταταγεί ομάδα": "Dogs classified for a team to be placed",
   "Βασικοί βαθμοί ανά βαθμολογία/τίτλο. Πολλαπλασιάζονται με τον συντελεστή του αγώνα (×2 ζεύγη, ×3 ή ×4 σε άγριο θήραμα για ΕΚ/ΠΚ).": "Base points per qualification/title. They are multiplied by the trial's coefficient (×2 braces, ×3 or ×4 on wild game for Hunting Research / Practical Hunting).",
+  "Βασικοί πόντοι": "Base points",
   "Βιβλίο γενεαλογίας χώρας": "Studbook of country",
   "Για ομάδες WhatsApp ή Viber, την επιτροπή ή τον πίνακα ανακοινώσεων. Στέλνει τη σειρά σε απλό κείμενο, όχι αρχείο.": "For WhatsApp or Viber groups, the committee or the notice board. It sends the order as plain text, not a file.",
   "Για τίτλο ο κανονισμός ζητά και τις δύο (ACO IX.33).": "For a title the regulation requires both (ACO IX.33).",
@@ -1404,6 +1414,7 @@ const UI_STR = {
   "Δεν υπάρχει εγκατεστημένος service worker σε αυτή τη συσκευή.": "No service worker is installed on this device.",
   "Δεν υπάρχει σύνδεσμος για κοινή χρήση και ο περιηγητής δεν αποθηκεύει τίποτε. Γράψτε τη διεύθυνση του ομίλου παρακάτω για να φτιαχτεί ο κωδικός QR.": "There is no link to share and the browser stores nothing. Write the club's address below so the QR code can be made.",
   "Δεν υπάρχει τηλέφωνο για ": "There is no phone number for ",
+  "Δεξιά": "Right",
   "Δεξιά της επιτροπής (1ος)": "Right of the jury (1st)",
   "Δεύτερη διαδρομή του": "Second run for",
   "Δεύτερη διαδρομή,": "Second run,",
@@ -1509,7 +1520,7 @@ const UI_STR = {
   "Η αλλαγή καταγράφηκε": "The change is recorded",
   "Η ανατομία του πόντου": "The anatomy of the point",
   "Η αντιγραφή δεν επιτράπηκε": "Copying was not allowed",
-  "Η γλώσσα αλλάζει μόνο ό,τι βλέπετε. Στη βάση όλα μένουν ελληνικά — η κατάσταση, η βαθμολογία, η μορφή του αγώνα — ώστε ένα αντίγραφο από αγγλικό κινητό να συγχωνεύεται κανονικά σε ελληνικό υπολογιστή και ο πίνακας πόντων να βρίσκει το κλειδί του.": "The language changes what you see and nothing else. Everything is stored in Greek — status, grading, trial format — so that a backup made on an English phone merges into a Greek laptop and the points table still finds its key.",
+  "Η γλώσσα αλλάζει την οθόνη και τις εξαγωγές — το βιβλίο, το Word, το CSV και τα τυπωμένα φύλλα. Στη βάση όλα μένουν ελληνικά — η κατάσταση, η βαθμολογία, η μορφή του αγώνα — ώστε ένα αντίγραφο από αγγλικό κινητό να συγχωνεύεται κανονικά σε ελληνικό υπολογιστή και ο πίνακας πόντων να βρίσκει το κλειδί του.": "The language changes the screen and the exports — the workbook, the Word file, the CSV and the printed sheets. Everything is stored in Greek — status, grading, trial format — so that a backup made on an English phone merges into a Greek laptop and the points table still finds its key.",
   "Η γραμμή επικεφαλίδων εντοπίστηκε αυτόματα. Ελέγξτε κάθε στήλη πριν την εισαγωγή· είναι η μόνη ευκαιρία να πιαστεί λάθος στήλη.": "The header row was found automatically. Check every column before importing; it is the only chance to catch a wrong column.",
   "Η διαδρομή": "The run",
   "Η διαδρομή επεκτάθηκε σε ": "The run was extended to ",
@@ -1533,6 +1544,7 @@ const UI_STR = {
   "Η σειρά είναι ενδεικτική (Άρθρο 16). Να είστε στη διάθεση των κριτών.": "The running order is indicative (Article 16). Please be at the judges' disposal.",
   "Η σειρά είναι ενδεικτική — Άρθρο 16.": "The order is indicative — Article 16.",
   "Η σειρά είναι ενδεικτική — Άρθρο 16. Το μήνυμα ανοίγει στην εφαρμογή μηνυμάτων του τηλεφώνου· η αποστολή γίνεται από εκεί.": "The order is indicative — Article 16. The message opens in the phone's messaging app; sending happens from there.",
+  "Η συγκρότηση δεν στέκει ακόμη": "The composition does not hold yet",
   "Η συγκρότηση δεν στέκει ακόμη:": "The line-up does not hold yet:",
   "Η συγχώνευση κρατά ό,τι υπάρχει και προσθέτει· η αντικατάσταση σβήνει τη συσκευή. Στο τερέν θέλετε σχεδόν πάντα συγχώνευση.": "Merging keeps what is there and adds; replacing wipes the device. In the field you almost always want merge.",
   "Η σφραγίδα εξαγωγής αφορά μόνο εισαγόμενο σκύλο και το CDE-GQ τη θέλει τουλάχιστον εξάμηνη. Για σκύλο γεννημένο στη χώρα του, αφήστε την κενή.": "The export stamp concerns an imported dog only, and CDE-GQ wants it at least six months old. For a dog born in its own country, leave it empty.",
@@ -1546,6 +1558,7 @@ const UI_STR = {
   "Ημ. σφραγίδας εξαγωγής": "Date of the export stamp",
   "Ημέρα": "Day",
   "Ημέρες": "Days",
+  "Ημερομηνία": "Date",
   "Ημερομηνία έναρξης": "Start date",
   "Ηπειρωτικές φυλές": "Continental breeds",
   "Ηπειρωτικές — F.C.I. Τμήμα 1": "Continental — F.C.I. Section 1",
@@ -1608,6 +1621,7 @@ const UI_STR = {
   "Κατάσταση": "Status",
   "Κατάταξη ανά χώρα": "Classification per country",
   "Κατακλείδα": "Closing line",
+  "Κατατάσσεται": "Ranked",
   "Καταχωρήστε τον πρώτο του σκύλο.": "Record his first dog.",
   "Κατόπιν εντολής": "On command",
   "Κεντρικός κριτής": "Head judge",
@@ -1619,6 +1633,7 @@ const UI_STR = {
   "Κλασικός": "Classic",
   "Κλείσιμο": "Close",
   "Κλείστηκε": "Closed",
+  "Κλειδί": "Key",
   "Κοινή χρήση": "Share",
   "Κοινή χρήση συνδέσμου": "Share the link",
   "Κριτές": "Judges",
@@ -1627,6 +1642,11 @@ const UI_STR = {
   "Κριτής με δικό του σκύλο σε αυτό το τερέν (Άρθρο 49):": "A judge with a dog of his own on this terrain (Article 49):",
   "Κυναγωγοί": "Handlers",
   "Κυναγωγός": "Handler",
+  "Κυναγωγός Α": "Handler L",
+  "Κυναγωγός Δ": "Handler R",
+  "Κυναγωγός αριστερά": "Handler on the left",
+  "Κυναγωγός δεξιά": "Handler on the right",
+  "Κωδικός": "Code",
   "Κωδικός QR για τη διεύθυνση της εφαρμογής": "QR code for the app's address",
   "Κωδικός κλήρωσης": "Draw seed",
   "Κύπελλο": "Cup",
@@ -1672,10 +1692,13 @@ const UI_STR = {
   "Μπήκε δίπλα στον ": "Placed beside ",
   "Μπεκάτσα": "Woodcock",
   "Μπόνους": "Bonus",
+  "Μπόνους για 3 διαφορετικές φυλές": "Bonus for 3 different breeds",
+  "Μπόνους για 4 διαφορετικές φυλές": "Bonus for 4 different breeds",
   "Μόνο για διεθνείς ομαδικούς αγώνες. Ο κανονισμός ζητά ιθαγένεια ή δωδεκάμηνη διαμονή του ιδιοκτήτη στη χώρα που εκπροσωπεί ο σκύλος, και εγγραφή του σκύλου στο βιβλίο γενεαλογίας της ίδιας χώρας (ACO VIII.5.3, IX.13 · CDE-GQ). Αφήστε τα κενά αν η λέσχη δεν διοργανώνει Κύπελλο — δεν ελέγχονται πουθενά αλλού.": "For international team events only. The regulation requires the owner's nationality or twelve months' residence in the country the dog represents, and the dog's entry in that same country's studbook (ACO VIII.5.3, IX.13 · CDE-GQ). Leave them empty if the club does not host a Cup — they are checked nowhere else.",
   "Μόνο κριτές": "Judges only",
   "Μόνο κυναγωγοί": "Handlers only",
   "Μόνο τα δικά του ζεύγη": "His own braces only",
+  "ΝΑΙ": "YES",
   "Νέα διαδρομή για τον": "A new run for",
   "Νέα κλήρωση": "New draw",
   "Νέα κλήρωση — ακυρώνει την τρέχουσα": "New draw — cancels the present one",
@@ -1708,6 +1731,7 @@ const UI_STR = {
   "Ο γερμανικός όρος στο ACO II.7 στέκει ως «beim erneuten Aufrufen»· δεν υπάρχει μονολεκτικό ουσιαστικό στα κείμενα που έχουμε.": "The German term stands in ACO II.7 as \"beim erneuten Aufrufen\"; there is no single-word noun in the texts we hold.",
   "Ο ιδιοκτήτης του σκύλου, όταν δεν είναι ο ίδιος ο κυναγωγός — που είναι και το συνηθισμένο. Μπαίνει σκέτο όνομα: δεν παίρνει τηλέφωνο και δεν λαμβάνει μηνύματα, γιατί τα SMS της σειράς πάνε στον κυναγωγό.": "The dog's owner, where he is not the handler himself — which is the usual case. A plain name goes in: he takes no phone number and receives no messages, because the running-order SMS go to the handler.",
   "Ο κανονισμός αυτού του Κυπέλλου δεν το επιτρέπει.": "This Cup's regulation does not allow it.",
+  "Ο κανονισμός του Κυπέλλου": "The Cup regulation",
   "Ο κεντρικός κριτής και οι κριτές 1 και 2 ορίζονται στην κάρτα του τερέν.": "The head judge and judges 1 and 2 are set on the terrain's card.",
   "Ο κριτής έχει σημειώσεις στους αγώνες: ": "The judge has notes in these trials: ",
   "Ο κριτής του τερέν έχει δικό του σκύλο εδώ (Άρθρο 49):": "The terrain's judge has a dog of his own here (Article 49):",
@@ -1727,6 +1751,7 @@ const UI_STR = {
   "Ο όρος στέκει στο ίδιο άρθρο του κανονισμού της F.C.I. σε τρεις γλώσσες": "The term stands in the same article of the F.C.I. regulation in three languages",
   "ΟΛΟΚΛΗΡΩΘΗΚΕ": "COMPLETED",
   "ΟΛΟΚΛΗΡΩΜΕΝΟΣ": "COMPLETED",
+  "ΟΧΙ": "NO",
   "Οίστρος τελευταίες": "Bitches in season last",
   "Οι εθνικές ομάδες υπάρχουν μόνο σε ομαδικό αγώνα. Ανοίξτε την Επεξεργασία του αγώνα και επιλέξτε κύπελλο.": "National teams exist only in a team event. Open Edit on the trial and choose a cup.",
   "Οι κανονισμοί δεν συμφωνούν: το SC art. 3b δέχεται θηλυκές σε οίστρο στο τέλος του γύρου και μόνο μεταξύ τους· το ACO I.6 τις αποκλείει εντελώς. Δεν είναι θέμα ορολογίας — είναι δύο διαφορετικοί κανόνες, βρετανικός και ηπειρωτικός.": "The regulations disagree: SC art. 3b accepts bitches in season at the end of the round and only among themselves; ACO I.6 excludes them altogether. This is not a matter of vocabulary — they are two different rules, British and Continental.",
@@ -1740,6 +1765,10 @@ const UI_STR = {
   "Ολοκλήρωση αγώνα": "Close the trial",
   "Ολοκληρωμένος": "Completed",
   "Ομάδα": "Team",
+  "Ομάδα Α": "Team L",
+  "Ομάδα Δ": "Team R",
+  "Ομάδα αριστερά": "Team on the left",
+  "Ομάδα δεξιά": "Team on the right",
   "Ομάδες": "Teams",
   "Ομαδικός αγώνας, αλλά κανένας σκύλος δεν έχει εθνική ομάδα στο μητρώο. Συμπληρώστε το πεδίο «Εθνική ομάδα» στην καρτέλα κάθε σκύλου.": "A team event, but no dog has a national team in the register. Fill in the “National team” field on each dog's record.",
   "Ομαδικός με εθνικές ομάδες": "Team event with national teams",
@@ -1759,6 +1788,8 @@ const UI_STR = {
   "Πίνακας βαθμών": "Points table",
   "Πίνακας σεζόν": "Season table",
   "Παγκόσμιο Πρακτικού Κυνηγίου": "World Championship of Practical Hunting",
+  "Παράμετροι": "Parameters",
+  "Παραπομπή": "Reference",
   "Πατήστε το κουμπί Κοινή χρήση, κάτω στη μέση.": "Press the Share button, bottom centre.",
   "Περιεχόμενο αρχείου": "What is in the file",
   "Περιεχόμενο μηνύματος": "What is in the message",
@@ -1798,6 +1829,7 @@ const UI_STR = {
   "Πόσα τερέν": "How many terrains",
   "Πώς φεύγει": "How it goes out",
   "Ρυθμίσεις": "Settings",
+  "Ρόλος": "Role",
   "ΣΕ ΕΞΕΛΙΞΗ": "IN PROGRESS",
   "ΣΕΙΡΑ ΤΗΣ ΗΜΕΡΑΣ": "RUNNING ORDER OF THE DAY",
   "ΣΥΜΠΛΗΡΩΜΑΤΙΚΟΣ": "SUPPLEMENTARY",
@@ -1813,6 +1845,7 @@ const UI_STR = {
   "Σε παρένθεση, η εθνική ομάδα που εκπροσωπεί ο σκύλος.": "In brackets, the national team the dog represents.",
   "Σε πολλά τηλέφωνα το SMS φτάνει μόνο στον πρώτο παραλήπτη. Ελέγξτε τη λίστα μέσα στην εφαρμογή μηνυμάτων πριν στείλετε.": "On many phones an SMS reaches only the first recipient. Check the list inside the messaging app before you send.",
   "Σεπτέμβριος": "September",
+  "Σημείωση": "Note",
   "Σημειώσεις": "Notes",
   "Σημειώσεις κριτών": "Judges' notes",
   "Σημειώστε ποιοι σκύλοι τρέχουν σήμερα. Κάθε σκύλος μπαίνει με τον κυναγωγό κάτω από τον οποίο βρίσκεται.": "Tick which dogs run today. Each dog is entered with the handler he sits under.",
@@ -1820,6 +1853,8 @@ const UI_STR = {
   "Σκύλοι ανά ομάδα, το πολύ": "Dogs per team, at most",
   "Σκύλοι ανά ομάδα, τουλάχιστον": "Dogs per team, at least",
   "Σκύλος": "Dog",
+  "Σκύλος αριστερά": "Dog on the left",
+  "Σκύλος δεξιά": "Dog on the right",
   "Σκύλος που αγωνίστηκε για μια χώρα δεν εκπροσωπεί άλλη (ACO VIII.5.3).": "A dog that has competed for one country does not represent another (ACO VIII.5.3).",
   "Στέλνει μόνο αυτόν τον αγώνα, με τους σκύλους και τους κυναγωγούς του — μικρό αρχείο που περνά από κάθε εφαρμογή μηνυμάτων. Στην άλλη συσκευή:": "It sends this trial alone, with its dogs and handlers — a small file that goes through any messaging app. On the other device:",
   "Στέρεη": "Firm",
@@ -1832,6 +1867,7 @@ const UI_STR = {
   "Στο κινητό:": "On the phone:",
   "Στο τερέν: στείλτε το στήσιμο στο κινητό και κάντε την κλήρωση εκεί, μπροστά σε όλους. Από το σπίτι: κληρώστε τώρα και στείλτε τη σειρά με SMS στους κυναγωγούς· η σειρά παραμένει ενδεικτική (Άρθρο 16).": "In the field: send the setup to the phone and make the draw there, in front of everyone. From home: draw now and send the order to the handlers by SMS; the order remains indicative (Article 16).",
   "Στον υπολογιστή, πριν τον αγώνα: μητρώο, συμμετοχές, τερέν και κριτές. Μετά πατήστε": "On the computer, before the trial: register, entries, terrains and judges. Then press",
+  "Συγκρότηση": "Team composition",
   "Συγχώνευση": "Merge",
   "Συγχώνευση ή αντικατάσταση;": "Merge or replace?",
   "Συμμετοχές": "Entries",
@@ -1840,12 +1876,14 @@ const UI_STR = {
   "Συμπληρώνεται μόνο όταν ο σκύλος τρέχει ως αθλητής εθνικής ομάδας. Δεν είναι η χώρα εκτροφής ούτε του κυναγωγού: είναι η ομάδα που εκπροσωπεί στον αγώνα. Αφήστε το «—» για τους υπόλοιπους.": "Filled in only when the dog runs as an athlete of a national team. It is neither the country of breeding nor the handler's: it is the team he represents at the trial. Leave it at \"—\" for everyone else.",
   "Συνέχεια;": "Continue?",
   "Συνδεδεμένο": "Online",
+  "Συντελεστής": "Coefficient",
   "Σφάλμα Άρθρου 33 καταγεγραμμένο:": "Article 33 fault recorded:",
   "Σφάλματα αποκλεισμού": "Eliminating faults",
   "Σφάλματα αποκλεισμού (Άρθρο 33):": "Eliminating faults (Article 33):",
   "Σφάλματα αποκλεισμού:": "Eliminating faults:",
   "Σωστό": "Correct",
   "Σύμπτυξη ζεύγους": "Collapse brace",
+  "Σύνολο": "Total",
   "Σύρετε το": "Drag the",
   "Σύρετε, ή ↑ ↓, για να αλλάξετε τη σειρά του ζεύγους": "Drag, or ↑ ↓, to change the brace's place in the order",
   "ΤΑ ΖΕΥΓΗ ΣΑΣ": "YOUR BRACES",
@@ -1913,6 +1951,7 @@ const UI_STR = {
   "Φέρμα / ποντάρισμα": "Pointing / commanded approach",
   "Φεβρουάριος": "February",
   "Φραγκολίνα": "Francolin",
+  "Φυλές": "Breeds",
   "Φυλή": "Breed",
   "Φυλή (μόνο για Derby)": "Breed (Derby only)",
   "Φυλή:": "Breed:",
@@ -2091,6 +2130,7 @@ const UI_STR = {
   "στο βιβλίο γενεαλογίας την ημέρα του αγώνα· χρειάζονται": "in the studbook on the day of the trial; what is needed is",
   "στο ιστορικό": "in the history",
   "στον πίνακα ·": "on the board ·",
+  "στον πυροβολισμό": "at the shot",
   "συμμετοχές": "entries",
   "συμμετοχή": "entry",
   "συμπληρωματικός": "supplementary",
@@ -2110,6 +2150,7 @@ const UI_STR = {
   "φυλές (ACO VIII.11.2-3)": "breeds (ACO VIII.11.2-3)",
   "φυλές στη βάση": "breeds in the team",
   "φυλή στη βάση": "breed in the team",
+  "χειροκίνητη αλλαγή": "manual change",
   "χωρίς αναγνωρίσιμη φυλή καταχωρούνται ως": "with no recognisable breed are recorded as",
   "χωρίς βαθμολογία": "with no qualification",
   "χωρίς ημερομηνία εγγραφής στο βιβλίο· ο κανονισμός ζητά": "with no studbook entry date; the regulation requires",
@@ -2252,6 +2293,7 @@ const UI_STR = {
   "ΑΡΘΡΟ 49": "ARTICLE 49",
   "ΑΤΟΜΙΚΟΣ": "INDIVIDUEL",
   "Αγγλικές φυλές": "Races britanniques",
+  "Αγώνας": "Épreuve",
   "Αγώνας:": "Épreuve :",
   "Αγώνες": "Épreuves",
   "Αδύναμη": "Faible",
@@ -2272,6 +2314,7 @@ const UI_STR = {
   "Αναζήτηση σκύλου ή κυναγωγού": "Chercher un chien ou un conducteur",
   "Αναζήτηση όρου σε οποιαδήποτε γλώσσα": "Chercher un terme dans n'importe quelle langue",
   "Αναπληρωματικοί": "Remplaçants",
+  "Αναπληρωματικοί, το πολύ": "Remplaçants, au maximum",
   "Ανοίξατε το αρχείο απευθείας και ο περιηγητής δεν επιτρέπει αποθήκευση. Ό,τι καταχωρήσετε θα χαθεί μόλις κλείσετε τη σελίδα. Κλείστε το και ανοίξτε την εφαρμογή από τη διεύθυνση του ομίλου, ή κατεβάστε αντίγραφο (Ρυθμίσεις → Μεταφορά) πριν κλείσετε.": "Vous avez ouvert le fichier directement et le navigateur n'autorise pas l'enregistrement. Tout ce que vous saisirez sera perdu dès la fermeture de la page. Fermez-la et ouvrez l'application depuis l'adresse du club, ou téléchargez une sauvegarde (Réglages → Transfert) avant de fermer.",
   "Ανοίξτε τη διεύθυνση στο Chrome.": "Ouvrez l'adresse dans Chrome.",
   "Ανοίξτε τη διεύθυνση στο Safari.": "Ouvrez l'adresse dans Safari.",
@@ -2303,11 +2346,14 @@ const UI_STR = {
   "Απρίλιος": "Avril",
   "Από υπολογιστή δεν στέλνονται SMS.": "On n'envoie pas de SMS depuis un ordinateur.",
   "Αρ. Κ.Ο.Κ.": "N° au livre des origines",
+  "Αρ. βιβλιαρίου": "N° livre des origines",
   "Αρ. βιβλιαρίου εργασίας": "N° du carnet de travail",
   "Αρ. μέλους": "N° de membre",
+  "Αριστερά": "Gauche",
   "Αριστερά της επιτροπής (2ος)": "À gauche du jury (2e)",
   "Αρσενικό": "Mâle",
   "Αρσενικός": "Mâle",
+  "Αρχηγός": "Capitaine",
   "Αρχηγός ομάδας": "Chef d'équipe",
   "Ατομική κατάταξη": "Classement individuel",
   "Ατομικός": "Individuel",
@@ -2317,10 +2363,12 @@ const UI_STR = {
   "Αφαίρεση συμπληρωματικού": "Retirer le supplémentaire",
   "Αύγουστος": "Août",
   "Αύξηση": "Augmenter",
+  "ΒΑΣΗ": "TITULAIRE",
   "Βαθμολογία": "Notation",
   "Βαθμολογημένοι": "Classés",
   "Βαθμολογημένοι για να καταταγεί ομάδα": "Chiens classés pour qu'une équipe soit classée",
   "Βασικοί βαθμοί ανά βαθμολογία/τίτλο. Πολλαπλασιάζονται με τον συντελεστή του αγώνα (×2 ζεύγη, ×3 ή ×4 σε άγριο θήραμα για ΕΚ/ΠΚ).": "Points de base par qualification/titre. Ils sont multipliés par le coefficient de l'épreuve (×2 en couple, ×3 ou ×4 sur gibier sauvage pour Recherche de chasse / Chasse pratique).",
+  "Βασικοί πόντοι": "Points de base",
   "Βιβλίο γενεαλογίας χώρας": "Livre des origines du pays",
   "Για ομάδες WhatsApp ή Viber, την επιτροπή ή τον πίνακα ανακοινώσεων. Στέλνει τη σειρά σε απλό κείμενο, όχι αρχείο.": "Pour les groupes WhatsApp ou Viber, le comité ou le tableau d'affichage. Envoie l'ordre en texte simple, pas en fichier.",
   "Για τίτλο ο κανονισμός ζητά και τις δύο (ACO IX.33).": "Pour un titre, le règlement exige les deux journées (ACO IX.33).",
@@ -2353,6 +2401,7 @@ const UI_STR = {
   "Δεν υπάρχει εγκατεστημένος service worker σε αυτή τη συσκευή.": "Aucun service worker n'est installé sur cet appareil.",
   "Δεν υπάρχει σύνδεσμος για κοινή χρήση και ο περιηγητής δεν αποθηκεύει τίποτε. Γράψτε τη διεύθυνση του ομίλου παρακάτω για να φτιαχτεί ο κωδικός QR.": "Il n'y a pas de lien à partager et le navigateur ne conserve rien. Écrivez l'adresse du club ci-dessous pour que le QR code soit créé.",
   "Δεν υπάρχει τηλέφωνο για ": "Pas de numéro de téléphone pour ",
+  "Δεξιά": "Droite",
   "Δεξιά της επιτροπής (1ος)": "À droite du jury (1er)",
   "Δεύτερη διαδρομή του": "Deuxième parcours de",
   "Δεύτερη διαδρομή,": "Deuxième parcours,",
@@ -2458,7 +2507,7 @@ const UI_STR = {
   "Η αλλαγή καταγράφηκε": "La modification est consignée",
   "Η ανατομία του πόντου": "L'anatomie du point",
   "Η αντιγραφή δεν επιτράπηκε": "La copie n'a pas été autorisée",
-  "Η γλώσσα αλλάζει μόνο ό,τι βλέπετε. Στη βάση όλα μένουν ελληνικά — η κατάσταση, η βαθμολογία, η μορφή του αγώνα — ώστε ένα αντίγραφο από αγγλικό κινητό να συγχωνεύεται κανονικά σε ελληνικό υπολογιστή και ο πίνακας πόντων να βρίσκει το κλειδί του.": "La langue ne change que ce que vous voyez. Tout est enregistré en grec — état, qualification, forme de l'épreuve — pour qu'une sauvegarde faite sur un téléphone en anglais fusionne sans peine dans un ordinateur en grec et que le barème retrouve sa clé.",
+  "Η γλώσσα αλλάζει την οθόνη και τις εξαγωγές — το βιβλίο, το Word, το CSV και τα τυπωμένα φύλλα. Στη βάση όλα μένουν ελληνικά — η κατάσταση, η βαθμολογία, η μορφή του αγώνα — ώστε ένα αντίγραφο από αγγλικό κινητό να συγχωνεύεται κανονικά σε ελληνικό υπολογιστή και ο πίνακας πόντων να βρίσκει το κλειδί του.": "La langue change l'écran et les exports — le classeur, le fichier Word, le CSV et les feuilles imprimées. Tout est enregistré en grec — état, qualification, forme de l'épreuve — pour qu'une sauvegarde faite sur un téléphone en anglais fusionne sans peine dans un ordinateur en grec et que le barème retrouve sa clé.",
   "Η γραμμή επικεφαλίδων εντοπίστηκε αυτόματα. Ελέγξτε κάθε στήλη πριν την εισαγωγή· είναι η μόνη ευκαιρία να πιαστεί λάθος στήλη.": "La ligne d'en-têtes a été repérée automatiquement. Vérifiez chaque colonne avant l'importation ; c'est la seule occasion de rattraper une mauvaise colonne.",
   "Η διαδρομή": "Le parcours",
   "Η διαδρομή επεκτάθηκε σε ": "Le parcours a été prolongé à ",
@@ -2482,6 +2531,7 @@ const UI_STR = {
   "Η σειρά είναι ενδεικτική (Άρθρο 16). Να είστε στη διάθεση των κριτών.": "L'ordre de passage est indicatif (Article 16). Tenez-vous à la disposition des juges.",
   "Η σειρά είναι ενδεικτική — Άρθρο 16.": "L'ordre est indicatif — Article 16.",
   "Η σειρά είναι ενδεικτική — Άρθρο 16. Το μήνυμα ανοίγει στην εφαρμογή μηνυμάτων του τηλεφώνου· η αποστολή γίνεται από εκεί.": "L'ordre est indicatif — Article 16. Le message s'ouvre dans l'application de messagerie du téléphone ; l'envoi se fait de là.",
+  "Η συγκρότηση δεν στέκει ακόμη": "La composition ne tient pas encore",
   "Η συγκρότηση δεν στέκει ακόμη:": "La composition ne tient pas encore :",
   "Η συγχώνευση κρατά ό,τι υπάρχει και προσθέτει· η αντικατάσταση σβήνει τη συσκευή. Στο τερέν θέλετε σχεδόν πάντα συγχώνευση.": "La fusion garde ce qui existe et ajoute ; le remplacement efface l'appareil. Sur le terrain, c'est presque toujours la fusion qu'il faut.",
   "Η σφραγίδα εξαγωγής αφορά μόνο εισαγόμενο σκύλο και το CDE-GQ τη θέλει τουλάχιστον εξάμηνη. Για σκύλο γεννημένο στη χώρα του, αφήστε την κενή.": "Le tampon d'exportation ne concerne qu'un chien importé, et la CDE-GQ le veut d'au moins six mois. Pour un chien né dans son pays, laissez vide.",
@@ -2495,6 +2545,7 @@ const UI_STR = {
   "Ημ. σφραγίδας εξαγωγής": "Date du tampon d'exportation",
   "Ημέρα": "Journée",
   "Ημέρες": "Journées",
+  "Ημερομηνία": "Date",
   "Ημερομηνία έναρξης": "Date de début",
   "Ηπειρωτικές φυλές": "Races continentales",
   "Ηπειρωτικές — F.C.I. Τμήμα 1": "Continentales — F.C.I. Section 1",
@@ -2557,6 +2608,7 @@ const UI_STR = {
   "Κατάσταση": "État",
   "Κατάταξη ανά χώρα": "Classement par pays",
   "Κατακλείδα": "Formule de fin",
+  "Κατατάσσεται": "Classée",
   "Καταχωρήστε τον πρώτο του σκύλο.": "Enregistrez son premier chien.",
   "Κατόπιν εντολής": "À l'ordre",
   "Κεντρικός κριτής": "Juge principal",
@@ -2568,6 +2620,7 @@ const UI_STR = {
   "Κλασικός": "Classique",
   "Κλείσιμο": "Fermer",
   "Κλείστηκε": "Clôturée",
+  "Κλειδί": "Clé",
   "Κοινή χρήση": "Partager",
   "Κοινή χρήση συνδέσμου": "Partager le lien",
   "Κριτές": "Juges",
@@ -2576,6 +2629,11 @@ const UI_STR = {
   "Κριτής με δικό του σκύλο σε αυτό το τερέν (Άρθρο 49):": "Un juge ayant son propre chien sur ce terrain (Article 49) :",
   "Κυναγωγοί": "Conducteurs",
   "Κυναγωγός": "Conducteur",
+  "Κυναγωγός Α": "Conducteur G",
+  "Κυναγωγός Δ": "Conducteur D",
+  "Κυναγωγός αριστερά": "Conducteur à gauche",
+  "Κυναγωγός δεξιά": "Conducteur à droite",
+  "Κωδικός": "Code",
   "Κωδικός QR για τη διεύθυνση της εφαρμογής": "QR code de l'adresse de l'application",
   "Κωδικός κλήρωσης": "Code du tirage",
   "Κύπελλο": "Coupe",
@@ -2621,10 +2679,13 @@ const UI_STR = {
   "Μπήκε δίπλα στον ": "Placé à côté de ",
   "Μπεκάτσα": "Bécasse",
   "Μπόνους": "Bonus",
+  "Μπόνους για 3 διαφορετικές φυλές": "Bonus pour 3 races différentes",
+  "Μπόνους για 4 διαφορετικές φυλές": "Bonus pour 4 races différentes",
   "Μόνο για διεθνείς ομαδικούς αγώνες. Ο κανονισμός ζητά ιθαγένεια ή δωδεκάμηνη διαμονή του ιδιοκτήτη στη χώρα που εκπροσωπεί ο σκύλος, και εγγραφή του σκύλου στο βιβλίο γενεαλογίας της ίδιας χώρας (ACO VIII.5.3, IX.13 · CDE-GQ). Αφήστε τα κενά αν η λέσχη δεν διοργανώνει Κύπελλο — δεν ελέγχονται πουθενά αλλού.": "Uniquement pour les épreuves internationales par équipes. Le règlement exige la nationalité du propriétaire ou douze mois de résidence dans le pays que le chien représente, et l'inscription du chien au livre des origines de ce même pays (ACO VIII.5.3, IX.13 · CDE-GQ). Laissez vide si le club n'organise pas de Coupe — ces champs ne sont contrôlés nulle part ailleurs.",
   "Μόνο κριτές": "Juges seulement",
   "Μόνο κυναγωγοί": "Conducteurs seulement",
   "Μόνο τα δικά του ζεύγη": "Ses couples seulement",
+  "ΝΑΙ": "OUI",
   "Νέα διαδρομή για τον": "Un nouveau parcours pour",
   "Νέα κλήρωση": "Nouveau tirage",
   "Νέα κλήρωση — ακυρώνει την τρέχουσα": "Nouveau tirage — annule celui en cours",
@@ -2657,6 +2718,7 @@ const UI_STR = {
   "Ο γερμανικός όρος στο ACO II.7 στέκει ως «beim erneuten Aufrufen»· δεν υπάρχει μονολεκτικό ουσιαστικό στα κείμενα που έχουμε.": "Le terme allemand figure dans ACO II.7 sous la forme « beim erneuten Aufrufen » ; il n'existe pas de substantif en un mot dans les textes dont nous disposons.",
   "Ο ιδιοκτήτης του σκύλου, όταν δεν είναι ο ίδιος ο κυναγωγός — που είναι και το συνηθισμένο. Μπαίνει σκέτο όνομα: δεν παίρνει τηλέφωνο και δεν λαμβάνει μηνύματα, γιατί τα SMS της σειράς πάνε στον κυναγωγό.": "Le propriétaire du chien, lorsqu'il n'est pas le conducteur lui-même — ce qui est le cas courant. On met un simple nom : il ne prend pas de téléphone et ne reçoit pas de messages, car les SMS de l'ordre de passage vont au conducteur.",
   "Ο κανονισμός αυτού του Κυπέλλου δεν το επιτρέπει.": "Le règlement de cette Coupe ne l'autorise pas.",
+  "Ο κανονισμός του Κυπέλλου": "Le règlement de la Coupe",
   "Ο κεντρικός κριτής και οι κριτές 1 και 2 ορίζονται στην κάρτα του τερέν.": "Le juge principal et les juges 1 et 2 se définissent sur la fiche du terrain.",
   "Ο κριτής έχει σημειώσεις στους αγώνες: ": "Le juge a des notes dans ces épreuves : ",
   "Ο κριτής του τερέν έχει δικό του σκύλο εδώ (Άρθρο 49):": "Le juge du terrain a son propre chien ici (Article 49) :",
@@ -2676,6 +2738,7 @@ const UI_STR = {
   "Ο όρος στέκει στο ίδιο άρθρο του κανονισμού της F.C.I. σε τρεις γλώσσες": "Le terme figure au même article du règlement F.C.I. dans trois langues",
   "ΟΛΟΚΛΗΡΩΘΗΚΕ": "TERMINÉE",
   "ΟΛΟΚΛΗΡΩΜΕΝΟΣ": "TERMINÉE",
+  "ΟΧΙ": "NON",
   "Οίστρος τελευταίες": "Chiennes en chaleurs en dernier",
   "Οι εθνικές ομάδες υπάρχουν μόνο σε ομαδικό αγώνα. Ανοίξτε την Επεξεργασία του αγώνα και επιλέξτε κύπελλο.": "Les équipes nationales n'existent que dans une épreuve par équipes. Ouvrez Modifier sur l'épreuve et choisissez une coupe.",
   "Οι κανονισμοί δεν συμφωνούν: το SC art. 3b δέχεται θηλυκές σε οίστρο στο τέλος του γύρου και μόνο μεταξύ τους· το ACO I.6 τις αποκλείει εντελώς. Δεν είναι θέμα ορολογίας — είναι δύο διαφορετικοί κανόνες, βρετανικός και ηπειρωτικός.": "Les règlements divergent : SC art. 3b accepte les chiennes en chaleurs en fin de tour et seulement entre elles ; ACO I.6 les exclut totalement. Ce n'est pas une question de terminologie — ce sont deux règles différentes, britannique et continentale.",
@@ -2689,6 +2752,10 @@ const UI_STR = {
   "Ολοκλήρωση αγώνα": "Clôturer l'épreuve",
   "Ολοκληρωμένος": "Terminée",
   "Ομάδα": "Équipe",
+  "Ομάδα Α": "Équipe G",
+  "Ομάδα Δ": "Équipe D",
+  "Ομάδα αριστερά": "Équipe à gauche",
+  "Ομάδα δεξιά": "Équipe à droite",
   "Ομάδες": "Équipes",
   "Ομαδικός αγώνας, αλλά κανένας σκύλος δεν έχει εθνική ομάδα στο μητρώο. Συμπληρώστε το πεδίο «Εθνική ομάδα» στην καρτέλα κάθε σκύλου.": "Épreuve par équipes, mais aucun chien n'a d'équipe nationale au registre. Renseignez le champ « Équipe nationale » sur la fiche de chaque chien.",
   "Ομαδικός με εθνικές ομάδες": "Épreuve par équipes nationales",
@@ -2708,6 +2775,8 @@ const UI_STR = {
   "Πίνακας βαθμών": "Barème de points",
   "Πίνακας σεζόν": "Tableau de la saison",
   "Παγκόσμιο Πρακτικού Κυνηγίου": "Championnat du monde de chasse pratique",
+  "Παράμετροι": "Paramètres",
+  "Παραπομπή": "Référence",
   "Πατήστε το κουμπί Κοινή χρήση, κάτω στη μέση.": "Appuyez sur le bouton Partager, en bas au centre.",
   "Περιεχόμενο αρχείου": "Contenu du fichier",
   "Περιεχόμενο μηνύματος": "Contenu du message",
@@ -2747,6 +2816,7 @@ const UI_STR = {
   "Πόσα τερέν": "Combien de terrains",
   "Πώς φεύγει": "Comment il part",
   "Ρυθμίσεις": "Réglages",
+  "Ρόλος": "Rôle",
   "ΣΕ ΕΞΕΛΙΞΗ": "EN COURS",
   "ΣΕΙΡΑ ΤΗΣ ΗΜΕΡΑΣ": "ORDRE DE LA JOURNÉE",
   "ΣΥΜΠΛΗΡΩΜΑΤΙΚΟΣ": "SUPPLÉMENTAIRE",
@@ -2762,6 +2832,7 @@ const UI_STR = {
   "Σε παρένθεση, η εθνική ομάδα που εκπροσωπεί ο σκύλος.": "Entre parenthèses, l'équipe nationale que le chien représente.",
   "Σε πολλά τηλέφωνα το SMS φτάνει μόνο στον πρώτο παραλήπτη. Ελέγξτε τη λίστα μέσα στην εφαρμογή μηνυμάτων πριν στείλετε.": "Sur beaucoup de téléphones, un SMS n'atteint que le premier destinataire. Vérifiez la liste dans l'application de messagerie avant d'envoyer.",
   "Σεπτέμβριος": "Septembre",
+  "Σημείωση": "Note",
   "Σημειώσεις": "Notes",
   "Σημειώσεις κριτών": "Notes des juges",
   "Σημειώστε ποιοι σκύλοι τρέχουν σήμερα. Κάθε σκύλος μπαίνει με τον κυναγωγό κάτω από τον οποίο βρίσκεται.": "Cochez quels chiens courent aujourd'hui. Chaque chien est engagé avec le conducteur sous lequel il figure.",
@@ -2769,6 +2840,8 @@ const UI_STR = {
   "Σκύλοι ανά ομάδα, το πολύ": "Chiens par équipe, au plus",
   "Σκύλοι ανά ομάδα, τουλάχιστον": "Chiens par équipe, au moins",
   "Σκύλος": "Chien",
+  "Σκύλος αριστερά": "Chien à gauche",
+  "Σκύλος δεξιά": "Chien à droite",
   "Σκύλος που αγωνίστηκε για μια χώρα δεν εκπροσωπεί άλλη (ACO VIII.5.3).": "Un chien ayant concouru pour un pays n'en représente pas un autre (ACO VIII.5.3).",
   "Στέλνει μόνο αυτόν τον αγώνα, με τους σκύλους και τους κυναγωγούς του — μικρό αρχείο που περνά από κάθε εφαρμογή μηνυμάτων. Στην άλλη συσκευή:": "Il n'envoie que cette épreuve, avec ses chiens et ses conducteurs — un petit fichier qui passe par n'importe quelle messagerie. Sur l'autre appareil :",
   "Στέρεη": "Ferme",
@@ -2781,6 +2854,7 @@ const UI_STR = {
   "Στο κινητό:": "Sur le téléphone :",
   "Στο τερέν: στείλτε το στήσιμο στο κινητό και κάντε την κλήρωση εκεί, μπροστά σε όλους. Από το σπίτι: κληρώστε τώρα και στείλτε τη σειρά με SMS στους κυναγωγούς· η σειρά παραμένει ενδεικτική (Άρθρο 16).": "Sur le terrain : envoyez la préparation sur le téléphone et faites le tirage là-bas, devant tout le monde. Depuis la maison : tirez maintenant et envoyez l'ordre aux conducteurs par SMS ; l'ordre reste indicatif (Article 16).",
   "Στον υπολογιστή, πριν τον αγώνα: μητρώο, συμμετοχές, τερέν και κριτές. Μετά πατήστε": "Sur l'ordinateur, avant l'épreuve : registre, engagements, terrains et juges. Puis appuyez sur",
+  "Συγκρότηση": "Composition",
   "Συγχώνευση": "Fusionner",
   "Συγχώνευση ή αντικατάσταση;": "Fusionner ou remplacer ?",
   "Συμμετοχές": "Engagements",
@@ -2789,12 +2863,14 @@ const UI_STR = {
   "Συμπληρώνεται μόνο όταν ο σκύλος τρέχει ως αθλητής εθνικής ομάδας. Δεν είναι η χώρα εκτροφής ούτε του κυναγωγού: είναι η ομάδα που εκπροσωπεί στον αγώνα. Αφήστε το «—» για τους υπόλοιπους.": "À remplir seulement quand le chien court comme athlète d'une équipe nationale. Ce n'est ni le pays d'élevage ni celui du conducteur : c'est l'équipe qu'il représente à l'épreuve. Laissez « — » pour tous les autres.",
   "Συνέχεια;": "Continuer ?",
   "Συνδεδεμένο": "En ligne",
+  "Συντελεστής": "Coefficient",
   "Σφάλμα Άρθρου 33 καταγεγραμμένο:": "Faute de l'Article 33 consignée :",
   "Σφάλματα αποκλεισμού": "Fautes éliminatoires",
   "Σφάλματα αποκλεισμού (Άρθρο 33):": "Fautes éliminatoires (Article 33) :",
   "Σφάλματα αποκλεισμού:": "Fautes éliminatoires :",
   "Σωστό": "Correct",
   "Σύμπτυξη ζεύγους": "Replier le couple",
+  "Σύνολο": "Total",
   "Σύρετε το": "Faites glisser le",
   "Σύρετε, ή ↑ ↓, για να αλλάξετε τη σειρά του ζεύγους": "Faites glisser, ou ↑ ↓, pour changer la place du couple",
   "ΤΑ ΖΕΥΓΗ ΣΑΣ": "VOS COUPLES",
@@ -2862,6 +2938,7 @@ const UI_STR = {
   "Φέρμα / ποντάρισμα": "Arrêt / coulé à l'ordre",
   "Φεβρουάριος": "Février",
   "Φραγκολίνα": "Francolin",
+  "Φυλές": "Races",
   "Φυλή": "Race",
   "Φυλή (μόνο για Derby)": "Race (Derby seulement)",
   "Φυλή:": "Race :",
@@ -3040,6 +3117,7 @@ const UI_STR = {
   "στο βιβλίο γενεαλογίας την ημέρα του αγώνα· χρειάζονται": "au livre des origines le jour de l'épreuve ; il en faut",
   "στο ιστορικό": "dans l'historique",
   "στον πίνακα ·": "au tableau ·",
+  "στον πυροβολισμό": "au coup de feu",
   "συμμετοχές": "engagements",
   "συμμετοχή": "engagement",
   "συμπληρωματικός": "supplémentaire",
@@ -3059,6 +3137,7 @@ const UI_STR = {
   "φυλές (ACO VIII.11.2-3)": "races (ACO VIII.11.2-3)",
   "φυλές στη βάση": "races dans l'équipe",
   "φυλή στη βάση": "race dans l'équipe",
+  "χειροκίνητη αλλαγή": "modification manuelle",
   "χωρίς αναγνωρίσιμη φυλή καταχωρούνται ως": "sans race reconnaissable sont enregistrés comme",
   "χωρίς βαθμολογία": "sans qualification",
   "χωρίς ημερομηνία εγγραφής στο βιβλίο· ο κανονισμός ζητά": "sans date d'inscription au livre ; le règlement en demande",
@@ -3201,6 +3280,7 @@ const UI_STR = {
   "ΑΡΘΡΟ 49": "ARTIKEL 49",
   "ΑΤΟΜΙΚΟΣ": "EINZELN",
   "Αγγλικές φυλές": "Britische Rassen",
+  "Αγώνας": "Prüfung",
   "Αγώνας:": "Prüfung:",
   "Αγώνες": "Prüfungen",
   "Αδύναμη": "Schwach",
@@ -3221,6 +3301,7 @@ const UI_STR = {
   "Αναζήτηση σκύλου ή κυναγωγού": "Hund oder Führer suchen",
   "Αναζήτηση όρου σε οποιαδήποτε γλώσσα": "Einen Begriff in beliebiger Sprache suchen",
   "Αναπληρωματικοί": "Ersatzhunde",
+  "Αναπληρωματικοί, το πολύ": "Ersatzhunde, höchstens",
   "Ανοίξατε το αρχείο απευθείας και ο περιηγητής δεν επιτρέπει αποθήκευση. Ό,τι καταχωρήσετε θα χαθεί μόλις κλείσετε τη σελίδα. Κλείστε το και ανοίξτε την εφαρμογή από τη διεύθυνση του ομίλου, ή κατεβάστε αντίγραφο (Ρυθμίσεις → Μεταφορά) πριν κλείσετε.": "Sie haben die Datei direkt geöffnet, und der Browser lässt kein Speichern zu. Alles, was Sie eingeben, geht beim Schließen der Seite verloren. Schließen Sie sie und öffnen Sie die Anwendung über die Adresse des Vereins, oder laden Sie vor dem Schließen eine Sicherung herunter (Einstellungen → Übertragung).",
   "Ανοίξτε τη διεύθυνση στο Chrome.": "Öffnen Sie die Adresse in Chrome.",
   "Ανοίξτε τη διεύθυνση στο Safari.": "Öffnen Sie die Adresse in Safari.",
@@ -3252,11 +3333,14 @@ const UI_STR = {
   "Απρίλιος": "April",
   "Από υπολογιστή δεν στέλνονται SMS.": "Von einem Rechner aus lassen sich keine SMS senden.",
   "Αρ. Κ.Ο.Κ.": "Zuchtbuchnummer",
+  "Αρ. βιβλιαρίου": "Zuchtbuch-Nr.",
   "Αρ. βιβλιαρίου εργασίας": "Nummer des Leistungsbuchs",
   "Αρ. μέλους": "Mitgliedsnummer",
+  "Αριστερά": "Links",
   "Αριστερά της επιτροπής (2ος)": "Links vom Richterkollegium (2.)",
   "Αρσενικό": "Rüde",
   "Αρσενικός": "Rüde",
+  "Αρχηγός": "Mannschaftsführer",
   "Αρχηγός ομάδας": "Mannschaftsführer",
   "Ατομική κατάταξη": "Einzelwertung",
   "Ατομικός": "Einzeln",
@@ -3266,10 +3350,12 @@ const UI_STR = {
   "Αφαίρεση συμπληρωματικού": "Ergänzungshund entfernen",
   "Αύγουστος": "August",
   "Αύξηση": "Erhöhen",
+  "ΒΑΣΗ": "STAMM",
   "Βαθμολογία": "Bewertung",
   "Βαθμολογημένοι": "Gewertet",
   "Βαθμολογημένοι για να καταταγεί ομάδα": "Gewertete Hunde, damit eine Mannschaft gewertet wird",
   "Βασικοί βαθμοί ανά βαθμολογία/τίτλο. Πολλαπλασιάζονται με τον συντελεστή του αγώνα (×2 ζεύγη, ×3 ή ×4 σε άγριο θήραμα για ΕΚ/ΠΚ).": "Grundpunkte je Bewertung/Titel. Sie werden mit dem Koeffizienten der Prüfung multipliziert (×2 im Paar, ×3 oder ×4 auf Wildwild für Jagdsuche / Praktische Jagd).",
+  "Βασικοί πόντοι": "Grundpunkte",
   "Βιβλίο γενεαλογίας χώρας": "Zuchtbuch des Landes",
   "Για ομάδες WhatsApp ή Viber, την επιτροπή ή τον πίνακα ανακοινώσεων. Στέλνει τη σειρά σε απλό κείμενο, όχι αρχείο.": "Für WhatsApp- oder Viber-Gruppen, den Vorstand oder das schwarze Brett. Sendet die Reihenfolge als reinen Text, nicht als Datei.",
   "Για τίτλο ο κανονισμός ζητά και τις δύο (ACO IX.33).": "Für einen Titel verlangt das Reglement beide Tage (ACO IX.33).",
@@ -3302,6 +3388,7 @@ const UI_STR = {
   "Δεν υπάρχει εγκατεστημένος service worker σε αυτή τη συσκευή.": "Auf diesem Gerät ist kein Service Worker installiert.",
   "Δεν υπάρχει σύνδεσμος για κοινή χρήση και ο περιηγητής δεν αποθηκεύει τίποτε. Γράψτε τη διεύθυνση του ομίλου παρακάτω για να φτιαχτεί ο κωδικός QR.": "Es gibt keinen Link zum Teilen, und der Browser speichert nichts. Schreiben Sie unten die Adresse des Vereins, damit der QR-Code erzeugt wird.",
   "Δεν υπάρχει τηλέφωνο για ": "Keine Telefonnummer für ",
+  "Δεξιά": "Rechts",
   "Δεξιά της επιτροπής (1ος)": "Rechts vom Richterkollegium (1.)",
   "Δεύτερη διαδρομή του": "Zweiter Gang von",
   "Δεύτερη διαδρομή,": "Zweiter Gang,",
@@ -3407,7 +3494,7 @@ const UI_STR = {
   "Η αλλαγή καταγράφηκε": "Die Änderung ist festgehalten",
   "Η ανατομία του πόντου": "Der Aufbau des Punktes",
   "Η αντιγραφή δεν επιτράπηκε": "Das Kopieren wurde nicht erlaubt",
-  "Η γλώσσα αλλάζει μόνο ό,τι βλέπετε. Στη βάση όλα μένουν ελληνικά — η κατάσταση, η βαθμολογία, η μορφή του αγώνα — ώστε ένα αντίγραφο από αγγλικό κινητό να συγχωνεύεται κανονικά σε ελληνικό υπολογιστή και ο πίνακας πόντων να βρίσκει το κλειδί του.": "Die Sprache ändert nur, was Sie sehen. Gespeichert wird alles auf Griechisch — Status, Bewertung, Form der Prüfung — damit eine auf einem englischen Telefon erstellte Sicherung sich in einen griechischen Rechner einfügt und die Punktetabelle ihren Schlüssel wiederfindet.",
+  "Η γλώσσα αλλάζει την οθόνη και τις εξαγωγές — το βιβλίο, το Word, το CSV και τα τυπωμένα φύλλα. Στη βάση όλα μένουν ελληνικά — η κατάσταση, η βαθμολογία, η μορφή του αγώνα — ώστε ένα αντίγραφο από αγγλικό κινητό να συγχωνεύεται κανονικά σε ελληνικό υπολογιστή και ο πίνακας πόντων να βρίσκει το κλειδί του.": "Die Sprache ändert den Bildschirm und die Exporte — die Arbeitsmappe, die Word-Datei, die CSV und die gedruckten Blätter. Gespeichert wird alles auf Griechisch — Status, Bewertung, Form der Prüfung — damit eine auf einem englischen Telefon erstellte Sicherung sich in einen griechischen Rechner einfügt und die Punktetabelle ihren Schlüssel wiederfindet.",
   "Η γραμμή επικεφαλίδων εντοπίστηκε αυτόματα. Ελέγξτε κάθε στήλη πριν την εισαγωγή· είναι η μόνη ευκαιρία να πιαστεί λάθος στήλη.": "Die Kopfzeile wurde automatisch erkannt. Prüfen Sie jede Spalte vor dem Import; es ist die einzige Gelegenheit, eine falsche Spalte zu bemerken.",
   "Η διαδρομή": "Der Gang",
   "Η διαδρομή επεκτάθηκε σε ": "Der Gang wurde verlängert auf ",
@@ -3431,6 +3518,7 @@ const UI_STR = {
   "Η σειρά είναι ενδεικτική (Άρθρο 16). Να είστε στη διάθεση των κριτών.": "Die Reihenfolge ist unverbindlich (Artikel 16). Halten Sie sich den Richtern zur Verfügung.",
   "Η σειρά είναι ενδεικτική — Άρθρο 16.": "Die Reihenfolge ist unverbindlich — Artikel 16.",
   "Η σειρά είναι ενδεικτική — Άρθρο 16. Το μήνυμα ανοίγει στην εφαρμογή μηνυμάτων του τηλεφώνου· η αποστολή γίνεται από εκεί.": "Die Reihenfolge ist unverbindlich — Artikel 16. Die Nachricht öffnet sich in der Nachrichten-App des Telefons; gesendet wird von dort.",
+  "Η συγκρότηση δεν στέκει ακόμη": "Die Aufstellung hält noch nicht",
   "Η συγκρότηση δεν στέκει ακόμη:": "Die Aufstellung hält noch nicht:",
   "Η συγχώνευση κρατά ό,τι υπάρχει και προσθέτει· η αντικατάσταση σβήνει τη συσκευή. Στο τερέν θέλετε σχεδόν πάντα συγχώνευση.": "Zusammenführen behält das Vorhandene und ergänzt; Ersetzen löscht das Gerät. Im Gelände wollen Sie fast immer Zusammenführen.",
   "Η σφραγίδα εξαγωγής αφορά μόνο εισαγόμενο σκύλο και το CDE-GQ τη θέλει τουλάχιστον εξάμηνη. Για σκύλο γεννημένο στη χώρα του, αφήστε την κενή.": "Der Ausfuhrstempel betrifft nur einen importierten Hund, und die CDE-GQ will ihn mindestens sechs Monate alt. Bei einem im eigenen Land geborenen Hund bleibt das Feld leer.",
@@ -3444,6 +3532,7 @@ const UI_STR = {
   "Ημ. σφραγίδας εξαγωγής": "Datum des Ausfuhrstempels",
   "Ημέρα": "Tag",
   "Ημέρες": "Tage",
+  "Ημερομηνία": "Datum",
   "Ημερομηνία έναρξης": "Anfangsdatum",
   "Ηπειρωτικές φυλές": "Kontinentale Rassen",
   "Ηπειρωτικές — F.C.I. Τμήμα 1": "Kontinentale — F.C.I. Sektion 1",
@@ -3506,6 +3595,7 @@ const UI_STR = {
   "Κατάσταση": "Status",
   "Κατάταξη ανά χώρα": "Wertung nach Ländern",
   "Κατακλείδα": "Schlusszeile",
+  "Κατατάσσεται": "Gewertet",
   "Καταχωρήστε τον πρώτο του σκύλο.": "Erfassen Sie seinen ersten Hund.",
   "Κατόπιν εντολής": "Auf Befehl",
   "Κεντρικός κριτής": "Obmann",
@@ -3517,6 +3607,7 @@ const UI_STR = {
   "Κλασικός": "Klassisch",
   "Κλείσιμο": "Schließen",
   "Κλείστηκε": "Abgeschlossen",
+  "Κλειδί": "Schlüssel",
   "Κοινή χρήση": "Teilen",
   "Κοινή χρήση συνδέσμου": "Link teilen",
   "Κριτές": "Richter",
@@ -3525,6 +3616,11 @@ const UI_STR = {
   "Κριτής με δικό του σκύλο σε αυτό το τερέν (Άρθρο 49):": "Ein Richter mit eigenem Hund auf diesem Gelände (Artikel 49):",
   "Κυναγωγοί": "Führer",
   "Κυναγωγός": "Führer",
+  "Κυναγωγός Α": "Führer L",
+  "Κυναγωγός Δ": "Führer R",
+  "Κυναγωγός αριστερά": "Führer links",
+  "Κυναγωγός δεξιά": "Führer rechts",
+  "Κωδικός": "Code",
   "Κωδικός QR για τη διεύθυνση της εφαρμογής": "QR-Code für die Adresse der Anwendung",
   "Κωδικός κλήρωσης": "Auslosungscode",
   "Κύπελλο": "Cup",
@@ -3570,10 +3666,13 @@ const UI_STR = {
   "Μπήκε δίπλα στον ": "Neben ",
   "Μπεκάτσα": "Waldschnepfe",
   "Μπόνους": "Bonus",
+  "Μπόνους για 3 διαφορετικές φυλές": "Bonus für 3 verschiedene Rassen",
+  "Μπόνους για 4 διαφορετικές φυλές": "Bonus für 4 verschiedene Rassen",
   "Μόνο για διεθνείς ομαδικούς αγώνες. Ο κανονισμός ζητά ιθαγένεια ή δωδεκάμηνη διαμονή του ιδιοκτήτη στη χώρα που εκπροσωπεί ο σκύλος, και εγγραφή του σκύλου στο βιβλίο γενεαλογίας της ίδιας χώρας (ACO VIII.5.3, IX.13 · CDE-GQ). Αφήστε τα κενά αν η λέσχη δεν διοργανώνει Κύπελλο — δεν ελέγχονται πουθενά αλλού.": "Nur für internationale Mannschaftsprüfungen. Das Reglement verlangt die Staatsangehörigkeit des Eigentümers oder zwölf Monate Wohnsitz in dem Land, das der Hund vertritt, und die Eintragung des Hundes im Zuchtbuch desselben Landes (ACO VIII.5.3, IX.13 · CDE-GQ). Lassen Sie sie leer, wenn der Verein keinen Cup ausrichtet — sie werden sonst nirgends geprüft.",
   "Μόνο κριτές": "Nur Richter",
   "Μόνο κυναγωγοί": "Nur Führer",
   "Μόνο τα δικά του ζεύγη": "Nur seine eigenen Paare",
+  "ΝΑΙ": "JA",
   "Νέα διαδρομή για τον": "Ein neuer Gang für",
   "Νέα κλήρωση": "Neue Auslosung",
   "Νέα κλήρωση — ακυρώνει την τρέχουσα": "Neue Auslosung — hebt die bestehende auf",
@@ -3606,6 +3705,7 @@ const UI_STR = {
   "Ο γερμανικός όρος στο ACO II.7 στέκει ως «beim erneuten Aufrufen»· δεν υπάρχει μονολεκτικό ουσιαστικό στα κείμενα που έχουμε.": "Der deutsche Begriff steht in ACO II.7 als „beim erneuten Aufrufen“; ein einwortiges Substantiv gibt es in den vorliegenden Texten nicht.",
   "Ο ιδιοκτήτης του σκύλου, όταν δεν είναι ο ίδιος ο κυναγωγός — που είναι και το συνηθισμένο. Μπαίνει σκέτο όνομα: δεν παίρνει τηλέφωνο και δεν λαμβάνει μηνύματα, γιατί τα SMS της σειράς πάνε στον κυναγωγό.": "Der Eigentümer des Hundes, wenn er nicht selbst der Führer ist — was der Normalfall ist. Es kommt ein bloßer Name hinein: er bekommt keine Telefonnummer und keine Nachrichten, denn die SMS zur Startordnung gehen an den Führer.",
   "Ο κανονισμός αυτού του Κυπέλλου δεν το επιτρέπει.": "Das Reglement dieses Cups lässt das nicht zu.",
+  "Ο κανονισμός του Κυπέλλου": "Das Reglement des Pokals",
   "Ο κεντρικός κριτής και οι κριτές 1 και 2 ορίζονται στην κάρτα του τερέν.": "Obmann sowie Richter 1 und 2 werden auf der Karte des Geländes festgelegt.",
   "Ο κριτής έχει σημειώσεις στους αγώνες: ": "Der Richter hat Notizen in diesen Prüfungen: ",
   "Ο κριτής του τερέν έχει δικό του σκύλο εδώ (Άρθρο 49):": "Der Richter des Geländes hat hier einen eigenen Hund (Artikel 49):",
@@ -3625,6 +3725,7 @@ const UI_STR = {
   "Ο όρος στέκει στο ίδιο άρθρο του κανονισμού της F.C.I. σε τρεις γλώσσες": "Der Begriff steht im selben Artikel der F.C.I.-Ordnung in drei Sprachen",
   "ΟΛΟΚΛΗΡΩΘΗΚΕ": "ABGESCHLOSSEN",
   "ΟΛΟΚΛΗΡΩΜΕΝΟΣ": "ABGESCHLOSSEN",
+  "ΟΧΙ": "NEIN",
   "Οίστρος τελευταίες": "Läufige Hündin zuletzt",
   "Οι εθνικές ομάδες υπάρχουν μόνο σε ομαδικό αγώνα. Ανοίξτε την Επεξεργασία του αγώνα και επιλέξτε κύπελλο.": "Nationalmannschaften gibt es nur in einer Mannschaftsprüfung. Öffnen Sie Bearbeiten bei der Prüfung und wählen Sie einen Cup.",
   "Οι κανονισμοί δεν συμφωνούν: το SC art. 3b δέχεται θηλυκές σε οίστρο στο τέλος του γύρου και μόνο μεταξύ τους· το ACO I.6 τις αποκλείει εντελώς. Δεν είναι θέμα ορολογίας — είναι δύο διαφορετικοί κανόνες, βρετανικός και ηπειρωτικός.": "Die Ordnungen widersprechen sich: SC Art. 3b lässt läufige Hündinnen am Ende des Durchgangs und nur untereinander zu; ACO I.6 schließt sie ganz aus. Das ist keine Frage der Terminologie — es sind zwei verschiedene Regeln, eine britische und eine kontinentale.",
@@ -3638,6 +3739,10 @@ const UI_STR = {
   "Ολοκλήρωση αγώνα": "Prüfung abschließen",
   "Ολοκληρωμένος": "Abgeschlossen",
   "Ομάδα": "Mannschaft",
+  "Ομάδα Α": "Mannschaft L",
+  "Ομάδα Δ": "Mannschaft R",
+  "Ομάδα αριστερά": "Mannschaft links",
+  "Ομάδα δεξιά": "Mannschaft rechts",
   "Ομάδες": "Mannschaften",
   "Ομαδικός αγώνας, αλλά κανένας σκύλος δεν έχει εθνική ομάδα στο μητρώο. Συμπληρώστε το πεδίο «Εθνική ομάδα» στην καρτέλα κάθε σκύλου.": "Eine Mannschaftsprüfung, aber kein Hund hat im Register eine Nationalmannschaft. Füllen Sie das Feld „Nationalmannschaft“ bei jedem Hund aus.",
   "Ομαδικός με εθνικές ομάδες": "Mannschaftsprüfung mit Nationalmannschaften",
@@ -3657,6 +3762,8 @@ const UI_STR = {
   "Πίνακας βαθμών": "Punktetabelle",
   "Πίνακας σεζόν": "Saisontabelle",
   "Παγκόσμιο Πρακτικού Κυνηγίου": "Weltmeisterschaft der praktischen Jagd",
+  "Παράμετροι": "Parameter",
+  "Παραπομπή": "Fundstelle",
   "Πατήστε το κουμπί Κοινή χρήση, κάτω στη μέση.": "Drücken Sie die Schaltfläche Teilen, unten in der Mitte.",
   "Περιεχόμενο αρχείου": "Inhalt der Datei",
   "Περιεχόμενο μηνύματος": "Inhalt der Nachricht",
@@ -3696,6 +3803,7 @@ const UI_STR = {
   "Πόσα τερέν": "Wie viele Gelände",
   "Πώς φεύγει": "Wie sie hinausgeht",
   "Ρυθμίσεις": "Einstellungen",
+  "Ρόλος": "Rolle",
   "ΣΕ ΕΞΕΛΙΞΗ": "LAUFEND",
   "ΣΕΙΡΑ ΤΗΣ ΗΜΕΡΑΣ": "REIHENFOLGE DES TAGES",
   "ΣΥΜΠΛΗΡΩΜΑΤΙΚΟΣ": "ERGÄNZUNGSHUND",
@@ -3711,6 +3819,7 @@ const UI_STR = {
   "Σε παρένθεση, η εθνική ομάδα που εκπροσωπεί ο σκύλος.": "In Klammern die Nationalmannschaft, die der Hund vertritt.",
   "Σε πολλά τηλέφωνα το SMS φτάνει μόνο στον πρώτο παραλήπτη. Ελέγξτε τη λίστα μέσα στην εφαρμογή μηνυμάτων πριν στείλετε.": "Auf vielen Telefonen erreicht eine SMS nur den ersten Empfänger. Prüfen Sie die Liste in der Nachrichten-App, bevor Sie senden.",
   "Σεπτέμβριος": "September",
+  "Σημείωση": "Anmerkung",
   "Σημειώσεις": "Notizen",
   "Σημειώσεις κριτών": "Notizen der Richter",
   "Σημειώστε ποιοι σκύλοι τρέχουν σήμερα. Κάθε σκύλος μπαίνει με τον κυναγωγό κάτω από τον οποίο βρίσκεται.": "Haken Sie ab, welche Hunde heute laufen. Jeder Hund wird mit dem Führer gemeldet, unter dem er steht.",
@@ -3718,6 +3827,8 @@ const UI_STR = {
   "Σκύλοι ανά ομάδα, το πολύ": "Hunde je Mannschaft, höchstens",
   "Σκύλοι ανά ομάδα, τουλάχιστον": "Hunde je Mannschaft, mindestens",
   "Σκύλος": "Hund",
+  "Σκύλος αριστερά": "Hund links",
+  "Σκύλος δεξιά": "Hund rechts",
   "Σκύλος που αγωνίστηκε για μια χώρα δεν εκπροσωπεί άλλη (ACO VIII.5.3).": "Ein Hund, der für ein Land gestartet ist, vertritt kein anderes (ACO VIII.5.3).",
   "Στέλνει μόνο αυτόν τον αγώνα, με τους σκύλους και τους κυναγωγούς του — μικρό αρχείο που περνά από κάθε εφαρμογή μηνυμάτων. Στην άλλη συσκευή:": "Sie sendet nur diese Prüfung, mit ihren Hunden und Führern — eine kleine Datei, die durch jede Nachrichten-App geht. Auf dem anderen Gerät:",
   "Στέρεη": "Fest",
@@ -3730,6 +3841,7 @@ const UI_STR = {
   "Στο κινητό:": "Auf dem Telefon:",
   "Στο τερέν: στείλτε το στήσιμο στο κινητό και κάντε την κλήρωση εκεί, μπροστά σε όλους. Από το σπίτι: κληρώστε τώρα και στείλτε τη σειρά με SMS στους κυναγωγούς· η σειρά παραμένει ενδεικτική (Άρθρο 16).": "Im Gelände: schicken Sie den Aufbau aufs Telefon und losen Sie dort, vor allen. Von zu Hause: losen Sie jetzt und schicken Sie die Reihenfolge den Führern per SMS; die Reihenfolge bleibt unverbindlich (Artikel 16).",
   "Στον υπολογιστή, πριν τον αγώνα: μητρώο, συμμετοχές, τερέν και κριτές. Μετά πατήστε": "Am Rechner, vor der Prüfung: Register, Meldungen, Gelände und Richter. Dann drücken Sie",
+  "Συγκρότηση": "Aufstellung",
   "Συγχώνευση": "Zusammenführen",
   "Συγχώνευση ή αντικατάσταση;": "Zusammenführen oder ersetzen?",
   "Συμμετοχές": "Meldungen",
@@ -3738,12 +3850,14 @@ const UI_STR = {
   "Συμπληρώνεται μόνο όταν ο σκύλος τρέχει ως αθλητής εθνικής ομάδας. Δεν είναι η χώρα εκτροφής ούτε του κυναγωγού: είναι η ομάδα που εκπροσωπεί στον αγώνα. Αφήστε το «—» για τους υπόλοιπους.": "Nur auszufüllen, wenn der Hund als Athlet einer Nationalmannschaft läuft. Es ist weder das Zuchtland noch das des Führers: es ist die Mannschaft, die er auf der Prüfung vertritt. Für alle anderen bei „—“ belassen.",
   "Συνέχεια;": "Fortfahren?",
   "Συνδεδεμένο": "Online",
+  "Συντελεστής": "Koeffizient",
   "Σφάλμα Άρθρου 33 καταγεγραμμένο:": "Fehler nach Artikel 33 vermerkt:",
   "Σφάλματα αποκλεισμού": "Ausschließende Fehler",
   "Σφάλματα αποκλεισμού (Άρθρο 33):": "Ausschließende Fehler (Artikel 33):",
   "Σφάλματα αποκλεισμού:": "Ausschließende Fehler:",
   "Σωστό": "Korrekt",
   "Σύμπτυξη ζεύγους": "Paar einklappen",
+  "Σύνολο": "Summe",
   "Σύρετε το": "Ziehen Sie das",
   "Σύρετε, ή ↑ ↓, για να αλλάξετε τη σειρά του ζεύγους": "Ziehen, oder ↑ ↓, um die Stelle des Paares zu ändern",
   "ΤΑ ΖΕΥΓΗ ΣΑΣ": "IHRE PAARE",
@@ -3811,6 +3925,7 @@ const UI_STR = {
   "Φέρμα / ποντάρισμα": "Vorstehen / Nachziehen auf Befehl",
   "Φεβρουάριος": "Februar",
   "Φραγκολίνα": "Frankolin",
+  "Φυλές": "Rassen",
   "Φυλή": "Rasse",
   "Φυλή (μόνο για Derby)": "Rasse (nur Derby)",
   "Φυλή:": "Rasse:",
@@ -3989,6 +4104,7 @@ const UI_STR = {
   "στο βιβλίο γενεαλογίας την ημέρα του αγώνα· χρειάζονται": "im Zuchtbuch am Tag der Prüfung; nötig sind",
   "στο ιστορικό": "in der Historie",
   "στον πίνακα ·": "auf der Tafel ·",
+  "στον πυροβολισμό": "beim Schuss",
   "συμμετοχές": "Meldungen",
   "συμμετοχή": "Meldung",
   "συμπληρωματικός": "Ergänzungshund",
@@ -4008,6 +4124,7 @@ const UI_STR = {
   "φυλές (ACO VIII.11.2-3)": "Rassen (ACO VIII.11.2-3)",
   "φυλές στη βάση": "Rassen in der Mannschaft",
   "φυλή στη βάση": "Rasse in der Mannschaft",
+  "χειροκίνητη αλλαγή": "manuelle Änderung",
   "χωρίς αναγνωρίσιμη φυλή καταχωρούνται ως": "ohne erkennbare Rasse werden erfasst als",
   "χωρίς βαθμολογία": "ohne Bewertung",
   "χωρίς ημερομηνία εγγραφής στο βιβλίο· ο κανονισμός ζητά": "ohne Datum der Zuchtbucheintragung; das Reglement verlangt",
@@ -4150,6 +4267,7 @@ const UI_STR = {
   "ΑΡΘΡΟ 49": "ARTICOLO 49",
   "ΑΤΟΜΙΚΟΣ": "INDIVIDUALE",
   "Αγγλικές φυλές": "Razze britanniche",
+  "Αγώνας": "Prova",
   "Αγώνας:": "Prova:",
   "Αγώνες": "Prove",
   "Αδύναμη": "Debole",
@@ -4170,6 +4288,7 @@ const UI_STR = {
   "Αναζήτηση σκύλου ή κυναγωγού": "Cerca cane o conduttore",
   "Αναζήτηση όρου σε οποιαδήποτε γλώσσα": "Cerca un termine in qualsiasi lingua",
   "Αναπληρωματικοί": "Riserve",
+  "Αναπληρωματικοί, το πολύ": "Riserve, al massimo",
   "Ανοίξατε το αρχείο απευθείας και ο περιηγητής δεν επιτρέπει αποθήκευση. Ό,τι καταχωρήσετε θα χαθεί μόλις κλείσετε τη σελίδα. Κλείστε το και ανοίξτε την εφαρμογή από τη διεύθυνση του ομίλου, ή κατεβάστε αντίγραφο (Ρυθμίσεις → Μεταφορά) πριν κλείσετε.": "Avete aperto il file direttamente e il browser non consente il salvataggio. Tutto ciò che inserite andrà perso appena chiudete la pagina. Chiudetela e aprite l'applicazione dall'indirizzo del club, oppure scaricate una copia (Impostazioni → Trasferimento) prima di chiudere.",
   "Ανοίξτε τη διεύθυνση στο Chrome.": "Aprite l'indirizzo in Chrome.",
   "Ανοίξτε τη διεύθυνση στο Safari.": "Aprite l'indirizzo in Safari.",
@@ -4201,11 +4320,14 @@ const UI_STR = {
   "Απρίλιος": "Aprile",
   "Από υπολογιστή δεν στέλνονται SMS.": "Da un computer non si inviano SMS.",
   "Αρ. Κ.Ο.Κ.": "N. del libro genealogico",
+  "Αρ. βιβλιαρίου": "N. libro origini",
   "Αρ. βιβλιαρίου εργασίας": "N. del libretto di lavoro",
   "Αρ. μέλους": "N. di socio",
+  "Αριστερά": "Sinistra",
   "Αριστερά της επιτροπής (2ος)": "A sinistra della giuria (2°)",
   "Αρσενικό": "Maschio",
   "Αρσενικός": "Maschio",
+  "Αρχηγός": "Capitano",
   "Αρχηγός ομάδας": "Capitano di squadra",
   "Ατομική κατάταξη": "Classifica individuale",
   "Ατομικός": "Individuale",
@@ -4215,10 +4337,12 @@ const UI_STR = {
   "Αφαίρεση συμπληρωματικού": "Togli il supplementare",
   "Αύγουστος": "Agosto",
   "Αύξηση": "Aumenta",
+  "ΒΑΣΗ": "TITOLARE",
   "Βαθμολογία": "Valutazione",
   "Βαθμολογημένοι": "Classificati",
   "Βαθμολογημένοι για να καταταγεί ομάδα": "Cani classificati perché una squadra sia classificata",
   "Βασικοί βαθμοί ανά βαθμολογία/τίτλο. Πολλαπλασιάζονται με τον συντελεστή του αγώνα (×2 ζεύγη, ×3 ή ×4 σε άγριο θήραμα για ΕΚ/ΠΚ).": "Punti base per qualifica/titolo. Vengono moltiplicati per il coefficiente della prova (×2 in batteria, ×3 o ×4 su selvaggina selvatica per Ricerca di caccia / Caccia pratica).",
+  "Βασικοί πόντοι": "Punti base",
   "Βιβλίο γενεαλογίας χώρας": "Libro genealogico del paese",
   "Για ομάδες WhatsApp ή Viber, την επιτροπή ή τον πίνακα ανακοινώσεων. Στέλνει τη σειρά σε απλό κείμενο, όχι αρχείο.": "Per i gruppi WhatsApp o Viber, il comitato o la bacheca. Invia l'ordine come testo semplice, non come file.",
   "Για τίτλο ο κανονισμός ζητά και τις δύο (ACO IX.33).": "Per un titolo il regolamento richiede entrambe le giornate (ACO IX.33).",
@@ -4251,6 +4375,7 @@ const UI_STR = {
   "Δεν υπάρχει εγκατεστημένος service worker σε αυτή τη συσκευή.": "Su questo dispositivo non è installato alcun service worker.",
   "Δεν υπάρχει σύνδεσμος για κοινή χρήση και ο περιηγητής δεν αποθηκεύει τίποτε. Γράψτε τη διεύθυνση του ομίλου παρακάτω για να φτιαχτεί ο κωδικός QR.": "Non c'è un link da condividere e il browser non conserva nulla. Scrivete qui sotto l'indirizzo del club perché venga creato il codice QR.",
   "Δεν υπάρχει τηλέφωνο για ": "Non c'è un numero di telefono per ",
+  "Δεξιά": "Destra",
   "Δεξιά της επιτροπής (1ος)": "A destra della giuria (1°)",
   "Δεύτερη διαδρομή του": "Secondo turno di",
   "Δεύτερη διαδρομή,": "Secondo turno,",
@@ -4356,7 +4481,7 @@ const UI_STR = {
   "Η αλλαγή καταγράφηκε": "La modifica è registrata",
   "Η ανατομία του πόντου": "L'anatomia del punto",
   "Η αντιγραφή δεν επιτράπηκε": "La copia non è stata consentita",
-  "Η γλώσσα αλλάζει μόνο ό,τι βλέπετε. Στη βάση όλα μένουν ελληνικά — η κατάσταση, η βαθμολογία, η μορφή του αγώνα — ώστε ένα αντίγραφο από αγγλικό κινητό να συγχωνεύεται κανονικά σε ελληνικό υπολογιστή και ο πίνακας πόντων να βρίσκει το κλειδί του.": "La lingua cambia solo ciò che vedete. Nella base dati resta tutto in greco — stato, qualifica, forma della prova — così che una copia fatta su un telefono in inglese si unisca senza problemi a un computer in greco e la tabella dei punti ritrovi la sua chiave.",
+  "Η γλώσσα αλλάζει την οθόνη και τις εξαγωγές — το βιβλίο, το Word, το CSV και τα τυπωμένα φύλλα. Στη βάση όλα μένουν ελληνικά — η κατάσταση, η βαθμολογία, η μορφή του αγώνα — ώστε ένα αντίγραφο από αγγλικό κινητό να συγχωνεύεται κανονικά σε ελληνικό υπολογιστή και ο πίνακας πόντων να βρίσκει το κλειδί του.": "La lingua cambia la schermata e le esportazioni — la cartella di lavoro, il file Word, il CSV e i fogli stampati. Nella base dati resta tutto in greco — stato, qualifica, forma della prova — così che una copia fatta su un telefono in inglese si unisca senza problemi a un computer in greco e la tabella dei punti ritrovi la sua chiave.",
   "Η γραμμή επικεφαλίδων εντοπίστηκε αυτόματα. Ελέγξτε κάθε στήλη πριν την εισαγωγή· είναι η μόνη ευκαιρία να πιαστεί λάθος στήλη.": "La riga di intestazione è stata individuata automaticamente. Controllate ogni colonna prima dell'importazione; è l'unica occasione per accorgersi di una colonna sbagliata.",
   "Η διαδρομή": "Il turno",
   "Η διαδρομή επεκτάθηκε σε ": "Il turno è stato prolungato a ",
@@ -4380,6 +4505,7 @@ const UI_STR = {
   "Η σειρά είναι ενδεικτική (Άρθρο 16). Να είστε στη διάθεση των κριτών.": "L'ordine di turno è indicativo (Articolo 16). Restate a disposizione dei giudici.",
   "Η σειρά είναι ενδεικτική — Άρθρο 16.": "L'ordine è indicativo — Articolo 16.",
   "Η σειρά είναι ενδεικτική — Άρθρο 16. Το μήνυμα ανοίγει στην εφαρμογή μηνυμάτων του τηλεφώνου· η αποστολή γίνεται από εκεί.": "L'ordine è indicativo — Articolo 16. Il messaggio si apre nell'app dei messaggi del telefono; l'invio avviene da lì.",
+  "Η συγκρότηση δεν στέκει ακόμη": "La composizione non regge ancora",
   "Η συγκρότηση δεν στέκει ακόμη:": "La composizione non regge ancora:",
   "Η συγχώνευση κρατά ό,τι υπάρχει και προσθέτει· η αντικατάσταση σβήνει τη συσκευή. Στο τερέν θέλετε σχεδόν πάντα συγχώνευση.": "L'unione conserva quel che c'è e aggiunge; la sostituzione cancella il dispositivo. Sul terreno serve quasi sempre l'unione.",
   "Η σφραγίδα εξαγωγής αφορά μόνο εισαγόμενο σκύλο και το CDE-GQ τη θέλει τουλάχιστον εξάμηνη. Για σκύλο γεννημένο στη χώρα του, αφήστε την κενή.": "Il timbro di esportazione riguarda solo un cane importato, e la CDE-GQ lo vuole di almeno sei mesi. Per un cane nato nel suo paese, lasciate vuoto.",
@@ -4393,6 +4519,7 @@ const UI_STR = {
   "Ημ. σφραγίδας εξαγωγής": "Data del timbro di esportazione",
   "Ημέρα": "Giornata",
   "Ημέρες": "Giornate",
+  "Ημερομηνία": "Data",
   "Ημερομηνία έναρξης": "Data d'inizio",
   "Ηπειρωτικές φυλές": "Razze continentali",
   "Ηπειρωτικές — F.C.I. Τμήμα 1": "Continentali — F.C.I. Sezione 1",
@@ -4455,6 +4582,7 @@ const UI_STR = {
   "Κατάσταση": "Stato",
   "Κατάταξη ανά χώρα": "Classifica per paese",
   "Κατακλείδα": "Chiusura",
+  "Κατατάσσεται": "Classificata",
   "Καταχωρήστε τον πρώτο του σκύλο.": "Registrate il suo primo cane.",
   "Κατόπιν εντολής": "Al comando",
   "Κεντρικός κριτής": "Giudice capo",
@@ -4466,6 +4594,7 @@ const UI_STR = {
   "Κλασικός": "Classica",
   "Κλείσιμο": "Chiudi",
   "Κλείστηκε": "Chiusa",
+  "Κλειδί": "Chiave",
   "Κοινή χρήση": "Condividi",
   "Κοινή χρήση συνδέσμου": "Condividi il link",
   "Κριτές": "Giudici",
@@ -4474,6 +4603,11 @@ const UI_STR = {
   "Κριτής με δικό του σκύλο σε αυτό το τερέν (Άρθρο 49):": "Un giudice con un proprio cane su questo terreno (Articolo 49):",
   "Κυναγωγοί": "Conduttori",
   "Κυναγωγός": "Conduttore",
+  "Κυναγωγός Α": "Conduttore S",
+  "Κυναγωγός Δ": "Conduttore D",
+  "Κυναγωγός αριστερά": "Conduttore a sinistra",
+  "Κυναγωγός δεξιά": "Conduttore a destra",
+  "Κωδικός": "Codice",
   "Κωδικός QR για τη διεύθυνση της εφαρμογής": "Codice QR dell'indirizzo dell'applicazione",
   "Κωδικός κλήρωσης": "Codice del sorteggio",
   "Κύπελλο": "Coppa",
@@ -4519,10 +4653,13 @@ const UI_STR = {
   "Μπήκε δίπλα στον ": "Messo accanto a ",
   "Μπεκάτσα": "Beccaccia",
   "Μπόνους": "Bonus",
+  "Μπόνους για 3 διαφορετικές φυλές": "Bonus per 3 razze diverse",
+  "Μπόνους για 4 διαφορετικές φυλές": "Bonus per 4 razze diverse",
   "Μόνο για διεθνείς ομαδικούς αγώνες. Ο κανονισμός ζητά ιθαγένεια ή δωδεκάμηνη διαμονή του ιδιοκτήτη στη χώρα που εκπροσωπεί ο σκύλος, και εγγραφή του σκύλου στο βιβλίο γενεαλογίας της ίδιας χώρας (ACO VIII.5.3, IX.13 · CDE-GQ). Αφήστε τα κενά αν η λέσχη δεν διοργανώνει Κύπελλο — δεν ελέγχονται πουθενά αλλού.": "Solo per prove internazionali a squadre. Il regolamento richiede la cittadinanza del proprietario o dodici mesi di residenza nel paese che il cane rappresenta, e l'iscrizione del cane al libro genealogico dello stesso paese (ACO VIII.5.3, IX.13 · CDE-GQ). Lasciateli vuoti se il club non organizza una Coppa — non sono controllati da nessun'altra parte.",
   "Μόνο κριτές": "Solo giudici",
   "Μόνο κυναγωγοί": "Solo conduttori",
   "Μόνο τα δικά του ζεύγη": "Solo le sue coppie",
+  "ΝΑΙ": "SI",
   "Νέα διαδρομή για τον": "Un nuovo turno per",
   "Νέα κλήρωση": "Nuovo sorteggio",
   "Νέα κλήρωση — ακυρώνει την τρέχουσα": "Nuovo sorteggio — annulla quello attuale",
@@ -4555,6 +4692,7 @@ const UI_STR = {
   "Ο γερμανικός όρος στο ACO II.7 στέκει ως «beim erneuten Aufrufen»· δεν υπάρχει μονολεκτικό ουσιαστικό στα κείμενα που έχουμε.": "Il termine tedesco figura in ACO II.7 come «beim erneuten Aufrufen»; nei testi in nostro possesso non esiste un sostantivo di una sola parola.",
   "Ο ιδιοκτήτης του σκύλου, όταν δεν είναι ο ίδιος ο κυναγωγός — που είναι και το συνηθισμένο. Μπαίνει σκέτο όνομα: δεν παίρνει τηλέφωνο και δεν λαμβάνει μηνύματα, γιατί τα SMS της σειράς πάνε στον κυναγωγό.": "Il proprietario del cane, quando non è lui stesso il conduttore — che è il caso abituale. Va messo un semplice nome: non prende telefono e non riceve messaggi, perché gli SMS dell'ordine vanno al conduttore.",
   "Ο κανονισμός αυτού του Κυπέλλου δεν το επιτρέπει.": "Il regolamento di questa Coppa non lo consente.",
+  "Ο κανονισμός του Κυπέλλου": "Il regolamento della Coppa",
   "Ο κεντρικός κριτής και οι κριτές 1 και 2 ορίζονται στην κάρτα του τερέν.": "Il giudice capo e i giudici 1 e 2 si definiscono sulla scheda del terreno.",
   "Ο κριτής έχει σημειώσεις στους αγώνες: ": "Il giudice ha note in queste prove: ",
   "Ο κριτής του τερέν έχει δικό του σκύλο εδώ (Άρθρο 49):": "Il giudice del terreno ha qui un proprio cane (Articolo 49):",
@@ -4574,6 +4712,7 @@ const UI_STR = {
   "Ο όρος στέκει στο ίδιο άρθρο του κανονισμού της F.C.I. σε τρεις γλώσσες": "Il termine figura nello stesso articolo del regolamento F.C.I. in tre lingue",
   "ΟΛΟΚΛΗΡΩΘΗΚΕ": "CONCLUSA",
   "ΟΛΟΚΛΗΡΩΜΕΝΟΣ": "CONCLUSA",
+  "ΟΧΙ": "NO",
   "Οίστρος τελευταίες": "Femmine in calore per ultime",
   "Οι εθνικές ομάδες υπάρχουν μόνο σε ομαδικό αγώνα. Ανοίξτε την Επεξεργασία του αγώνα και επιλέξτε κύπελλο.": "Le squadre nazionali esistono solo in una prova a squadre. Aprite Modifica sulla prova e scegliete una coppa.",
   "Οι κανονισμοί δεν συμφωνούν: το SC art. 3b δέχεται θηλυκές σε οίστρο στο τέλος του γύρου και μόνο μεταξύ τους· το ACO I.6 τις αποκλείει εντελώς. Δεν είναι θέμα ορολογίας — είναι δύο διαφορετικοί κανόνες, βρετανικός και ηπειρωτικός.": "I regolamenti non concordano: SC art. 3b ammette le femmine in calore alla fine del turno e solo fra loro; ACO I.6 le esclude del tutto. Non è questione di terminologia — sono due regole diverse, britannica e continentale.",
@@ -4587,6 +4726,10 @@ const UI_STR = {
   "Ολοκλήρωση αγώνα": "Chiudi la prova",
   "Ολοκληρωμένος": "Conclusa",
   "Ομάδα": "Squadra",
+  "Ομάδα Α": "Squadra S",
+  "Ομάδα Δ": "Squadra D",
+  "Ομάδα αριστερά": "Squadra a sinistra",
+  "Ομάδα δεξιά": "Squadra a destra",
   "Ομάδες": "Squadre",
   "Ομαδικός αγώνας, αλλά κανένας σκύλος δεν έχει εθνική ομάδα στο μητρώο. Συμπληρώστε το πεδίο «Εθνική ομάδα» στην καρτέλα κάθε σκύλου.": "Prova a squadre, ma nessun cane ha una squadra nazionale nel registro. Compilate il campo «Squadra nazionale» nella scheda di ogni cane.",
   "Ομαδικός με εθνικές ομάδες": "Prova a squadre nazionali",
@@ -4606,6 +4749,8 @@ const UI_STR = {
   "Πίνακας βαθμών": "Tabella dei punti",
   "Πίνακας σεζόν": "Tabella della stagione",
   "Παγκόσμιο Πρακτικού Κυνηγίου": "Campionato del mondo di caccia pratica",
+  "Παράμετροι": "Parametri",
+  "Παραπομπή": "Riferimento",
   "Πατήστε το κουμπί Κοινή χρήση, κάτω στη μέση.": "Premete il pulsante Condividi, in basso al centro.",
   "Περιεχόμενο αρχείου": "Contenuto del file",
   "Περιεχόμενο μηνύματος": "Contenuto del messaggio",
@@ -4645,6 +4790,7 @@ const UI_STR = {
   "Πόσα τερέν": "Quanti terreni",
   "Πώς φεύγει": "Come parte",
   "Ρυθμίσεις": "Impostazioni",
+  "Ρόλος": "Ruolo",
   "ΣΕ ΕΞΕΛΙΞΗ": "IN CORSO",
   "ΣΕΙΡΑ ΤΗΣ ΗΜΕΡΑΣ": "ORDINE DELLA GIORNATA",
   "ΣΥΜΠΛΗΡΩΜΑΤΙΚΟΣ": "SUPPLEMENTARE",
@@ -4660,6 +4806,7 @@ const UI_STR = {
   "Σε παρένθεση, η εθνική ομάδα που εκπροσωπεί ο σκύλος.": "Fra parentesi, la squadra nazionale che il cane rappresenta.",
   "Σε πολλά τηλέφωνα το SMS φτάνει μόνο στον πρώτο παραλήπτη. Ελέγξτε τη λίστα μέσα στην εφαρμογή μηνυμάτων πριν στείλετε.": "Su molti telefoni un SMS raggiunge solo il primo destinatario. Controllate l'elenco dentro l'applicazione di messaggi prima di inviare.",
   "Σεπτέμβριος": "Settembre",
+  "Σημείωση": "Nota",
   "Σημειώσεις": "Note",
   "Σημειώσεις κριτών": "Note dei giudici",
   "Σημειώστε ποιοι σκύλοι τρέχουν σήμερα. Κάθε σκύλος μπαίνει με τον κυναγωγό κάτω από τον οποίο βρίσκεται.": "Spuntate quali cani corrono oggi. Ogni cane viene iscritto con il conduttore sotto cui figura.",
@@ -4667,6 +4814,8 @@ const UI_STR = {
   "Σκύλοι ανά ομάδα, το πολύ": "Cani per squadra, al massimo",
   "Σκύλοι ανά ομάδα, τουλάχιστον": "Cani per squadra, almeno",
   "Σκύλος": "Cane",
+  "Σκύλος αριστερά": "Cane a sinistra",
+  "Σκύλος δεξιά": "Cane a destra",
   "Σκύλος που αγωνίστηκε για μια χώρα δεν εκπροσωπεί άλλη (ACO VIII.5.3).": "Un cane che ha gareggiato per un paese non ne rappresenta un altro (ACO VIII.5.3).",
   "Στέλνει μόνο αυτόν τον αγώνα, με τους σκύλους και τους κυναγωγούς του — μικρό αρχείο που περνά από κάθε εφαρμογή μηνυμάτων. Στην άλλη συσκευή:": "Invia soltanto questa prova, con i suoi cani e conduttori — un file piccolo che passa da qualunque app di messaggi. Sull'altro dispositivo:",
   "Στέρεη": "Salda",
@@ -4679,6 +4828,7 @@ const UI_STR = {
   "Στο κινητό:": "Sul telefono:",
   "Στο τερέν: στείλτε το στήσιμο στο κινητό και κάντε την κλήρωση εκεί, μπροστά σε όλους. Από το σπίτι: κληρώστε τώρα και στείλτε τη σειρά με SMS στους κυναγωγούς· η σειρά παραμένει ενδεικτική (Άρθρο 16).": "Sul terreno: mandate l'impostazione al telefono e fate lì il sorteggio, davanti a tutti. Da casa: sorteggiate ora e mandate l'ordine ai conduttori via SMS; l'ordine resta indicativo (Articolo 16).",
   "Στον υπολογιστή, πριν τον αγώνα: μητρώο, συμμετοχές, τερέν και κριτές. Μετά πατήστε": "Al computer, prima della prova: registro, iscrizioni, terreni e giudici. Poi premete",
+  "Συγκρότηση": "Composizione",
   "Συγχώνευση": "Unisci",
   "Συγχώνευση ή αντικατάσταση;": "Unire o sostituire?",
   "Συμμετοχές": "Iscrizioni",
@@ -4687,12 +4837,14 @@ const UI_STR = {
   "Συμπληρώνεται μόνο όταν ο σκύλος τρέχει ως αθλητής εθνικής ομάδας. Δεν είναι η χώρα εκτροφής ούτε του κυναγωγού: είναι η ομάδα που εκπροσωπεί στον αγώνα. Αφήστε το «—» για τους υπόλοιπους.": "Si compila solo quando il cane corre come atleta di una squadra nazionale. Non è il paese di allevamento né quello del conduttore: è la squadra che rappresenta alla prova. Per tutti gli altri lasciate «—».",
   "Συνέχεια;": "Continuare?",
   "Συνδεδεμένο": "In linea",
+  "Συντελεστής": "Coefficiente",
   "Σφάλμα Άρθρου 33 καταγεγραμμένο:": "Mancanza dell'Articolo 33 registrata:",
   "Σφάλματα αποκλεισμού": "Mancanze eliminatorie",
   "Σφάλματα αποκλεισμού (Άρθρο 33):": "Mancanze eliminatorie (Articolo 33):",
   "Σφάλματα αποκλεισμού:": "Mancanze eliminatorie:",
   "Σωστό": "Corretto",
   "Σύμπτυξη ζεύγους": "Riduci la coppia",
+  "Σύνολο": "Totale",
   "Σύρετε το": "Trascinate il",
   "Σύρετε, ή ↑ ↓, για να αλλάξετε τη σειρά του ζεύγους": "Trascinate, o ↑ ↓, per cambiare il posto della coppia",
   "ΤΑ ΖΕΥΓΗ ΣΑΣ": "LE VOSTRE COPPIE",
@@ -4760,6 +4912,7 @@ const UI_STR = {
   "Φέρμα / ποντάρισμα": "Ferma / guidata",
   "Φεβρουάριος": "Febbraio",
   "Φραγκολίνα": "Francolino",
+  "Φυλές": "Razze",
   "Φυλή": "Razza",
   "Φυλή (μόνο για Derby)": "Razza (solo Derby)",
   "Φυλή:": "Razza:",
@@ -4938,6 +5091,7 @@ const UI_STR = {
   "στο βιβλίο γενεαλογίας την ημέρα του αγώνα· χρειάζονται": "nel libro genealogico il giorno della prova; ne servono",
   "στο ιστορικό": "nello storico",
   "στον πίνακα ·": "in tabella ·",
+  "στον πυροβολισμό": "allo sparo",
   "συμμετοχές": "iscrizioni",
   "συμμετοχή": "iscrizione",
   "συμπληρωματικός": "supplementare",
@@ -4957,6 +5111,7 @@ const UI_STR = {
   "φυλές (ACO VIII.11.2-3)": "razze (ACO VIII.11.2-3)",
   "φυλές στη βάση": "razze in squadra",
   "φυλή στη βάση": "razza in squadra",
+  "χειροκίνητη αλλαγή": "modifica manuale",
   "χωρίς αναγνωρίσιμη φυλή καταχωρούνται ως": "senza razza riconoscibile sono registrati come",
   "χωρίς βαθμολογία": "senza qualifica",
   "χωρίς ημερομηνία εγγραφής στο βιβλίο· ο κανονισμός ζητά": "senza data di iscrizione al libro; il regolamento ne richiede",
@@ -5099,6 +5254,7 @@ const UI_STR = {
   "ΑΡΘΡΟ 49": "ARTÍCULO 49",
   "ΑΤΟΜΙΚΟΣ": "INDIVIDUAL",
   "Αγγλικές φυλές": "Razas británicas",
+  "Αγώνας": "Prueba",
   "Αγώνας:": "Prueba:",
   "Αγώνες": "Pruebas",
   "Αδύναμη": "Débil",
@@ -5119,6 +5275,7 @@ const UI_STR = {
   "Αναζήτηση σκύλου ή κυναγωγού": "Buscar perro o conductor",
   "Αναζήτηση όρου σε οποιαδήποτε γλώσσα": "Buscar un término en cualquier lengua",
   "Αναπληρωματικοί": "Suplentes",
+  "Αναπληρωματικοί, το πολύ": "Suplentes, como máximo",
   "Ανοίξατε το αρχείο απευθείας και ο περιηγητής δεν επιτρέπει αποθήκευση. Ό,τι καταχωρήσετε θα χαθεί μόλις κλείσετε τη σελίδα. Κλείστε το και ανοίξτε την εφαρμογή από τη διεύθυνση του ομίλου, ή κατεβάστε αντίγραφο (Ρυθμίσεις → Μεταφορά) πριν κλείσετε.": "Ha abierto el archivo directamente y el navegador no permite guardar. Todo lo que introduzca se perderá en cuanto cierre la página. Ciérrela y abra la aplicación desde la dirección del club, o descargue una copia (Ajustes → Transferencia) antes de cerrar.",
   "Ανοίξτε τη διεύθυνση στο Chrome.": "Abra la dirección en Chrome.",
   "Ανοίξτε τη διεύθυνση στο Safari.": "Abra la dirección en Safari.",
@@ -5150,11 +5307,14 @@ const UI_STR = {
   "Απρίλιος": "Abril",
   "Από υπολογιστή δεν στέλνονται SMS.": "Desde un ordenador no se envían SMS.",
   "Αρ. Κ.Ο.Κ.": "Nº de L.O.",
+  "Αρ. βιβλιαρίου": "N.º libro de orígenes",
   "Αρ. βιβλιαρίου εργασίας": "Nº de cartilla de trabajo",
   "Αρ. μέλους": "Nº de socio",
+  "Αριστερά": "Izquierda",
   "Αριστερά της επιτροπής (2ος)": "A la izquierda del jurado (2º)",
   "Αρσενικό": "Macho",
   "Αρσενικός": "Macho",
+  "Αρχηγός": "Capitán",
   "Αρχηγός ομάδας": "Jefe de equipo",
   "Ατομική κατάταξη": "Clasificación individual",
   "Ατομικός": "Individual",
@@ -5164,10 +5324,12 @@ const UI_STR = {
   "Αφαίρεση συμπληρωματικού": "Quitar el suplementario",
   "Αύγουστος": "Agosto",
   "Αύξηση": "Aumentar",
+  "ΒΑΣΗ": "TITULAR",
   "Βαθμολογία": "Calificación",
   "Βαθμολογημένοι": "Clasificados",
   "Βαθμολογημένοι για να καταταγεί ομάδα": "Perros clasificados para que un equipo sea clasificado",
   "Βασικοί βαθμοί ανά βαθμολογία/τίτλο. Πολλαπλασιάζονται με τον συντελεστή του αγώνα (×2 ζεύγη, ×3 ή ×4 σε άγριο θήραμα για ΕΚ/ΠΚ).": "Puntos base por calificación/título. Se multiplican por el coeficiente de la prueba (×2 parejas, ×3 o ×4 sobre caza silvestre para I.C./C.P.).",
+  "Βασικοί πόντοι": "Puntos base",
   "Βιβλίο γενεαλογίας χώρας": "Libro genealógico del país",
   "Για ομάδες WhatsApp ή Viber, την επιτροπή ή τον πίνακα ανακοινώσεων. Στέλνει τη σειρά σε απλό κείμενο, όχι αρχείο.": "Para grupos de WhatsApp o Viber, el comité o el tablón de anuncios. Envía el orden como texto simple, no como archivo.",
   "Για τίτλο ο κανονισμός ζητά και τις δύο (ACO IX.33).": "Para un título el reglamento exige ambas jornadas (ACO IX.33).",
@@ -5200,6 +5362,7 @@ const UI_STR = {
   "Δεν υπάρχει εγκατεστημένος service worker σε αυτή τη συσκευή.": "No hay ningún service worker instalado en este dispositivo.",
   "Δεν υπάρχει σύνδεσμος για κοινή χρήση και ο περιηγητής δεν αποθηκεύει τίποτε. Γράψτε τη διεύθυνση του ομίλου παρακάτω για να φτιαχτεί ο κωδικός QR.": "No hay enlace que compartir y el navegador no guarda nada. Escriba abajo la dirección del club para que se genere el código QR.",
   "Δεν υπάρχει τηλέφωνο για ": "No hay teléfono para ",
+  "Δεξιά": "Derecha",
   "Δεξιά της επιτροπής (1ος)": "A la derecha del jurado (1º)",
   "Δεύτερη διαδρομή του": "Segundo turno de",
   "Δεύτερη διαδρομή,": "Segundo turno,",
@@ -5305,7 +5468,7 @@ const UI_STR = {
   "Η αλλαγή καταγράφηκε": "El cambio queda registrado",
   "Η ανατομία του πόντου": "La anatomía del punto",
   "Η αντιγραφή δεν επιτράπηκε": "No se permitió copiar",
-  "Η γλώσσα αλλάζει μόνο ό,τι βλέπετε. Στη βάση όλα μένουν ελληνικά — η κατάσταση, η βαθμολογία, η μορφή του αγώνα — ώστε ένα αντίγραφο από αγγλικό κινητό να συγχωνεύεται κανονικά σε ελληνικό υπολογιστή και ο πίνακας πόντων να βρίσκει το κλειδί του.": "La lengua cambia lo que usted ve y nada más. En la base todo queda en griego — el estado, la calificación, el formato de la prueba — para que una copia hecha en un teléfono inglés se fusione en un ordenador griego y la tabla de puntos siga encontrando su clave.",
+  "Η γλώσσα αλλάζει την οθόνη και τις εξαγωγές — το βιβλίο, το Word, το CSV και τα τυπωμένα φύλλα. Στη βάση όλα μένουν ελληνικά — η κατάσταση, η βαθμολογία, η μορφή του αγώνα — ώστε ένα αντίγραφο από αγγλικό κινητό να συγχωνεύεται κανονικά σε ελληνικό υπολογιστή και ο πίνακας πόντων να βρίσκει το κλειδί του.": "El idioma cambia la pantalla y las exportaciones — el libro, el archivo Word, el CSV y las hojas impresas. En la base de datos todo permanece en griego — estado, calificación, forma de la prueba — de modo que una copia hecha en un teléfono en inglés se fusione sin problemas en un ordenador en griego y la tabla de puntos encuentre su clave.",
   "Η γραμμή επικεφαλίδων εντοπίστηκε αυτόματα. Ελέγξτε κάθε στήλη πριν την εισαγωγή· είναι η μόνη ευκαιρία να πιαστεί λάθος στήλη.": "La fila de encabezados se ha detectado automáticamente. Compruebe cada columna antes de importar; es la única ocasión de descubrir una columna equivocada.",
   "Η διαδρομή": "El turno",
   "Η διαδρομή επεκτάθηκε σε ": "El turno se prolongó a ",
@@ -5329,6 +5492,7 @@ const UI_STR = {
   "Η σειρά είναι ενδεικτική (Άρθρο 16). Να είστε στη διάθεση των κριτών.": "El orden de salida es orientativo (Artículo 16). Manténgase a disposición de los jueces.",
   "Η σειρά είναι ενδεικτική — Άρθρο 16.": "El orden es orientativo — Artículo 16.",
   "Η σειρά είναι ενδεικτική — Άρθρο 16. Το μήνυμα ανοίγει στην εφαρμογή μηνυμάτων του τηλεφώνου· η αποστολή γίνεται από εκεί.": "El orden es orientativo — Artículo 16. El mensaje se abre en la aplicación de mensajes del teléfono; el envío se hace desde ahí.",
+  "Η συγκρότηση δεν στέκει ακόμη": "La composición todavía no se sostiene",
   "Η συγκρότηση δεν στέκει ακόμη:": "La composición todavía no se sostiene:",
   "Η συγχώνευση κρατά ό,τι υπάρχει και προσθέτει· η αντικατάσταση σβήνει τη συσκευή. Στο τερέν θέλετε σχεδόν πάντα συγχώνευση.": "Fusionar conserva lo que hay y añade; reemplazar borra el dispositivo. En el campo casi siempre quiere fusionar.",
   "Η σφραγίδα εξαγωγής αφορά μόνο εισαγόμενο σκύλο και το CDE-GQ τη θέλει τουλάχιστον εξάμηνη. Για σκύλο γεννημένο στη χώρα του, αφήστε την κενή.": "El sello de exportación sólo afecta a un perro importado, y la CDE-GQ lo quiere de al menos seis meses. Para un perro nacido en su país, déjelo vacío.",
@@ -5342,6 +5506,7 @@ const UI_STR = {
   "Ημ. σφραγίδας εξαγωγής": "Fecha del sello de exportación",
   "Ημέρα": "Día",
   "Ημέρες": "Días",
+  "Ημερομηνία": "Fecha",
   "Ημερομηνία έναρξης": "Fecha de inicio",
   "Ηπειρωτικές φυλές": "Razas continentales",
   "Ηπειρωτικές — F.C.I. Τμήμα 1": "Continentales — F.C.I. Sección 1",
@@ -5404,6 +5569,7 @@ const UI_STR = {
   "Κατάσταση": "Estado",
   "Κατάταξη ανά χώρα": "Clasificación por país",
   "Κατακλείδα": "Línea de cierre",
+  "Κατατάσσεται": "Clasificado",
   "Καταχωρήστε τον πρώτο του σκύλο.": "Registre su primer perro.",
   "Κατόπιν εντολής": "A la orden",
   "Κεντρικός κριτής": "Juez principal",
@@ -5415,6 +5581,7 @@ const UI_STR = {
   "Κλασικός": "Clásica",
   "Κλείσιμο": "Cerrar",
   "Κλείστηκε": "Cerrada",
+  "Κλειδί": "Clave",
   "Κοινή χρήση": "Compartir",
   "Κοινή χρήση συνδέσμου": "Compartir el enlace",
   "Κριτές": "Jueces",
@@ -5423,6 +5590,11 @@ const UI_STR = {
   "Κριτής με δικό του σκύλο σε αυτό το τερέν (Άρθρο 49):": "Un juez con un perro propio en este terreno (Artículo 49):",
   "Κυναγωγοί": "Conductores",
   "Κυναγωγός": "Conductor",
+  "Κυναγωγός Α": "Guía I",
+  "Κυναγωγός Δ": "Guía D",
+  "Κυναγωγός αριστερά": "Guía a la izquierda",
+  "Κυναγωγός δεξιά": "Guía a la derecha",
+  "Κωδικός": "Código",
   "Κωδικός QR για τη διεύθυνση της εφαρμογής": "Código QR de la dirección de la aplicación",
   "Κωδικός κλήρωσης": "Semilla del sorteo",
   "Κύπελλο": "Copa",
@@ -5468,10 +5640,13 @@ const UI_STR = {
   "Μπήκε δίπλα στον ": "Colocado junto a ",
   "Μπεκάτσα": "Becada",
   "Μπόνους": "Bonificación",
+  "Μπόνους για 3 διαφορετικές φυλές": "Bonificación por 3 razas diferentes",
+  "Μπόνους για 4 διαφορετικές φυλές": "Bonificación por 4 razas diferentes",
   "Μόνο για διεθνείς ομαδικούς αγώνες. Ο κανονισμός ζητά ιθαγένεια ή δωδεκάμηνη διαμονή του ιδιοκτήτη στη χώρα που εκπροσωπεί ο σκύλος, και εγγραφή του σκύλου στο βιβλίο γενεαλογίας της ίδιας χώρας (ACO VIII.5.3, IX.13 · CDE-GQ). Αφήστε τα κενά αν η λέσχη δεν διοργανώνει Κύπελλο — δεν ελέγχονται πουθενά αλλού.": "Sólo para pruebas internacionales por equipos. El reglamento exige la nacionalidad del propietario o doce meses de residencia en el país que representa el perro, y la inscripción del perro en el libro genealógico de ese mismo país (ACO VIII.5.3, IX.13 · CDE-GQ). Déjelos vacíos si el club no organiza una Copa — no se comprueban en ningún otro sitio.",
   "Μόνο κριτές": "Sólo jueces",
   "Μόνο κυναγωγοί": "Sólo conductores",
   "Μόνο τα δικά του ζεύγη": "Sólo sus propias parejas",
+  "ΝΑΙ": "SI",
   "Νέα διαδρομή για τον": "Un turno nuevo para",
   "Νέα κλήρωση": "Nuevo sorteo",
   "Νέα κλήρωση — ακυρώνει την τρέχουσα": "Nuevo sorteo — anula el actual",
@@ -5504,6 +5679,7 @@ const UI_STR = {
   "Ο γερμανικός όρος στο ACO II.7 στέκει ως «beim erneuten Aufrufen»· δεν υπάρχει μονολεκτικό ουσιαστικό στα κείμενα που έχουμε.": "El término alemán figura en el ACO II.7 como «beim erneuten Aufrufen»; no hay un sustantivo de una sola palabra en los textos que tenemos.",
   "Ο ιδιοκτήτης του σκύλου, όταν δεν είναι ο ίδιος ο κυναγωγός — που είναι και το συνηθισμένο. Μπαίνει σκέτο όνομα: δεν παίρνει τηλέφωνο και δεν λαμβάνει μηνύματα, γιατί τα SMS της σειράς πάνε στον κυναγωγό.": "El propietario del perro, cuando no es el propio conductor — que es lo habitual. Se pone un nombre a secas: no lleva teléfono ni recibe mensajes, porque los SMS del orden van al conductor.",
   "Ο κανονισμός αυτού του Κυπέλλου δεν το επιτρέπει.": "El reglamento de esta Copa no lo permite.",
+  "Ο κανονισμός του Κυπέλλου": "El reglamento de la Copa",
   "Ο κεντρικός κριτής και οι κριτές 1 και 2 ορίζονται στην κάρτα του τερέν.": "El juez principal y los jueces 1 y 2 se fijan en la ficha del terreno.",
   "Ο κριτής έχει σημειώσεις στους αγώνες: ": "El juez tiene notas en estas pruebas: ",
   "Ο κριτής του τερέν έχει δικό του σκύλο εδώ (Άρθρο 49):": "El juez del terreno tiene aquí un perro propio (Artículo 49):",
@@ -5523,6 +5699,7 @@ const UI_STR = {
   "Ο όρος στέκει στο ίδιο άρθρο του κανονισμού της F.C.I. σε τρεις γλώσσες": "El término figura en el mismo artículo del reglamento de la F.C.I. en tres lenguas",
   "ΟΛΟΚΛΗΡΩΘΗΚΕ": "COMPLETADA",
   "ΟΛΟΚΛΗΡΩΜΕΝΟΣ": "COMPLETADO",
+  "ΟΧΙ": "NO",
   "Οίστρος τελευταίες": "Perras en celo, las últimas",
   "Οι εθνικές ομάδες υπάρχουν μόνο σε ομαδικό αγώνα. Ανοίξτε την Επεξεργασία του αγώνα και επιλέξτε κύπελλο.": "Los equipos nacionales sólo existen en una prueba por equipos. Abra Editar en la prueba y elija una copa.",
   "Οι κανονισμοί δεν συμφωνούν: το SC art. 3b δέχεται θηλυκές σε οίστρο στο τέλος του γύρου και μόνο μεταξύ τους· το ACO I.6 τις αποκλείει εντελώς. Δεν είναι θέμα ορολογίας — είναι δύο διαφορετικοί κανόνες, βρετανικός και ηπειρωτικός.": "Los reglamentos no coinciden: el SC art. 3b admite perras en celo al final de la vuelta y sólo entre ellas; el ACO I.6 las excluye del todo. No es cuestión de terminología — son dos reglas distintas, la británica y la continental.",
@@ -5536,6 +5713,10 @@ const UI_STR = {
   "Ολοκλήρωση αγώνα": "Cerrar la prueba",
   "Ολοκληρωμένος": "Terminada",
   "Ομάδα": "Equipo",
+  "Ομάδα Α": "Equipo I",
+  "Ομάδα Δ": "Equipo D",
+  "Ομάδα αριστερά": "Equipo a la izquierda",
+  "Ομάδα δεξιά": "Equipo a la derecha",
   "Ομάδες": "Equipos",
   "Ομαδικός αγώνας, αλλά κανένας σκύλος δεν έχει εθνική ομάδα στο μητρώο. Συμπληρώστε το πεδίο «Εθνική ομάδα» στην καρτέλα κάθε σκύλου.": "Prueba por equipos, pero ningún perro tiene equipo nacional en el registro. Rellene el campo «Equipo nacional» en la ficha de cada perro.",
   "Ομαδικός με εθνικές ομάδες": "Prueba por equipos nacionales",
@@ -5555,6 +5736,8 @@ const UI_STR = {
   "Πίνακας βαθμών": "Tabla de puntos",
   "Πίνακας σεζόν": "Tabla de la temporada",
   "Παγκόσμιο Πρακτικού Κυνηγίου": "Campeonato del mundo de caza práctica",
+  "Παράμετροι": "Parámetros",
+  "Παραπομπή": "Referencia",
   "Πατήστε το κουμπί Κοινή χρήση, κάτω στη μέση.": "Pulse el botón Compartir, abajo en el centro.",
   "Περιεχόμενο αρχείου": "Qué hay en el archivo",
   "Περιεχόμενο μηνύματος": "Qué hay en el mensaje",
@@ -5594,6 +5777,7 @@ const UI_STR = {
   "Πόσα τερέν": "Cuántos terrenos",
   "Πώς φεύγει": "Cómo sale",
   "Ρυθμίσεις": "Ajustes",
+  "Ρόλος": "Función",
   "ΣΕ ΕΞΕΛΙΞΗ": "EN CURSO",
   "ΣΕΙΡΑ ΤΗΣ ΗΜΕΡΑΣ": "ORDEN DEL DÍA",
   "ΣΥΜΠΛΗΡΩΜΑΤΙΚΟΣ": "SUPLEMENTARIO",
@@ -5609,6 +5793,7 @@ const UI_STR = {
   "Σε παρένθεση, η εθνική ομάδα που εκπροσωπεί ο σκύλος.": "Entre paréntesis, la selección nacional que representa el perro.",
   "Σε πολλά τηλέφωνα το SMS φτάνει μόνο στον πρώτο παραλήπτη. Ελέγξτε τη λίστα μέσα στην εφαρμογή μηνυμάτων πριν στείλετε.": "En muchos teléfonos un SMS llega sólo al primer destinatario. Compruebe la lista dentro de la aplicación de mensajes antes de enviar.",
   "Σεπτέμβριος": "Septiembre",
+  "Σημείωση": "Nota",
   "Σημειώσεις": "Notas",
   "Σημειώσεις κριτών": "Notas de los jueces",
   "Σημειώστε ποιοι σκύλοι τρέχουν σήμερα. Κάθε σκύλος μπαίνει με τον κυναγωγό κάτω από τον οποίο βρίσκεται.": "Marque qué perros corren hoy. Cada perro se inscribe con el conductor bajo el que figura.",
@@ -5616,6 +5801,8 @@ const UI_STR = {
   "Σκύλοι ανά ομάδα, το πολύ": "Perros por equipo, como máximo",
   "Σκύλοι ανά ομάδα, τουλάχιστον": "Perros por equipo, al menos",
   "Σκύλος": "Perro",
+  "Σκύλος αριστερά": "Perro a la izquierda",
+  "Σκύλος δεξιά": "Perro a la derecha",
   "Σκύλος που αγωνίστηκε για μια χώρα δεν εκπροσωπεί άλλη (ACO VIII.5.3).": "Un perro que ha competido por un país no representa a otro (ACO VIII.5.3).",
   "Στέλνει μόνο αυτόν τον αγώνα, με τους σκύλους και τους κυναγωγούς του — μικρό αρχείο που περνά από κάθε εφαρμογή μηνυμάτων. Στην άλλη συσκευή:": "Envía sólo esta prueba, con sus perros y sus conductores — un archivo pequeño que pasa por cualquier aplicación de mensajes. En el otro dispositivo:",
   "Στέρεη": "Firme",
@@ -5628,6 +5815,7 @@ const UI_STR = {
   "Στο κινητό:": "En el teléfono:",
   "Στο τερέν: στείλτε το στήσιμο στο κινητό και κάντε την κλήρωση εκεί, μπροστά σε όλους. Από το σπίτι: κληρώστε τώρα και στείλτε τη σειρά με SMS στους κυναγωγούς· η σειρά παραμένει ενδεικτική (Άρθρο 16).": "En el campo: envíe el montaje al teléfono y haga el sorteo allí, delante de todos. Desde casa: sortee ahora y envíe el orden a los conductores por SMS; el orden sigue siendo orientativo (Artículo 16).",
   "Στον υπολογιστή, πριν τον αγώνα: μητρώο, συμμετοχές, τερέν και κριτές. Μετά πατήστε": "En el ordenador, antes de la prueba: registro, inscripciones, terrenos y jueces. Después pulse",
+  "Συγκρότηση": "Composición",
   "Συγχώνευση": "Fusionar",
   "Συγχώνευση ή αντικατάσταση;": "¿Fusionar o reemplazar?",
   "Συμμετοχές": "Inscripciones",
@@ -5636,12 +5824,14 @@ const UI_STR = {
   "Συμπληρώνεται μόνο όταν ο σκύλος τρέχει ως αθλητής εθνικής ομάδας. Δεν είναι η χώρα εκτροφής ούτε του κυναγωγού: είναι η ομάδα που εκπροσωπεί στον αγώνα. Αφήστε το «—» για τους υπόλοιπους.": "Se rellena sólo cuando el perro corre como atleta de una selección nacional. No es el país de cría ni el del conductor: es el equipo que representa en la prueba. Para los demás, déjelo en «—».",
   "Συνέχεια;": "¿Continuar?",
   "Συνδεδεμένο": "Conectado",
+  "Συντελεστής": "Coeficiente",
   "Σφάλμα Άρθρου 33 καταγεγραμμένο:": "Fallo del Artículo 33 registrado:",
   "Σφάλματα αποκλεισμού": "Fallos eliminatorios",
   "Σφάλματα αποκλεισμού (Άρθρο 33):": "Fallos eliminatorios (Artículo 33):",
   "Σφάλματα αποκλεισμού:": "Fallos eliminatorios:",
   "Σωστό": "Correcto",
   "Σύμπτυξη ζεύγους": "Plegar la pareja",
+  "Σύνολο": "Total",
   "Σύρετε το": "Arrastre el",
   "Σύρετε, ή ↑ ↓, για να αλλάξετε τη σειρά του ζεύγους": "Arrastre, o ↑ ↓, para cambiar el puesto de la pareja en el orden",
   "ΤΑ ΖΕΥΓΗ ΣΑΣ": "SUS PAREJAS",
@@ -5709,6 +5899,7 @@ const UI_STR = {
   "Φέρμα / ποντάρισμα": "Muestra / guiada a la orden",
   "Φεβρουάριος": "Febrero",
   "Φραγκολίνα": "Francolín",
+  "Φυλές": "Razas",
   "Φυλή": "Raza",
   "Φυλή (μόνο για Derby)": "Raza (sólo para el Derby)",
   "Φυλή:": "Raza:",
@@ -5887,6 +6078,7 @@ const UI_STR = {
   "στο βιβλίο γενεαλογίας την ημέρα του αγώνα· χρειάζονται": "en el libro genealógico el día de la prueba; hacen falta",
   "στο ιστορικό": "en el historial",
   "στον πίνακα ·": "en el tablón ·",
+  "στον πυροβολισμό": "al disparo",
   "συμμετοχές": "inscripciones",
   "συμμετοχή": "inscripción",
   "συμπληρωματικός": "suplementario",
@@ -5906,6 +6098,7 @@ const UI_STR = {
   "φυλές (ACO VIII.11.2-3)": "razas (ACO VIII.11.2-3)",
   "φυλές στη βάση": "razas en el equipo",
   "φυλή στη βάση": "raza en el equipo",
+  "χειροκίνητη αλλαγή": "cambio manual",
   "χωρίς αναγνωρίσιμη φυλή καταχωρούνται ως": "sin raza reconocible se registran como",
   "χωρίς βαθμολογία": "sin calificación",
   "χωρίς ημερομηνία εγγραφής στο βιβλίο· ο κανονισμός ζητά": "sin fecha de inscripción en el libro; el reglamento exige",
@@ -7910,8 +8103,8 @@ function drawSheet(t, day, tr){
     const nat = e => { const d = dogById(e.dogId) || {};
       return d.natTeam ? ` (${esc(natTag(d.natTeam))})` : ""; };
     const cell = e => e ? `${esc(dogName(e.dogId))}${nat(e)} — ${esc(perName(e.handlerId))}` : tx("ΜΟΝΟΣ");
-    const marks = [b.recall && "επανάκληση", b.trailer && "συμπληρωματικός",
-                   b.manual && "χειροκίνητη αλλαγή"].filter(Boolean);
+    const marks = [b.recall && tx("επανάκληση"), b.trailer && tx("συμπληρωματικός"),
+                   b.manual && tx("χειροκίνητη αλλαγή")].filter(Boolean);
     return `<tr>
       <td style="font-weight:700">${b.no}</td>
       <td>${cell(ea)}</td>
@@ -7927,7 +8120,7 @@ function drawSheet(t, day, tr){
   return `<div class="sheet">
     <div class="print-hd" style="display:flex">
       <img src="${BADGE}" alt="">
-      <div class="t"><b>${tx("ΚΥΠΡΙΑΚΟΣ ΟΜΙΛΟΣ ΑΓΓΛΙΚΩΝ ΔΕΙΚΤΩΝ")}</b>
+      <div class="t"><b>${esc(clubCaps())}</b>
         <span>${esc(t.title)}${t.place && t.place!==t.title ? " · "+esc(t.place) : ""} · ${esc(tx(t.type))} · ${fmtDate(day.date)}</span>
         <span>${tx("Κριτές:")} ${judges||"—"}</span></div>
       <div class="pg">${esc(tr.name)}</div>
@@ -7965,9 +8158,9 @@ function noteSheet(t, day, tr, b, e, d, note, judgeName){
   const ptRows = [];
   for(let i=0;i<Math.max(4, pts.length);i++){
     const p = pts[i] || {};
-    ptRows.push(`<tr><td>${i+1}</td><td style="height:26px">${esc(p.game||"")}</td>
-      <td>${esc(p.quality||"")}</td><td>${esc([p.ferma,p.pontar].filter(Boolean).join(" / "))}</td>
-      <td>${esc(p.akinF||"")}</td><td>${esc(p.syn||"")}</td></tr>`);
+    ptRows.push(`<tr><td>${i+1}</td><td style="height:26px">${esc(tx(p.game||""))}</td>
+      <td>${esc(tx(p.quality||""))}</td><td>${esc([p.ferma,p.pontar].filter(Boolean).map(x=>tx(x)).join(" / "))}</td>
+      <td>${esc(tx(p.akinF||""))}</td><td>${esc(tx(p.syn||""))}</td></tr>`);
   }
   return `<div class="sheet">
     <div class="print-hd" style="display:flex">
@@ -7979,20 +8172,21 @@ function noteSheet(t, day, tr, b, e, d, note, judgeName){
     </div>
     <div class="fields">
       ${fld("Σκύλος", d.name)}
-      ${fld("Ζεύγος / θέση", "ζεύγος " + b.no + " · " + (b.a===e.id?"δεξιά":"αριστερά") + " της επιτροπής")}
+      ${fld("Ζεύγος / θέση", braceLabel(b.no) + " · "
+        + (b.a===e.id?tx("δεξιά"):tx("αριστερά")) + " " + tx("της επιτροπής"))}
       ${fld("Κυναγωγός", perName(e.handlerId))}
       ${fld("Κ.Ο.Κ.", d.reg)}
-      ${fld("Φυλή / φύλο", breedName(d.breed) + (d.sex?" · "+d.sex:""))}
+      ${fld("Φυλή / φύλο", breedName(d.breed) + (d.sex?" · "+sexShort(d.sex):""))}
       ${d.natTeam ? fld("Εθνική ομάδα", natTag(d.natTeam)) : ""}
       ${fld("Κριτής", judgeName || "")}
     </div>
     <h4>${tx("ΕΡΕΥΝΑ")}</h4>
     ${scales.map(([k,label])=>`<div style="display:flex;align-items:center;gap:10px;padding:5px 0">
-      <span style="flex:1;font:400 9.5pt/1.2 var(--f-b)">${label}</span>${rate(n[k])}</div>`).join("")}
+      <span style="flex:1;font:400 9.5pt/1.2 var(--f-b)">${tx(label)}</span>${rate(n[k])}</div>`).join("")}
     <div style="display:flex;align-items:center;gap:10px;padding:5px 0">
       <span style="flex:1;font:400 9.5pt/1.2 var(--f-b)">${tx("Πλάτος έρευνας")}</span>
       <span style="font:400 9pt/1 var(--f-b)">${widths.map(w=>
-        n.width===w?`<b style="text-decoration:underline">${w}</b>`:w).join(" · ")}</span></div>
+        n.width===w?`<b style="text-decoration:underline">${esc(tx(w))}</b>`:esc(tx(w))).join(" · ")}</span></div>
     <h4>${tx("ΠΟΝΤΟΙ")}</h4>
     <table><tr><th style="width:22px">#</th><th>${tx("Θήραμα")}</th><th>${tx("Ποιότητα")}</th>
       <th>${tx("Φέρμα / ποντάρισμα")}</th><th>${tx("Ακινησία")}</th><th>${tx("Συναίνεση")}</th></tr>
@@ -8022,9 +8216,9 @@ function noteSheet(t, day, tr, b, e, d, note, judgeName){
 function printHead(t, day, terrain){
   return `<div class="print-hd">
     <img src="${BADGE}" alt="">
-    <div class="t"><b>${tx("ΚΥΠΡΙΑΚΟΣ ΟΜΙΛΟΣ ΑΓΓΛΙΚΩΝ ΔΕΙΚΤΩΝ")}</b>
+    <div class="t"><b>${esc(clubCaps())}</b>
       <span>${esc(t.title)} · ${esc(tx(t.type))} · ${esc(t.place||"")} · ${fmtDate(day.date)}${
-        t.time?" · ώρα "+esc(t.time):""}</span>
+        t.time?" · "+tx("ώρα")+" "+esc(t.time):""}</span>
       <span>${tx("Η σειρά είναι ενδεικτική — Άρθρο 16.")}</span></div>
     ${terrain?`<div class="pg">${esc(terrain)}</div>`:""}
   </div>`;
@@ -9155,7 +9349,7 @@ function vSettings(){
     <button class="b-sm b-pri" style="margin-top:8px" data-act="saveSms">${tx("Αποθήκευση")}</button></div>
 
   <div class="card"><h3>${tx("Γλώσσα")}</h3>
-    <p class="tiny">${tx("Η γλώσσα αλλάζει μόνο ό,τι βλέπετε. Στη βάση όλα μένουν ελληνικά — η κατάσταση, η βαθμολογία, η μορφή του αγώνα — ώστε ένα αντίγραφο από αγγλικό κινητό να συγχωνεύεται κανονικά σε ελληνικό υπολογιστή και ο πίνακας πόντων να βρίσκει το κλειδί του.")}</p>
+    <p class="tiny">${tx("Η γλώσσα αλλάζει την οθόνη και τις εξαγωγές — το βιβλίο, το Word, το CSV και τα τυπωμένα φύλλα. Στη βάση όλα μένουν ελληνικά — η κατάσταση, η βαθμολογία, η μορφή του αγώνα — ώστε ένα αντίγραφο από αγγλικό κινητό να συγχωνεύεται κανονικά σε ελληνικό υπολογιστή και ο πίνακας πόντων να βρίσκει το κλειδί του.")}</p>
     <div class="row tight" style="margin-top:10px">${LANGS.map(([k,name])=>
       `<button class="tog ${(DB.settings.lang||"el")===k?"on":""}" data-setlang="${k}">${esc(name)}</button>`).join("")}</div>
     <p class="tiny" style="margin-top:10px">${tx("Η ορολογία των κριτών — φέρμα, ποντάρισμα, συναίνεση, τα σφάλματα του Άρθρου 33, οι βαθμολογίες — μπήκε από τους ίδιους τους κανονισμούς και σε πέντε γλώσσες. Κανένας όρος δεν μεταφράστηκε· δείτε τους με την πηγή τους στο Γλωσσάρι. Η υπόλοιπη οθόνη είναι επαγγελματική, μη επίσημη μετάφραση, γιατί γι' αυτήν δεν υπάρχει κανονισμός να την ορίσει. Οι φυλές είναι της F.C.I. και της ENCI, οι χώρες του CLDR. Τα ισπανικά στέκουν αλλιώς: κανένας ισπανικός κανονισμός δεν βρίσκεται στο αποθετήριο, οπότε το Γλωσσάρι δεν έχει ισπανική στήλη και στην ισπανική οθόνη είναι μετάφραση και οι όροι και οι φυλές.")}</p>
@@ -10029,18 +10223,24 @@ ${sheets.map((_,i)=>`<Relationship Id="${rel(i)}" Type="http://schemas.openxmlfo
    VLOOKUP and the standings add up Δεδομένα with SUMIFS, so anyone who opens
    the workbook can audit the arithmetic and change the club's scoring without
    touching the app. */
-const SH_PAR = "Παράμετροι", SH_DATA = "Δεδομένα", SH_STATS = "Στατιστικά", SH_BR = "Ζεύγη",
-      SH_TEAM = "Ομάδες";
-/* Οι δύο ρόλοι, όπως γράφονται στο φύλλο και όπως τους ψάχνουν τα SUMIFS.
-   Σταθερές του αρχείου, όχι της γλώσσας: το βιβλίο είναι αρχείο της λέσχης
-   και μένει ελληνικό, όπως και οι επικεφαλίδες του. */
-const ROLE_MAIN = "ΒΑΣΗ", ROLE_SUB = "ΑΝΑΠΛΗΡΩΜΑΤΙΚΟΣ";
+/* Τα ονόματα των φύλλων είναι συναρτήσεις, όχι σταθερές: μπαίνουν και στην
+   καρτέλα του φύλλου και μέσα στους τύπους, οπότε πρέπει να γυρίζουν μαζί.
+   Ένα βιβλίο παράγεται σε μία γλώσσα και μένει συνεπές με τον εαυτό του. */
+const SH_PAR = () => tx("Παράμετροι"), SH_DATA = () => tx("Δεδομένα"),
+      SH_STATS = () => tx("Στατιστικά"), SH_BR = () => tx("Ζεύγη"),
+      SH_TEAM = () => tx("Ομάδες"), SH_SQ = () => tx("Συγκρότηση");
+/* Οι δύο ρόλοι και το ναι/όχι της κατάταξης: τα γράφει ένας τύπος και τα
+   διαβάζει άλλος, οπότε αρκεί να βγαίνουν από την ίδια συνάρτηση. */
+const ROLE_MAIN = () => tx("ΒΑΣΗ"), ROLE_SUB = () => tx("ΑΝΑΠΛΗΡΩΜΑΤΙΚΟΣ");
+const YES = () => tx("ΝΑΙ"), NO = () => tx("ΟΧΙ");
 const qname = n => "'" + n + "'";
 
+/* Το κλειδί του πίνακα πόντων γράφεται στη γλώσσα του βιβλίου — και στα
+   Δεδομένα και εδώ, από την ίδια tx(). Το VLOOKUP ψάχνει ό,τι γράφτηκε. */
 function parSheet(){
   const keys = Object.keys(DB.settings.points).filter(k=>k!=="-");
-  return { name: SH_PAR, rows: [[txt("Κλειδί"), txt("Βασικοί πόντοι")]]
-    .concat(keys.map(k=>[txt(k), num(DB.settings.points[k])])) };
+  return { name: SH_PAR(), rows: [[txt(tx("Κλειδί")), txt(tx("Βασικοί πόντοι"))]]
+    .concat(keys.map(k=>[txt(tx(k)), num(DB.settings.points[k])])) };
 }
 /* Η ομάδα και ο ρόλος μπαίνουν ΜΕΤΑ τη στήλη των πόντων, όχι δίπλα στον
    σκύλο: το J μένει J και κανένα SUMIFS του Στατιστικά δεν μετακινείται. */
@@ -10049,48 +10249,48 @@ function dataSheet(trials, keep){
      τον αγώνα, η διαδρομή είναι μία και η στήλη «Ημέρα» γράφει 1· όπου
      αθροίζει (ACO IX.29), ο σκύλος έχει δύο γραμμές και τα SUMIFS του
      «Ομάδες» τις προσθέτουν χωρίς να αλλάξει τύπος. */
-  const rows = [[txt("Σκύλος"),txt("Φυλή"),txt("Αγώνας"),txt("Ημερομηνία"),txt("Είδος"),
-                 txt("Βαθμολογία"),txt("Τίτλος"),txt("Κλειδί"),txt("Συντελεστής"),txt("Πόντοι"),
-                 txt("Ομάδα"),txt("Ρόλος"),txt("Ημέρα")]];
+  const rows = [[txt(tx("Σκύλος")),txt(tx("Φυλή")),txt(tx("Αγώνας")),txt(tx("Ημερομηνία")),txt(tx("Είδος")),
+                 txt(tx("Βαθμολογία")),txt(tx("Τίτλος")),txt(tx("Κλειδί")),txt(tx("Συντελεστής")),txt(tx("Πόντοι")),
+                 txt(tx("Ομάδα")),txt(tx("Ρόλος")),txt(tx("Ημέρα"))]];
   trials.forEach(t=>t.entries.forEach(e=>resDays(t, e.id).forEach(({day, res:r})=>{
     if(keep && !keep(t,e)) return;
     const d = dogById(e.dogId) || {};
     const n = rows.length + 1;
     const m = cupOn(t) ? squadOfEntry(t, e.id) : null;
-    rows.push([txt(d.name||""), txt(d.breed||""), txt(t.title), txt(fmtDate(t.dateStart)), txt(t.type),
-      txt(r.qual||"-"), txt(r.award||"-"),
+    rows.push([txt(d.name||""), txt(breedName(d.breed)||""), txt(t.title), txt(fmtDate(t.dateStart)), txt(tx(t.type)),
+      txt(tx(r.qual||"-")), txt(r.award||"-"),
       fml(`IF(G${n}<>"-",G${n},F${n})`, true),
       num(coefficient(t)),
-      fml(`IFERROR(VLOOKUP(H${n},${qname(SH_PAR)}!$A$2:$B$40,2,FALSE)*I${n},0)`),
+      fml(`IFERROR(VLOOKUP(H${n},${qname(SH_PAR())}!$A$2:$B$40,2,FALSE)*I${n},0)`),
       txt(teamOfEntry(t, e)),
-      txt(m ? (m.sub ? ROLE_SUB : ROLE_MAIN) : ""),
+      txt(m ? (m.sub ? ROLE_SUB() : ROLE_MAIN()) : ""),
       num(day + 1)]);
   })));
-  return { name: SH_DATA, rows };
+  return { name: SH_DATA(), rows };
 }
 function statsSheet(trials, keep){
   const dogIds = [];
   trials.forEach(t=>t.entries.forEach(e=>{
     if(resDays(t, e.id).length && (!keep || keep(t,e)) && !dogIds.includes(e.dogId)) dogIds.push(e.dogId); }));
-  const rows = [[txt("Σκύλος")].concat(trials.map(t=>txt(t.title))).concat([txt("ΣΥΝΟΛΟ")])];
+  const rows = [[txt(tx("Σκύλος"))].concat(trials.map(t=>txt(t.title))).concat([txt(tx("ΣΥΝΟΛΟ"))])];
   dogIds.forEach(id=>{
     const n = rows.length + 1;
     const cells = [txt(dogName(id))];
     trials.forEach((_, i)=>{
       const c = colName(i + 2);
-      cells.push(fml(`SUMIFS(${qname(SH_DATA)}!$J:$J,${qname(SH_DATA)}!$A:$A,$A${n},${qname(SH_DATA)}!$C:$C,${c}$1)`));
+      cells.push(fml(`SUMIFS(${qname(SH_DATA())}!$J:$J,${qname(SH_DATA())}!$A:$A,$A${n},${qname(SH_DATA())}!$C:$C,${c}$1)`));
     });
     cells.push(fml(`SUM(B${n}:${colName(trials.length + 1)}${n})`));
     rows.push(cells);
   });
   const last = rows.length;
-  const tot = [txt("ΣΥΝΟΛΟ ΑΓΩΝΑ")];
+  const tot = [txt(tx("ΣΥΝΟΛΟ ΑΓΩΝΑ"))];
   for(let i = 0; i < trials.length + 1; i++){
     const c = colName(i + 2);
     tot.push(fml(last > 1 ? `SUM(${c}2:${c}${last})` : "0"));
   }
   rows.push(tot);
-  return { name: SH_STATS, rows };
+  return { name: SH_STATS(), rows };
 }
 /* Η κατάταξη ανά χώρα, ζωντανή. Κάθε αριθμός της βγαίνει από το φύλλο
    Δεδομένα με SUMIFS και COUNTIFS, και κάθε κατώφλι από το μπλοκ του
@@ -10105,10 +10305,10 @@ function statsSheet(trials, keep){
    και στα δύο κελιά του κανονισμού (ACO VIII.11.2-3). */
 function teamSheet(t){
   const {list, cup} = teamTable(t);
-  const D = qname(SH_DATA);
-  const head = [txt("Θέση"),txt("Χώρα"),txt("Κωδικός"),txt("Αρχηγός"),txt("Σκύλοι"),
-    txt("Αναπληρωματικοί"),txt("Βαθμολογημένοι"),txt("Πόντοι"),txt("Φυλές"),
-    txt("Μπόνους"),txt("Σύνολο"),txt("Κατατάσσεται")];
+  const D = qname(SH_DATA());
+  const head = [txt(tx("Θέση")),txt(tx("Χώρα")),txt(tx("Κωδικός")),txt(tx("Αρχηγός")),txt(tx("Σκύλοι")),
+    txt(tx("Αναπληρωματικοί")),txt(tx("Βαθμολογημένοι")),txt(tx("Πόντοι")),txt(tx("Φυλές")),
+    txt(tx("Μπόνους")),txt(tx("Σύνολο")),txt(tx("Κατατάσσεται"))];
   const rows = [head];
   const n = list.length;
   const last = n + 1;                       /* τελευταία γραμμή ομάδας */
@@ -10118,80 +10318,80 @@ function teamSheet(t){
   list.forEach(x=>{
     const r = rows.length + 1;
     rows.push([
-      fml(`IF($L${r}<>"ΝΑΙ","—",SUMPRODUCT(($L$2:$L$${last}="ΝΑΙ")*($K$2:$K$${last}>$K${r}))+1)`, true),
+      fml(`IF($L${r}<>"${YES()}","—",SUMPRODUCT(($L$2:$L$${last}="${YES()}")*($K$2:$K$${last}>$K${r}))+1)`, true),
       txt(countryName(x.country)),
       txt(x.country),
       txt((x.squad && x.squad.captain) || ""),
       num(x.dogs.length),
       num(x.subs.length),
-      fml(`COUNTIFS(${D}!$K:$K,$C${r},${D}!$L:$L,"${ROLE_MAIN}",${D}!$J:$J,">0")`),
-      fml(`SUMIFS(${D}!$J:$J,${D}!$K:$K,$C${r},${D}!$L:$L,"${ROLE_MAIN}")`),
+      fml(`COUNTIFS(${D}!$K:$K,$C${r},${D}!$L:$L,"${ROLE_MAIN()}",${D}!$J:$J,">0")`),
+      fml(`SUMIFS(${D}!$J:$J,${D}!$K:$K,$C${r},${D}!$L:$L,"${ROLE_MAIN()}")`),
       num(x.breeds.size),
       fml(`IF($I${r}>=4,$B$${R.b4},IF($I${r}=3,$B$${R.b3},0))`),
       fml(`$H${r}+$J${r}`),
-      fml(`IF(AND($G${r}>=$B$${R.placed},$K${r}>=$B$${R.pts}),"ΝΑΙ","ΟΧΙ")`, true)
+      fml(`IF(AND($G${r}>=$B$${R.placed},$K${r}>=$B$${R.pts}),"${YES()}","${NO()}")`, true)
     ]);
   });
 
   rows.push([]);
-  rows.push([txt("Ο κανονισμός του Κυπέλλου")]);
-  rows.push([txt("Κύπελλο"), txt(cup.label || "")]);
-  rows.push([txt("Παραπομπή"), txt(cup.ref || "")]);
-  rows.push([txt("Σκύλοι ανά ομάδα, τουλάχιστον"), num(cup.min)]);
-  rows.push([txt("Σκύλοι ανά ομάδα, το πολύ"), num(cup.max)]);
-  rows.push([txt("Αναπληρωματικοί, το πολύ"), num(cup.subs)]);
-  rows.push([txt("Βαθμολογημένοι για να καταταγεί ομάδα"), num(cup.needPlaced)]);
-  rows.push([txt("Πόντοι για να καταταγεί ομάδα"), num(cup.needPoints)]);
-  rows.push([txt("Μπόνους για 4 διαφορετικές φυλές"), num(cup.bonus ? 4 : 0)]);
-  rows.push([txt("Μπόνους για 3 διαφορετικές φυλές"), num(cup.bonus ? 2 : 0)]);
-  return { name: SH_TEAM, rows };
+  rows.push([txt(tx("Ο κανονισμός του Κυπέλλου"))]);
+  rows.push([txt(tx("Κύπελλο")), txt(tx(cup.label || ""))]);
+  rows.push([txt(tx("Παραπομπή")), txt(cup.ref || "")]);
+  rows.push([txt(tx("Σκύλοι ανά ομάδα, τουλάχιστον")), num(cup.min)]);
+  rows.push([txt(tx("Σκύλοι ανά ομάδα, το πολύ")), num(cup.max)]);
+  rows.push([txt(tx("Αναπληρωματικοί, το πολύ")), num(cup.subs)]);
+  rows.push([txt(tx("Βαθμολογημένοι για να καταταγεί ομάδα")), num(cup.needPlaced)]);
+  rows.push([txt(tx("Πόντοι για να καταταγεί ομάδα")), num(cup.needPoints)]);
+  rows.push([txt(tx("Μπόνους για 4 διαφορετικές φυλές")), num(cup.bonus ? 4 : 0)]);
+  rows.push([txt(tx("Μπόνους για 3 διαφορετικές φυλές")), num(cup.bonus ? 2 : 0)]);
+  return { name: SH_TEAM(), rows };
 }
 /* Η σύνθεση κάθε ομάδας, σκύλο τον σκύλο: αυτό είναι το φύλλο που υπογράφει ο
    αρχηγός και που ελέγχει η επιτροπή πριν την κλήρωση. */
 function squadSheet(t){
-  const rows = [[txt("Χώρα"),txt("Κωδικός"),txt("Αρχηγός"),txt("Ρόλος"),txt("Σκύλος"),
-                 txt("Φυλή"),txt("Φύλο"),txt("Αρ. Κ.Ο.Κ."),txt("Αρ. βιβλιαρίου"),
-                 txt("Ιδιοκτήτης"),txt("Κυναγωγός"),txt("Χώρα εκτροφής")]];
+  const rows = [[txt(tx("Χώρα")),txt(tx("Κωδικός")),txt(tx("Αρχηγός")),txt(tx("Ρόλος")),txt(tx("Σκύλος")),
+                 txt(tx("Φυλή")),txt(tx("Φύλο")),txt(tx("Αρ. Κ.Ο.Κ.")),txt(tx("Αρ. βιβλιαρίου")),
+                 txt(tx("Ιδιοκτήτης")),txt(tx("Κυναγωγός")),txt(tx("Χώρα εκτροφής"))]];
   squadsOf(t).forEach(q=>{
     const line = (id, role)=>{
       const e = t.entries.find(x=>x.id===id); if(!e) return;
       const d = dogById(e.dogId) || {};
       rows.push([txt(countryName(q.country)), txt(q.country), txt(q.captain||""), txt(role),
-        txt(d.name||""), txt(d.breed||""), txt(d.sex||""), txt(d.reg||""), txt(d.book||""),
+        txt(d.name||""), txt(breedName(d.breed)||""), txt(sexShort(d.sex)), txt(d.reg||""), txt(d.book||""),
         txt(d.owner||""), txt(perName(e.handlerId)), txt(countryName(d.country))]);
     };
-    (q.entryIds||[]).forEach(id=>line(id, ROLE_MAIN));
-    (q.subIds||[]).forEach(id=>line(id, ROLE_SUB));
+    (q.entryIds||[]).forEach(id=>line(id, ROLE_MAIN()));
+    (q.subIds||[]).forEach(id=>line(id, ROLE_SUB()));
   });
   const problems = squadProblems(t);
   if(problems.length){
     rows.push([]);
-    rows.push([txt("Η συγκρότηση δεν στέκει ακόμη")]);
+    rows.push([txt(tx("Η συγκρότηση δεν στέκει ακόμη"))]);
     /* Το κείμενο κρατά τη σημαία του· στο φύλλο μένει ο κωδικός. */
     problems.forEach(x=>rows.push([txt(String(x)
       .replace(/[\u{1F1E6}-\u{1F1FF}]/gu, "").replace(/\s+/g, " ").trim())]));
   }
-  return { name: "Συγκρότηση", rows };
+  return { name: SH_SQ(), rows };
 }
 
 function bracesSheet(t){
   /* Σε Κύπελλο μπαίνει και η ομάδα κάθε πλευράς: εκεί ελέγχει η επιτροπή, μέσα
      στο ίδιο το αρχείο, ότι κανένα ζεύγος δεν έχει δύο συμπατριώτες. */
   const cup = cupOn(t);
-  const rows = [[txt("Τερέν"),txt("Ζεύγος"),txt("Σκύλος δεξιά"),txt("Σκύλος αριστερά"),
-                 txt("Κυναγωγός δεξιά"),txt("Κυναγωγός αριστερά")]
-    .concat(cup ? [txt("Ομάδα δεξιά"), txt("Ομάδα αριστερά")] : [])
-    .concat([txt("Κριτές"),txt("Σημείωση")])];
+  const rows = [[txt(tx("Τερέν")),txt(tx("Ζεύγος")),txt(tx("Σκύλος δεξιά")),txt(tx("Σκύλος αριστερά")),
+                 txt(tx("Κυναγωγός δεξιά")),txt(tx("Κυναγωγός αριστερά"))]
+    .concat(cup ? [txt(tx("Ομάδα δεξιά")), txt(tx("Ομάδα αριστερά"))] : [])
+    .concat([txt(tx("Κριτές")),txt(tx("Σημείωση"))])];
   t.days.forEach(day=>day.terrains.forEach(tr=>(tr.braces||[]).forEach(b=>{
     const ea = t.entries.find(e=>e.id===b.a), eb = t.entries.find(e=>e.id===b.b);
-    const marks = [b.recall && "επανάκληση", b.trailer && "συμπληρωματικός",
-                   b.manual && "χειροκίνητη αλλαγή"].filter(Boolean).join(" · ");
-    rows.push([txt(tr.name), num(b.no), txt(ea?dogName(ea.dogId):""), txt(eb?dogName(eb.dogId):"ΜΟΝΟΣ"),
+    const marks = [b.recall && tx("επανάκληση"), b.trailer && tx("συμπληρωματικός"),
+                   b.manual && tx("χειροκίνητη αλλαγή")].filter(Boolean).join(" · ");
+    rows.push([txt(tr.name), num(b.no), txt(ea?dogName(ea.dogId):""), txt(eb?dogName(eb.dogId):tx("ΜΟΝΟΣ")),
       txt(ea?perName(ea.handlerId):""), txt(eb?perName(eb.handlerId):"")]
       .concat(cup ? [txt(ea?teamOfEntry(t,ea):""), txt(eb?teamOfEntry(t,eb):"")] : [])
       .concat([txt(tr.judgeIds.map(j=>(judById(j)||{}).name).filter(Boolean).join(", ")), txt(marks)]));
   })));
-  return { name: SH_BR, rows };
+  return { name: SH_BR(), rows };
 }
 function exportTrialXls(t){
   /* Σε Κύπελλο μπαίνουν δύο φύλλα ακόμη, και μπροστά: η κατάταξη ανά χώρα
@@ -10260,11 +10460,11 @@ function exportPaidXls(t){
 }
 function exportTrialCsv(t){
   const cup = cupOn(t);
-  const lines = [["Τερέν","Ζεύγος","Δεξιά","Αριστερά","Κυναγωγός Δ","Κυναγωγός Α"]
-    .concat(cup ? ["Ομάδα Δ","Ομάδα Α"] : []).join(";")];
+  const lines = [[tx("Τερέν"),tx("Ζεύγος"),tx("Δεξιά"),tx("Αριστερά"),tx("Κυναγωγός Δ"),tx("Κυναγωγός Α")]
+    .concat(cup ? [tx("Ομάδα Δ"),tx("Ομάδα Α")] : []).join(";")];
   t.days.forEach(day=>day.terrains.forEach(tr=>(tr.braces||[]).forEach(b=>{
     const ea=t.entries.find(e=>e.id===b.a), eb=t.entries.find(e=>e.id===b.b);
-    lines.push([tr.name,b.no,ea?dogName(ea.dogId):"",eb?dogName(eb.dogId):"ΜΟΝΟΣ",
+    lines.push([tr.name,b.no,ea?dogName(ea.dogId):"",eb?dogName(eb.dogId):tx("ΜΟΝΟΣ"),
       ea?perName(ea.handlerId):"",eb?perName(eb.handlerId):""]
       .concat(cup ? [ea?teamOfEntry(t,ea):"", eb?teamOfEntry(t,eb):""] : []).join(";"));
   })));
@@ -10291,13 +10491,14 @@ function exportTrialDoc(t){
     const parts = judged.map(([jid, n])=>{
       const scale = [["passion","Πάθος"],["method","Μεθοδικότητα"],
                      ["style","Καλπασμός και στυλ φυλής"],["contact","Επαφή με κυναγωγό"]]
-        .filter(([k])=>n[k]).map(([k,l])=>`${l} ${n[k]}/5`).join(" · ");
+        .filter(([k])=>n[k]).map(([k,l])=>`${tx(l)} ${n[k]}/5`).join(" · ");
       const pts = (n.points||[]).map((p,i)=>
-        `<li>${i+1}. ${esc([p.game,p.quality,p.ferma,p.pontar,p.akinF && "ακινησία στο πέταγμα: "+p.akinF,
-           p.akinS && "στον πυροβολισμό: "+p.akinS, p.aport && "απόρτ: "+p.aport,
-           p.syn && "συναίνεση: "+p.syn].filter(Boolean).join(" · "))}</li>`).join("");
+        `<li>${i+1}. ${esc([tx(p.game),tx(p.quality),tx(p.ferma),tx(p.pontar),
+           p.akinF && tx("ακινησία στο πέταγμα")+": "+tx(p.akinF),
+           p.akinS && tx("στον πυροβολισμό")+": "+tx(p.akinS), p.aport && tx("απόρτ")+": "+tx(p.aport),
+           p.syn && tx("συναίνεση")+": "+tx(p.syn)].filter(Boolean).join(" · "))}</li>`).join("");
       return `<p style="margin:6pt 0 2pt"><b>${esc((judById(jid)||{}).name || tx("Κριτής"))}</b></p>
-        ${scale?`<p style="margin:0">${esc(scale)}${n.width?" · έρευνα "+esc(n.width.toLowerCase()):""}</p>`:""}
+        ${scale?`<p style="margin:0">${esc(scale)}${n.width?" · "+tx("έρευνα")+" "+esc(tx(n.width).toLowerCase()):""}</p>`:""}
         ${pts?`<p style="margin:4pt 0 0"><i>${tx("Πόντοι")}</i></p><ul style="margin:0">${pts}</ul>`:""}
         ${n.whites?`<p style="margin:2pt 0 0">${tx("Λευκές φέρμες:")} ${n.whites}</p>`:""}
         ${(n.faults||[]).length?`<p style="margin:2pt 0 0;color:#B3261E">${tx("Σφάλματα αποκλεισμού (Άρθρο 33):")}
@@ -10308,8 +10509,8 @@ function exportTrialDoc(t){
       <p style="margin:0"><b>${esc(dogName(e.dogId))}</b> — ${esc(breedName(d.breed))}${d.sex?" · "+d.sex:""}
         ${d.reg?" · Κ.Ο.Κ. "+esc(d.reg):""}${
         d.natTeam?" · "+tx("Εθνική ομάδα")+" "+esc(natTag(d.natTeam)):""}</p>
-      <p style="margin:0;font-size:9pt">${esc(tr.name)} ${tx("· ζεύγος")} ${b.no}${b.recall?" · επανάκληση (Άρθρο 30)":""}
-        · ${b.a===e.id?"δεξιά":"αριστερά"} ${tx("της επιτροπής · κυναγωγός")} ${esc(perName(e.handlerId))}
+      <p style="margin:0;font-size:9pt">${esc(tr.name)} ${tx("· ζεύγος")} ${b.no}${b.recall?" · "+tx("επανάκληση")+" ("+tx("Άρθρο 30")+")":""}
+        · ${b.a===e.id?tx("δεξιά"):tx("αριστερά")} ${tx("της επιτροπής · κυναγωγός")} ${esc(perName(e.handlerId))}
         ${tx("· βαθμολογία")} ${esc(tx(r.qual||"-"))}${r.award&&r.award!=="-"?" · "+esc(tx(r.award)):""}
         · ${pointsFor(t,r)} ${tx("πόντοι")}</p>
       ${parts}</div>`);
@@ -10346,10 +10547,10 @@ function exportTrialDoc(t){
   })();
 
   const html = `<html><head><meta charset="utf-8"></head><body style="font-family:Calibri">
-    <h2>${tx("ΚΥΠΡΙΑΚΟΣ ΟΜΙΛΟΣ ΑΓΓΛΙΚΩΝ ΔΕΙΚΤΩΝ")}</h2>
+    <h2>${esc(clubName().toUpperCase())}</h2>
     <h3>${esc(t.title)}</h3>
-    <p>${esc(t.type)} · ${fmtDate(t.dateStart)} · ${esc(t.place||"")} ${tx("· Θήραμα:")} ${esc(t.game||"")}${
-      t.wild?" (άγριο θήραμα)":""} ${tx("· Συντελεστής ×")}${coefficient(t)}</p>
+    <p>${esc(tx(t.type))} · ${fmtDate(t.dateStart)} · ${esc(t.place||"")} ${tx("· Θήραμα:")} ${esc(tx(t.game||""))}${
+      t.wild?" ("+tx("άγριο θήραμα")+")":""} ${tx("· Συντελεστής ×")}${coefficient(t)}</p>
     ${cupBlock}
     <h3 style="margin-top:14pt">${tx("Ατομική κατάταξη")}</h3>
     <table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;font-size:11pt">
@@ -12800,7 +13001,7 @@ function qrPoster(){
     <img src="${BADGE}" alt="" style="width:26mm;height:26mm;border-radius:50%;
       filter:grayscale(1) contrast(1.2);margin:6mm auto 0;display:block">
     <div style="font:800 14pt/1.3 var(--f-d);letter-spacing:.08em;margin-top:5mm">
-      ${tx("ΚΥΠΡΙΑΚΟΣ ΟΜΙΛΟΣ ΑΓΓΛΙΚΩΝ ΔΕΙΚΤΩΝ")}</div>
+      ${esc(clubCaps())}</div>
     <div style="font:400 11pt/1.4 var(--f-b);margin-top:2mm">${tx("Διαχείριση Αγώνων · σαρώστε για εγκατάσταση")}</div>
     <div style="margin:8mm auto 0;width:92mm">${QR.svg(url, 348)}</div>
     <div style="font:400 10pt/1.4 var(--f-b);margin-top:5mm;word-break:break-all">${esc(url)}</div>

@@ -769,6 +769,13 @@
   "fr": "Races britanniques",
   "it": "Razze britanniche"
  },
+ "Αγώνας": {
+  "de": "Prüfung",
+  "en": "Trial",
+  "es": "Prueba",
+  "fr": "Épreuve",
+  "it": "Prova"
+ },
  "Αγώνας:": {
   "de": "Prüfung:",
   "en": "Trial:",
@@ -908,6 +915,13 @@
   "es": "Suplentes",
   "fr": "Remplaçants",
   "it": "Riserve"
+ },
+ "Αναπληρωματικοί, το πολύ": {
+  "de": "Ersatzhunde, höchstens",
+  "en": "Substitutes, at most",
+  "es": "Suplentes, como máximo",
+  "fr": "Remplaçants, au maximum",
+  "it": "Riserve, al massimo"
  },
  "Ανοίξατε το αρχείο απευθείας και ο περιηγητής δεν επιτρέπει αποθήκευση. Ό,τι καταχωρήσετε θα χαθεί μόλις κλείσετε τη σελίδα. Κλείστε το και ανοίξτε την εφαρμογή από τη διεύθυνση του ομίλου, ή κατεβάστε αντίγραφο (Ρυθμίσεις → Μεταφορά) πριν κλείσετε.": {
   "de": "Sie haben die Datei direkt geöffnet, und der Browser lässt kein Speichern zu. Alles, was Sie eingeben, geht beim Schließen der Seite verloren. Schließen Sie sie und öffnen Sie die Anwendung über die Adresse des Vereins, oder laden Sie vor dem Schließen eine Sicherung herunter (Einstellungen → Übertragung).",
@@ -1126,6 +1140,13 @@
   "fr": "N° au livre des origines",
   "it": "N. del libro genealogico"
  },
+ "Αρ. βιβλιαρίου": {
+  "de": "Zuchtbuch-Nr.",
+  "en": "Studbook no.",
+  "es": "N.º libro de orígenes",
+  "fr": "N° livre des origines",
+  "it": "N. libro origini"
+ },
  "Αρ. βιβλιαρίου εργασίας": {
   "de": "Nummer des Leistungsbuchs",
   "en": "Working book no.",
@@ -1139,6 +1160,13 @@
   "es": "Nº de socio",
   "fr": "N° de membre",
   "it": "N. di socio"
+ },
+ "Αριστερά": {
+  "de": "Links",
+  "en": "Left",
+  "es": "Izquierda",
+  "fr": "Gauche",
+  "it": "Sinistra"
  },
  "Αριστερά της επιτροπής (2ος)": {
   "de": "Links vom Richterkollegium (2.)",
@@ -1160,6 +1188,13 @@
   "es": "Macho",
   "fr": "Mâle",
   "it": "Maschio"
+ },
+ "Αρχηγός": {
+  "de": "Mannschaftsführer",
+  "en": "Captain",
+  "es": "Capitán",
+  "fr": "Capitaine",
+  "it": "Capitano"
  },
  "Αρχηγός ομάδας": {
   "de": "Mannschaftsführer",
@@ -1224,6 +1259,13 @@
   "fr": "Augmenter",
   "it": "Aumenta"
  },
+ "ΒΑΣΗ": {
+  "de": "STAMM",
+  "en": "MAIN",
+  "es": "TITULAR",
+  "fr": "TITULAIRE",
+  "it": "TITOLARE"
+ },
  "Βαθμολογία": {
   "de": "Bewertung",
   "en": "Scoring",
@@ -1251,6 +1293,13 @@
   "es": "Puntos base por calificación/título. Se multiplican por el coeficiente de la prueba (×2 parejas, ×3 o ×4 sobre caza silvestre para I.C./C.P.).",
   "fr": "Points de base par qualification/titre. Ils sont multipliés par le coefficient de l'épreuve (×2 en couple, ×3 ou ×4 sur gibier sauvage pour Recherche de chasse / Chasse pratique).",
   "it": "Punti base per qualifica/titolo. Vengono moltiplicati per il coefficiente della prova (×2 in batteria, ×3 o ×4 su selvaggina selvatica per Ricerca di caccia / Caccia pratica)."
+ },
+ "Βασικοί πόντοι": {
+  "de": "Grundpunkte",
+  "en": "Base points",
+  "es": "Puntos base",
+  "fr": "Points de base",
+  "it": "Punti base"
  },
  "Βιβλίο γενεαλογίας χώρας": {
   "de": "Zuchtbuch des Landes",
@@ -1475,6 +1524,13 @@
   "es": "No hay teléfono para ",
   "fr": "Pas de numéro de téléphone pour ",
   "it": "Non c'è un numero di telefono per "
+ },
+ "Δεξιά": {
+  "de": "Rechts",
+  "en": "Right",
+  "es": "Derecha",
+  "fr": "Droite",
+  "it": "Destra"
  },
  "Δεξιά της επιτροπής (1ος)": {
   "de": "Rechts vom Richterkollegium (1.)",
@@ -2211,12 +2267,12 @@
   "fr": "La copie n'a pas été autorisée",
   "it": "La copia non è stata consentita"
  },
- "Η γλώσσα αλλάζει μόνο ό,τι βλέπετε. Στη βάση όλα μένουν ελληνικά — η κατάσταση, η βαθμολογία, η μορφή του αγώνα — ώστε ένα αντίγραφο από αγγλικό κινητό να συγχωνεύεται κανονικά σε ελληνικό υπολογιστή και ο πίνακας πόντων να βρίσκει το κλειδί του.": {
-  "de": "Die Sprache ändert nur, was Sie sehen. Gespeichert wird alles auf Griechisch — Status, Bewertung, Form der Prüfung — damit eine auf einem englischen Telefon erstellte Sicherung sich in einen griechischen Rechner einfügt und die Punktetabelle ihren Schlüssel wiederfindet.",
-  "en": "The language changes what you see and nothing else. Everything is stored in Greek — status, grading, trial format — so that a backup made on an English phone merges into a Greek laptop and the points table still finds its key.",
-  "es": "La lengua cambia lo que usted ve y nada más. En la base todo queda en griego — el estado, la calificación, el formato de la prueba — para que una copia hecha en un teléfono inglés se fusione en un ordenador griego y la tabla de puntos siga encontrando su clave.",
-  "fr": "La langue ne change que ce que vous voyez. Tout est enregistré en grec — état, qualification, forme de l'épreuve — pour qu'une sauvegarde faite sur un téléphone en anglais fusionne sans peine dans un ordinateur en grec et que le barème retrouve sa clé.",
-  "it": "La lingua cambia solo ciò che vedete. Nella base dati resta tutto in greco — stato, qualifica, forma della prova — così che una copia fatta su un telefono in inglese si unisca senza problemi a un computer in greco e la tabella dei punti ritrovi la sua chiave."
+ "Η γλώσσα αλλάζει την οθόνη και τις εξαγωγές — το βιβλίο, το Word, το CSV και τα τυπωμένα φύλλα. Στη βάση όλα μένουν ελληνικά — η κατάσταση, η βαθμολογία, η μορφή του αγώνα — ώστε ένα αντίγραφο από αγγλικό κινητό να συγχωνεύεται κανονικά σε ελληνικό υπολογιστή και ο πίνακας πόντων να βρίσκει το κλειδί του.": {
+  "de": "Die Sprache ändert den Bildschirm und die Exporte — die Arbeitsmappe, die Word-Datei, die CSV und die gedruckten Blätter. Gespeichert wird alles auf Griechisch — Status, Bewertung, Form der Prüfung — damit eine auf einem englischen Telefon erstellte Sicherung sich in einen griechischen Rechner einfügt und die Punktetabelle ihren Schlüssel wiederfindet.",
+  "en": "The language changes the screen and the exports — the workbook, the Word file, the CSV and the printed sheets. Everything is stored in Greek — status, grading, trial format — so that a backup made on an English phone merges into a Greek laptop and the points table still finds its key.",
+  "es": "El idioma cambia la pantalla y las exportaciones — el libro, el archivo Word, el CSV y las hojas impresas. En la base de datos todo permanece en griego — estado, calificación, forma de la prueba — de modo que una copia hecha en un teléfono en inglés se fusione sin problemas en un ordenador en griego y la tabla de puntos encuentre su clave.",
+  "fr": "La langue change l'écran et les exports — le classeur, le fichier Word, le CSV et les feuilles imprimées. Tout est enregistré en grec — état, qualification, forme de l'épreuve — pour qu'une sauvegarde faite sur un téléphone en anglais fusionne sans peine dans un ordinateur en grec et que le barème retrouve sa clé.",
+  "it": "La lingua cambia la schermata e le esportazioni — la cartella di lavoro, il file Word, il CSV e i fogli stampati. Nella base dati resta tutto in greco — stato, qualifica, forma della prova — così che una copia fatta su un telefono in inglese si unisca senza problemi a un computer in greco e la tabella dei punti ritrovi la sua chiave."
  },
  "Η γραμμή επικεφαλίδων εντοπίστηκε αυτόματα. Ελέγξτε κάθε στήλη πριν την εισαγωγή· είναι η μόνη ευκαιρία να πιαστεί λάθος στήλη.": {
   "de": "Die Kopfzeile wurde automatisch erkannt. Prüfen Sie jede Spalte vor dem Import; es ist die einzige Gelegenheit, eine falsche Spalte zu bemerken.",
@@ -2379,6 +2435,13 @@
   "fr": "L'ordre est indicatif — Article 16. Le message s'ouvre dans l'application de messagerie du téléphone ; l'envoi se fait de là.",
   "it": "L'ordine è indicativo — Articolo 16. Il messaggio si apre nell'app dei messaggi del telefono; l'invio avviene da lì."
  },
+ "Η συγκρότηση δεν στέκει ακόμη": {
+  "de": "Die Aufstellung hält noch nicht",
+  "en": "The composition does not hold yet",
+  "es": "La composición todavía no se sostiene",
+  "fr": "La composition ne tient pas encore",
+  "it": "La composizione non regge ancora"
+ },
  "Η συγκρότηση δεν στέκει ακόμη:": {
   "de": "Die Aufstellung hält noch nicht:",
   "en": "The line-up does not hold yet:",
@@ -2469,6 +2532,13 @@
   "es": "Días",
   "fr": "Journées",
   "it": "Giornate"
+ },
+ "Ημερομηνία": {
+  "de": "Datum",
+  "en": "Date",
+  "es": "Fecha",
+  "fr": "Date",
+  "it": "Data"
  },
  "Ημερομηνία έναρξης": {
   "de": "Anfangsdatum",
@@ -2904,6 +2974,13 @@
   "fr": "Formule de fin",
   "it": "Chiusura"
  },
+ "Κατατάσσεται": {
+  "de": "Gewertet",
+  "en": "Ranked",
+  "es": "Clasificado",
+  "fr": "Classée",
+  "it": "Classificata"
+ },
  "Καταχωρήστε τον πρώτο του σκύλο.": {
   "de": "Erfassen Sie seinen ersten Hund.",
   "en": "Record his first dog.",
@@ -2981,6 +3058,13 @@
   "fr": "Clôturée",
   "it": "Chiusa"
  },
+ "Κλειδί": {
+  "de": "Schlüssel",
+  "en": "Key",
+  "es": "Clave",
+  "fr": "Clé",
+  "it": "Chiave"
+ },
  "Κοινή χρήση": {
   "de": "Teilen",
   "en": "Share",
@@ -3036,6 +3120,41 @@
   "es": "Conductor",
   "fr": "Conducteur",
   "it": "Conduttore"
+ },
+ "Κυναγωγός Α": {
+  "de": "Führer L",
+  "en": "Handler L",
+  "es": "Guía I",
+  "fr": "Conducteur G",
+  "it": "Conduttore S"
+ },
+ "Κυναγωγός Δ": {
+  "de": "Führer R",
+  "en": "Handler R",
+  "es": "Guía D",
+  "fr": "Conducteur D",
+  "it": "Conduttore D"
+ },
+ "Κυναγωγός αριστερά": {
+  "de": "Führer links",
+  "en": "Handler on the left",
+  "es": "Guía a la izquierda",
+  "fr": "Conducteur à gauche",
+  "it": "Conduttore a sinistra"
+ },
+ "Κυναγωγός δεξιά": {
+  "de": "Führer rechts",
+  "en": "Handler on the right",
+  "es": "Guía a la derecha",
+  "fr": "Conducteur à droite",
+  "it": "Conduttore a destra"
+ },
+ "Κωδικός": {
+  "de": "Code",
+  "en": "Code",
+  "es": "Código",
+  "fr": "Code",
+  "it": "Codice"
  },
  "Κωδικός QR για τη διεύθυνση της εφαρμογής": {
   "de": "QR-Code für die Adresse der Anwendung",
@@ -3352,6 +3471,20 @@
   "fr": "Bonus",
   "it": "Bonus"
  },
+ "Μπόνους για 3 διαφορετικές φυλές": {
+  "de": "Bonus für 3 verschiedene Rassen",
+  "en": "Bonus for 3 different breeds",
+  "es": "Bonificación por 3 razas diferentes",
+  "fr": "Bonus pour 3 races différentes",
+  "it": "Bonus per 3 razze diverse"
+ },
+ "Μπόνους για 4 διαφορετικές φυλές": {
+  "de": "Bonus für 4 verschiedene Rassen",
+  "en": "Bonus for 4 different breeds",
+  "es": "Bonificación por 4 razas diferentes",
+  "fr": "Bonus pour 4 races différentes",
+  "it": "Bonus per 4 razze diverse"
+ },
  "Μόνο για διεθνείς ομαδικούς αγώνες. Ο κανονισμός ζητά ιθαγένεια ή δωδεκάμηνη διαμονή του ιδιοκτήτη στη χώρα που εκπροσωπεί ο σκύλος, και εγγραφή του σκύλου στο βιβλίο γενεαλογίας της ίδιας χώρας (ACO VIII.5.3, IX.13 · CDE-GQ). Αφήστε τα κενά αν η λέσχη δεν διοργανώνει Κύπελλο — δεν ελέγχονται πουθενά αλλού.": {
   "de": "Nur für internationale Mannschaftsprüfungen. Das Reglement verlangt die Staatsangehörigkeit des Eigentümers oder zwölf Monate Wohnsitz in dem Land, das der Hund vertritt, und die Eintragung des Hundes im Zuchtbuch desselben Landes (ACO VIII.5.3, IX.13 · CDE-GQ). Lassen Sie sie leer, wenn der Verein keinen Cup ausrichtet — sie werden sonst nirgends geprüft.",
   "en": "For international team events only. The regulation requires the owner's nationality or twelve months' residence in the country the dog represents, and the dog's entry in that same country's studbook (ACO VIII.5.3, IX.13 · CDE-GQ). Leave them empty if the club does not host a Cup — they are checked nowhere else.",
@@ -3379,6 +3512,13 @@
   "es": "Sólo sus propias parejas",
   "fr": "Ses couples seulement",
   "it": "Solo le sue coppie"
+ },
+ "ΝΑΙ": {
+  "de": "JA",
+  "en": "YES",
+  "es": "SI",
+  "fr": "OUI",
+  "it": "SI"
  },
  "Νέα διαδρομή για τον": {
   "de": "Ein neuer Gang für",
@@ -3604,6 +3744,13 @@
   "fr": "Le règlement de cette Coupe ne l'autorise pas.",
   "it": "Il regolamento di questa Coppa non lo consente."
  },
+ "Ο κανονισμός του Κυπέλλου": {
+  "de": "Das Reglement des Pokals",
+  "en": "The Cup regulation",
+  "es": "El reglamento de la Copa",
+  "fr": "Le règlement de la Coupe",
+  "it": "Il regolamento della Coppa"
+ },
  "Ο κεντρικός κριτής και οι κριτές 1 και 2 ορίζονται στην κάρτα του τερέν.": {
   "de": "Obmann sowie Richter 1 und 2 werden auf der Karte des Geländes festgelegt.",
   "en": "The head judge and judges 1 and 2 are set on the terrain's card.",
@@ -3737,6 +3884,13 @@
   "fr": "TERMINÉE",
   "it": "CONCLUSA"
  },
+ "ΟΧΙ": {
+  "de": "NEIN",
+  "en": "NO",
+  "es": "NO",
+  "fr": "NON",
+  "it": "NO"
+ },
  "Οίστρος τελευταίες": {
   "de": "Läufige Hündin zuletzt",
   "en": "Bitches in season last",
@@ -3827,6 +3981,34 @@
   "es": "Equipo",
   "fr": "Équipe",
   "it": "Squadra"
+ },
+ "Ομάδα Α": {
+  "de": "Mannschaft L",
+  "en": "Team L",
+  "es": "Equipo I",
+  "fr": "Équipe G",
+  "it": "Squadra S"
+ },
+ "Ομάδα Δ": {
+  "de": "Mannschaft R",
+  "en": "Team R",
+  "es": "Equipo D",
+  "fr": "Équipe D",
+  "it": "Squadra D"
+ },
+ "Ομάδα αριστερά": {
+  "de": "Mannschaft links",
+  "en": "Team on the left",
+  "es": "Equipo a la izquierda",
+  "fr": "Équipe à gauche",
+  "it": "Squadra a sinistra"
+ },
+ "Ομάδα δεξιά": {
+  "de": "Mannschaft rechts",
+  "en": "Team on the right",
+  "es": "Equipo a la derecha",
+  "fr": "Équipe à droite",
+  "it": "Squadra a destra"
  },
  "Ομάδες": {
   "de": "Mannschaften",
@@ -3960,6 +4142,20 @@
   "es": "Campeonato del mundo de caza práctica",
   "fr": "Championnat du monde de chasse pratique",
   "it": "Campionato del mondo di caccia pratica"
+ },
+ "Παράμετροι": {
+  "de": "Parameter",
+  "en": "Parameters",
+  "es": "Parámetros",
+  "fr": "Paramètres",
+  "it": "Parametri"
+ },
+ "Παραπομπή": {
+  "de": "Fundstelle",
+  "en": "Reference",
+  "es": "Referencia",
+  "fr": "Référence",
+  "it": "Riferimento"
  },
  "Πατήστε το κουμπί Κοινή χρήση, κάτω στη μέση.": {
   "de": "Drücken Sie die Schaltfläche Teilen, unten in der Mitte.",
@@ -4234,6 +4430,13 @@
   "fr": "Réglages",
   "it": "Impostazioni"
  },
+ "Ρόλος": {
+  "de": "Rolle",
+  "en": "Role",
+  "es": "Función",
+  "fr": "Rôle",
+  "it": "Ruolo"
+ },
  "ΣΕ ΕΞΕΛΙΞΗ": {
   "de": "LAUFEND",
   "en": "IN PROGRESS",
@@ -4339,6 +4542,13 @@
   "fr": "Septembre",
   "it": "Settembre"
  },
+ "Σημείωση": {
+  "de": "Anmerkung",
+  "en": "Note",
+  "es": "Nota",
+  "fr": "Note",
+  "it": "Nota"
+ },
  "Σημειώσεις": {
   "de": "Notizen",
   "en": "Notes",
@@ -4387,6 +4597,20 @@
   "es": "Perro",
   "fr": "Chien",
   "it": "Cane"
+ },
+ "Σκύλος αριστερά": {
+  "de": "Hund links",
+  "en": "Dog on the left",
+  "es": "Perro a la izquierda",
+  "fr": "Chien à gauche",
+  "it": "Cane a sinistra"
+ },
+ "Σκύλος δεξιά": {
+  "de": "Hund rechts",
+  "en": "Dog on the right",
+  "es": "Perro a la derecha",
+  "fr": "Chien à droite",
+  "it": "Cane a destra"
  },
  "Σκύλος που αγωνίστηκε για μια χώρα δεν εκπροσωπεί άλλη (ACO VIII.5.3).": {
   "de": "Ein Hund, der für ein Land gestartet ist, vertritt kein anderes (ACO VIII.5.3).",
@@ -4472,6 +4696,13 @@
   "fr": "Sur l'ordinateur, avant l'épreuve : registre, engagements, terrains et juges. Puis appuyez sur",
   "it": "Al computer, prima della prova: registro, iscrizioni, terreni e giudici. Poi premete"
  },
+ "Συγκρότηση": {
+  "de": "Aufstellung",
+  "en": "Team composition",
+  "es": "Composición",
+  "fr": "Composition",
+  "it": "Composizione"
+ },
  "Συγχώνευση": {
   "de": "Zusammenführen",
   "en": "Merge",
@@ -4528,6 +4759,13 @@
   "fr": "En ligne",
   "it": "In linea"
  },
+ "Συντελεστής": {
+  "de": "Koeffizient",
+  "en": "Coefficient",
+  "es": "Coeficiente",
+  "fr": "Coefficient",
+  "it": "Coefficiente"
+ },
  "Σφάλμα Άρθρου 33 καταγεγραμμένο:": {
   "de": "Fehler nach Artikel 33 vermerkt:",
   "en": "Article 33 fault recorded:",
@@ -4569,6 +4807,13 @@
   "es": "Plegar la pareja",
   "fr": "Replier le couple",
   "it": "Riduci la coppia"
+ },
+ "Σύνολο": {
+  "de": "Summe",
+  "en": "Total",
+  "es": "Total",
+  "fr": "Total",
+  "it": "Totale"
  },
  "Σύρετε το": {
   "de": "Ziehen Sie das",
@@ -5045,6 +5290,13 @@
   "es": "Francolín",
   "fr": "Francolin",
   "it": "Francolino"
+ },
+ "Φυλές": {
+  "de": "Rassen",
+  "en": "Breeds",
+  "es": "Razas",
+  "fr": "Races",
+  "it": "Razze"
  },
  "Φυλή": {
   "de": "Rasse",
@@ -6292,6 +6544,13 @@
   "fr": "au tableau ·",
   "it": "in tabella ·"
  },
+ "στον πυροβολισμό": {
+  "de": "beim Schuss",
+  "en": "at the shot",
+  "es": "al disparo",
+  "fr": "au coup de feu",
+  "it": "allo sparo"
+ },
  "συμμετοχές": {
   "de": "Meldungen",
   "en": "entries",
@@ -6424,6 +6683,13 @@
   "es": "raza en el equipo",
   "fr": "race dans l'équipe",
   "it": "razza in squadra"
+ },
+ "χειροκίνητη αλλαγή": {
+  "de": "manuelle Änderung",
+  "en": "manual change",
+  "es": "cambio manual",
+  "fr": "modification manuelle",
+  "it": "modifica manuale"
  },
  "χωρίς αναγνωρίσιμη φυλή καταχωρούνται ως": {
   "de": "ohne erkennbare Rasse werden erfasst als",

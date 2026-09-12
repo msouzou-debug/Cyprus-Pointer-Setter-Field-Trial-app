@@ -113,7 +113,15 @@ Three consequences worth knowing:
   read them only when the trial is a Cup, and each line names the article behind it. The one
   exception is the export stamp: blank there means home-bred, which is not a gap.
 
-The exports carry all of it. The workbook gains two sheets ahead of the rest — **Ομάδες**, the
+The exports carry all of it, **in the language the app is set to** — workbook, Word, CSV and the
+printed sheets alike, so a club organising in France hands its jury a French sheet and its committee
+a French workbook. Inside the workbook that is more than relabelling: a sheet's name also appears
+inside the formulas, the points key is a `VLOOKUP` argument, and the role `ΒΑΣΗ` is written by one
+cell and matched by another's `SUMIFS` — turn one without the other and the file opens perfectly and
+reports zeros. So the sheet names and the role values are functions rather than constants, and
+`xlslang.js` rebuilds the book in each of the six languages, recomputes the classification from the
+file's own formulas, and demands the same numbers as the Greek one. The database never moves: what
+is stored stays Greek. The workbook gains two sheets ahead of the rest — **Ομάδες**, the
 classification per country, and **Συγκρότηση**, every dog with its role and its captain — and the
 `Δεδομένα` sheet gains a team and a role column. The classification is computed *in the file*, by
 `SUMIFS` and `COUNTIFS` over `Δεδομένα` with every threshold read from a block of the regulation's
