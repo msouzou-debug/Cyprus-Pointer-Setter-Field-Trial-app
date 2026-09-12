@@ -1245,6 +1245,13 @@
   "fr": "Points de base par qualification/titre. Ils sont multipliés par le coefficient de l'épreuve (×2 en couple, ×3 ou ×4 sur gibier sauvage pour Recherche de chasse / Chasse pratique).",
   "it": "Punti base per qualifica/titolo. Vengono moltiplicati per il coefficiente della prova (×2 in batteria, ×3 o ×4 su selvaggina selvatica per Ricerca di caccia / Caccia pratica)."
  },
+ "Βιβλίο γενεαλογίας χώρας": {
+  "de": "Zuchtbuch des Landes",
+  "en": "Studbook of country",
+  "es": "Libro genealógico del país",
+  "fr": "Livre des origines du pays",
+  "it": "Libro genealogico del paese"
+ },
  "Για ομάδες WhatsApp ή Viber, την επιτροπή ή τον πίνακα ανακοινώσεων. Στέλνει τη σειρά σε απλό κείμενο, όχι αρχείο.": {
   "de": "Für WhatsApp- oder Viber-Gruppen, den Vorstand oder das schwarze Brett. Sendet die Reihenfolge als reinen Text, nicht als Datei.",
   "en": "For WhatsApp or Viber groups, the committee or the notice board. It sends the order as plain text, not a file.",
@@ -2043,6 +2050,13 @@
   "fr": "Choisissez le conducteur et cochez lesquels de ses chiens courent aujourd'hui.",
   "it": "Scegliete il conduttore e spuntate quali dei suoi cani corrono oggi."
  },
+ "Επιλεξιμότητα για Κύπελλο": {
+  "de": "Startberechtigung für einen Cup",
+  "en": "Eligibility for a Cup",
+  "es": "Elegibilidad para una Copa",
+  "fr": "Éligibilité pour une Coupe",
+  "it": "Ammissibilità per una Coppa"
+ },
  "Επιλογή": {
   "de": "Auswahl",
   "en": "Select",
@@ -2365,6 +2379,13 @@
   "fr": "La fusion garde ce qui existe et ajoute ; le remplacement efface l'appareil. Sur le terrain, c'est presque toujours la fusion qu'il faut.",
   "it": "L'unione conserva quel che c'è e aggiunge; la sostituzione cancella il dispositivo. Sul terreno serve quasi sempre l'unione."
  },
+ "Η σφραγίδα εξαγωγής αφορά μόνο εισαγόμενο σκύλο και το CDE-GQ τη θέλει τουλάχιστον εξάμηνη. Για σκύλο γεννημένο στη χώρα του, αφήστε την κενή.": {
+  "de": "Der Ausfuhrstempel betrifft nur einen importierten Hund, und die CDE-GQ will ihn mindestens sechs Monate alt. Bei einem im eigenen Land geborenen Hund bleibt das Feld leer.",
+  "en": "The export stamp concerns an imported dog only, and CDE-GQ wants it at least six months old. For a dog born in its own country, leave it empty.",
+  "es": "El sello de exportación sólo afecta a un perro importado, y la CDE-GQ lo quiere de al menos seis meses. Para un perro nacido en su país, déjelo vacío.",
+  "fr": "Le tampon d'exportation ne concerne qu'un chien importé, et la CDE-GQ le veut d'au moins six mois. Pour un chien né dans son pays, laissez vide.",
+  "it": "Il timbro di esportazione riguarda solo un cane importato, e la CDE-GQ lo vuole di almeno sei mesi. Per un cane nato nel suo paese, lasciate vuoto."
+ },
  "Η τοποθεσία και η ώρα μπαίνουν στο SMS των κυναγωγών και των κριτών.": {
   "de": "Ort und Uhrzeit stehen in der SMS an Führer und Richter.",
   "en": "The place and the time go into the SMS to the handlers and the judges.",
@@ -2406,6 +2427,20 @@
   "es": "F. de nacimiento",
   "fr": "Date de naissance",
   "it": "Data di nascita"
+ },
+ "Ημ. εγγραφής στο βιβλίο": {
+  "de": "Datum der Zuchtbucheintragung",
+  "en": "Date entered in the studbook",
+  "es": "Fecha de inscripción en el libro",
+  "fr": "Date d'inscription au livre",
+  "it": "Data di iscrizione al libro"
+ },
+ "Ημ. σφραγίδας εξαγωγής": {
+  "de": "Datum des Ausfuhrstempels",
+  "en": "Date of the export stamp",
+  "es": "Fecha del sello de exportación",
+  "fr": "Date du tampon d'exportation",
+  "it": "Data del timbro di esportazione"
  },
  "Ημέρα": {
   "de": "Tag",
@@ -3302,6 +3337,13 @@
   "es": "Bonificación",
   "fr": "Bonus",
   "it": "Bonus"
+ },
+ "Μόνο για διεθνείς ομαδικούς αγώνες. Ο κανονισμός ζητά ιθαγένεια ή δωδεκάμηνη διαμονή του ιδιοκτήτη στη χώρα που εκπροσωπεί ο σκύλος, και εγγραφή του σκύλου στο βιβλίο γενεαλογίας της ίδιας χώρας (ACO VIII.5.3, IX.13 · CDE-GQ). Αφήστε τα κενά αν η λέσχη δεν διοργανώνει Κύπελλο — δεν ελέγχονται πουθενά αλλού.": {
+  "de": "Nur für internationale Mannschaftsprüfungen. Das Reglement verlangt die Staatsangehörigkeit des Eigentümers oder zwölf Monate Wohnsitz in dem Land, das der Hund vertritt, und die Eintragung des Hundes im Zuchtbuch desselben Landes (ACO VIII.5.3, IX.13 · CDE-GQ). Lassen Sie sie leer, wenn der Verein keinen Cup ausrichtet — sie werden sonst nirgends geprüft.",
+  "en": "For international team events only. The regulation requires the owner's nationality or twelve months' residence in the country the dog represents, and the dog's entry in that same country's studbook (ACO VIII.5.3, IX.13 · CDE-GQ). Leave them empty if the club does not host a Cup — they are checked nowhere else.",
+  "es": "Sólo para pruebas internacionales por equipos. El reglamento exige la nacionalidad del propietario o doce meses de residencia en el país que representa el perro, y la inscripción del perro en el libro genealógico de ese mismo país (ACO VIII.5.3, IX.13 · CDE-GQ). Déjelos vacíos si el club no organiza una Copa — no se comprueban en ningún otro sitio.",
+  "fr": "Uniquement pour les épreuves internationales par équipes. Le règlement exige la nationalité du propriétaire ou douze mois de résidence dans le pays que le chien représente, et l'inscription du chien au livre des origines de ce même pays (ACO VIII.5.3, IX.13 · CDE-GQ). Laissez vide si le club n'organise pas de Coupe — ces champs ne sont contrôlés nulle part ailleurs.",
+  "it": "Solo per prove internazionali a squadre. Il regolamento richiede la cittadinanza del proprietario o dodici mesi di residenza nel paese che il cane rappresenta, e l'iscrizione del cane al libro genealogico dello stesso paese (ACO VIII.5.3, IX.13 · CDE-GQ). Lasciateli vuoti se il club non organizza una Coppa — non sono controllati da nessun'altra parte."
  },
  "Μόνο κριτές": {
   "de": "Nur Richter",
@@ -4332,6 +4374,13 @@
   "fr": "Chien",
   "it": "Cane"
  },
+ "Σκύλος που αγωνίστηκε για μια χώρα δεν εκπροσωπεί άλλη (ACO VIII.5.3).": {
+  "de": "Ein Hund, der für ein Land gestartet ist, vertritt kein anderes (ACO VIII.5.3).",
+  "en": "A dog that has competed for one country does not represent another (ACO VIII.5.3).",
+  "es": "Un perro que ha competido por un país no representa a otro (ACO VIII.5.3).",
+  "fr": "Un chien ayant concouru pour un pays n'en représente pas un autre (ACO VIII.5.3).",
+  "it": "Un cane che ha gareggiato per un paese non ne rappresenta un altro (ACO VIII.5.3)."
+ },
  "Στέλνει μόνο αυτόν τον αγώνα, με τους σκύλους και τους κυναγωγούς του — μικρό αρχείο που περνά από κάθε εφαρμογή μηνυμάτων. Στην άλλη συσκευή:": {
   "de": "Sie sendet nur diese Prüfung, mit ihren Hunden und Führern — eine kleine Datei, die durch jede Nachrichten-App geht. Auf dem anderen Gerät:",
   "en": "It sends this trial alone, with its dogs and handlers — a small file that goes through any messaging app. On the other device:",
@@ -4892,6 +4941,13 @@
   "fr": "Une nouvelle version existe. Recharger maintenant ?",
   "it": "C'è una nuova versione. Ricaricare ora?"
  },
+ "Υπάρχουν": {
+  "de": "Vorhanden sind",
+  "en": "There are",
+  "es": "Hay",
+  "fr": "Il y en a",
+  "it": "Ce ne sono"
+ },
  "Υπαγόρευση": {
   "de": "Diktieren",
   "en": "Dictate",
@@ -5074,6 +5130,13 @@
   "fr": "Un motif est nécessaire",
   "it": "Serve una motivazione"
  },
+ "Χρειάζεται ιθαγένεια ή": {
+  "de": "Nötig ist die Staatsangehörigkeit, oder",
+  "en": "Nationality is needed, or",
+  "es": "Hace falta la nacionalidad, o",
+  "fr": "Il faut la nationalité, ou",
+  "it": "Serve la cittadinanza, oppure"
+ },
  "Χρειάζονται": {
   "de": "Erforderlich sind",
   "en": "There must be",
@@ -5172,6 +5235,13 @@
   "fr": "Pays d'élevage",
   "it": "Paese di allevamento"
  },
+ "Χώρα ιδιοκτήτη": {
+  "de": "Land des Eigentümers",
+  "en": "Owner's country",
+  "es": "País del propietario",
+  "fr": "Pays du propriétaire",
+  "it": "Paese del proprietario"
+ },
  "άγριο θήραμα": {
   "de": "Wildwild",
   "en": "wild game",
@@ -5199,6 +5269,13 @@
   "es": "tiene",
   "fr": "a",
   "it": "ha"
+ },
+ "έχει ήδη τρέξει για": {
+  "de": "ist bereits gestartet für",
+  "en": "has already run for",
+  "es": "ya ha corrido para",
+  "fr": "a déjà couru pour",
+  "it": "ha già corso per"
  },
  "έχει κληρωμένα ζεύγη. Κάντε νέα κλήρωση ή διαγράψτε το τερέν από την Επεξεργασία του.": {
   "de": "hat ausgeloste Paare. Losen Sie neu aus, oder löschen Sie das Gelände über Bearbeiten.",
@@ -5241,6 +5318,20 @@
   "es": "sin asignar",
   "fr": "non attribué",
   "it": "non assegnato"
+ },
+ "ανά όμιλο (ACO VIII.8). Η κλήρωση μοιράζει κάθε ομάδα αναλογικά.": {
+  "de": "je Gruppe (ACO VIII.8). Die Auslosung verteilt jede Mannschaft anteilig.",
+  "en": "per group (ACO VIII.8). The draw spreads each team proportionally.",
+  "es": "por grupo (ACO VIII.8). El sorteo reparte cada equipo proporcionalmente.",
+  "fr": "par groupe (ACO VIII.8). Le tirage répartit chaque équipe proportionnellement.",
+  "it": "per gruppo (ACO VIII.8). Il sorteggio distribuisce ogni squadra proporzionalmente."
+ },
+ "ανά όμιλο θέλουν": {
+  "de": "je Gruppe brauchen",
+  "en": "per group need",
+  "es": "por grupo necesitan",
+  "fr": "par groupe demandent",
+  "it": "per gruppo richiedono"
  },
  "αναπληρωματικοί": {
   "de": "Ersatzhunde",
@@ -5396,6 +5487,20 @@
   "fr": "n'a pas été tirée, il n'y a donc aucun ordre à inverser.",
   "it": "non è stata sorteggiata, quindi non c'è un ordine da invertire."
  },
+ "δεν έχει χώρα ιδιοκτήτη στο μητρώο· ο κανονισμός τη ζητά": {
+  "de": "hat im Register kein Land des Eigentümers; das Reglement verlangt es",
+  "en": "has no owner's country in the register; the regulation requires it",
+  "es": "no tiene país del propietario en el registro; el reglamento lo exige",
+  "fr": "n'a pas de pays du propriétaire au registre ; le règlement l'exige",
+  "it": "non ha il paese del proprietario nel registro; il regolamento lo richiede"
+ },
+ "δεν λέει σε ποιας χώρας το βιβλίο γενεαλογίας είναι γραμμένος": {
+  "de": "sagt nicht, in welchem Landeszuchtbuch er eingetragen ist",
+  "en": "does not say which country's studbook it is entered in",
+  "es": "no dice en el libro genealógico de qué país está inscrito",
+  "fr": "n'indique pas dans le livre des origines de quel pays il est inscrit",
+  "it": "non dice in quale libro genealogico nazionale è iscritto"
+ },
  "δεξιά": {
   "de": "rechts",
   "en": "right",
@@ -5430,6 +5535,13 @@
   "es": "turnos",
   "fr": "parcours",
   "it": "turni"
+ },
+ "είναι γραμμένος στο βιβλίο": {
+  "de": "ist im Zuchtbuch von",
+  "en": "is entered in the studbook of",
+  "es": "está inscrito en el libro genealógico de",
+  "fr": "est inscrit au livre des origines de",
+  "it": "è iscritto al libro genealogico di"
  },
  "είναι σε δύο ομάδες.": {
   "de": "ist in zwei Mannschaften.",
@@ -5508,6 +5620,20 @@
   "fr": "couple(s) avec le même conducteur — aucune autre disposition n'est possible avec les chiens de ce terrain.",
   "it": "coppia/e con lo stesso conduttore — non esiste altra disposizione possibile con i cani di questo terreno."
  },
+ "η ομάδα": {
+  "de": "die Mannschaft ist",
+  "en": "the team is",
+  "es": "el equipo es",
+  "fr": "l'équipe est",
+  "it": "la squadra è"
+ },
+ "η σφραγίδα εξαγωγής είναι": {
+  "de": "der Ausfuhrstempel ist",
+  "en": "the export stamp is",
+  "es": "el sello de exportación es de",
+  "fr": "le tampon d'exportation date de",
+  "it": "il timbro di esportazione è di"
+ },
  "ημέρες": {
   "de": "Tage",
   "en": "days",
@@ -5577,6 +5703,13 @@
   "es": "y envíe el archivo al teléfono.",
   "fr": "et envoyez le fichier sur le téléphone.",
   "it": "e mandate il file al telefono."
+ },
+ "και τρέχει για": {
+  "de": "eingetragen und startet für",
+  "en": "and runs for",
+  "es": "y corre para",
+  "fr": "et court pour",
+  "it": "e corre per"
  },
  "καμία": {
   "de": "keine",
@@ -5697,6 +5830,34 @@
   "fr": "membre",
   "it": "socio"
  },
+ "μήνα": {
+  "de": "Monat alt",
+  "en": "month old",
+  "es": "mes",
+  "fr": "mois",
+  "it": "mese"
+ },
+ "μήνας": {
+  "de": "Monat",
+  "en": "month",
+  "es": "mes",
+  "fr": "mois",
+  "it": "mese"
+ },
+ "μήνες": {
+  "de": "Monate",
+  "en": "months",
+  "es": "meses",
+  "fr": "mois",
+  "it": "mesi"
+ },
+ "μήνες διαμονής στη χώρα που εκπροσωπεί ο σκύλος.": {
+  "de": "Monate Wohnsitz in dem Land, das der Hund vertritt.",
+  "en": "months of residence in the country the dog represents.",
+  "es": "meses de residencia en el país que representa el perro.",
+  "fr": "mois de résidence dans le pays que le chien représente.",
+  "it": "mesi di residenza nel paese che il cane rappresenta."
+ },
  "μαζί": {
   "de": "zusammen",
   "en": "together",
@@ -5710,6 +5871,13 @@
   "es": "mensajes se marcarán como enviados, sin enviarse. ¿Continuar?",
   "fr": "messages seront marqués comme envoyés, sans l'être. Continuer ?",
   "it": "messaggi verranno segnati come inviati, senza essere inviati. Continuare?"
+ },
+ "μηνών": {
+  "de": "Monate alt",
+  "en": "months old",
+  "es": "meses",
+  "fr": "mois",
+  "it": "mesi"
  },
  "μπόνους": {
   "de": "Bonus",
@@ -5738,6 +5906,20 @@
   "es": "para salir",
   "fr": "à partir",
   "it": "da inviare"
+ },
+ "ο ιδιοκτήτης είναι": {
+  "de": "der Eigentümer ist",
+  "en": "the owner is",
+  "es": "el propietario es",
+  "fr": "le propriétaire est",
+  "it": "il proprietario è"
+ },
+ "ο κανονισμός τη θέλει τουλάχιστον": {
+  "de": "das Reglement will ihn mindestens",
+  "en": "the regulation wants it at least",
+  "es": "el reglamento lo quiere de al menos",
+  "fr": "le règlement le veut d'au moins",
+  "it": "il regolamento lo vuole di almeno"
  },
  "ο κριτής έχει δικό του σκύλο (Άρθρο 49):": {
   "de": "der Richter hat einen eigenen Hund (Artikel 49):",
@@ -5949,6 +6131,13 @@
   "fr": "chiens resteront engagés, sans équipe.",
   "it": "cani resteranno iscritti, senza squadra."
  },
+ "σκύλοι με όριο": {
+  "de": "Hunde bei einer Obergrenze von",
+  "en": "dogs with a cap of",
+  "es": "perros con un tope de",
+  "fr": "chiens avec un plafond de",
+  "it": "cani con un limite di"
+ },
  "σκύλοι μπήκαν σε ομάδες": {
   "de": "Hunde kamen in Mannschaften",
   "en": "dogs went into teams",
@@ -6005,6 +6194,13 @@
   "fr": "d'un chien de grande valeur — un nouveau parcours est ajouté en fin de terrain, avec ses propres notes. Si le nombre de chiens est impair, on peut ajouter un",
   "it": "di un cane di grande valore — viene aggiunto un nuovo turno alla fine del terreno, con note proprie. Con un numero dispari di cani si può aggiungere un"
  },
+ "σκύλους — μέσα στο όριο των": {
+  "de": "Hunde — innerhalb der Grenze von",
+  "en": "dogs — within the cap of",
+  "es": "perros — dentro del tope de",
+  "fr": "chiens — dans la limite de",
+  "it": "cani — entro il limite di"
+ },
  "σκύλων": {
   "de": "Hunde",
   "en": "dogs",
@@ -6046,6 +6242,13 @@
   "es": "en WhatsApp o Viber toque el archivo → Compartir → Guardar en Archivos. Después aquí: ↑ Cargar → Explorar → búsquelo.",
   "fr": "dans WhatsApp ou Viber, touchez le fichier → Partager → Enregistrer dans Fichiers. Puis ici : ↑ Charger → Parcourir → retrouvez-le.",
   "it": "in WhatsApp o Viber toccate il file → Condividi → Salva su File. Poi qui: ↑ Carica → Sfoglia → trovatelo."
+ },
+ "στο βιβλίο γενεαλογίας την ημέρα του αγώνα· χρειάζονται": {
+  "de": "im Zuchtbuch am Tag der Prüfung; nötig sind",
+  "en": "in the studbook on the day of the trial; what is needed is",
+  "es": "en el libro genealógico el día de la prueba; hacen falta",
+  "fr": "au livre des origines le jour de l'épreuve ; il en faut",
+  "it": "nel libro genealogico il giorno della prova; ne servono"
  },
  "στο ιστορικό": {
   "de": "in der Historie",
@@ -6102,6 +6305,13 @@
   "es": "terrenos ·",
   "fr": "terrains ·",
   "it": "terreni ·"
+ },
+ "τερέν για": {
+  "de": "Gelände für",
+  "en": "terrains for",
+  "es": "terrenos para",
+  "fr": "terrains pour",
+  "it": "terreni per"
  },
  "τερέν. Συνέχεια;": {
   "de": "Gelände. Fortfahren?",
@@ -6193,6 +6403,13 @@
   "es": "sin calificación",
   "fr": "sans qualification",
   "it": "senza qualifica"
+ },
+ "χωρίς ημερομηνία εγγραφής στο βιβλίο· ο κανονισμός ζητά": {
+  "de": "ohne Datum der Zuchtbucheintragung; das Reglement verlangt",
+  "en": "with no studbook entry date; the regulation requires",
+  "es": "sin fecha de inscripción en el libro; el reglamento exige",
+  "fr": "sans date d'inscription au livre ; le règlement en demande",
+  "it": "senza data di iscrizione al libro; il regolamento ne richiede"
  },
  "χωρίς κυναγωγό": {
   "de": "ohne Führer",

@@ -64,11 +64,14 @@ A team is a record on the trial, not a label on a dog: country, captain, the dog
 named substitutes. A trial that is a Cup carries the numbers of the regulation it is run under, and
 they differ enough that they cannot be one setting:
 
-| | dogs | substitutes | placed with | breed bonus | one handler, one country |
-|---|---|---|---|---|---|
-| **CDE-GQ** (British, European Cup) | 1–4 | 2 | 2 classified, 9 points | no | **no** — he may run for several |
-| **ACO VIII** (Continental, Spring European Cup) | 2–4 | 1 | 2 classified, 9 points | 4 breeds +4, 3 breeds +2 | yes |
-| **ACO IX** (World, Practical Hunting) | 2–4 | 1 | 2 classified | no | yes |
+| | dogs | substitutes | placed with | breed bonus | one handler, one country | per group | studbook | export stamp |
+|---|---|---|---|---|---|---|---|---|
+| **CDE-GQ** (British, European Cup) | 1–4 | 2 | 2 classified, 9 points | no | **no** — he may run for several | — | registered, no term | ≥ 6 months |
+| **ACO VIII** (Continental, Spring European Cup) | 2–4 | 1 | 2 classified, 9 points | 4 breeds +4, 3 breeds +2 | yes | **14** | ≥ 12 months | — |
+| **ACO IX** (World, Practical Hunting) | 2–4 | 1 | 2 classified | no | yes | — | ≥ 12 months | — |
+
+All three require the owner's nationality, or twelve months' residence, in the country the dog
+represents. Only ACO VIII locks a dog to its first country (VIII.5.3).
 
 Picking the cup fills those numbers in; a club running something else edits them. The screen then
 reports what does not hold — a team under or over strength, too many substitutes, a dog in two
@@ -86,6 +89,19 @@ Three consequences worth knowing:
   exception of the substitute dog"* (ACO VIII.5.4a).
 - **A Cup has no coefficient.** The regulation's table is an absolute scale and the nine points are
   measured on it.
+- **The group cap shapes the draw, not just a warning.** ACO VIII.8.1 caps a group at 14 and
+  VIII.8.2's table — *less than 15 = 1 group, more than 14 and less than 29 = 2* — is exactly
+  `ceil(n/14)`; the draw screen says how many terrains that needs against how many exist. Inside
+  the draw a full terrain drops out of the candidates, and VIII.8.3's proportional spread is the
+  *first* sort key in a Cup, ahead of the app's own habit of scattering one handler's dogs. That
+  order matters: with the handler first, five teams over three terrains came out 2-0-4; with the
+  team first, 2-2-2. If the terrains genuinely cannot hold everyone the cap yields rather than
+  leaving a dog out of the trial — the warning has already been given, and a dog missing from the
+  running order is the worse failure.
+- **An empty eligibility field is reported, not assumed good.** The four fields live folded away on
+  the dog's record, because a club that never hosts a Cup should not scroll past them; the checks
+  read them only when the trial is a Cup, and each line names the article behind it. The one
+  exception is the export stamp: blank there means home-bred, which is not a gap.
 
 The exports carry all of it. The workbook gains two sheets ahead of the rest — **Ομάδες**, the
 classification per country, and **Συγκρότηση**, every dog with its role and its captain — and the
