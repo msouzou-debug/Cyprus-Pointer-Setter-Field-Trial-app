@@ -64,11 +64,11 @@ A team is a record on the trial, not a label on a dog: country, captain, the dog
 named substitutes. A trial that is a Cup carries the numbers of the regulation it is run under, and
 they differ enough that they cannot be one setting:
 
-| | dogs | substitutes | placed with | breed bonus | one handler, one country | per group | studbook | export stamp |
-|---|---|---|---|---|---|---|---|---|
-| **CDE-GQ** (British, European Cup) | 1–4 | 2 | 2 classified, 9 points | no | **no** — he may run for several | — | registered, no term | ≥ 6 months |
-| **ACO VIII** (Continental, Spring European Cup) | 2–4 | 1 | 2 classified, 9 points | 4 breeds +4, 3 breeds +2 | yes | **14** | ≥ 12 months | — |
-| **ACO IX** (World, Practical Hunting) | 2–4 | 1 | 2 classified | no | yes | — | ≥ 12 months | — |
+| | dogs | substitutes | placed with | breed bonus | one handler, one country | per group | studbook | export stamp | days |
+|---|---|---|---|---|---|---|---|---|---|
+| **CDE-GQ** (British, European Cup) | 1–4 | 2 | 2 classified, 9 points | no | **no** — he may run for several | — | registered, no term | ≥ 6 months | one ranking |
+| **ACO VIII** (Continental, Spring European Cup) | 2–4 | 1 | 2 classified, 9 points | 4 breeds +4, 3 breeds +2 | yes | **14** | ≥ 12 months | — | not cumulative |
+| **ACO IX** (World, Practical Hunting) | 2–4 | 1 | 2 classified | no | yes | — | ≥ 12 months | — | **summed** |
 
 All three require the owner's nationality, or twelve months' residence, in the country the dog
 represents. Only ACO VIII locks a dog to its first country (VIII.5.3).
@@ -98,6 +98,16 @@ Three consequences worth knowing:
   team first, 2-2-2. If the terrains genuinely cannot hold everyone the cap yields rather than
   leaving a dog out of the trial — the warning has already been given, and a dog missing from the
   running order is the worse failure.
+- **Only one of the three adds the days up.** ACO IX takes *"the total of points obtained by each
+  dog over the two days"* (IX.33), and the same for the country (IX.30). CDE-GQ says there is *"only
+  one ranking"*; ACO VIII says in as many words that the marks of the two days *"are not
+  cumulative"* and settles a tie by a run-off between each day's best (VIII.12.3). So a result
+  belongs to a **run**, not to a dog: the key is `entry::day`, and the day is written 0 wherever the
+  regulation wants a single mark. A club trial — one day or two — therefore behaves exactly as it
+  always has, one score per dog, whichever day the secretary writes it on. Where the days do count
+  separately the scoring screen says which day of how many it is scoring and why, and shows the
+  running total beside the day's points. ACO IX.33 also asks that a dog *"have run the two days"* to
+  take a title, so a dog that ran only one is named once every day is drawn — a report, not a block.
 - **An empty eligibility field is reported, not assumed good.** The four fields live folded away on
   the dog's record, because a club that never hosts a Cup should not scroll past them; the checks
   read them only when the trial is a Cup, and each line names the article behind it. The one
@@ -108,7 +118,9 @@ classification per country, and **Συγκρότηση**, every dog with its rol
 `Δεδομένα` sheet gains a team and a role column. The classification is computed *in the file*, by
 `SUMIFS` and `COUNTIFS` over `Δεδομένα` with every threshold read from a block of the regulation's
 own numbers at the foot of the sheet: correct a qualification and the placings re-sort themselves,
-with no app involved. One number is data rather than formula and says so in a comment — the count
+with no app involved. Where the cup sums the days, `Δεδομένα` carries one row per run and a
+**Ημέρα** column, and the same `SUMIFS` adds them up without being told. One number is data rather
+than formula and says so in a comment — the count
 of distinct breeds, which no portable spreadsheet formula expresses legibly; the bonus *rule* is
 still live `IF` logic over that count. Word opens on the team result before the individual one, and
 the drawn order — in the workbook and in the CSV — shows the team on each side of every brace, which

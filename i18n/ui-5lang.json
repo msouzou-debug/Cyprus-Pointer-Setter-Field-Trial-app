@@ -1189,6 +1189,13 @@
   "fr": "Spontané",
   "it": "Spontanea"
  },
+ "Αυτό το κύπελλο αθροίζει τις ημέρες (ACO IX.29): κάθε ημέρα βαθμολογείται χωριστά και οι πόντοι του σκύλου είναι το άθροισμά τους. Αλλάξτε ημέρα από τη μπάρα πάνω.": {
+  "de": "Dieser Pokal addiert die Tage (ACO IX.29): Jeder Tag wird getrennt bewertet, und die Punkte des Hundes sind deren Summe. Wechseln Sie den Tag in der Leiste oben.",
+  "en": "This cup adds up the days (ACO IX.29): each day is scored separately and the dog's points are their sum. Change the day from the bar above.",
+  "es": "Esta copa suma las jornadas (ACO IX.29): cada jornada se puntúa por separado y los puntos del perro son su suma. Cambie de jornada en la barra superior.",
+  "fr": "Cette coupe additionne les journées (ACO IX.29) : chaque journée est notée séparément et les points du chien en sont la somme. Changez de journée dans la barre ci-dessus.",
+  "it": "Questa coppa somma le giornate (ACO IX.29): ogni giornata è valutata separatamente e i punti del cane ne sono la somma. Cambiate giornata dalla barra in alto."
+ },
  "Αυτόματη κατανομή": {
   "de": "Automatische Zuteilung",
   "en": "Automatic assignment",
@@ -1258,6 +1265,13 @@
   "es": "Para grupos de WhatsApp o Viber, el comité o el tablón de anuncios. Envía el orden como texto simple, no como archivo.",
   "fr": "Pour les groupes WhatsApp ou Viber, le comité ou le tableau d'affichage. Envoie l'ordre en texte simple, pas en fichier.",
   "it": "Per i gruppi WhatsApp o Viber, il comitato o la bacheca. Invia l'ordine come testo semplice, non come file."
+ },
+ "Για τίτλο ο κανονισμός ζητά και τις δύο (ACO IX.33).": {
+  "de": "Für einen Titel verlangt das Reglement beide Tage (ACO IX.33).",
+  "en": "For a title the regulation requires both (ACO IX.33).",
+  "es": "Para un título el reglamento exige ambas jornadas (ACO IX.33).",
+  "fr": "Pour un titre, le règlement exige les deux journées (ACO IX.33).",
+  "it": "Per un titolo il regolamento richiede entrambe le giornate (ACO IX.33)."
  },
  "Γλωσσάρι": {
   "de": "Glossar",
@@ -5263,6 +5277,13 @@
   "fr": "un conducteur, un pays",
   "it": "un conduttore, un paese"
  },
+ "έτρεξε": {
+  "de": "lief",
+  "en": "ran",
+  "es": "corrió",
+  "fr": "a couru",
+  "it": "ha corso"
+ },
  "έχει": {
   "de": "hat",
   "en": "has",
@@ -5633,6 +5654,13 @@
   "es": "el sello de exportación es de",
   "fr": "le tampon d'exportation date de",
   "it": "il timbro di esportazione è di"
+ },
+ "ημέρα": {
+  "de": "Tag",
+  "en": "day",
+  "es": "día",
+  "fr": "journée",
+  "it": "giornata"
  },
  "ημέρες": {
   "de": "Tage",
@@ -6284,6 +6312,13 @@
   "es": "suplementario",
   "fr": "supplémentaire",
   "it": "supplementare"
+ },
+ "σύνολο": {
+  "de": "Gesamt",
+  "en": "total",
+  "es": "total",
+  "fr": "total",
+  "it": "totale"
  },
  "τα δικά σας ζεύγη": {
   "de": "Ihre Paare",

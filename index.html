@@ -898,19 +898,90 @@ const CUPS = {
   "CDE-GQ": { label:"Κύπελλο Ευρώπης Μεγάλης Έρευνας (αγγλικοί δείκτες)",
     ref:"F.C.I. ABR CDE-GQ, ισχύς 1.1.2021",
     min:1, max:4, subs:2, needPlaced:2, needPoints:9, bonus:false, handlerOneCountry:false,
-    perGroup:0,  ownerMonths:12, dogMonths:0,  exportMonths:6, dogLocked:false },
+    perGroup:0,  ownerMonths:12, dogMonths:0,  exportMonths:6, dogLocked:false,
+    sumDays:false },
   "EC-CONT": { label:"Εαρινό Κύπελλο Ευρώπης (ηπειρωτικοί δείκτες)",
     ref:"F.C.I. ACO VIII",
     min:2, max:4, subs:1, needPlaced:2, needPoints:9, bonus:true,  handlerOneCountry:true,
-    perGroup:14, ownerMonths:12, dogMonths:12, exportMonths:0, dogLocked:true },
+    perGroup:14, ownerMonths:12, dogMonths:12, exportMonths:0, dogLocked:true,
+    sumDays:false },
   "WC-PH": { label:"Παγκόσμιο Πρακτικού Κυνηγίου",
     ref:"F.C.I. ACO IX",
     min:2, max:4, subs:1, needPlaced:2, needPoints:0, bonus:false, handlerOneCountry:true,
-    perGroup:0,  ownerMonths:12, dogMonths:12, exportMonths:0, dogLocked:false },
+    perGroup:0,  ownerMonths:12, dogMonths:12, exportMonths:0, dogLocked:false,
+    sumDays:true },
   "ΑΛΛΟ": { label:"Άλλο κύπελλο — δικοί σας αριθμοί", ref:"",
     min:1, max:8, subs:2, needPlaced:2, needPoints:0, bonus:false, handlerOneCountry:false,
-    perGroup:0,  ownerMonths:0,  dogMonths:0,  exportMonths:0, dogLocked:false }
+    perGroup:0,  ownerMonths:0,  dogMonths:0,  exportMonths:0, dogLocked:false,
+    sumDays:false }
 };
+/* --- Το αποτέλεσμα ανήκει σε ΜΙΑ ΔΙΑΔΡΟΜΗ, όχι στον αγώνα ---
+   Τρία κείμενα, τρεις διαφορετικοί κανόνες, και δεν συγχωνεύονται:
+
+   — CDE-GQ: «The trial, even if held over two days, will have only one
+     ranking.» Μία βαθμολογία για όλο τον αγώνα.
+   — ACO VIII: «These marks are not cumulative» (VIII.11) και ο τίτλος
+     κρίνεται με μπαράζ ανάμεσα στον καλύτερο της κάθε μέρας (VIII.12.3).
+     Δεν αθροίζει.
+   — ACO IX: «the total of points obtained by each dog over the two days»
+     (IX.33), και το ίδιο για την ομάδα (IX.30). ΑΘΡΟΙΖΕΙ.
+
+   Οπότε το κλειδί είναι πάντα «συμμετοχή::ημέρα», αλλά η ημέρα γράφεται 0
+   όπου ο κανονισμός θέλει μία βαθμολογία. Έτσι ο αγώνας του ομίλου —
+   μονοήμερος ή διήμερος — συμπεριφέρεται ακριβώς όπως πάντα: ένα
+   αποτέλεσμα ανά σκύλο, όποια μέρα κι αν το γράψει ο γραμματέας. */
+const sumsDays = t => !!(cupOn(t) && cupOf(t).sumDays);
+const resKey = (t, eid, day) => eid + "::" + (sumsDays(t) ? (day || 0) : 0);
+/* Η μετάβαση σβήνει το σκέτο κλειδί, αλλά ο αναγνώστης το δέχεται ακόμη: μια
+   βαθμολογία που μπήκε από δρόμο που δεν περνά από τη μετάβαση δεν επιτρέπεται
+   να γίνει αόρατη. Σκέτο κλειδί σημαίνει πάντα «πρώτη μέρα». */
+const resAt  = (t, eid, i) => t.results[eid + "::" + i] || (i === 0 ? t.results[eid] : null);
+const resOf  = (t, eid, day) => resAt(t, eid, sumsDays(t) ? (day || 0) : 0) || {};
+function setRes(t, eid, day, field, value){
+  const k = resKey(t, eid, day);
+  t.results[k] = Object.assign({qual:"-", award:"-"}, t.results[k] || t.results[eid], {[field]: value});
+  if(k === eid + "::0") delete t.results[eid];   /* καμία σκιά πίσω από τη γραφή */
+  return t.results[k];
+}
+/* Οι μέρες που έχει γραμμένο αποτέλεσμα ο σκύλος, με τον αριθμό της καθεμιάς. */
+function resDays(t, eid){
+  const out = [];
+  const n = sumsDays(t) ? (t.days||[]).length : 1;
+  for(let i = 0; i < n; i++){
+    const r = resAt(t, eid, i);
+    if(r) out.push({day:i, res:r});
+  }
+  return out;
+}
+/* Οι πόντοι ενός σκύλου σε έναν αγώνα: άθροισμα των ημερών του όπου ο
+   κανονισμός αθροίζει, αλλιώς η μία του βαθμολογία. */
+function dogPoints(t, eid){
+  return resDays(t, eid).reduce((a, x)=>a + pointsFor(t, x.res), 0);
+}
+/* Βαθμολογημένος σημαίνει «έχει αξιολόγηση», σε οποιαδήποτε μέρα. */
+function hasResult(t, eid){
+  return resDays(t, eid).some(x=>x.res.qual && x.res.qual !== "-");
+}
+/* Όταν φεύγει μια συμμετοχή, φεύγουν όλες οι μέρες της. Με ένα κλειδί ανά
+   ημέρα, το «delete t.results[eid]» θα άφηνε ορφανά. */
+function dropResults(t, eid){
+  Object.keys(t.results).forEach(k=>{
+    if(k === eid || k.startsWith(eid + "::")) delete t.results[k];
+  });
+}
+/* ACO IX.33: για τίτλο ο σκύλος «must have run the two days of the contest».
+   Επιστρέφει σε πόσες από τις μέρες του αγώνα έτρεξε — δηλαδή σε πόσες
+   βρέθηκε σε ζεύγος, όχι σε πόσες βαθμολογήθηκε. */
+function daysRun(t, eid){
+  let n = 0;
+  (t.days||[]).forEach(day=>{
+    const ran = (day.terrains||[]).some(tr=>(tr.braces||[])
+      .some(b=>b.a === eid || b.b === eid));
+    if(ran) n++;
+  });
+  return n;
+}
+
 /* Πόσοι πλήρεις μήνες πέρασαν από μια ημερομηνία ως την ημέρα του αγώνα. Η
    προθεσμία μετριέται ως την ΕΝΑΡΞΗ του αγώνα, όχι ως σήμερα: αλλιώς ο ίδιος
    φάκελος κρίνεται αλλιώς κάθε μέρα που τον ανοίγεις. */
@@ -1292,6 +1363,7 @@ const UI_STR = {
   "Ατομική κατάταξη": "Individual classification",
   "Ατομικός": "Solo",
   "Αυθόρμητη": "Spontaneous",
+  "Αυτό το κύπελλο αθροίζει τις ημέρες (ACO IX.29): κάθε ημέρα βαθμολογείται χωριστά και οι πόντοι του σκύλου είναι το άθροισμά τους. Αλλάξτε ημέρα από τη μπάρα πάνω.": "This cup adds up the days (ACO IX.29): each day is scored separately and the dog's points are their sum. Change the day from the bar above.",
   "Αυτόματη κατανομή": "Automatic assignment",
   "Αφαίρεση συμπληρωματικού": "Remove supplementary",
   "Αύγουστος": "August",
@@ -1302,6 +1374,7 @@ const UI_STR = {
   "Βασικοί βαθμοί ανά βαθμολογία/τίτλο. Πολλαπλασιάζονται με τον συντελεστή του αγώνα (×2 ζεύγη, ×3 ή ×4 σε άγριο θήραμα για ΕΚ/ΠΚ).": "Base points per qualification/title. They are multiplied by the trial's coefficient (×2 braces, ×3 or ×4 on wild game for Hunting Research / Practical Hunting).",
   "Βιβλίο γενεαλογίας χώρας": "Studbook of country",
   "Για ομάδες WhatsApp ή Viber, την επιτροπή ή τον πίνακα ανακοινώσεων. Στέλνει τη σειρά σε απλό κείμενο, όχι αρχείο.": "For WhatsApp or Viber groups, the committee or the notice board. It sends the order as plain text, not a file.",
+  "Για τίτλο ο κανονισμός ζητά και τις δύο (ACO IX.33).": "For a title the regulation requires both (ACO IX.33).",
   "Γλωσσάρι": "Glossary",
   "Γλώσσα": "Language",
   "Γράψτε πρώτα τη διεύθυνση του ομίλου": "Write the club's address first",
@@ -1873,6 +1946,7 @@ const UI_STR = {
   "άγριο θήραμα": "wild game",
   "έγινε": "done",
   "ένας κυναγωγός, μία χώρα": "one handler, one country",
+  "έτρεξε": "ran",
   "έχει": "has",
   "έχει ήδη τρέξει για": "has already run for",
   "έχει κληρωμένα ζεύγη. Κάντε νέα κλήρωση ή διαγράψτε το τερέν από την Επεξεργασία του.": "has drawn braces. Draw again, or delete the terrain from its Edit screen.",
@@ -1926,6 +2000,7 @@ const UI_STR = {
   "ζεύγος/η με τον ίδιο κυναγωγό — δεν υπάρχει άλλη δυνατή διάταξη με τους σκύλους αυτού του τερέν.": "brace(s) with the same handler — there is no other possible arrangement with the dogs of this terrain.",
   "η ομάδα": "the team is",
   "η σφραγίδα εξαγωγής είναι": "the export stamp is",
+  "ημέρα": "day",
   "ημέρες": "days",
   "ημερομηνίες από σειριακό αριθμό Excel.": "dates from an Excel serial number.",
   "θα αφαιρεθεί μαζί με τις χειροκίνητες αναθέσεις του. Συνέχεια;": "will be removed along with its manual assignments. Continue?",
@@ -2019,6 +2094,7 @@ const UI_STR = {
   "συμμετοχές": "entries",
   "συμμετοχή": "entry",
   "συμπληρωματικός": "supplementary",
+  "σύνολο": "total",
   "τα δικά σας ζεύγη": "your braces",
   "τερέν": "terrains",
   "τερέν ·": "terrains ·",
@@ -2236,6 +2312,7 @@ const UI_STR = {
   "Ατομική κατάταξη": "Classement individuel",
   "Ατομικός": "Individuel",
   "Αυθόρμητη": "Spontané",
+  "Αυτό το κύπελλο αθροίζει τις ημέρες (ACO IX.29): κάθε ημέρα βαθμολογείται χωριστά και οι πόντοι του σκύλου είναι το άθροισμά τους. Αλλάξτε ημέρα από τη μπάρα πάνω.": "Cette coupe additionne les journées (ACO IX.29) : chaque journée est notée séparément et les points du chien en sont la somme. Changez de journée dans la barre ci-dessus.",
   "Αυτόματη κατανομή": "Répartition automatique",
   "Αφαίρεση συμπληρωματικού": "Retirer le supplémentaire",
   "Αύγουστος": "Août",
@@ -2246,6 +2323,7 @@ const UI_STR = {
   "Βασικοί βαθμοί ανά βαθμολογία/τίτλο. Πολλαπλασιάζονται με τον συντελεστή του αγώνα (×2 ζεύγη, ×3 ή ×4 σε άγριο θήραμα για ΕΚ/ΠΚ).": "Points de base par qualification/titre. Ils sont multipliés par le coefficient de l'épreuve (×2 en couple, ×3 ou ×4 sur gibier sauvage pour Recherche de chasse / Chasse pratique).",
   "Βιβλίο γενεαλογίας χώρας": "Livre des origines du pays",
   "Για ομάδες WhatsApp ή Viber, την επιτροπή ή τον πίνακα ανακοινώσεων. Στέλνει τη σειρά σε απλό κείμενο, όχι αρχείο.": "Pour les groupes WhatsApp ou Viber, le comité ou le tableau d'affichage. Envoie l'ordre en texte simple, pas en fichier.",
+  "Για τίτλο ο κανονισμός ζητά και τις δύο (ACO IX.33).": "Pour un titre, le règlement exige les deux journées (ACO IX.33).",
   "Γλωσσάρι": "Lexique",
   "Γλώσσα": "Langue",
   "Γράψτε πρώτα τη διεύθυνση του ομίλου": "Écrivez d'abord l'adresse du club",
@@ -2817,6 +2895,7 @@ const UI_STR = {
   "άγριο θήραμα": "gibier sauvage",
   "έγινε": "fait",
   "ένας κυναγωγός, μία χώρα": "un conducteur, un pays",
+  "έτρεξε": "a couru",
   "έχει": "a",
   "έχει ήδη τρέξει για": "a déjà couru pour",
   "έχει κληρωμένα ζεύγη. Κάντε νέα κλήρωση ή διαγράψτε το τερέν από την Επεξεργασία του.": "a des couples tirés. Refaites le tirage, ou supprimez le terrain depuis sa fiche.",
@@ -2870,6 +2949,7 @@ const UI_STR = {
   "ζεύγος/η με τον ίδιο κυναγωγό — δεν υπάρχει άλλη δυνατή διάταξη με τους σκύλους αυτού του τερέν.": "couple(s) avec le même conducteur — aucune autre disposition n'est possible avec les chiens de ce terrain.",
   "η ομάδα": "l'équipe est",
   "η σφραγίδα εξαγωγής είναι": "le tampon d'exportation date de",
+  "ημέρα": "journée",
   "ημέρες": "journées",
   "ημερομηνίες από σειριακό αριθμό Excel.": "dates issues d'un numéro de série Excel.",
   "θα αφαιρεθεί μαζί με τις χειροκίνητες αναθέσεις του. Συνέχεια;": "sera retiré avec ses affectations manuelles. Continuer ?",
@@ -2963,6 +3043,7 @@ const UI_STR = {
   "συμμετοχές": "engagements",
   "συμμετοχή": "engagement",
   "συμπληρωματικός": "supplémentaire",
+  "σύνολο": "total",
   "τα δικά σας ζεύγη": "vos couples",
   "τερέν": "terrains",
   "τερέν ·": "terrains ·",
@@ -3180,6 +3261,7 @@ const UI_STR = {
   "Ατομική κατάταξη": "Einzelwertung",
   "Ατομικός": "Einzeln",
   "Αυθόρμητη": "Spontan",
+  "Αυτό το κύπελλο αθροίζει τις ημέρες (ACO IX.29): κάθε ημέρα βαθμολογείται χωριστά και οι πόντοι του σκύλου είναι το άθροισμά τους. Αλλάξτε ημέρα από τη μπάρα πάνω.": "Dieser Pokal addiert die Tage (ACO IX.29): Jeder Tag wird getrennt bewertet, und die Punkte des Hundes sind deren Summe. Wechseln Sie den Tag in der Leiste oben.",
   "Αυτόματη κατανομή": "Automatische Zuteilung",
   "Αφαίρεση συμπληρωματικού": "Ergänzungshund entfernen",
   "Αύγουστος": "August",
@@ -3190,6 +3272,7 @@ const UI_STR = {
   "Βασικοί βαθμοί ανά βαθμολογία/τίτλο. Πολλαπλασιάζονται με τον συντελεστή του αγώνα (×2 ζεύγη, ×3 ή ×4 σε άγριο θήραμα για ΕΚ/ΠΚ).": "Grundpunkte je Bewertung/Titel. Sie werden mit dem Koeffizienten der Prüfung multipliziert (×2 im Paar, ×3 oder ×4 auf Wildwild für Jagdsuche / Praktische Jagd).",
   "Βιβλίο γενεαλογίας χώρας": "Zuchtbuch des Landes",
   "Για ομάδες WhatsApp ή Viber, την επιτροπή ή τον πίνακα ανακοινώσεων. Στέλνει τη σειρά σε απλό κείμενο, όχι αρχείο.": "Für WhatsApp- oder Viber-Gruppen, den Vorstand oder das schwarze Brett. Sendet die Reihenfolge als reinen Text, nicht als Datei.",
+  "Για τίτλο ο κανονισμός ζητά και τις δύο (ACO IX.33).": "Für einen Titel verlangt das Reglement beide Tage (ACO IX.33).",
   "Γλωσσάρι": "Glossar",
   "Γλώσσα": "Sprache",
   "Γράψτε πρώτα τη διεύθυνση του ομίλου": "Schreiben Sie zuerst die Adresse des Vereins",
@@ -3761,6 +3844,7 @@ const UI_STR = {
   "άγριο θήραμα": "Wildwild",
   "έγινε": "erfolgt",
   "ένας κυναγωγός, μία χώρα": "ein Führer, ein Land",
+  "έτρεξε": "lief",
   "έχει": "hat",
   "έχει ήδη τρέξει για": "ist bereits gestartet für",
   "έχει κληρωμένα ζεύγη. Κάντε νέα κλήρωση ή διαγράψτε το τερέν από την Επεξεργασία του.": "hat ausgeloste Paare. Losen Sie neu aus, oder löschen Sie das Gelände über Bearbeiten.",
@@ -3814,6 +3898,7 @@ const UI_STR = {
   "ζεύγος/η με τον ίδιο κυναγωγό — δεν υπάρχει άλλη δυνατή διάταξη με τους σκύλους αυτού του τερέν.": "Paar(e) mit demselben Führer — mit den Hunden dieses Geländes ist keine andere Anordnung möglich.",
   "η ομάδα": "die Mannschaft ist",
   "η σφραγίδα εξαγωγής είναι": "der Ausfuhrstempel ist",
+  "ημέρα": "Tag",
   "ημέρες": "Tage",
   "ημερομηνίες από σειριακό αριθμό Excel.": "Datumsangaben aus einer Excel-Seriennummer.",
   "θα αφαιρεθεί μαζί με τις χειροκίνητες αναθέσεις του. Συνέχεια;": "wird samt seinen manuellen Zuteilungen entfernt. Fortfahren?",
@@ -3907,6 +3992,7 @@ const UI_STR = {
   "συμμετοχές": "Meldungen",
   "συμμετοχή": "Meldung",
   "συμπληρωματικός": "Ergänzungshund",
+  "σύνολο": "Gesamt",
   "τα δικά σας ζεύγη": "Ihre Paare",
   "τερέν": "Gelände",
   "τερέν ·": "Gelände ·",
@@ -4124,6 +4210,7 @@ const UI_STR = {
   "Ατομική κατάταξη": "Classifica individuale",
   "Ατομικός": "Individuale",
   "Αυθόρμητη": "Spontanea",
+  "Αυτό το κύπελλο αθροίζει τις ημέρες (ACO IX.29): κάθε ημέρα βαθμολογείται χωριστά και οι πόντοι του σκύλου είναι το άθροισμά τους. Αλλάξτε ημέρα από τη μπάρα πάνω.": "Questa coppa somma le giornate (ACO IX.29): ogni giornata è valutata separatamente e i punti del cane ne sono la somma. Cambiate giornata dalla barra in alto.",
   "Αυτόματη κατανομή": "Assegnazione automatica",
   "Αφαίρεση συμπληρωματικού": "Togli il supplementare",
   "Αύγουστος": "Agosto",
@@ -4134,6 +4221,7 @@ const UI_STR = {
   "Βασικοί βαθμοί ανά βαθμολογία/τίτλο. Πολλαπλασιάζονται με τον συντελεστή του αγώνα (×2 ζεύγη, ×3 ή ×4 σε άγριο θήραμα για ΕΚ/ΠΚ).": "Punti base per qualifica/titolo. Vengono moltiplicati per il coefficiente della prova (×2 in batteria, ×3 o ×4 su selvaggina selvatica per Ricerca di caccia / Caccia pratica).",
   "Βιβλίο γενεαλογίας χώρας": "Libro genealogico del paese",
   "Για ομάδες WhatsApp ή Viber, την επιτροπή ή τον πίνακα ανακοινώσεων. Στέλνει τη σειρά σε απλό κείμενο, όχι αρχείο.": "Per i gruppi WhatsApp o Viber, il comitato o la bacheca. Invia l'ordine come testo semplice, non come file.",
+  "Για τίτλο ο κανονισμός ζητά και τις δύο (ACO IX.33).": "Per un titolo il regolamento richiede entrambe le giornate (ACO IX.33).",
   "Γλωσσάρι": "Glossario",
   "Γλώσσα": "Lingua",
   "Γράψτε πρώτα τη διεύθυνση του ομίλου": "Scrivete prima l'indirizzo del club",
@@ -4705,6 +4793,7 @@ const UI_STR = {
   "άγριο θήραμα": "selvaggina selvatica",
   "έγινε": "fatto",
   "ένας κυναγωγός, μία χώρα": "un conduttore, un paese",
+  "έτρεξε": "ha corso",
   "έχει": "ha",
   "έχει ήδη τρέξει για": "ha già corso per",
   "έχει κληρωμένα ζεύγη. Κάντε νέα κλήρωση ή διαγράψτε το τερέν από την Επεξεργασία του.": "ha coppie sorteggiate. Rifate il sorteggio, o eliminate il terreno da Modifica.",
@@ -4758,6 +4847,7 @@ const UI_STR = {
   "ζεύγος/η με τον ίδιο κυναγωγό — δεν υπάρχει άλλη δυνατή διάταξη με τους σκύλους αυτού του τερέν.": "coppia/e con lo stesso conduttore — non esiste altra disposizione possibile con i cani di questo terreno.",
   "η ομάδα": "la squadra è",
   "η σφραγίδα εξαγωγής είναι": "il timbro di esportazione è di",
+  "ημέρα": "giornata",
   "ημέρες": "giornate",
   "ημερομηνίες από σειριακό αριθμό Excel.": "date da numero seriale Excel.",
   "θα αφαιρεθεί μαζί με τις χειροκίνητες αναθέσεις του. Συνέχεια;": "verrà tolto insieme alle sue assegnazioni manuali. Continuare?",
@@ -4851,6 +4941,7 @@ const UI_STR = {
   "συμμετοχές": "iscrizioni",
   "συμμετοχή": "iscrizione",
   "συμπληρωματικός": "supplementare",
+  "σύνολο": "totale",
   "τα δικά σας ζεύγη": "le vostre coppie",
   "τερέν": "terreni",
   "τερέν ·": "terreni ·",
@@ -5068,6 +5159,7 @@ const UI_STR = {
   "Ατομική κατάταξη": "Clasificación individual",
   "Ατομικός": "Individual",
   "Αυθόρμητη": "Espontánea",
+  "Αυτό το κύπελλο αθροίζει τις ημέρες (ACO IX.29): κάθε ημέρα βαθμολογείται χωριστά και οι πόντοι του σκύλου είναι το άθροισμά τους. Αλλάξτε ημέρα από τη μπάρα πάνω.": "Esta copa suma las jornadas (ACO IX.29): cada jornada se puntúa por separado y los puntos del perro son su suma. Cambie de jornada en la barra superior.",
   "Αυτόματη κατανομή": "Reparto automático",
   "Αφαίρεση συμπληρωματικού": "Quitar el suplementario",
   "Αύγουστος": "Agosto",
@@ -5078,6 +5170,7 @@ const UI_STR = {
   "Βασικοί βαθμοί ανά βαθμολογία/τίτλο. Πολλαπλασιάζονται με τον συντελεστή του αγώνα (×2 ζεύγη, ×3 ή ×4 σε άγριο θήραμα για ΕΚ/ΠΚ).": "Puntos base por calificación/título. Se multiplican por el coeficiente de la prueba (×2 parejas, ×3 o ×4 sobre caza silvestre para I.C./C.P.).",
   "Βιβλίο γενεαλογίας χώρας": "Libro genealógico del país",
   "Για ομάδες WhatsApp ή Viber, την επιτροπή ή τον πίνακα ανακοινώσεων. Στέλνει τη σειρά σε απλό κείμενο, όχι αρχείο.": "Para grupos de WhatsApp o Viber, el comité o el tablón de anuncios. Envía el orden como texto simple, no como archivo.",
+  "Για τίτλο ο κανονισμός ζητά και τις δύο (ACO IX.33).": "Para un título el reglamento exige ambas jornadas (ACO IX.33).",
   "Γλωσσάρι": "Glosario",
   "Γλώσσα": "Lengua",
   "Γράψτε πρώτα τη διεύθυνση του ομίλου": "Escriba primero la dirección del club",
@@ -5649,6 +5742,7 @@ const UI_STR = {
   "άγριο θήραμα": "caza silvestre",
   "έγινε": "hecho",
   "ένας κυναγωγός, μία χώρα": "un conductor, un país",
+  "έτρεξε": "corrió",
   "έχει": "tiene",
   "έχει ήδη τρέξει για": "ya ha corrido para",
   "έχει κληρωμένα ζεύγη. Κάντε νέα κλήρωση ή διαγράψτε το τερέν από την Επεξεργασία του.": "tiene parejas sorteadas. Vuelva a sortear, o borre el terreno desde su pantalla de Editar.",
@@ -5702,6 +5796,7 @@ const UI_STR = {
   "ζεύγος/η με τον ίδιο κυναγωγό — δεν υπάρχει άλλη δυνατή διάταξη με τους σκύλους αυτού του τερέν.": "pareja(s) con el mismo conductor — no hay otra disposición posible con los perros de este terreno.",
   "η ομάδα": "el equipo es",
   "η σφραγίδα εξαγωγής είναι": "el sello de exportación es de",
+  "ημέρα": "día",
   "ημέρες": "días",
   "ημερομηνίες από σειριακό αριθμό Excel.": "fechas a partir de un número de serie de Excel.",
   "θα αφαιρεθεί μαζί με τις χειροκίνητες αναθέσεις του. Συνέχεια;": "se quitará junto con sus asignaciones manuales. ¿Continuar?",
@@ -5795,6 +5890,7 @@ const UI_STR = {
   "συμμετοχές": "inscripciones",
   "συμμετοχή": "inscripción",
   "συμπληρωματικός": "suplementario",
+  "σύνολο": "total",
   "τα δικά σας ζεύγη": "sus parejas",
   "τερέν": "terrenos",
   "τερέν ·": "terrenos ·",
@@ -6756,7 +6852,7 @@ function progressStrip(t){
   const judged = day.terrains.length && day.terrains.every(tr=>tr.judgeIds.length);
   const q = day.draw ? smsQueue(t) : [];
   const sent = q.filter(x=>t.sms[x.key]==="ΕΣΤΑΛΗ").length;
-  const scored = t.entries.filter(e=>{ const r = t.results[e.id]; return r && r.qual && r.qual!=="-"; }).length;
+  const scored = t.entries.filter(e=>hasResult(t, e.id)).length;
   const braces = [];
   day.terrains.forEach(tr=>(tr.braces||[]).forEach(b=>braces.push(b)));
   const ran = braces.filter(b=>b.status==="ΟΛΟΚΛΗΡΩΘΗΚΕ").length;
@@ -7287,8 +7383,8 @@ function clockEl(b, big, t){
     >${clockText(allow - braceElapsed(b))}</span>`;
 }
 
-function qualChip(t, id){
-  const r = t.results[id];
+function qualChip(t, id, day){
+  const r = t.results[resKey(t, id, day == null ? S.day : day)];
   if(!r || !r.qual || r.qual==="-") return "";
   const pts = pointsFor(t, r);
   return `<span class="chip o">${esc(tx(r.qual))}${r.award&&r.award!=="-"?" · "+esc(tx(r.award)):""}${pts?" · "+pts:""}</span>`;
@@ -7910,9 +8006,9 @@ function noteSheet(t, day, tr, b, e, d, note, judgeName){
       <div style="flex:1"><span style="font:400 9pt/1 var(--f-b)">${tx("Λευκές φέρμες")}</span>
         <div class="box">${n.whites?esc(String(n.whites)):""}</div></div>
       <div style="flex:2"><span style="font:400 9pt/1 var(--f-b)">${tx("Προτεινόμενη βαθμολογία")}</span>
-        <div class="box">${esc((t.results[e.id]||{}).qual&&(t.results[e.id]||{}).qual!=="-"
-          ? t.results[e.id].qual + ((t.results[e.id].award&&t.results[e.id].award!=="-")
-            ? " · " + t.results[e.id].award : "") : "")}</div></div>
+        <div class="box">${(()=>{ const r = resOf(t, e.id, day);
+          return esc(r.qual && r.qual!=="-"
+            ? tx(r.qual) + (r.award && r.award!=="-" ? " · " + tx(r.award) : "") : ""); })()}</div></div>
     </div>
     <h4>${tx("ΕΛΕΥΘΕΡΟ ΣΧΟΛΙΟ")}</h4>
     <div style="border:1px solid #000;height:34mm;padding:4px;font:400 9.5pt/1.45 var(--f-b);
@@ -8307,8 +8403,12 @@ function teamTable(t){
     if(isTrailerEntry(t, e.id)) return;            /* Άρθρο 40: δεν αγωνίζεται */
     const c = teamOfEntry(t, e); if(!c) return;
     const m = squadOfEntry(t, e.id);
-    const r = t.results[e.id] || {};
-    const p = pointsFor(t, r);
+    /* ACO IX.30: «the total of points obtained by the team members over the
+       two days». Το dogPoints() αθροίζει όπου ο κανονισμός αθροίζει και
+       επιστρέφει τη μία βαθμολογία όπου όχι. */
+    const days = resDays(t, e.id);
+    const r = (days.slice().sort((x,y)=>pointsFor(t,y.res)-pointsFor(t,x.res))[0]||{}).res || {};
+    const p = dogPoints(t, e.id);
     const d = dogById(e.dogId) || {};
     const row = {name:dogName(e.dogId), pts:p, qual:r.qual||"-", award:r.award||"-",
                  sub: !!(m && m.sub)};
@@ -8366,6 +8466,20 @@ function squadProblems(t){
       }
     });
   });
+  /* ACO IX.33: «he must have run the two days of the contest». Δεν είναι
+     εύρημα συγκρότησης αλλά της βαθμολογίας — μπαίνει εδώ γιατί εδώ βλέπει ο
+     γραμματέας τι δεν στέκει, και μόνο όταν όλες οι μέρες έχουν κληρωθεί,
+     ώστε να μη φωνάζει την πρώτη μέρα ενός διήμερου. */
+  if(sumsDays(t) && (t.days||[]).length > 1 && (t.days||[]).every(d=>d.draw)){
+    squads.forEach(q=>(q.entryIds||[]).forEach(id=>{
+      const e = t.entries.find(x=>x.id===id); if(!e) return;
+      const n = daysRun(t, id);
+      if(n && n < t.days.length)
+        out.push(`${dogName(e.dogId)}: ${tx("έτρεξε")} ${n} ${tx(n===1?"ημέρα":"ημέρες")} ${
+          tx("από")} ${t.days.length}. ${tx("Για τίτλο ο κανονισμός ζητά και τις δύο (ACO IX.33).")}`);
+    }));
+  }
+
   /* --- Επιλεξιμότητα, σκύλο τον σκύλο ---
      Κάθε γραμμή λέει τι λείπει και ποιο άρθρο το ζητά. Το «δεν ξέρω» δεν
      γίνεται «εντάξει»: κενό πεδίο αναφέρεται ως κενό, γιατί ο κανονισμός δεν
@@ -8447,7 +8561,7 @@ function tResults(t){
        draw, he takes no place and no judge scores him — so he is not on this
        screen, gets no sheet, and never reaches the standings. */
     if(isTrailerEntry(t, e.id)) return;
-    const r = t.results[e.id] || {};
+    const r = resOf(t, e.id, S.day);
     /* The app's arithmetic is advice and clearly subordinate: Άρθρο 27 caps are
        shown as a hint, never as a block. The judge always overrides. */
     const locked = !!(t.signoff||{})[tr.id];
@@ -8468,7 +8582,9 @@ function tResults(t){
         `<option value="${esc(q)}" ${r.qual===q?"selected":""}>${esc(tx(q))}</option>`).join("")}</select></td>
       <td><select data-res="${e.id}|award" ${locked?"disabled":""}>${AWARDS.map(a=>
         `<option value="${esc(a)}" ${r.award===a?"selected":""}>${esc(tx(a))}</option>`).join("")}</select></td>
-      <td class="num"><b style="font:800 21px/1 var(--f-d)">${pointsFor(t,r)}</b></td>
+      <td class="num"><b style="font:800 21px/1 var(--f-d)">${pointsFor(t,r)}</b>${
+        sumsDays(t) && t.days.length > 1
+          ? `<div class="tiny">${tx("σύνολο")} ${dogPoints(t, e.id)}</div>` : ""}</td>
       <td class="noprint"><button class="b-sm" data-note="${e.id}::${b.id}">${locked?tx("Προβολή"):tx("Σημειώσεις")}</button></td>
     </tr>`);
   })));
@@ -8484,7 +8600,11 @@ function tResults(t){
            : `<button class="b-sm b-pri" data-signoff="${tr.id}">${tx("Υπογραφή")}</button>`}
     </div>`;
   }).join("");
-  return `<div class="note">${cupOn(t)
+  return `${sumsDays(t) && t.days.length > 1
+    ? `<div class="note" style="margin-bottom:10px"><b>${tx("Ημέρα")} ${S.day+1} ${tx("από")} ${t.days.length}.</b>
+       ${tx("Αυτό το κύπελλο αθροίζει τις ημέρες (ACO IX.29): κάθε ημέρα βαθμολογείται χωριστά και οι πόντοι του σκύλου είναι το άθροισμά τους. Αλλάξτε ημέρα από τη μπάρα πάνω.")}</div>`
+    : ""}
+  <div class="note">${cupOn(t)
     ? tx("Κύπελλο: οι πόντοι είναι αυτοί του πίνακα, χωρίς συντελεστή. Ο κανονισμός δίνει απόλυτη κλίμακα και πάνω της μετριέται το κατώφλι της ομάδας.")
     : tx("Πόντοι = βασικοί πόντοι × συντελεστής") + " " + coefficient(t) + `
     (${tx(t.format==="ΖΕΥΓΗ"?"ζεύγη":"ατομικός")}${t.wild&&(t.type==="Έρευνας Κυνηγίου"||t.type==="Πρακτικού Κυνηγίου")?", "+tx("άγριο θήραμα"):""}).`}
@@ -8580,9 +8700,9 @@ function tExport(t){
    said a trial was finished, so every season stayed open for ever. */
 function closeCard(t){
   const done = t.status === CLOSED;
-  const scored = t.entries.filter(e=>{ const r = t.results[e.id]; return r && r.qual && r.qual!=="-"; }).length;
+  const scored = t.entries.filter(e=>hasResult(t, e.id)).length;
   const active = t.entries.filter(e=>e.status==="ΔΗΛΩΜΕΝΟΣ").length;
-  const pts = t.entries.reduce((a,e)=>a + (t.results[e.id] ? pointsFor(t, t.results[e.id]) : 0), 0);
+  const pts = t.entries.reduce((a,e)=>a + dogPoints(t, e.id), 0);
   if(done) return `<div class="card">
     <div class="eyebrow">${tx("Ολοκληρωμένος")}</div>
     <p class="tiny">${tx("Κλείστηκε")} ${esc(t.closedAt||"")}${tx(". Ο αγώνας είναι στο ιστορικό και μετρά στα Στατιστικά:")} ${scored} ${tx("βαθμολογημένοι σκύλοι,")} ${pts} ${tx("πόντοι. Ανοίγει κανονικά για ανάγνωση, εκτύπωση και εξαγωγή.")}</p>
@@ -8810,7 +8930,10 @@ function vDog(){
     let ter="—", no="—";
     t.days.forEach(day=>day.terrains.forEach(tr=>(tr.braces||[]).forEach(b=>{
       if(b.a===e.id||b.b===e.id){ ter=tr.name; no=b.no; }})));
-    const r = t.results[e.id]||{};
+    /* Ο σκύλος μπορεί να έχει βαθμολογία σε κάθε μέρα· στο ιστορικό
+       εμφανίζεται η καλύτερη και οι πόντοι είναι το άθροισμα όλων. */
+    const days = resDays(t, e.id);
+    const r = (days.slice().sort((x,y)=>pointsFor(t,y.res)-pointsFor(t,x.res))[0]||{}).res || {};
     const notes = {};
     Object.keys(t.notes||{}).forEach(k=>{
       if(k === e.id || k.startsWith(e.id + "::"))
@@ -8896,8 +9019,8 @@ function statsSlice(){
                      && (!f.dog     || e.dogId === f.dog);
   const map = {};                       // dogId -> trialId -> points
   inScope.forEach(t=>t.entries.forEach(e=>{
-    const r = t.results[e.id]; if(!r || !keep(t,e)) return;
-    (map[e.dogId] = map[e.dogId]||{})[t.id] = pointsFor(t,r);
+    if(!resDays(t, e.id).length || !keep(t,e)) return;
+    (map[e.dogId] = map[e.dogId]||{})[t.id] = dogPoints(t, e.id);
   }));
   const dogIds = Object.keys(map).sort((a,b)=>dogName(a).localeCompare(dogName(b),"el"));
   const trials = inScope.filter(t => dogIds.some(id => map[id][t.id] !== undefined));
@@ -8914,7 +9037,7 @@ function statsOptions(){
     if(m && !months.includes(m)) months.push(m);
     if(t.type && !types.includes(t.type)) types.push(t.type);
     t.entries.forEach(e=>{
-      if(!t.results[e.id]) return;
+      if(!resDays(t, e.id).length) return;
       if(e.dogId && !dogs.includes(e.dogId)) dogs.push(e.dogId);
       if(e.handlerId && !handlers.includes(e.handlerId)) handlers.push(e.handlerId);
     });
@@ -9448,8 +9571,7 @@ function fieldList(t){
     if(b.a) drawn.add(b.a); if(b.b) drawn.add(b.b); })));
   const locked = new Set();
   t.entries.forEach(e=>{
-    const r = t.results[e.id];
-    if(drawn.has(e.id) || (r && r.qual && r.qual !== "-")) locked.add(e.dogId);
+    if(drawn.has(e.id) || hasResult(t, e.id)) locked.add(e.dogId);
   });
 
   const dogsOf = new Map();
@@ -9538,8 +9660,7 @@ function batchList(t, hid){
   const rows = own.map(d=>{
     const en = t.entries.find(x=>x.dogId === d.id);
     const other = en && en.handlerId !== hid;              /* entered under someone else */
-    const res = en && t.results[en.id];
-    const locked = en && (drawn.has(en.id) || (res && res.qual && res.qual !== "-"));
+    const locked = en && (drawn.has(en.id) || hasResult(t, en.id));
     const on = !!en && !other;
     return `<button class="tog assign ${on?"on":""}" ${locked||other?"disabled":""}
       data-btick="${d.id}" style="width:100%;justify-content:flex-start;text-align:left;
@@ -9924,11 +10045,15 @@ function parSheet(){
 /* Η ομάδα και ο ρόλος μπαίνουν ΜΕΤΑ τη στήλη των πόντων, όχι δίπλα στον
    σκύλο: το J μένει J και κανένα SUMIFS του Στατιστικά δεν μετακινείται. */
 function dataSheet(trials, keep){
+  /* Μία γραμμή ανά ΔΙΑΔΡΟΜΗ. Όπου ο κανονισμός δίνει μία βαθμολογία για όλο
+     τον αγώνα, η διαδρομή είναι μία και η στήλη «Ημέρα» γράφει 1· όπου
+     αθροίζει (ACO IX.29), ο σκύλος έχει δύο γραμμές και τα SUMIFS του
+     «Ομάδες» τις προσθέτουν χωρίς να αλλάξει τύπος. */
   const rows = [[txt("Σκύλος"),txt("Φυλή"),txt("Αγώνας"),txt("Ημερομηνία"),txt("Είδος"),
                  txt("Βαθμολογία"),txt("Τίτλος"),txt("Κλειδί"),txt("Συντελεστής"),txt("Πόντοι"),
-                 txt("Ομάδα"),txt("Ρόλος")]];
-  trials.forEach(t=>t.entries.forEach(e=>{
-    const r = t.results[e.id]; if(!r || (keep && !keep(t,e))) return;
+                 txt("Ομάδα"),txt("Ρόλος"),txt("Ημέρα")]];
+  trials.forEach(t=>t.entries.forEach(e=>resDays(t, e.id).forEach(({day, res:r})=>{
+    if(keep && !keep(t,e)) return;
     const d = dogById(e.dogId) || {};
     const n = rows.length + 1;
     const m = cupOn(t) ? squadOfEntry(t, e.id) : null;
@@ -9938,14 +10063,15 @@ function dataSheet(trials, keep){
       num(coefficient(t)),
       fml(`IFERROR(VLOOKUP(H${n},${qname(SH_PAR)}!$A$2:$B$40,2,FALSE)*I${n},0)`),
       txt(teamOfEntry(t, e)),
-      txt(m ? (m.sub ? ROLE_SUB : ROLE_MAIN) : "")]);
-  }));
+      txt(m ? (m.sub ? ROLE_SUB : ROLE_MAIN) : ""),
+      num(day + 1)]);
+  })));
   return { name: SH_DATA, rows };
 }
 function statsSheet(trials, keep){
   const dogIds = [];
   trials.forEach(t=>t.entries.forEach(e=>{
-    if(t.results[e.id] && (!keep || keep(t,e)) && !dogIds.includes(e.dogId)) dogIds.push(e.dogId); }));
+    if(resDays(t, e.id).length && (!keep || keep(t,e)) && !dogIds.includes(e.dogId)) dogIds.push(e.dogId); }));
   const rows = [[txt("Σκύλος")].concat(trials.map(t=>txt(t.title))).concat([txt("ΣΥΝΟΛΟ")])];
   dogIds.forEach(id=>{
     const n = rows.length + 1;
@@ -10147,9 +10273,9 @@ function exportTrialCsv(t){
 function exportTrialDoc(t){
   const rows = [];
   const blocks = [];
-  t.days.forEach(day=>day.terrains.forEach(tr=>(tr.braces||[]).forEach(b=>[b.a,b.b].forEach(id=>{
+  t.days.forEach((day, di)=>day.terrains.forEach(tr=>(tr.braces||[]).forEach(b=>[b.a,b.b].forEach(id=>{
     const e = t.entries.find(x=>x.id===id); if(!e) return;
-    const r = t.results[e.id]||{};
+    const r = resOf(t, e.id, di);
     const d = dogById(e.dogId)||{};
     rows.push(`<tr><td>${esc(tr.name)}</td><td>${b.no}</td><td>${esc(dogName(e.dogId))}</td>
       ${cupOn(t)?`<td>${esc(natTag(teamOfEntry(t,e)))}</td>`:""}
@@ -10472,8 +10598,7 @@ document.addEventListener("change", ev=>{
   const t = trialById(S.trialId);
   const r = ev.target.dataset.res;
   if(r && t){ const [eid,f] = r.split("|");
-    t.results[eid] = t.results[eid] || {qual:"-",award:"-"};
-    t.results[eid][f] = ev.target.value; save(); render(); return; }
+    setRes(t, eid, S.day, f, ev.target.value); save(); render(); return; }
   const p = ev.target.dataset.pt;
   if(p && p.includes("|") && window._note){ const [i,f] = p.split("|");
     window._note.points[+i][f] = ev.target.value; return; }
@@ -10851,7 +10976,7 @@ const ACT = {
     if(!confirmAct(`${tx("Αποκλεισμός του")} ${name} ${tx("για:")} ${faults.join(", ")}.\n\n`
       + "Η διαδρομή τερματίζεται και η βαθμολογία γίνεται ΑΠΟΚΛΕΙΣΜΟΣ.")) return;
     if(!confirmAct(tx("Η ενέργεια καταγράφεται στο φύλλο του κριτή. Επιβεβαίωση αποκλεισμού;"))) return;
-    t.results[entryId] = Object.assign({qual:"-",award:"-"}, t.results[entryId], {qual:"ΑΠΟΚΛΕΙΣΜΟΣ"});
+    setRes(t, entryId, S.day, "qual", "ΑΠΟΚΛΕΙΣΜΟΣ");
     autosaveNote(); save(); closeDlg(); render();
     toast(tx("Ο σκύλος αποκλείστηκε"));
   },
@@ -10946,10 +11071,9 @@ const ACT = {
                                  status:"ΔΗΛΩΜΕΝΟΣ", paid:false, season:false}); added++; }
         else if(en.status !== "ΔΗΛΩΜΕΝΟΣ"){ en.status = "ΔΗΛΩΜΕΝΟΣ"; added++; }
       } else if(en){
-        const r = t.results[en.id];
-        if(drawn.has(en.id) || (r && r.qual && r.qual !== "-")) return;   /* locked */
+        if(drawn.has(en.id) || hasResult(t, en.id)) return;              /* locked */
         t.entries = t.entries.filter(x=>x.id !== en.id);
-        delete t.results[en.id]; delete t.sms[en.id];
+        dropResults(t, en.id); delete t.sms[en.id];
         removed++;
       }
     });
@@ -10973,7 +11097,7 @@ const ACT = {
                                  paid:false, season:false}); added++; }
       } else if(en && en.handlerId === hid){
         t.entries = t.entries.filter(x=>x.id !== en.id);
-        delete t.results[en.id]; delete t.sms[en.id];
+        dropResults(t, en.id); delete t.sms[en.id];
         removed++;
       }
     });
@@ -11013,15 +11137,18 @@ const ACT = {
         const k = el("t_cup").value;
         /* Ο διακόπτης σβήνει την κατάταξη, ποτέ τις ομάδες: αν ο γραμματέας τον
            γυρίσει κατά λάθος, η συγκρότηση είναι εκεί όταν τον ξαναγυρίσει. */
+        /* Όλο το προκαθορισμένο μπαίνει μέσα, όχι μερικά του πεδία: όσα δεν
+           έχουν κουτί στο έντυπο — το όριο ανά όμιλο, οι μήνες, το κλείδωμα
+           του σκύλου, το άθροισμα των ημερών — είναι εξίσου κανονισμός, και
+           αν έλειπαν θα έπεφταν σιωπηλά στις προεπιλογές του «ΑΛΛΟ». */
         const base = Object.assign({}, CUPS[k] || CUPS["ΑΛΛΟ"]);
-        return {on: !!k, preset: k || (t && t.cup && t.cup.preset) || "ΑΛΛΟ",
-          label: base.label, ref: base.ref,
-          bonus: base.bonus, handlerOneCountry: base.handlerOneCountry,
+        return Object.assign(base, {
+          on: !!k, preset: k || (t && t.cup && t.cup.preset) || "ΑΛΛΟ",
           min:  Math.max(1, +el("t_cupMin").value || 1),
           max:  Math.max(1, +el("t_cupMax").value || 1),
           subs: Math.max(0, +el("t_cupSubs").value || 0),
           needPlaced: Math.max(0, +el("t_cupPlaced").value || 0),
-          needPoints: Math.max(0, +el("t_cupPts").value || 0)};
+          needPoints: Math.max(0, +el("t_cupPts").value || 0)});
       })()
     };
     if(!t){
@@ -11039,7 +11166,7 @@ const ACT = {
      not actually finished — and it never destroys anything. */
   closeTrial: (btn, t)=>{
     const active = t.entries.filter(e=>e.status==="ΔΗΛΩΜΕΝΟΣ").length;
-    const scored = t.entries.filter(e=>{ const r = t.results[e.id]; return r && r.qual && r.qual!=="-"; }).length;
+    const scored = t.entries.filter(e=>hasResult(t, e.id)).length;
     const open = [];
     t.days.forEach((day,i)=>(day.terrains||[]).forEach(tr=>{
       if((tr.braces||[]).length && !(t.signoff||{})[tr.id]) open.push(tr.name
@@ -11543,8 +11670,30 @@ function migrate(){
           ({id:uid(), country:c, captain:"", entryIds:by[c], subIds:[]}));
       }
     }
+    /* Ένας αγώνας αποθηκευμένος πριν, από έντυπο που κρατούσε μόνο τα πεδία
+       με κουτί, έχει t.cup χωρίς τα υπόλοιπα του κανονισμού. Συμπληρώνονται
+       από το προκαθορισμένο — ποτέ πάνω από αριθμό που έχει ήδη τιμή, ώστε
+       ό,τι άλλαξε ο γραμματέας να μένει δικό του. */
+    if(t.cup && t.cup.preset && CUPS[t.cup.preset])
+      Object.keys(CUPS[t.cup.preset]).forEach(k=>{
+        if(t.cup[k] === undefined) t.cup[k] = CUPS[t.cup.preset][k];
+      });
     if(!Array.isArray(t.squads)) t.squads = [];
     t.notes = t.notes || {}; t.results = t.results || {}; t.sms = t.sms || {};
+    /* Το αποτέλεσμα ήταν ένα ανά σκύλο ανά αγώνα· τώρα ανήκει σε μια
+       διαδρομή και το κλειδί του λέει και την ημέρα. Η παλιά εγγραφή είναι
+       εξ ορισμού της πρώτης ημέρας. Το uid() είναι base36 και δεν περιέχει
+       ποτέ «::», οπότε ένα κλειδί που το έχει είναι ήδη περασμένο — η
+       μετάβαση τρέχει μία φορά, όσες φορές κι αν κληθεί. */
+    Object.keys(t.results).forEach(k=>{
+      if(k.includes("::")) return;
+      const v = t.results[k]; delete t.results[k];
+      /* Αν υπάρχει ήδη εγγραφή πρώτης ημέρας, η παλιά δεν τη σβήνει: κρατιέται
+         ό,τι έχει αξιολόγηση, γιατί το κενό δεν αντικαθιστά γραμμένο. */
+      const nk = k + "::0";
+      if(!t.results[nk] || !(t.results[nk].qual && t.results[nk].qual !== "-"))
+        t.results[nk] = v;
+    });
     (t.days||[]).forEach(d=>(d.terrains||[]).forEach(tr=>(tr.braces||[]).forEach(b=>{
       if(!b.id) b.id = uid();
     })));
