@@ -580,6 +580,13 @@
   "fr": "Voici l'en-tête obtenu pour « ",
   "it": "Ecco come esce l'intestazione per «"
  },
+ "Έχει κατεβεί νεότερη έκδοση": {
+  "de": "Eine neuere Version wurde heruntergeladen",
+  "en": "A newer version has been downloaded",
+  "es": "Se ha descargado una versión más reciente",
+  "fr": "Une version plus récente a été téléchargée",
+  "it": "È stata scaricata una versione più recente"
+ },
  "Έχετε την τελευταία έκδοση: ": {
   "de": "Sie haben die neueste Version: ",
   "en": "You have the latest version: ",
@@ -2008,6 +2015,13 @@
   "fr": "Remettre l'épreuve en cours ?",
   "it": "Rimettere la prova in corso?"
  },
+ "Επαναφόρτωση τώρα": {
+  "de": "Jetzt neu laden",
+  "en": "Reload now",
+  "es": "Recargar ahora",
+  "fr": "Recharger maintenant",
+  "it": "Ricarica ora"
+ },
  "Επαφή με κυναγωγό": {
   "de": "Führer kontaktieren",
   "en": "Contact the handler",
@@ -2427,6 +2441,13 @@
   "es": "El sorteo está completo",
   "fr": "Le tirage est terminé",
   "it": "Il sorteggio è completato"
+ },
+ "Η νεότερη έκδοση έχει κατεβεί αλλά δεν τρέχει ακόμη. Επαναφόρτωση τώρα;": {
+  "de": "Die neuere Version ist heruntergeladen, läuft aber noch nicht. Jetzt neu laden?",
+  "en": "The newer version has been downloaded but is not running yet. Reload now?",
+  "es": "La versión más reciente está descargada pero aún no se ejecuta. ¿Recargar ahora?",
+  "fr": "La version plus récente est téléchargée mais ne tourne pas encore. Recharger maintenant ?",
+  "it": "La versione più recente è scaricata ma non è ancora in esecuzione. Ricaricare ora?"
  },
  "Η ορολογία των κριτών γυρίζει σε πέντε γλώσσες, από τους ίδιους τους κανονισμούς. Τα ισπανικά είναι η εξαίρεση: κανένας ισπανικός κανονισμός δεν βρίσκεται στο αποθετήριο, οπότε εκεί και οι όροι είναι επαγγελματική, μη επίσημη μετάφραση — όπως όλη η υπόλοιπη οθόνη σε κάθε γλώσσα. Στη βάση όλα μένουν ελληνικά.": {
   "de": "Die Richterterminologie dreht sich in fünf Sprachen, den Regelwerken selbst entnommen. Spanisch ist die Ausnahme: im Repositorium liegt kein spanisches Regelwerk, also sind dort auch die Fachbegriffe eine professionelle, nicht offizielle Übersetzung — wie der übrige Bildschirm in jeder Sprache. In der Datenbank bleibt alles griechisch.",
@@ -3561,6 +3582,13 @@
   "es": "SI",
   "fr": "OUI",
   "it": "SI"
+ },
+ "Νέα έκδοση κατεβασμένη — επαναφορτώστε για να τρέξει": {
+  "de": "Neue Version heruntergeladen — zum Ausführen neu laden",
+  "en": "New version downloaded — reload to run it",
+  "es": "Nueva versión descargada — recargue para ejecutarla",
+  "fr": "Nouvelle version téléchargée — rechargez pour l'exécuter",
+  "it": "Nuova versione scaricata — ricaricate per eseguirla"
  },
  "Νέα διαδρομή για τον": {
   "de": "Ein neuer Gang für",
@@ -5893,6 +5921,13 @@
   "fr": "en attente",
   "it": "in attesa"
  },
+ "εκκρεμεί επαναφόρτωση για την": {
+  "de": "ein Neustart steht aus für",
+  "en": "a reload is pending for",
+  "es": "queda pendiente una recarga para la",
+  "fr": "un rechargement est en attente pour la",
+  "it": "è in attesa una ricarica per la"
+ },
  "ενημερώνονται με βάση το Κ.Ο.Κ. ή το όνομα.": {
   "de": "werden anhand der Zuchtbuchnummer oder des Namens aktualisiert.",
   "en": "are updated by stud book number or by name.",
@@ -6032,6 +6067,13 @@
   "es": "y se juzgan juntos. Cada uno lleva su propia hoja de notas.",
   "fr": "et sont jugés ensemble. Chacun tient sa propre feuille de notes.",
   "it": "e vengono giudicati insieme. Ciascuno tiene un proprio foglio note."
+ },
+ "και περιμένει επαναφόρτωση. Ώσπου να γίνει, τρέχει ακόμη η παραπάνω.": {
+  "de": "und wartet auf einen Neustart. Bis dahin läuft die oben genannte Version.",
+  "en": "and is waiting for a reload. Until then, the version above is the one running.",
+  "es": "y espera una recarga. Hasta entonces, la que corre es la de arriba.",
+  "fr": "et attend un rechargement. D'ici là, c'est la version ci-dessus qui tourne.",
+  "it": "e attende una ricarica. Fino ad allora gira quella indicata sopra."
  },
  "και στείλτε το αρχείο στο κινητό.": {
   "de": "und schicken Sie die Datei aufs Telefon.",
